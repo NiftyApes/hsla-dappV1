@@ -1,22 +1,14 @@
-import React, { Suspense, lazy } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { lazy } from 'react';
+import { Route } from 'react-router-dom';
 
-import DefaultLayout from '../components/layout/Default';
+import MarketingLayout from 'components/layout/Marketing';
 
-type Props = {};
+const MarketingHome = lazy(() => import('../pages/marketing/Home'));
 
-const Home = lazy(() => import('../pages/Home'));
-
-const Marketing: React.FC<Props> = () => {
-  return (
-    <DefaultLayout>
-      <Suspense fallback={<>Loading...</>}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-        </Routes>
-      </Suspense>
-    </DefaultLayout>
-  );
-};
+const Marketing = (
+  <Route path="/" element={<MarketingLayout />}>
+    <Route index element={<MarketingHome />} />
+  </Route>
+);
 
 export default Marketing;

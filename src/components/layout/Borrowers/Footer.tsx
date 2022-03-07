@@ -3,7 +3,7 @@ import React from 'react';
 type Props = {};
 
 const Footer: React.FC<Props> = () => {
-  return <div>Footer</div>;
+  return <div>Borrowers Footer</div>;
 };
 
 export default Footer;
