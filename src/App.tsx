@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 import theme from './theme';
-import Marketing from './routes/Marketing';
+import Marketing from 'routes/Marketing';
+import LoadingIndicator from 'components/atoms/LoadingIndicator';
+import Borrowers from 'routes/Borrowers';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,7 +20,12 @@ const App: React.FC = () => (
   <ChakraProvider theme={theme}>
     <QueryClientProvider client={queryClient}>
       <Router>
-        <Marketing />
+        <Suspense fallback={<LoadingIndicator fullScreen />}>
+          <Routes>
+            {Marketing}
+            {Borrowers}
+          </Routes>
+        </Suspense>
       </Router>
     </QueryClientProvider>
   </ChakraProvider>

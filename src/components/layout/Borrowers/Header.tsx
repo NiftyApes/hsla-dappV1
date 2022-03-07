@@ -3,7 +3,7 @@ import React from 'react';
 type Props = {};
 
 const Header: React.FC<Props> = () => {
-  return <div>Header</div>;
+  return <div> Borrowers Header</div>;
 };
 
 export default Header;

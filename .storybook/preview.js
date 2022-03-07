@@ -1,4 +1,4 @@
-const theme = require('../src/theme');
+import theme from '../src/theme';
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
@@ -8,7 +8,7 @@ export const parameters = {
       date: /Date$/,
     },
   },
-  chkara: {
+  chakra: {
     theme,
   },
 };
