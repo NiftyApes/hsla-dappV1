@@ -2,7 +2,11 @@ import React from 'react';
 import { Button, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { AiOutlineCaretDown } from 'react-icons/ai';
+
 import Icon from 'components/atoms/Icon';
+import { borrowersId, ROUTE_BORROWERS_DASHBOARD } from 'routes/router';
+
+const MOCK_ID = '123';
 
 const Header: React.FC = () => {
   return (
@@ -19,12 +23,13 @@ const Header: React.FC = () => {
           columnGap="46px"
           fontSize="2.5xs"
           p="17px 26px"
+          fontWeight="bold"
         >
           <Text>
-            <Link to="">🍌 Borrow</Link>
+            <Link to={borrowersId(MOCK_ID)}>🍌 Borrow</Link>
           </Text>
-          <Text color="darkGray">
-            <Link to="">📊 DASH</Link>
+          <Text color="solid.darkGray">
+            <Link to={ROUTE_BORROWERS_DASHBOARD}>📊 DASH</Link>
           </Text>
         </Flex>
         <Menu>
@@ -45,7 +50,7 @@ const Header: React.FC = () => {
           fontWeight="bold"
           alignItems="center"
         >
-          <Text color="darkGray" m="11px 14px 11px 18px">
+          <Text color="solid.darkGray" m="11px 14px 11px 18px">
             00.0157Ξ
           </Text>
           <Button variant="primary" borderRadius="40px">

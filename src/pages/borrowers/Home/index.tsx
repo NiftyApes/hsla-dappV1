@@ -1,7 +1,13 @@
 import React from 'react';
 
+import FilterSidebar from './FilterSidebar';
+
 const Borrowers: React.FC = () => {
-  return <div>Borrowers</div>;
+  return (
+    <>
+      <FilterSidebar />
+    </>
+  );
 };
 
 export default Borrowers;

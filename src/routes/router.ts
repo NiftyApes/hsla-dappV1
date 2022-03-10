@@ -12,6 +12,10 @@ export const borrowers = () => {
   return path([ROUTE_BORROWERS]);
 };
 
+export const borrowersId = (id: string) => {
+  return path([ROUTE_BORROWERS, id]);
+};
+
 export const lenders = () => {
   return path([ROUTE_LENDERS]);
 };
