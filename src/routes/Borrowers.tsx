@@ -8,8 +8,8 @@ const BorrowersHome = lazy(() => import('../pages/borrowers/Home'));
 
 const Borrowers = (
   <Route path={borrowers()} element={<BorrowersLayout />}>
-    <Route index element={<BorrowersHome />} />
-    <Route path=":id" element={<>Borrower id page</>} />
+    <Route index element={<>Connect Wallet</>} />
+    <Route path=":id" element={<BorrowersHome />} />
     <Route path={`:id/${ROUTE_BORROWERS_DASHBOARD}`} element={<>Borrower dashboard page</>} />
   </Route>
 );

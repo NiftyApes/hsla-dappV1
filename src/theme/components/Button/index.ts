@@ -14,19 +14,30 @@ const variants: { [variant: string]: StyleObjectOrFn } = {
     color: 'darkGray',
     bgColor: 'solid.white',
   },
-  secondary: {},
+  secondary: {
+    color: 'primary.purple',
+    bgColor: 'accents.100',
+  },
   neutral: {},
-  icon: {
+  circle: {
     borderRadius: '50%',
+    bg: 'transparent',
   },
 };
 
 const sizes: { [size: string]: StyleObjectOrFn } = {
-  xs: {},
-  sm: {},
+  xs: {
+    fontSize: '2xs',
+    padding: '6px 9px',
+    borderRadius: '10px',
+  },
+  sm: {
+    fontsize: 'sm',
+  },
   md: {
     fontWeight: 'bold',
     fontSize: '2md',
+    borderRadius: '40px',
   },
   lg: {},
   xl: {},
