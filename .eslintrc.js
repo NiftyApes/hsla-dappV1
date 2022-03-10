@@ -20,7 +20,6 @@ module.exports = {
     project: './tsconfig.json',
   },
   rules: {
-    'no-unused-vars': 'error',
     '@typescript-eslint/no-unused-vars': ['error'],
     'no-duplicate-imports': 'error',
     'react/no-unescaped-entities': 'error',
