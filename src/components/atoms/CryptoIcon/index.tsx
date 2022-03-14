@@ -1,11 +1,11 @@
 import { Image } from '@chakra-ui/react';
 import React from 'react';
 
-import { COIN_SYMBOL_MAP } from './constants';
+import { CoinSymbol } from 'lib/constants/coinSymbols';
 import useDynamicSVGImport, { DynamicSVGImportOptions } from './useDynamicSVGImport';
 
 export interface IconProps extends React.SVGProps<SVGSVGElement> {
-  symbol: keyof typeof COIN_SYMBOL_MAP;
+  symbol: CoinSymbol;
   size?: number;
   onCompleted?: DynamicSVGImportOptions['onCompleted'];
   onError?: DynamicSVGImportOptions['onError'];
@@ -15,7 +15,7 @@ export interface IconProps extends React.SVGProps<SVGSVGElement> {
  * Simple wrapper for dynamic SVG import hook. You can implement your own wrapper,
  * or even use the hook directly in your components.
  */
-const Icon: React.FC<IconProps> = ({
+const CryptoIcon: React.FC<IconProps> = ({
   symbol,
   size = 32,
   onCompleted,
@@ -39,4 +39,4 @@ const Icon: React.FC<IconProps> = ({
   return null;
 };
 
-export default Icon;
+export default CryptoIcon;

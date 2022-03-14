@@ -10,7 +10,15 @@ const MOCK_ID = '123';
 
 const Header: React.FC = () => {
   return (
-    <Flex p="20px 15px 32px 20px" alignItems="center" justifyContent="space-between">
+    <Flex
+      p="20px 15px 32px 20px"
+      alignItems="center"
+      justifyContent="space-between"
+      position="sticky"
+      top="0px"
+      bg="gradient.primary"
+      zIndex={9}
+    >
       <Flex alignItems="center">
         <Image src="/assets/images/header_logo.png" alt="Logo" mr="15px" />
         <Text textTransform="uppercase" fontSize="md" fontWeight="bold" mr="20px">

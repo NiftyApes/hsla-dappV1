@@ -1,8 +1,8 @@
 import { Box, Grid } from '@chakra-ui/react';
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
+import { COIN_SYMBOL_MAP } from 'lib/constants/coinSymbols';
 import CryptoIcon from '.';
-import { COIN_SYMBOL_MAP } from './constants';
 
 const Stories = {
   component: CryptoIcon,
