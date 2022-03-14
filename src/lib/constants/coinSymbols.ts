@@ -2345,3 +2345,5 @@ export const COIN_SYMBOL_MAP = {
     color: '#302c2c',
   },
 };
+
+export type CoinSymbol = keyof typeof COIN_SYMBOL_MAP;

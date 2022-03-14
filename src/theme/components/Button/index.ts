@@ -32,7 +32,7 @@ const sizes: { [size: string]: StyleObjectOrFn } = {
     borderRadius: '10px',
   },
   sm: {
-    fontsize: 'sm',
+    fontSize: 'sm',
   },
   md: {
     fontWeight: 'bold',

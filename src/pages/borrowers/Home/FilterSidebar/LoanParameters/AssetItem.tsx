@@ -2,10 +2,10 @@ import React from 'react';
 import { Checkbox, Flex, Image, Text } from '@chakra-ui/react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import { COIN_SYMBOL_MAP } from 'components/atoms/CryptoIcon/constants';
+import { CoinSymbol, COIN_SYMBOL_MAP } from 'lib/constants/coinSymbols';
 
 type Props = {
-  symbol: keyof typeof COIN_SYMBOL_MAP;
+  symbol: CoinSymbol;
 };
 
 const AssetItem: React.FC<Props> = ({ symbol }) => {

@@ -26,6 +26,9 @@ const colors = {
     darkGray: '#656565',
     white: '#FFFFFF',
   },
+  gradient: {
+    primary: 'linear-gradient(101.3deg, #F0F0F0 0.17%, #F8F3FF 85.61%)',
+  },
 };
 
 export const colorNames = () => {

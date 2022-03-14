@@ -1,18 +1,25 @@
-import { Box, Button, Flex, Text } from '@chakra-ui/react';
+import { Box, BoxProps, Button, Flex, Text } from '@chakra-ui/react';
 import React from 'react';
 
 import Icon from 'components/atoms/Icon';
 import Collections from './Collections';
 import LoanParameters from './LoanParameters';
 
-const FilterSidebar: React.FC = () => {
+interface Props extends BoxProps {
+  onHide(): void;
+}
+
+export const FILTER_SIDEBAR_WIDTH = 351;
+
+const FilterSidebar: React.FC<Props> = ({ onHide, ...restProps }) => {
   return (
     <Box
-      w="351px"
+      w={FILTER_SIDEBAR_WIDTH}
       bg="linear-gradient(0deg, #FAFAFA, #FAFAFA), #FFFFFF"
       boxShadow="0px 4px 24px rgba(73, 16, 146, 0.02)"
       borderRadius="0px 15px 15px 0px"
-      flexGrow="1"
+      pb="20px"
+      {...restProps}
     >
       {/* Header */}
       <Flex p="17px 21px 30px 27px" alignItems="center" justifyContent="space-between">
@@ -25,7 +32,7 @@ const FilterSidebar: React.FC = () => {
             Reset Filters
           </Button>
         </Flex>
-        <Button variant="link">
+        <Button variant="link" onClick={onHide}>
           <Icon name="arrow-left" color="gray.100" />
         </Button>
       </Flex>
