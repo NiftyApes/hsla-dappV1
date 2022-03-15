@@ -7,6 +7,7 @@ import { ReactComponent as Sliders } from './assets/sliders.svg';
 import { ReactComponent as ArrowLeft } from './assets/arrow-left.svg';
 import { ReactComponent as ChevronUp } from './assets/chevron-up.svg';
 import { ReactComponent as MoreVertical } from './assets/more-vertical.svg';
+import { ReactComponent as Close } from './assets/close.svg';
 
 export const IconMap = {
   menu: Menu,
@@ -15,6 +16,7 @@ export const IconMap = {
   'arrow-left': ArrowLeft,
   'chevron-up': ChevronUp,
   'more-vertical': MoreVertical,
+  close: Close,
 };
 
 interface Props extends BoxProps {
