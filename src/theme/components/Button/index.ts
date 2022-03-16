@@ -18,7 +18,13 @@ const variants: { [variant: string]: StyleObjectOrFn } = {
     color: 'primary.purple',
     bgColor: 'accents.100',
   },
-  neutral: {},
+  neutral: {
+    color: 'primary.purple',
+    bgColor: 'solid.white',
+    borderColor: 'primary.purple',
+    border: '2px solid',
+    borderRadius: '10px',
+  },
   circle: {
     borderRadius: '50%',
     bg: 'transparent',
