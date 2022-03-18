@@ -5,7 +5,7 @@ import NFTNoOfferCard from '.';
 
 const Stories = {
   component: NFTNoOfferCard,
-  title: 'atoms/NFTNoOfferCard',
+  title: 'molecules/NFTNoOfferCard',
 } as ComponentMeta<typeof NFTNoOfferCard>;
 
 export default Stories;

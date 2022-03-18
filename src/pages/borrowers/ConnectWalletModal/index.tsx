@@ -1,16 +1,9 @@
 import React from 'react';
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  useDisclosure,
-  Text,
-  Button,
-  Flex,
-} from '@chakra-ui/react';
+import { useDisclosure, Text, Button, Flex, Box } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
 import Step from './Step';
 import { borrowersId } from 'routes/router';
+import Modal from 'components/atoms/Modal/Modal';
 
 const isWalletConnected = false;
 
@@ -23,16 +16,7 @@ const ConnectWalletModal: React.FC = () => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered closeOnOverlayClick={false}>
-      <ModalOverlay />
-      <ModalContent
-        w="956px"
-        pos="relative"
-        maxW="auto"
-        boxShadow="0px 4px 24px rgba(73, 16, 146, 0.1)"
-        borderRadius="25px"
-        textAlign="center"
-        py="21px"
-      >
+      <Box textAlign="center" py="21px">
         <Text color="solid.darkGray" fontSize="lg" textTransform="uppercase">
           🍌 QuickStart Borrowing on NiftyApes 🍌
         </Text>
@@ -59,7 +43,7 @@ const ConnectWalletModal: React.FC = () => {
         <Button variant="neutral" w="400px" margin="0 auto" mt="20px">
           Connect Wallet
         </Button>
-      </ModalContent>
+      </Box>
     </Modal>
   );
 };

@@ -25,6 +25,10 @@ const variants: { [variant: string]: StyleObjectOrFn } = {
     border: '2px solid',
     borderRadius: '10px',
   },
+  notify: {
+    bg: 'notification.notify',
+    color: 'solid.white',
+  },
   circle: {
     borderRadius: '50%',
     bg: 'transparent',
