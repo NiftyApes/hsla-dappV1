@@ -3,8 +3,8 @@ import { Button, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Text } from 
 import { Link } from 'react-router-dom';
 import { AiOutlineCaretDown } from 'react-icons/ai';
 
-import Icon from 'components/atoms/Icon';
 import { borrowersId, ROUTE_BORROWERS_DASHBOARD } from 'routes/router';
+import WalletInfo from 'components/molecules/WalletInfo';
 
 const MOCK_ID = '123';
 
@@ -49,36 +49,7 @@ const Header: React.FC = () => {
           </MenuList>
         </Menu>
       </Flex>
-
-      <Flex alignItems="center">
-        <Flex
-          bg="gray.300"
-          borderRadius="40px"
-          fontSize="2md"
-          fontWeight="bold"
-          alignItems="center"
-        >
-          <Text color="solid.darkGray" m="11px 14px 11px 18px">
-            00.0157Ξ
-          </Text>
-          <Button variant="primary" borderRadius="40px">
-            <Text mr="12px" p="6px 0px 6px 18px">
-              0xEc01...3510
-            </Text>
-            <Image
-              src="/assets/images/wallet_address_indicator.png"
-              alt="Logo"
-              p="8px 6px 8px 0px"
-            />
-          </Button>
-        </Flex>
-        <Button variant="primary" borderRadius="50%" p="11px" ml="6px">
-          <Icon name="menu" />
-        </Button>
-        <Button variant="primary" borderRadius="50%" p="11px" ml="9px">
-          <Icon name="notification" color="primary.purple" />
-        </Button>
-      </Flex>
+      <WalletInfo />
     </Flex>
   );
 };

@@ -1,22 +1,23 @@
 import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import MockImg1 from './mockImgs/1.png';
-import NFTCard from '.';
+import BorrowerOfferDetailsCard from '.';
 
 const Stories = {
-  component: NFTCard,
-  title: 'molecules/NFTCard',
-} as ComponentMeta<typeof NFTCard>;
+  component: BorrowerOfferDetailsCard,
+  title: 'molecules/BorrowerOfferDetailsCard',
+} as ComponentMeta<typeof BorrowerOfferDetailsCard>;
 
 export default Stories;
 
-const Template: ComponentStory<typeof NFTCard> = (args) => <NFTCard {...args} />;
+const Template: ComponentStory<typeof BorrowerOfferDetailsCard> = (args) => (
+  <BorrowerOfferDetailsCard {...args} />
+);
 
 export const Default = Template.bind({});
 Default.args = {
   img: MockImg1,
-  collectionName: 'COLLECTION.NAME',
-  tokenName: 'TOKEN.NAME',
+  tokenName: 'Bored Ape Yatch Club',
   offer: {
     type: 'floor',
     price: 42.167,
@@ -24,5 +25,4 @@ Default.args = {
     aprPercentage: 25,
     symbol: 'eth',
   },
-  numberOfOffers: 1425,
 };
