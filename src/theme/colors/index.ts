@@ -20,6 +20,7 @@ const colors = {
     alert: '#FF5B5B',
     warn: '#FFC120',
     notify: '#24DFA5',
+    info: '#FFA003',
   },
   solid: {
     black: '#070707',

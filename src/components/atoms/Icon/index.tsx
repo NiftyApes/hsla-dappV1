@@ -10,6 +10,8 @@ import { ReactComponent as MoreVertical } from './assets/more-vertical.svg';
 import { ReactComponent as Close } from './assets/close.svg';
 import { ReactComponent as Etherscan } from './assets/etherscan.svg';
 import { ReactComponent as HelpCircle } from './assets/help-circle.svg';
+import { ReactComponent as Filter } from './assets/filter.svg';
+import { ReactComponent as Search } from './assets/search.svg';
 
 export const IconMap = {
   menu: Menu,
@@ -21,6 +23,8 @@ export const IconMap = {
   close: Close,
   etherscan: Etherscan,
   'help-circle': HelpCircle,
+  filter: Filter,
+  search: Search,
 };
 
 interface Props extends BoxProps {
