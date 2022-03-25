@@ -12,7 +12,7 @@ const Content: React.FC<Props> = ({ isSidebarOpen, showSidebar, ...restProps }) 
   return (
     <Box {...restProps}>
       {!isSidebarOpen && (
-        <Button variant="primary" color="solid.darkGray" onClick={showSidebar} borderRadius="9px">
+        <Button variant="primary" color="solid.gray0" onClick={showSidebar} borderRadius="9px">
           <Icon name="sliders" />
         </Button>
       )}

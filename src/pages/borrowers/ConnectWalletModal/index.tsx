@@ -17,7 +17,7 @@ const ConnectWalletModal: React.FC = () => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered closeOnOverlayClick={false}>
       <Box textAlign="center" py="21px">
-        <Text color="solid.darkGray" fontSize="lg" textTransform="uppercase">
+        <Text color="solid.gray0" fontSize="lg" textTransform="uppercase">
           🍌 QuickStart Borrowing on NiftyApes 🍌
         </Text>
         <Button variant="link" onClick={onClose} pos="absolute" top="30px" right="30px">

@@ -14,7 +14,7 @@ const Category: React.FC<Props> = ({ name, children }) => {
           textTransform="uppercase"
           fontSize="2xs"
           fontWeight="bold"
-          color="solid.darkGray"
+          color="solid.gray0"
           flexShrink={0}
           mr="18px"
         >
