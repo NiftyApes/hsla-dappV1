@@ -12,6 +12,7 @@ import { ReactComponent as Etherscan } from './assets/etherscan.svg';
 import { ReactComponent as HelpCircle } from './assets/help-circle.svg';
 import { ReactComponent as Filter } from './assets/filter.svg';
 import { ReactComponent as Search } from './assets/search.svg';
+import { ReactComponent as OS } from './assets/os.svg';
 
 export const IconMap = {
   menu: Menu,
@@ -25,6 +26,7 @@ export const IconMap = {
   'help-circle': HelpCircle,
   filter: Filter,
   search: Search,
+  os: OS,
 };
 
 interface Props extends BoxProps {

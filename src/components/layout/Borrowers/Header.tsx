@@ -3,7 +3,7 @@ import { Button, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Text } from 
 import { Link } from 'react-router-dom';
 import { AiOutlineCaretDown } from 'react-icons/ai';
 
-import { borrowersId, ROUTE_BORROWERS_DASHBOARD } from 'routes/router';
+import { borrowersId, borrowersIdDashboard } from 'routes/router';
 import WalletInfo from 'components/molecules/WalletInfo';
 
 const MOCK_ID = '123';

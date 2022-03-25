@@ -7,6 +7,13 @@ const baseStyle: StyleObjectOrFn = {
   _active: {
     background: 'inherit',
   },
+  _disabled: {
+    background: 'gray.100',
+    color: 'solid.white',
+    _hover: {
+      background: '#d8d8d8 !important',
+    },
+  },
 };
 
 const variants: { [variant: string]: StyleObjectOrFn } = {
@@ -25,6 +32,11 @@ const variants: { [variant: string]: StyleObjectOrFn } = {
     border: '2px solid',
     borderRadius: '10px',
   },
+  neutralReverse: {
+    bgColor: 'primary.purple',
+    color: 'solid.white',
+    borderRadius: '10px',
+  },
   notify: {
     bg: 'notification.notify',
     color: 'solid.white',
@@ -32,6 +44,7 @@ const variants: { [variant: string]: StyleObjectOrFn } = {
   circle: {
     borderRadius: '50%',
     bg: 'transparent',
+    padding: '0 0 0 0',
   },
 };
 
