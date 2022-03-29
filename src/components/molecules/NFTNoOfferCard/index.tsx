@@ -19,7 +19,7 @@ const NFTNoOfferCard: React.FC<Props> = ({ collectionName, tokenName, id, img })
       boxShadow="0px 4px 24px rgba(73, 16, 146, 0.1)"
       borderRadius="15px"
     >
-      <Text color="solid.lightGray" fontSize="2.5xs">
+      <Text color="solid.gray0" fontSize="2.5xs">
         {collectionName}
       </Text>
       <Text fontSize="xl" mt="5px" maxW="100%" isTruncated>
@@ -34,7 +34,7 @@ const NFTNoOfferCard: React.FC<Props> = ({ collectionName, tokenName, id, img })
         borderRadius="25px"
         mt="12px"
       />
-      <Text mt="8px" color="solid.darkGray" fontSize="xs">
+      <Text mt="8px" color="solid.gray0" fontSize="xs">
         NO OFFERS AVAILABLE
       </Text>
       <Button variant="secondary" size="xs" py="8px" w="100%" h="30px" mt="8px">

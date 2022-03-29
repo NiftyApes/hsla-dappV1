@@ -22,7 +22,7 @@ const CollapseWrapper: React.FC<Props> = ({ name, children }) => {
         <Text fontSize="md" fontWeight="bold">
           {name}
         </Text>
-        <Button variant="link" color="solid.darkGray" onClick={onToggle}>
+        <Button variant="link" color="solid.gray0" onClick={onToggle}>
           {isOpen ? <FiChevronUp /> : <FiChevronDown />}
         </Button>
       </Flex>

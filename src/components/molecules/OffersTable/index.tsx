@@ -23,13 +23,13 @@ const OffersTable: React.FC = () => {
           <Button variant="icon" background="gray.300" mr="16px">
             <Icon name="search" size={15} />
           </Button>
-          <Text color="solid.darkGray" fontSize="lg" fontWeight="bold">
+          <Text color="solid.gray0" fontSize="lg" fontWeight="bold">
             ALL MATCHING OFFERS
           </Text>
         </Flex>
         <Flex alignItems="center">
           Filters
-          <Icon name="sliders" size={15} color="solid.darkGray" ml="6px" mr="20px" />
+          <Icon name="sliders" size={15} color="solid.gray0" ml="6px" mr="20px" />
           Smart Filter
           <Checkbox type="checkbox" checked ml="6px" />
         </Flex>
@@ -42,7 +42,7 @@ const OffersTable: React.FC = () => {
               '& > th': {
                 fontWeight: 'bold',
                 fontSize: '2xs',
-                color: 'solid.darkGray',
+                color: 'solid.gray0',
                 border: 'none',
                 width: '33%',
                 textAlign: 'left',

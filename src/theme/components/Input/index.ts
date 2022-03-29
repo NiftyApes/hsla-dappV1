@@ -14,7 +14,7 @@ const variants: { [variant: string]: StyleObjectOrFn } = {
     field: {
       borderColor: 'gray.100',
       _focus: {
-        borderColor: 'darkGray',
+        borderColor: 'gray0',
       },
     },
   },

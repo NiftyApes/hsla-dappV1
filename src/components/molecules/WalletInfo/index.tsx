@@ -5,8 +5,15 @@ import Icon from 'components/atoms/Icon';
 const WalletInfo: React.FC = () => {
   return (
     <Flex alignItems="center">
-      <Flex bg="gray.300" borderRadius="40px" fontSize="2md" fontWeight="bold" alignItems="center">
-        <Text color="solid.darkGray" m="11px 14px 11px 18px">
+      <Flex
+        bg="gray.300"
+        borderRadius="40px"
+        fontSize="2md"
+        fontWeight="bold"
+        alignItems="center"
+        padding="0 .3rem"
+      >
+        <Text color="solid.gray0" m="11px 14px 11px 18px">
           00.0157Ξ
         </Text>
         <Button variant="primary" borderRadius="40px">

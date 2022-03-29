@@ -29,8 +29,14 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ img, offer, tokenName }) => {
       borderRadius="10px"
       textAlign="center"
     >
-      <Flex flexDir="column" alignItems="center" bg="gray.100" borderRadius="10px">
-        <Text mt="24px" fontWeight="bold" fontSize="sm" color="solid.darkGray">
+      <Flex
+        flexDir="column"
+        alignItems="center"
+        bg="solid.gray3"
+        borderRadius="10px"
+        padding=".2rem .5rem"
+      >
+        <Text mt="24px" fontWeight="bold" fontSize="sm" color="solid.gray0">
           YOUR COLLATERAL
         </Text>
         <Image
@@ -50,7 +56,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ img, offer, tokenName }) => {
         <Text mt="1px" fontSize="2xl" color="solid.black" fontWeight="bold" lineHeight="28px">
           #43
         </Text>
-        <Text mt="27px" color="solid.darkGray" fontSize="2xs">
+        <Text mt="27px" color="solid.gray0" fontSize="2xs">
           ASSET DETAILS
         </Text>
         <Flex alignItems="center" mt="10px">
@@ -77,7 +83,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ img, offer, tokenName }) => {
       </Flex>
 
       <Flex flexDir="column" alignItems="center">
-        <Text mt="24px" fontWeight="bold" fontSize="sm" color="solid.darkGray">
+        <Text mt="24px" fontWeight="bold" fontSize="sm" color="solid.gray0">
           DEAL TERMS
         </Text>
         <Flex alignItems="center">
@@ -95,10 +101,10 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ img, offer, tokenName }) => {
           {offer.price}% will be sent to your wallet address once your loan is executed.
         </Text>
         <Flex alignItems="center" mt="50px">
-          <Text fontSize="sm" color="solid.darkGray" mr="3px">
+          <Text fontSize="sm" color="solid.gray0" mr="3px">
             TOTAL INTEREST
           </Text>
-          <Icon name="help-circle" color="solid.darkGray" />
+          <Icon name="help-circle" color="solid.gray0" />
         </Flex>
         <Flex alignItems="center" mt="30px">
           <CryptoIcon symbol={offer.symbol} size={32} />

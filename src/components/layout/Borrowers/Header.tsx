@@ -36,8 +36,8 @@ const Header: React.FC = () => {
           <Text>
             <Link to={borrowersId(MOCK_ID)}>🍌 Borrow</Link>
           </Text>
-          <Text color="solid.darkGray">
-            <Link to={borrowersIdDashboard(MOCK_ID)}>📊 DASH</Link>
+          <Text color="solid.gray0">
+            <Link to={ROUTE_BORROWERS_DASHBOARD}>📊 DASH</Link>
           </Text>
         </Flex>
         <Menu>
