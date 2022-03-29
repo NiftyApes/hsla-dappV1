@@ -1,12 +1,20 @@
 import { init } from '@web3-onboard/react';
 import injectedModule from '@web3-onboard/injected-wallets';
+import walletConnectModule from '@web3-onboard/walletconnect';
 
 // Replace with your DApp's Infura ID
 const INFURA_ID = process.env.REACT_APP_INFURA_ID;
 const injected = injectedModule();
 
+const walletConnect = walletConnectModule({
+  bridge: 'YOUR_CUSTOM_BRIDGE_SERVER',
+  qrcodeModalOptions: {
+    mobileLinks: ['rainbow', 'metamask', 'argent', 'trust', 'imtoken', 'pillar'],
+  },
+});
+
 export const initWeb3Onboard = init({
-  wallets: [injected],
+  wallets: [injected, walletConnect],
   chains: [
     {
       id: '0x1',
