@@ -6,12 +6,7 @@ import walletConnectModule from '@web3-onboard/walletconnect';
 const INFURA_ID = process.env.REACT_APP_INFURA_ID;
 const injected = injectedModule();
 
-const walletConnect = walletConnectModule({
-  bridge: 'YOUR_CUSTOM_BRIDGE_SERVER',
-  qrcodeModalOptions: {
-    mobileLinks: ['rainbow', 'metamask', 'argent', 'trust', 'imtoken', 'pillar'],
-  },
-});
+const walletConnect = walletConnectModule();
 
 export const initWeb3Onboard = init({
   wallets: [injected, walletConnect],
