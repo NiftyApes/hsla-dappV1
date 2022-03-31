@@ -7,7 +7,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable import/order */
 // This adds support for typescript paths mappings
-import 'tsconfig-paths/register';
+//import 'tsconfig-paths/register';
 
 import { BigNumber, Signer, utils } from 'ethers';
 
@@ -26,7 +26,7 @@ import { Provider, TransactionRequest, TransactionResponse } from '@ethersprojec
 
 import { HardhatUserConfig, task } from 'hardhat/config';
 import { HttpNetworkUserConfig } from 'hardhat/types';
-import { THardhatDeployEthers } from 'helpers/types/hardhat-type-extensions';
+import { THardhatDeployEthers } from './helpers/types/hardhat-type-extensions';
 import { create } from 'ipfs-http-client';
 
 import { config as envConfig } from 'dotenv';
