@@ -1,2 +1,14 @@
+# folders
+hardhat-ts/
+lib/
+node_modules/
+# files
 .eslintrc.js
 lint-staged.js
+**/*.less
+**/*.css
+**/*.scss
+**/*.json
+**/*.png
+**/*.svg
+generated/

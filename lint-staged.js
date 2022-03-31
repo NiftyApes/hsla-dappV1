@@ -1,6 +1,6 @@
 module.exports = {
   '*.{ts,tsx}': [
-    'eslint src/* --max-warnings=0',
+    'eslint src/* --max-warnings=7',
     'react-scripts test --bail --watchAll=false --findRelatedTests --passWithNoTests',
     () => 'tsc-files --noEmit',
   ],
