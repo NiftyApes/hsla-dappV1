@@ -28,6 +28,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ img, offer, tokenName }) => {
       borderColor="solid.lightPurple"
       borderRadius="10px"
       textAlign="center"
+      bgColor="solid.white"
     >
       <Flex
         flexDir="column"

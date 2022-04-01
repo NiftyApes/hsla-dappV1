@@ -29,6 +29,7 @@ const colors = {
     gray2: '#d8d8d8',
     gray3: '#f2f2f2',
     gray4: '#fafafa',
+    gray5: '#e5e5e5',
     white: '#FFFFFF',
     lightPurple: '#EAD9FF',
   },

@@ -1,3 +1,4 @@
+import { BrowserRouter } from 'react-router-dom';
 import theme from '../src/theme';
 
 export const parameters = {
@@ -12,3 +13,11 @@ export const parameters = {
     theme,
   },
 };
+
+export const decorators = [
+  (Story) => (
+    <BrowserRouter>
+      <Story />
+    </BrowserRouter>
+  ),
+];

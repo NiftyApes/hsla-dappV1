@@ -2,13 +2,16 @@ import React from 'react';
 import { Button, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { AiOutlineCaretDown } from 'react-icons/ai';
+import { useConnectWallet } from '@web3-onboard/react';
 
 import { borrowersId, borrowersIdDashboard } from 'routes/router';
 import WalletInfo from 'components/molecules/WalletInfo';
 
-const MOCK_ID = '123';
-
 const Header: React.FC = () => {
+  const [{ wallet }] = useConnectWallet();
+
+  const walletAddress = wallet?.accounts[0].address;
+
   return (
     <Flex
       p="20px 15px 32px 20px"
@@ -34,10 +37,10 @@ const Header: React.FC = () => {
           fontWeight="bold"
         >
           <Text>
-            <Link to={borrowersId(MOCK_ID)}>🍌 Borrow</Link>
+            <Link to={borrowersId(walletAddress || '')}>🍌 Borrow</Link>
           </Text>
           <Text color="solid.gray0">
-            <Link to={borrowersIdDashboard(MOCK_ID)}>📊 DASH</Link>
+            <Link to={walletAddress ? borrowersIdDashboard(walletAddress) : ''}>📊 DASH</Link>
           </Text>
         </Flex>
         <Menu>
