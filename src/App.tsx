@@ -3,6 +3,8 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter as Router, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
+// import { ContractsAppContext } from './config/contractContext';
+
 import theme from './theme';
 import Marketing from 'routes/Marketing';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
@@ -16,7 +18,19 @@ const queryClient = new QueryClient({
   },
 });
 
+// const BLOCKNATIVE_DAPPID = '0b58206a-f3c0-4701-a62f-73c7243e8c77';
+
+// // create eth components context for options and API keys
+// const ethComponentsSettings: IEthComponentsSettings = {
+//   apiKeys: {
+//     BlocknativeDappId: BLOCKNATIVE_DAPPID,
+//   },
+// };
+
 const App: React.FC = () => (
+  // <EthComponentsSettingsContext.Provider value={ethComponentsSettings}>
+  // <ContractsAppContext>
+  // {/* <EthersAppContext> */}
   <ChakraProvider theme={theme}>
     <QueryClientProvider client={queryClient}>
       <Router>
@@ -29,6 +43,9 @@ const App: React.FC = () => (
       </Router>
     </QueryClientProvider>
   </ChakraProvider>
+  // {/* </EthersAppContext> */}
+  // </ContractsAppContext>
+  // </EthComponentsSettingsContext.Provider>
 );
 
 export { App };
