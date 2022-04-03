@@ -19,7 +19,14 @@ module.exports = {
     sourceType: 'module',
     tsconfigRootDir: '.',
     project: ['./tsconfig.json'],
-    projectFolderIgnoreList: ['node_modules', 'dist', 'build', '.yarn', 'build-utils'],
+    projectFolderIgnoreList: [
+      'node_modules',
+      'dist',
+      'build',
+      '.yarn',
+      'build-utils',
+      './src/generated',
+    ],
     extraFileExtensions: ['.sol'],
   },
   rules: {

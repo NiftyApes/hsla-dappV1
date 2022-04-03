@@ -1,7 +1,7 @@
 /**
  * This file was automatically generated from .bak
  */
- 
+
 import { defineConfig } from '@dethcrypto/eth-sdk';
 import { contractsByNetworkName } from '../functions/contractsByNetworkName';
 
