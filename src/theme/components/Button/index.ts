@@ -18,7 +18,7 @@ const baseStyle: StyleObjectOrFn = {
 
 const variants: { [variant: string]: StyleObjectOrFn } = {
   primary: {
-    color: 'darkGray',
+    color: 'gray0',
     bgColor: 'solid.white',
   },
   secondary: {

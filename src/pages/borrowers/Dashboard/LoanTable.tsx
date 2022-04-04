@@ -1,9 +1,29 @@
 import React from 'react';
-import { Table, Thead, Tr, Th, Tbody, Td, Flex, Box, Image, Text, Button } from '@chakra-ui/react';
+import {
+  Table,
+  Thead,
+  Tr,
+  Th,
+  Tbody,
+  Td,
+  Flex,
+  Box,
+  Image,
+  Text,
+  Button,
+  useDisclosure,
+} from '@chakra-ui/react';
 
 import Icon from 'components/atoms/Icon';
+import RepayLoanModal from 'components/organisms/RepayLoanModal';
 
 const LoanTable: React.FC = () => {
+  const {
+    onOpen: showRepayLoanModal,
+    onClose: hideRepayLoanModal,
+    isOpen: isRepayLoanModalVisible,
+  } = useDisclosure();
+
   return (
     <Box px="120px">
       <Table>
@@ -31,13 +51,13 @@ const LoanTable: React.FC = () => {
         </Thead>
         <Tbody
           sx={{
-            'tr:first-child > td:first-child': {
+            'tr:first-of-type > td:first-of-type': {
               borderTopLeftRadius: '10px',
             },
-            'tr:first-child > td:last-child': {
+            'tr:first-of-type > td:last-child': {
               borderTopRightRadius: '10px',
             },
-            'tr:last-child > td:first-child': {
+            'tr:last-child > td:first-of-type': {
               borderBottomLeftRadius: '10px',
             },
             'tr:last-child > td:last-child': {
@@ -114,11 +134,14 @@ const LoanTable: React.FC = () => {
               </Text>
             </Td>
             <Td>
-              <Button variant="neutral">REPAY</Button>
+              <Button variant="neutral" onClick={showRepayLoanModal}>
+                REPAY
+              </Button>
             </Td>
           </Tr>
         </Tbody>
       </Table>
+      <RepayLoanModal isOpen={isRepayLoanModalVisible} onClose={hideRepayLoanModal} />
     </Box>
   );
 };

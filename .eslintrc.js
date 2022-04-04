@@ -1,5 +1,5 @@
 module.exports = {
-  extends: ['react-app', 'prettier'],
+  extends: ['react-app', 'prettier', 'plugin:react-hooks/recommended'],
   plugins: ['react', '@typescript-eslint', 'jest'],
   env: {
     browser: true,

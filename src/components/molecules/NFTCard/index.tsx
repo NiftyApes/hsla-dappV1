@@ -44,7 +44,7 @@ const NFTCard: React.FC<Props> = ({ collectionName, tokenName, offer, img, numbe
       >
         <Menu>
           <MenuButton position="absolute" top="16px" right="14px">
-            <Icon name="more-vertical" color="solid.darkGray" />
+            <Icon name="more-vertical" color="solid.gray0" />
           </MenuButton>
           <MenuList>
             <MenuItem>Add</MenuItem>
@@ -52,7 +52,7 @@ const NFTCard: React.FC<Props> = ({ collectionName, tokenName, offer, img, numbe
           </MenuList>
         </Menu>
 
-        <Text maxW="100%" color="solid.darkGray" fontSize="sm" fontWeight="bold" isTruncated>
+        <Text maxW="100%" color="solid.gray0" fontSize="sm" fontWeight="bold" isTruncated>
           {collectionName}
         </Text>
         <Text
@@ -82,7 +82,7 @@ const NFTCard: React.FC<Props> = ({ collectionName, tokenName, offer, img, numbe
           textTransform="uppercase"
           fontSize="xs"
           p="3px 7px"
-          color="solid.darkGray"
+          color="solid.gray0"
           boxShadow="0px 1px 0px 0px #F6EDFF"
           borderRadius="3px"
           mt="16px"
@@ -109,7 +109,7 @@ const NFTCard: React.FC<Props> = ({ collectionName, tokenName, offer, img, numbe
               {offer.price}Ξ
             </Text>
           </Flex>
-          <Text fontSize="lg" color="solid.darkGray">
+          <Text fontSize="lg" color="solid.gray0">
             <Text as="span" color="solid.black">
               {offer.days}
             </Text>

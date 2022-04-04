@@ -30,7 +30,7 @@ const Step: React.FC<Props> = ({ title, desc, img, onReadMore }) => {
       <Text mt="25px" fontWeight="bold" fontSize="sm">
         {title}
       </Text>
-      <Text mt="21px" fontWeight="normal" fontSize="sm" color="solid.darkGray">
+      <Text mt="21px" fontWeight="normal" fontSize="sm" color="solid.gray0">
         {desc}
       </Text>
       <Button

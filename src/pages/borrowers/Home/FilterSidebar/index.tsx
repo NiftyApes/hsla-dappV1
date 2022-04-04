@@ -24,7 +24,7 @@ const FilterSidebar: React.FC<Props> = ({ onHide, ...restProps }) => {
       {/* Header */}
       <Flex p="17px 21px 30px 27px" alignItems="center" justifyContent="space-between">
         <Flex alignItems="center">
-          <Icon name="sliders" color="solid.darkGray" mr="8px" />
+          <Icon name="sliders" color="solid.gray0" mr="8px" />
           <Text fontSize="lg" fontWeight="bold" mr="9px">
             FILTERS
           </Text>

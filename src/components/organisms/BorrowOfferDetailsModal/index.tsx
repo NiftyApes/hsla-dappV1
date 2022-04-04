@@ -31,14 +31,14 @@ const BorrowOfferDetailsModal: React.FC<ModalProps> = ({ onClose, ...restProps }
         <Text textTransform="uppercase" mt="30px" fontSize="xl">
           Liquidity awaits!
         </Text>
-        <Text fontSize="lg" color="solid.darkGray" mt="10px" maxW="530px">
+        <Text fontSize="lg" color="solid.gray0" mt="10px" maxW="530px">
           Approve and transfer Bored Ape Yatch Club asset, #3368 to the NiftyApes smart contract to
           borrow 37.5Ξ for 120 days.
         </Text>
         <Button variant="neutral" size="md" p="26px 90px" mt="10px">
           APPROVE TRANSFER
         </Button>
-        <Text fontStyle="italic" color="solid.darkGray" mt="10px">
+        <Text fontStyle="italic" color="solid.gray0" mt="10px">
           Or
         </Text>
         <Flex alignItems="center">

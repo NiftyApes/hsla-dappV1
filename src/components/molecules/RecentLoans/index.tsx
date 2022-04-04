@@ -7,10 +7,10 @@ const RecentLoans: React.FC = () => {
   return (
     <Box>
       <Flex justifyContent="space-between" alignItems="center" mb="36px" mt="6px">
-        <Text color="solid.darkGray" fontSize="lg" fontWeight="bold">
+        <Text color="solid.gray0" fontSize="lg" fontWeight="bold">
           RECENT LOANS ON PLATFORMS
         </Text>
-        <Icon name="filter" size={17} color="solid.darkGray" />
+        <Icon name="filter" size={17} color="solid.gray0" />
       </Flex>
       <Table>
         <Thead>
@@ -20,7 +20,7 @@ const RecentLoans: React.FC = () => {
               '& > th': {
                 fontWeight: 'bold',
                 fontSize: '2xs',
-                color: 'solid.darkGray',
+                color: 'solid.gray0',
                 border: 'none',
                 width: '33%',
               },
@@ -52,7 +52,7 @@ const RecentLoans: React.FC = () => {
                   <CryptoIcon symbol="eth" size={20} />
                 </Grid>
               </Flex>
-              <Text fontWeight="bold" fontSize="sm" color="solid.darkGray">
+              <Text fontWeight="bold" fontSize="sm" color="solid.gray0">
                 BAYC&nbsp;
                 <Text as="span" color="solid.black">
                   #3369
@@ -63,7 +63,7 @@ const RecentLoans: React.FC = () => {
               <Text fontSize="sm" color="notification.info" fontWeight="bold">
                 Active Loan
               </Text>
-              <Text fontSize="2xs" color="solid.darkGray" mt="6px">
+              <Text fontSize="2xs" color="solid.gray0" mt="6px">
                 👇 [timestamp (txt)
               </Text>
             </Td>
@@ -71,11 +71,11 @@ const RecentLoans: React.FC = () => {
               <Box>
                 <Text fontWeight="bold">
                   37.5Ξ&nbsp;
-                  <Text as="span" color="solid.darkGray" fontWeight="normal">
+                  <Text as="span" color="solid.gray0" fontWeight="normal">
                     120 Days,
                   </Text>
                   12%{' '}
-                  <Text as="span" color="solid.darkGray" fontWeight="normal">
+                  <Text as="span" color="solid.gray0" fontWeight="normal">
                     APR
                   </Text>
                 </Text>

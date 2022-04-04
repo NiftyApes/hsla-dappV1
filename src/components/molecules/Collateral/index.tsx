@@ -13,14 +13,14 @@ const Collateral: React.FC<Props> = ({ collectionName, tokenName, img, ...rest }
       flexDir="column"
       alignItems="center"
       textAlign="center"
-      bg="gray.100"
+      bg="solid.gray3"
       borderRadius="10px"
       h="100%"
       w="100%"
       p="23px"
       {...rest}
     >
-      <Text color="solid.darkGray" fontWeight="bold" fontSize="lg">
+      <Text color="solid.gray0" fontWeight="bold" fontSize="lg">
         YOUR COLLATERAL
       </Text>
       <Image src={img} w="120px" h="120px" objectFit="cover" mt="22px" borderRadius="10px" />

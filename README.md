@@ -29,6 +29,11 @@ yarn install
 yarn run prepare
 ```
 
+## Environment variables
+
+Make sure that you copy `.env.example` to `.env.development` for local development. For production, make sure that you make `.env.production`.
+The typical env vars should be asked to Zach.
+
 ## How to run the app
 
 ```shell
