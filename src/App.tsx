@@ -21,6 +21,7 @@ const queryClient = new QueryClient({
   },
 });
 
+// turn into an env variable
 const BLOCKNATIVE_DAPPID = '0b58206a-f3c0-4701-a62f-73c7243e8c77';
 
 // create eth components context for options and API keys

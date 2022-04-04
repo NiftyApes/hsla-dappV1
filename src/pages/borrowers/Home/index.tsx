@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Flex, useDisclosure } from '@chakra-ui/react';
+
+import { useEthersContext } from 'eth-hooks/context';
 
 import FilterSidebar, { FILTER_SIDEBAR_WIDTH } from './FilterSidebar';
 import Content from './Content';
@@ -9,6 +11,12 @@ const SIDEBAR_TRANSITION_TIME = '1s';
 const Borrowers: React.FC = () => {
   const { isOpen: isSidebarVisible, onToggle: onSidebarVisibilityToggle } = useDisclosure({
     defaultIsOpen: true,
+  });
+
+  const ethersContext = useEthersContext();
+
+  useEffect(() => {
+    console.log('ethersContext', ethersContext);
   });
 
   return (
