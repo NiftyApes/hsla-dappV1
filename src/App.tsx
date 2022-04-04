@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 
 // import { EthComponentsSettingsContext, IEthComponentsSettings } from 'eth-components/models';
-// import { EthersAppContext } from 'eth-hooks/context';
+import { EthersAppContext } from 'eth-hooks/context';
 
 // import { ContractsAppContext } from './config/contractContext';
 
@@ -22,20 +22,20 @@ const queryClient = new QueryClient({
 });
 
 const App: React.FC = () => (
-  // <EthersAppContext>
-  <ChakraProvider theme={theme}>
-    <QueryClientProvider client={queryClient}>
-      <Router>
-        <Suspense fallback={<LoadingIndicator fullScreen />}>
-          <Routes>
-            {Marketing}
-            {Borrowers}
-          </Routes>
-        </Suspense>
-      </Router>
-    </QueryClientProvider>
-  </ChakraProvider>
-  // </EthersAppContext>
+  <EthersAppContext>
+    <ChakraProvider theme={theme}>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <Suspense fallback={<LoadingIndicator fullScreen />}>
+            <Routes>
+              {Marketing}
+              {Borrowers}
+            </Routes>
+          </Suspense>
+        </Router>
+      </QueryClientProvider>
+    </ChakraProvider>
+  </EthersAppContext>
 );
 
 export { App };
