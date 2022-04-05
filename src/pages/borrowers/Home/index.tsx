@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import { Flex, useDisclosure } from '@chakra-ui/react';
 
 import { useEthersContext } from 'eth-hooks/context';
+// import { useScaffoldProviders as useScaffoldAppProviders } from '../../../functions/useScaffoldAppProviders';
+import { WalletProvider } from '../../../lib/contexts/WalletProvider';
 
 import FilterSidebar, { FILTER_SIDEBAR_WIDTH } from './FilterSidebar';
 import Content from './Content';
@@ -13,10 +15,16 @@ const Borrowers: React.FC = () => {
     defaultIsOpen: true,
   });
 
+  // 🛰 providers
+  // see useLoadProviders.ts for everything to do with loading the right providers
+  // const scaffoldAppProviders = useScaffoldAppProviders();
+
   const ethersContext = useEthersContext();
 
   useEffect(() => {
+    // console.log('scaffoldAppProviders', scaffoldAppProviders);
     console.log('ethersContext', ethersContext);
+    console.log('WalletProvider', WalletProvider);
   });
 
   return (
