@@ -46,6 +46,10 @@ const variants: { [variant: string]: StyleObjectOrFn } = {
     bg: 'transparent',
     padding: '0 0 0 0',
   },
+  alert: {
+    bg: 'notification.alert',
+    color: 'solid.white',
+  },
 };
 
 const sizes: { [size: string]: StyleObjectOrFn } = {

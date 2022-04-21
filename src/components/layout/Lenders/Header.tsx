@@ -4,7 +4,12 @@ import { Link } from 'react-router-dom';
 import { AiOutlineCaretDown } from 'react-icons/ai';
 import { useConnectWallet } from '@web3-onboard/react';
 
-import { borrowersId, borrowersIdDashboard } from 'routes/router';
+import {
+  lendersIdDashboard,
+  lendersIdLend,
+  lendersIdLiquidity,
+  lendersIdOffers,
+} from 'routes/router';
 import WalletInfo from 'components/molecules/WalletInfo';
 
 const Header: React.FC = () => {
@@ -27,7 +32,7 @@ const Header: React.FC = () => {
           <Image src="/assets/images/header_logo.png" alt="Logo" mr="15px" cursor="pointer" />
         </Link>
         <Text textTransform="uppercase" fontSize="md" fontWeight="bold" mr="20px">
-          Borrowers
+          Lenders
         </Text>
         <Flex
           bg="gray.300"
@@ -36,18 +41,17 @@ const Header: React.FC = () => {
           columnGap="46px"
           fontSize="2.5xs"
           p="17px 26px"
+          color="solid.gray0"
           fontWeight="bold"
         >
-          <Text>
-            <Link to={borrowersId(walletAddress || '')}>🍌 Borrow</Link>
-          </Text>
-          <Text color="solid.gray0">
-            <Link to={walletAddress ? borrowersIdDashboard(walletAddress) : ''}>📊 DASH</Link>
-          </Text>
+          <Link to={walletAddress ? lendersIdDashboard(walletAddress) : ''}>📊 DASH</Link>
+          <Link to={walletAddress ? lendersIdLiquidity(walletAddress) : ''}>💧 LIQUIDITY</Link>
+          <Link to={walletAddress ? lendersIdOffers(walletAddress) : ''}>📃 OFFERS</Link>
+          <Link to={walletAddress ? lendersIdLend(walletAddress) : ''}>🚀 LEND</Link>
         </Flex>
         <Menu>
           <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} bg="transparent">
-            LENDERS
+            BORROWERS
           </MenuButton>
           <MenuList>
             <MenuItem>Sample</MenuItem>

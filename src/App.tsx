@@ -7,6 +7,7 @@ import theme from './theme';
 import Marketing from 'routes/Marketing';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import Borrowers from 'routes/Borrowers';
+import Lenders from 'routes/Lenders';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,6 +25,7 @@ const App: React.FC = () => (
           <Routes>
             {Marketing}
             {Borrowers}
+            {Lenders}
           </Routes>
         </Suspense>
       </Router>

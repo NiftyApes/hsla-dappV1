@@ -6,7 +6,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import Step from 'components/molecules/WalletInfo/Step';
 import { initWeb3Onboard } from 'services/wallet';
-import { borrowersId } from 'routes/router';
 import Modal from 'components/atoms/Modal/Modal';
 
 interface WalletContextProps {
@@ -65,7 +64,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode | React.ReactN
 
   useLayoutEffect(() => {
     if (walletAddress && id !== walletAddress) {
-      navigate(borrowersId(walletAddress));
+      navigate(walletAddress);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletAddress]);
