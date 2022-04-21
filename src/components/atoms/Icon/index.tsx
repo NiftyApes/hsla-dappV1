@@ -13,6 +13,8 @@ import { ReactComponent as HelpCircle } from './assets/help-circle.svg';
 import { ReactComponent as Filter } from './assets/filter.svg';
 import { ReactComponent as Search } from './assets/search.svg';
 import { ReactComponent as OS } from './assets/os.svg';
+import { ReactComponent as Lock } from './assets/lock.svg';
+import { ReactComponent as CircleQuestionMark } from './assets/circle-question-mark.svg';
 
 export const IconMap = {
   menu: Menu,
@@ -27,6 +29,8 @@ export const IconMap = {
   filter: Filter,
   search: Search,
   os: OS,
+  lock: Lock,
+  'circle-question-mark': CircleQuestionMark,
 };
 
 interface Props extends BoxProps {
