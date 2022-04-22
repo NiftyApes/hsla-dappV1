@@ -27,3 +27,6 @@ yarn-error.log*
 # env vars
 .env.development
 .env.production
+
+# src
+src/generated
