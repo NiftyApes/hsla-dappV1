@@ -68,6 +68,7 @@
     "fork": "cd hardhat-ts && npx hardhat node --fork https://mainnet.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad",
     "node": "cd hardhat-ts && npx hardhat chain",
     "hardhat-test": "cd hardhat-ts && npx hardhat test",
+    "hardhat-yarn-install": "cd hardhat-ts && yarn install",
     "compile": "cd hardhat-ts && npx hardhat compile",
     "contracts:build": "cd hardhat-ts && npx hardhat compile && cd .. && npx shx rm -rf './src/generated/external-contracts' && npx shx cp -r './src/scripts/eth-sdk-config.ts.bak' './src/generated/eth-sdk.config.ts' && npx eth-sdk -p ./src/generated",
     "contracts:rebuild": "cd hardhat-ts && npx hardhat clean && cd .. && yarn contracts:build",
