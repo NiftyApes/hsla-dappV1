@@ -39,3 +39,15 @@ The typical env vars should be asked to Zach.
 ```shell
 yarn start
 ```
+
+## How to run smart contracts locally with Hardhat
+
+```shell
+yarn hardhat-yarn-install
+yarn compile
+yarn build # use yarn rebuild after first time
+yarn chain
+yarn deploy
+yarn fund-10 --to <address> # give 10 eth to address
+yarn mint --to <address> # mint 6 NFTs to address
+```
