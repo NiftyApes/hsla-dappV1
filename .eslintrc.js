@@ -17,7 +17,17 @@ module.exports = {
     },
     ecmaVersion: 2018,
     sourceType: 'module',
-    project: './tsconfig.json',
+    tsconfigRootDir: '.',
+    project: ['./tsconfig.json'],
+    projectFolderIgnoreList: [
+      'node_modules',
+      'dist',
+      'build',
+      '.yarn',
+      'build-utils',
+      './src/generated',
+    ],
+    extraFileExtensions: ['.sol'],
   },
   rules: {
     '@typescript-eslint/no-unused-vars': ['error'],
