@@ -68,11 +68,12 @@
     "fork": "cd hardhat-ts && npx hardhat node --fork https://mainnet.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad",
     "node": "cd hardhat-ts && npx hardhat chain",
     "hardhat-test": "cd hardhat-ts && npx hardhat test",
+    "hardhat-yarn-install": "cd hardhat-ts && yarn install",
     "compile": "cd hardhat-ts && npx hardhat compile",
     "contracts:build": "cd hardhat-ts && npx hardhat compile && cd .. && npx shx rm -rf './src/generated/external-contracts' && npx shx cp -r './src/scripts/eth-sdk-config.ts.bak' './src/generated/eth-sdk.config.ts' && npx eth-sdk -p ./src/generated",
     "contracts:rebuild": "cd hardhat-ts && npx hardhat clean && cd .. && yarn contracts:build",
     "export": "cd hardhat-ts && npx hardhat export",
-    "deploy": "cd hardhat-ts && npx hardhat deploy --export-all ../src/generated/hardhat_contracts.json",
+    "deploy": "cd hardhat-ts && npx hardhat deploy --export-all ../src/generated/hardhat_contracts.json --network localhost",
     "watch": "cd hardhat-ts && npx hardhat watch",
     "accounts": "cd hardhat-ts && npx hardhat accounts",
     "balance": "cd hardhat-ts && npx hardhat balance",
@@ -83,7 +84,10 @@
     "wallet": "cd hardhat-ts && npx hardhat wallet",
     "fundedwallet": "cd hardhat-ts && npx hardhat fundedwallet",
     "flatten": "cd hardhat-ts && npx hardhat flatten",
-    "clean": "cd hardhat-ts && npx hardhat clean"
+    "clean": "cd hardhat-ts && npx hardhat clean",
+    "fund": "cd hardhat-ts && npx hardhat send --from 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 --network localhost",
+    "fund-10": "cd hardhat-ts && npx hardhat send --from 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 --amount 10 --network localhost",
+    "mint": "cd hardhat-ts && npx hardhat --network localhost mint"
   },
   "eslintConfig": {
     "extends": "react-app",

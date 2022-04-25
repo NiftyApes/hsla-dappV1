@@ -17,7 +17,10 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     // args: ["Hello"],
     log: true,
   });
-
+  await deploy('YourCollectible', {
+    from: deployer,
+    log: true,
+  });
   /*
     // Getting a previously deployed contract
     const YourContract = await ethers.getContract("YourContract", deployer);
