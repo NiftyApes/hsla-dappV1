@@ -36,7 +36,7 @@ export const LocalhostContent: React.FC = () => {
           key={item.id.toNumber()}
           collectionName=""
           tokenName={`${item.name}`}
-          id={`${item.id.tokenId}`}
+          id={`${item.id.toNumber()}`}
           img={item.image}
         />
       ))}
