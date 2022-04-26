@@ -8,7 +8,9 @@ export const useContract = ({ address, abi }: { address: string; abi: ContractIn
     return undefined;
   }
 
-  const provider = new ethers.providers.Web3Provider(wallet.provider, 'any');
+  // The Web3Provider can be used to wrap a EIP-1193 Provider,
+  // which is what Block Native's @web-onboard returns.
+  const provider = new ethers.providers.Web3Provider(wallet.provider);
   const contract = new ethers.Contract(address, abi, provider.getUncheckedSigner());
   return contract;
 };
