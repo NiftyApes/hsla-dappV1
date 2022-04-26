@@ -9,18 +9,6 @@ export const LocalhostContent: React.FC = () => {
 
   const [walletNfts, setWalletNfts] = useState<any>();
 
-  const [collectionOffers, setCollectionOffers] = useState([]);
-
-  const getCollectionOffers = async () => {
-    // loop through collection arr and query each address for offers
-    setCollectionOffers([]);
-  };
-
-  useEffect(() => {
-    getCollectionOffers();
-    console.log('collectionOffers', collectionOffers);
-  }, [walletNfts]);
-
   const scaffoldEthNFTContract = useScaffoldEthNFTContract();
   const scaffoldEthNFTs = useSlowWayToGetNFTsOfAddress({
     address: wallet?.accounts[0].address,
