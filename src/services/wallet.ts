@@ -47,6 +47,12 @@ export const initWeb3Onboard = init({
       label: 'Fantom Mainnet',
       rpcUrl: 'https://rpc.ftm.tools/',
     },
+    {
+      id: '0x7a69',
+      token: 'ETH',
+      label: 'Localhost',
+      rpcUrl: 'http://localhost:8545',
+    },
   ],
   appMetadata: {
     name: 'Niftyapes',
