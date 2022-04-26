@@ -11,14 +11,14 @@ interface WalletNft {
 export const MainnetContent: React.FC = () => {
   const connectedWallets = useWallets();
 
-  const [walletNft, setWalletNft] = useState<WalletNft>();
+  const [walletNfts, setWalletNfts] = useState<WalletNft>();
 
   const getMainnetWalletNFTs = async () => {
     // make api key an env variable
     const callWalletNfts = await fetch(
       `https://eth-mainnet.g.alchemy.com/v2/Of3Km_--Ow1fNnMhaETmwnmWBFFHF3ZY/getNFTs?owner=${connectedWallets[0].accounts[0].address}`,
     );
-    setWalletNft(await callWalletNfts.json());
+    setWalletNfts(await callWalletNfts.json());
   };
 
   useEffect(() => {
@@ -27,7 +27,7 @@ export const MainnetContent: React.FC = () => {
 
   return (
     <>
-      {walletNft?.ownedNfts.map((item) => (
+      {walletNfts?.ownedNfts.map((item) => (
         <NFTNoOfferCard
           key={item.id.tokenId}
           collectionName=""
