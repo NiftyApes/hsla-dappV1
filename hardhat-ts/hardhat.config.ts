@@ -9,7 +9,7 @@
 // This adds support for typescript paths mappings
 //import 'tsconfig-paths/register';
 
-import { Signer, utils } from 'ethers';
+import { BigNumber, Signer, utils } from 'ethers';
 
 import '@typechain/hardhat';
 import '@nomiclabs/hardhat-waffle';
@@ -19,6 +19,7 @@ import 'hardhat-deploy';
 import 'solidity-coverage';
 
 import * as fs from 'fs';
+import * as path from 'path';
 import * as chalk from 'chalk';
 
 import { Provider, TransactionRequest, TransactionResponse } from '@ethersproject/providers';
@@ -26,6 +27,7 @@ import { Provider, TransactionRequest, TransactionResponse } from '@ethersprojec
 import { HardhatUserConfig, task } from 'hardhat/config';
 import { HttpNetworkUserConfig } from 'hardhat/types';
 import { THardhatDeployEthers } from './helpers/types/hardhat-type-extensions';
+import { create } from 'ipfs-http-client';
 
 import { config as envConfig } from 'dotenv';
 envConfig({ path: '../vite-app-ts/.env' });
@@ -192,7 +194,7 @@ const config: HardhatUserConfig = {
   typechain: {
     outDir: '../src/generated/contract-types',
   },
-} as any;
+};
 export default config;
 
 const DEBUG = false;
@@ -214,7 +216,7 @@ async function send(signer: Signer, txparams: any): Promise<TransactionResponse>
   //   });
 }
 
-task('wallet', 'Create a wallet (pk) link', async (_, { ethers }: any) => {
+task('wallet', 'Create a wallet (pk) link', async (_, { ethers }) => {
   const randomWallet = ethers.Wallet.createRandom();
   const { privateKey } = randomWallet._signingKey();
   console.log(`🔐 WALLET Generated as ${randomWallet.address}`);
@@ -225,7 +227,7 @@ task('fundedwallet', 'Create a wallet (pk) link and fund it with deployer?')
   .addOptionalParam('amount', 'Amount of ETH to send to wallet after generating')
   .addOptionalParam('url', 'URL to add pk to')
   .setAction(async (taskArgs: { url?: string; amount?: string }, hre) => {
-    const { ethers } = hre as any;
+    const { ethers } = hre;
     const randomWallet = ethers.Wallet.createRandom();
     const { privateKey } = randomWallet._signingKey();
     console.log(`🔐 WALLET Generated as ${randomWallet.address}`);
@@ -260,7 +262,7 @@ task('fundedwallet', 'Create a wallet (pk) link and fund it with deployer?')
     }
   });
 
-task('generate', 'Create a mnemonic for builder deploys', async (_, { ethers }: any) => {
+task('generate', 'Create a mnemonic for builder deploys', async (_, { ethers }) => {
   const bip39 = require('bip39');
   const hdkey = require('ethereumjs-wallet/hdkey');
   const mnemonic = bip39.generateMnemonic();
@@ -286,7 +288,7 @@ task('generate', 'Create a mnemonic for builder deploys', async (_, { ethers }: 
 
 task('mineContractAddress', 'Looks for a deployer account that will give leading zeros')
   .addParam('searchFor', 'String to search for')
-  .setAction(async (taskArgs) => {
+  .setAction(async (taskArgs, { network, ethers }) => {
     let contractAddress = '';
     let address;
 
@@ -571,19 +573,19 @@ const findFirstAddr = async (ethers: THardhatDeployEthers, addr: string): Promis
   throw new Error(`Could not normalize address: ${addr}`);
 };
 
-task('accounts', 'Prints the list of accounts', async (_, { ethers }: any) => {
+task('accounts', 'Prints the list of accounts', async (_, { ethers }) => {
   const accounts = await ethers.provider.listAccounts();
   accounts.forEach((account: any) => console.log(account));
 });
 
-task('blockNumber', 'Prints the block number', async (_, { ethers }: any) => {
+task('blockNumber', 'Prints the block number', async (_, { ethers }) => {
   const blockNumber = await ethers.provider.getBlockNumber();
   console.log(blockNumber);
 });
 
 task('balance', "Prints an account's balance")
   .addPositionalParam('account', "The account's address")
-  .setAction(async (taskArgs, { ethers }: any) => {
+  .setAction(async (taskArgs, { ethers }) => {
     const balance = await ethers.provider.getBalance(await findFirstAddr(ethers, taskArgs.account));
     console.log(formatUnits(balance, 'ether'), 'ETH');
   });
@@ -596,7 +598,7 @@ task('send', 'Send ETH')
   .addOptionalParam('gasPrice', 'Price you are willing to pay in gwei')
   .addOptionalParam('gasLimit', 'Limit of how much gas to spend')
 
-  .setAction(async (taskArgs: { to?: string; from: string; amount?: string; gasPrice?: string; gasLimit?: number; data?: any }, { network, ethers }: any) => {
+  .setAction(async (taskArgs: { to?: string; from: string; amount?: string; gasPrice?: string; gasLimit?: number; data?: any }, { network, ethers }) => {
     const from = await findFirstAddr(ethers, taskArgs.from);
     debug(`Normalized from address: ${from}`);
     const fromSigner = ethers.provider.getSigner(from);
