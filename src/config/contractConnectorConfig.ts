@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
+/* tslint:disable */
 import {
   createConnectorForExternalContract,
   createConnectorForHardhatContract,
 } from 'eth-hooks/context';
 
+// @ts-ignore
 import hardhatContractsJson from '../generated/hardhat_contracts.json';
 
 import { externalContractsAddressMap } from './externalContractsConfig';

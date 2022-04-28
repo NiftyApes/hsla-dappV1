@@ -25,6 +25,7 @@ export const {
   useConnectAppContracts,
 } = contractsContextFactory<
   keyof TAppConnectorList,
+  // @ts-ignore
   TAppConnectorList,
   TTypedContract<keyof TAppConnectorList, TAppConnectorList>
 >(contractConnectorConfig);

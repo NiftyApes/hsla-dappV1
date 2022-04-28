@@ -15,12 +15,14 @@ import { ReactComponent as Search } from './assets/search.svg';
 import { ReactComponent as OS } from './assets/os.svg';
 import { ReactComponent as Lock } from './assets/lock.svg';
 import { ReactComponent as CircleQuestionMark } from './assets/circle-question-mark.svg';
+import { ReactComponent as ArrowRight } from './assets/arrow-right.svg';
 
 export const IconMap = {
   menu: Menu,
   notification: Notification,
   sliders: Sliders,
   'arrow-left': ArrowLeft,
+  'arrow-right': ArrowRight,
   'chevron-up': ChevronUp,
   'more-vertical': MoreVertical,
   close: Close,

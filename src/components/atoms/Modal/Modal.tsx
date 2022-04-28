@@ -28,7 +28,7 @@ const Modal: React.FC<Omit<ModalProps, 'onClose'> & { onClose?: () => void }> = 
   return (
     <ChakraModal isCentered closeOnOverlayClick={false} onClose={() => null} {...restProps}>
       <ModalOverlay />
-      <ModalContent bgColor="solid.gray5" {...modalContentProps}>
+      <ModalContent bg="linear-gradient(180deg, #FFFFFF 0%, #F9F5FE 100%)" {...modalContentProps}>
         {restProps.onClose && (
           <Button variant="link" onClick={restProps.onClose} pos="absolute" top="30px" right="30px">
             <Icon name="close" />
