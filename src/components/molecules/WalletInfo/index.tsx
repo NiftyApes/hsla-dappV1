@@ -5,10 +5,12 @@ import { useConnectWallet } from '@web3-onboard/react';
 import Icon from 'components/atoms/Icon';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { WalletContext } from 'lib/contexts/WalletProvider';
+import { useWalletBalance } from 'hooks/useWalletBalance';
 
 const WalletInfo: React.FC = () => {
   const [{ wallet, connecting }] = useConnectWallet();
   const { showWalletConnectModal } = useContext(WalletContext);
+  const balance = useWalletBalance();
 
   return (
     <>
@@ -24,11 +26,7 @@ const WalletInfo: React.FC = () => {
             padding="0 .3rem"
           >
             <Text color="solid.gray0" m="11px 14px 11px 18px">
-              {wallet.accounts[0].balance
-                ? `${Object.values(wallet.accounts[0].balance)[0].slice(0, 6)} ${
-                    Object.keys(wallet.accounts[0].balance)[0]
-                  }`
-                : '0'}
+              {balance}
             </Text>
             <Button variant="primary" borderRadius="40px">
               <Text mr="12px" p="6px 0px 6px 18px">
