@@ -45,7 +45,7 @@ yarn start
 ```shell
 yarn hardhat-yarn-install
 yarn compile
-yarn build # use yarn rebuild after first time
+yarn contracts:build # use yarn contracts:rebuild after first time
 yarn chain
 yarn deploy
 yarn fund-10 --to <address> # give 10 eth to address
