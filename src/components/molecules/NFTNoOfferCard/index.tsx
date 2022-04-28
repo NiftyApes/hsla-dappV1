@@ -1,14 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Flex, Image, Text } from '@chakra-ui/react';
+import { useERC721ApprovalForAll } from 'hooks/useERC721ApprovalForAll';
+import { Contract } from 'ethers';
+import { useNiftyApesContractAddress } from 'hooks/useNiftyApesContractAddress';
 
 interface Props {
+  contract?: Contract;
   collectionName: string;
   tokenName: string;
   id: string;
   img: string;
 }
 
-const NFTNoOfferCard: React.FC<Props> = ({ collectionName, tokenName, id, img }) => {
+const NFTNoOfferCard: React.FC<Props> = ({ contract, collectionName, tokenName, id, img }) => {
+  const niftyApesContractAddress = useNiftyApesContractAddress();
+
+  const { hasApprovalForAll, grantApprovalForAll } = useERC721ApprovalForAll({
+    contract,
+    operator: niftyApesContractAddress,
+  });
+
+  const [approvalTxStatus, setApprovalTxStatus] = useState<string>('READY');
+
   return (
     <Flex
       alignItems="center"
@@ -37,7 +50,48 @@ const NFTNoOfferCard: React.FC<Props> = ({ collectionName, tokenName, id, img })
       <Text mt="8px" color="solid.gray0" fontSize="xs">
         NO OFFERS AVAILABLE
       </Text>
-      <Button variant="secondary" size="xs" py="8px" w="100%" h="30px" mt="8px">
+      {!hasApprovalForAll && (
+        <Button
+          onClick={async () =>
+            await grantApprovalForAll({
+              onTxSubmitted: () => setApprovalTxStatus('PENDING'),
+              onTxMined: () => {
+                setApprovalTxStatus('SUCCESS');
+                setTimeout(() => setApprovalTxStatus('READY'), 1000);
+              },
+              onError: () => {
+                setApprovalTxStatus('ERROR');
+                setTimeout(() => setApprovalTxStatus('READY'), 1000);
+              },
+            })
+          }
+          variant="secondary"
+          size="xs"
+          py="8px"
+          w="100%"
+          h="30px"
+          mt="8px"
+        >
+          {approvalTxStatus === 'READY'
+            ? 'Approve'
+            : approvalTxStatus === 'PENDING'
+            ? 'Pending'
+            : approvalTxStatus === 'SUCCESS'
+            ? 'Success'
+            : approvalTxStatus === 'ERROR'
+            ? 'Error'
+            : 'Approve'}
+        </Button>
+      )}
+      <Button
+        disabled={!hasApprovalForAll}
+        variant="secondary"
+        size="xs"
+        py="8px"
+        w="100%"
+        h="30px"
+        mt="8px"
+      >
         REQUEST LOAN
       </Button>
     </Flex>
