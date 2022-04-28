@@ -187,9 +187,9 @@ const config: HardhatUserConfig = {
     ],
   },
   paths: {
-    cache: './generated/cache',
-    artifacts: './generated/artifacts',
-    deployments: './generated/deployments',
+    cache: '../src/generated/cache',
+    artifacts: '../src/generated/artifacts',
+    deployments: '../src/generated/deployments',
   },
   typechain: {
     outDir: '../src/generated/contract-types',
