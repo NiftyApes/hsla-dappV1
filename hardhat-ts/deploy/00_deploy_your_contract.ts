@@ -11,12 +11,23 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     // args: ["Hello"],
     log: true,
   });
-  await deploy('NiftyApes', {
+  const deployResult = await deploy('NiftyApes', {
     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
     from: deployer,
     // args: ["Hello"],
     log: true,
   });
+
+  const { address } = deployResult;
+
+  const contract = await hre.ethers.getContractAt('NiftyApes', address);
+  await contract.initialize();
+
+  const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
+  const CETH_ADDRESS = '0x4Ddc2D193948926D02f9B1fE9e1daa0718270ED5';
+  const tx = await contract.setCAssetAddress(ETH_ADDRESS, CETH_ADDRESS);
+  await tx.wait();
+
   await deploy('YourCollectible', {
     from: deployer,
     log: true,
