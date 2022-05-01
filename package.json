@@ -89,9 +89,12 @@
     "fundedwallet": "cd hardhat-ts && npx hardhat fundedwallet",
     "flatten": "cd hardhat-ts && npx hardhat flatten",
     "clean": "cd hardhat-ts && npx hardhat clean",
-    "fund": "cd hardhat-ts && npx hardhat send --from 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 --network localhost",
-    "fund-10": "cd hardhat-ts && npx hardhat send --from 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 --amount 10 --network localhost",
-    "mint": "cd hardhat-ts && npx hardhat --network localhost mint"
+    "fund": "cd hardhat-ts && npx hardhat fund --network localhost",
+    "fund-10": "cd hardhat-ts && npx hardhat fund --amount 10 --network localhost",
+    "mint": "cd hardhat-ts && npx hardhat --network localhost mint",
+    "deposit-eth": "cd hardhat-ts && npx hardhat --network localhost deposit-eth",
+    "withdraw-eth": "cd hardhat-ts && npx hardhat --network localhost withdraw-eth",
+    "create-offer": "cd hardhat-ts && npx hardhat --network localhost create-offer"
   },
   "eslintConfig": {
     "extends": "react-app",

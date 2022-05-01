@@ -22,6 +22,9 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as chalk from 'chalk';
 
+const NiftyApesDeploymentJSON = require('./generated/deployments/localhost/NiftyApes.json');
+const YourCollectibleDeploymentJSON = require('./generated/deployments/localhost/YourCollectible.json');
+
 import { Provider, TransactionRequest, TransactionResponse } from '@ethersproject/providers';
 
 import { HardhatUserConfig, task } from 'hardhat/config';
@@ -334,6 +337,49 @@ task('mineContractAddress', 'Looks for a deployer account that will give leading
     fs.writeFileSync(mnemonicPath, mnemonic.toString());
   });
 
+task('deposit-eth', 'Deposit ETH liquidity (for testing)').setAction(async (taskArgs, { network, ethers }, hre) => {
+  console.log('Balance before deposit: ', ethers.utils.formatEther(await ethers.provider.getBalance('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266')));
+
+  const niftyApes = await ethers.getContractAt('NiftyApes', NiftyApesDeploymentJSON.address);
+  const tx = await niftyApes.supplyEth({ value: ethers.utils.parseEther('1000.0') });
+  await tx.wait();
+
+  console.log('Balance after deposit: ', ethers.utils.formatEther(await ethers.provider.getBalance('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266')));
+});
+
+task('withdraw-eth', 'Withdraw ETH liquidity (for testing)').setAction(async (taskArgs, { network, ethers }, hre) => {
+  console.log('Balance before withdraw: ', ethers.utils.formatEther(await ethers.provider.getBalance('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266')));
+
+  const niftyApes = await ethers.getContractAt('NiftyApes', NiftyApesDeploymentJSON.address);
+  const tx = await niftyApes.withdrawEth(ethers.utils.parseEther('2'));
+  await tx.wait();
+
+  console.log('Balance after withdraw: ', ethers.utils.formatEther(await ethers.provider.getBalance('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266')));
+});
+
+task('create-offer', 'Create offer').setAction(async (taskArgs, { network, ethers }, hre) => {
+  const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
+
+  const niftyApes = await ethers.getContractAt('NiftyApes', NiftyApesDeploymentJSON.address);
+
+  const tx = await niftyApes.createOffer({
+    creator: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+    nftContractAddress: YourCollectibleDeploymentJSON.address,
+    interestRatePerSecond: 3,
+    fixedTerms: true,
+    floorTerm: false,
+    lenderOffer: true,
+    nftId: 1,
+    asset: ETH_ADDRESS,
+    amount: 6,
+    duration: 60 * 60 * 24, // 1 day
+    expiration: Date.now() / 1000 + 60 * 60 * 24 * 5, // 5 days from now
+  });
+
+  const receipt = await tx.wait();
+  console.log('Offer hash: ', receipt.events[1].args.offerHash);
+});
+
 task('mint', 'String to search for')
   .addOptionalParam('to', 'address to mint to')
   .setAction(async (taskArgs, { network, ethers }, hre) => {
@@ -346,7 +392,7 @@ task('mint', 'String to search for')
     console.log('\n\n 🎫 Minting to ' + toAddress + '...\n');
 
     // Might need to hand-edit contract address
-    const yourCollectible = await ethers.getContractAt('YourCollectible', '0x276c216d241856199a83bf27b2286659e5b877d3');
+    const yourCollectible = await ethers.getContractAt('YourCollectible', YourCollectibleDeploymentJSON.address);
 
     const buffalo = {
       description: "It's actually a bison?",
@@ -588,6 +634,20 @@ task('balance', "Prints an account's balance")
   .setAction(async (taskArgs, { ethers }) => {
     const balance = await ethers.provider.getBalance(await findFirstAddr(ethers, taskArgs.account));
     console.log(formatUnits(balance, 'ether'), 'ETH');
+  });
+
+task('fund', 'fund wallet')
+  .addParam('to', 'To address or account index')
+  .addParam('amount', 'Amount to send in ether')
+  .setAction(async (taskArgs: { to: string; amount: string }, { network, ethers }) => {
+    const { to, amount } = taskArgs;
+
+    const tx = {
+      to,
+      value: ethers.utils.parseEther(amount),
+    };
+
+    return await send(ethers.provider.getSigner() as Signer, tx);
   });
 
 task('send', 'Send ETH')
