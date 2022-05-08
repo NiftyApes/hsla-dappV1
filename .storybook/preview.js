@@ -1,5 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 import theme from '../src/theme';
+import { store } from '../src/app/store';
+import { Provider } from 'react-redux';
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
@@ -16,8 +18,10 @@ export const parameters = {
 
 export const decorators = [
   (Story) => (
-    <BrowserRouter>
-      <Story />
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Story />
+      </BrowserRouter>
+    </Provider>
   ),
 ];

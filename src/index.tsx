@@ -7,6 +7,12 @@ import { store } from './app/store';
 import { App } from './App';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorker from './serviceWorker';
+import { setupLocalStorageForTesting } from './fixtures/setupLocalStorageForTesting';
+
+// Use window.setupLocalStorageForTesting()
+// in browser console to configure local storage
+// for local dev work
+(window as any).setupLocalStorageForTesting = setupLocalStorageForTesting;
 
 ReactDOM.render(
   <React.StrictMode>

@@ -371,12 +371,30 @@ task('create-offer', 'Create offer').setAction(async (taskArgs, { network, ether
     lenderOffer: true,
     nftId: 1,
     asset: ETH_ADDRESS,
-    amount: 6,
+    amount: ethers.utils.parseUnits('1', 'ether'),
     duration: 60 * 60 * 24, // 1 day
-    expiration: Date.now() / 1000 + 60 * 60 * 24 * 5, // 5 days from now
+    expiration: Math.floor(Date.now() / 1000 + 60 * 60 * 24 * 5), // 5 days from now
   });
 
   const receipt = await tx.wait();
+  const offer = receipt.events[1].args[4];
+  const offerObj = {
+    creator: offer.creator,
+    nftContractAddress: offer.nftContractAddress,
+    interestRatePerSecond: offer.interestRatePerSecond.toNumber(),
+    fixedTerms: offer.fixedTerms,
+    floorTerm: offer.floorTerm,
+    lenderOffer: offer.lenderOffer,
+    nftId: offer.nftId.toNumber(),
+    asset: offer.asset,
+    amount: offer.amount.toString(),
+    duration: offer.duration,
+    expiration: offer.expiration,
+  };
+
+  console.log('Contract address: ', NiftyApesDeploymentJSON.address);
+  console.log('Nft ID: ', offer.nftId);
+  console.log('Offer : ', offerObj);
   console.log('Offer hash: ', receipt.events[1].args.offerHash);
 });
 

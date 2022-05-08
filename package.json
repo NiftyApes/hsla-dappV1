@@ -69,7 +69,7 @@
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public",
     "chain": "cd hardhat-ts && npx hardhat node --network hardhat --no-deploy",
-    "fork": "cd hardhat-ts && npx hardhat node --fork https://mainnet.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad",
+    "fork": "cd hardhat-ts && yarn fork",
     "node": "cd hardhat-ts && npx hardhat chain",
     "hardhat-test": "cd hardhat-ts && npx hardhat test",
     "hardhat-yarn-install": "cd hardhat-ts && yarn install",
