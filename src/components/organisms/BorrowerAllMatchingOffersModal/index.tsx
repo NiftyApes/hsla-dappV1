@@ -8,7 +8,10 @@ import Collateral from 'components/molecules/Collateral';
 import RecentLoans from 'components/molecules/RecentLoans';
 import OffersTable from 'components/molecules/OffersTable';
 
-const BorrowerAllMatchingOffersModal: React.FC<ModalProps> = ({ onClose, ...restProps }) => {
+const BorrowerAllMatchingOffersModal: React.FC<Omit<ModalProps, 'children'>> = ({
+  onClose,
+  ...restProps
+}) => {
   return (
     <Modal size="full" {...restProps}>
       <Flex alignItems="center" justifyContent="space-between" mt="15px" px="15px">
