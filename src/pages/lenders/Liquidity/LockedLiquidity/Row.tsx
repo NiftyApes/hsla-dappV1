@@ -3,9 +3,20 @@ import CryptoIcon from 'components/atoms/CryptoIcon';
 import Icon from 'components/atoms/Icon';
 import React from 'react';
 import AddLiquidityModal from '../AddLiquidityModal';
+import WithdrawLiquidityModal from '../WithdrawLiquidityModal';
 
 const Row: React.FC = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isAddLiquidityModalOpen,
+    onOpen: onAddLiqudityModalOpen,
+    onClose: onAddLiqudityModalClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isWithdrawLiquidityModalOpen,
+    onOpen: onWithdrawLiqudityModalOpen,
+    onClose: onWithdrawLiqudityModalClose,
+  } = useDisclosure();
 
   return (
     <>
@@ -44,16 +55,31 @@ const Row: React.FC = () => {
         </Td>
         <Td>
           <Flex alignItems="center">
-            <Button variant="link" color="primary.purple" fontSize="2.5xs" mr="18px">
+            <Button
+              variant="link"
+              color="primary.purple"
+              fontSize="2.5xs"
+              mr="18px"
+              onClick={onWithdrawLiqudityModalOpen}
+            >
               WITHDRAW
             </Button>
-            <Button variant="neutralReverse" fontSize="2.5xs" px="30px" onClick={onOpen}>
+            <Button
+              variant="neutralReverse"
+              fontSize="2.5xs"
+              px="30px"
+              onClick={onAddLiqudityModalOpen}
+            >
               ADD
             </Button>
           </Flex>
         </Td>
       </Tr>
-      <AddLiquidityModal isOpen={isOpen} onClose={onClose} />
+      <AddLiquidityModal isOpen={isAddLiquidityModalOpen} onClose={onAddLiqudityModalClose} />
+      <WithdrawLiquidityModal
+        isOpen={isWithdrawLiquidityModalOpen}
+        onClose={onWithdrawLiqudityModalClose}
+      />
     </>
   );
 };
