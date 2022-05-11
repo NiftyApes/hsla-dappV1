@@ -33,6 +33,7 @@ import { THardhatDeployEthers } from './helpers/types/hardhat-type-extensions';
 import { create } from 'ipfs-http-client';
 
 import { config as envConfig } from 'dotenv';
+import { saveOfferInDb } from './helpers/saveOfferInDb';
 envConfig({ path: '../vite-app-ts/.env' });
 
 const ipfsAPI = require('ipfs-http-client');
@@ -81,7 +82,7 @@ const config: HardhatUserConfig = {
       chainId: 31337,
       forking: {
         url: `https://eth-mainnet.alchemyapi.io/v2/Of3Km_--Ow1fNnMhaETmwnmWBFFHF3ZY`,
-        blockNumber: 13928264,
+        blockNumber: 14724006,
       },
       mining: {
         auto: false,
@@ -369,7 +370,7 @@ task('create-offer', 'Create offer').setAction(async (taskArgs, { network, ether
     fixedTerms: true,
     floorTerm: false,
     lenderOffer: true,
-    nftId: 1,
+    nftId: '1',
     asset: ETH_ADDRESS,
     amount: ethers.utils.parseUnits('1', 'ether'),
     duration: 60 * 60 * 24, // 1 day
@@ -391,6 +392,20 @@ task('create-offer', 'Create offer').setAction(async (taskArgs, { network, ether
     duration: offer.duration,
     expiration: offer.expiration,
   };
+
+  const { nftId, creator, interestRatePerSecond, amount, duration, expiration, floorTerm, nftContractAddress } = offerObj;
+
+  await saveOfferInDb({
+    nftId,
+    creator,
+    interestRatePerSecond,
+    amount,
+    duration,
+    expiration,
+    floorTerm,
+    nftContractAddress,
+    offerHash: receipt.events[1].args.offerHash,
+  });
 
   console.log('Contract address: ', NiftyApesDeploymentJSON.address);
   console.log('Nft ID: ', offer.nftId);

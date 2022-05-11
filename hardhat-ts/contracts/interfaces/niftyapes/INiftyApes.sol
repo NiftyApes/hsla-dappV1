@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.13;
+pragma solidity 0.8.13;
 
 import "./admin/INiftyApesAdmin.sol";
 import "./lending/ILending.sol";

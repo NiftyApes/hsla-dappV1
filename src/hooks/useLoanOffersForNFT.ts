@@ -1,3 +1,6 @@
+import { BigNumber } from 'ethers';
+import { useEffect, useState } from 'react';
+
 export const useLoanOffersForNFT = ({
   nftContractAddress,
   nftId,
@@ -5,29 +8,35 @@ export const useLoanOffersForNFT = ({
   nftContractAddress?: string;
   nftId: number;
 }) => {
-  if (!nftContractAddress || !nftId) {
+  const [offers, setOffers] = useState<any>();
+  useEffect(() => {
+    async function fetchLoanOffersForNFT() {
+      const result = await fetch(
+        `https://qqxeqsrt39.execute-api.us-west-2.amazonaws.com/api/offer?status=ACTIVE&nftId=${nftId}&nftContractAddress=${nftContractAddress}`,
+      );
+
+      const json = await result.json();
+
+      setOffers(json);
+    }
+
+    fetchLoanOffersForNFT();
+  }, [nftId, nftContractAddress]);
+
+  if (!offers) {
     return undefined;
   }
 
-  let offersString = localStorage.getItem('nifty-apes-offers');
+  console.log('offers.Items', offers.Items);
 
-  if (!offersString) {
-    localStorage.setItem('nifty-apes-offers', JSON.stringify({}));
-    offersString = localStorage.getItem('nifty-apes-offers');
-  }
-
-  const offers = JSON.parse(offersString as string);
-
-  let offersForCollection = offers[nftContractAddress];
-  if (!offersForCollection) {
-    offers[nftContractAddress] = {};
-    offersForCollection = offers[nftContractAddress];
-  }
-
-  let offersForNFT = offersForCollection[nftId];
-  if (!offersForNFT) {
-    offersForCollection[nftId] = [];
-  }
-
-  return offersForCollection[nftId];
+  return offers.Items.map((item: any) => {
+    return {
+      offer: {
+        amount: BigNumber.from(String(item.D.terms.amount)),
+        expiration: Number(item.D.terms.expiration),
+        interestRatePerSecond: item.D.terms.interestRatePerSecond,
+      },
+      offerHash: item.G4,
+    };
+  });
 };

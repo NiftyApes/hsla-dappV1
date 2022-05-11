@@ -21,7 +21,6 @@ export const useExecuteLoanByBorrower = ({
 
   return {
     executeLoanByBorrower: async () => {
-      console.log(nftContractAddress, nftId, offerHash, floorTerm);
       await niftyApesContract.executeLoanByBorrower(
         nftContractAddress,
         nftId,

@@ -52,7 +52,7 @@ const NFTCard: React.FC<Props> = ({
   const { executeLoanByBorrower } = useExecuteLoanByBorrower({
     nftContractAddress: contract?.address,
     nftId: id,
-    offerHash: '0x50cc118b301c20a00f2d09ca44ad00d69643ce7d530cc74e1ce057a2f1e4ce45',
+    offerHash,
     floorTerm: false,
   });
 

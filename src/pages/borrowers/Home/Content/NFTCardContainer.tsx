@@ -1,11 +1,14 @@
 import NFTCard from 'components/molecules/NFTCard';
-import { useLoanOffersForNFT } from 'hooks/useLoanOffersForNFT';
 import { Contract, ethers } from 'ethers';
 import NFTNoOfferCard from 'components/molecules/NFTNoOfferCard';
 import { useLoanAuction } from 'hooks/useLoanAuction';
+import { useLoanOffersForNFT } from 'hooks/useLoanOffersForNFT';
 
 export const NFTCardContainer = ({ contract, item }: { contract?: Contract; item?: any }) => {
-  const loanOffers = useLoanOffersForNFT({ nftContractAddress: contract?.address, nftId: item.id });
+  const loanOffers = useLoanOffersForNFT({
+    nftContractAddress: contract?.address,
+    nftId: item.id,
+  });
 
   const loanAuctions = useLoanAuction({ nftContractAddress: contract?.address, nftId: item.id });
 
@@ -15,7 +18,11 @@ export const NFTCardContainer = ({ contract, item }: { contract?: Contract; item
     return null;
   }
 
-  if (loanOffers.length === 0) {
+  if (!loanOffers) {
+    return <div>Loading...</div>;
+  }
+
+  if (loanOffers?.length === 0) {
     return (
       <NFTNoOfferCard
         contract={contract}
@@ -27,6 +34,8 @@ export const NFTCardContainer = ({ contract, item }: { contract?: Contract; item
       />
     );
   }
+
+  console.log('loanOffers', loanOffers);
 
   const loanOffer = loanOffers[0].offer;
   const offerHash = loanOffers[0].offerHash;
