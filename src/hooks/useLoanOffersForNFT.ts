@@ -1,3 +1,5 @@
+import { useAppSelector } from 'app/hooks';
+import { RootState } from 'app/store';
 import { BigNumber } from 'ethers';
 import { useEffect, useState } from 'react';
 
@@ -9,6 +11,9 @@ export const useLoanOffersForNFT = ({
   nftId: number;
 }) => {
   const [offers, setOffers] = useState<any>();
+
+  const cacheCounter = useAppSelector((state: RootState) => state.counter);
+
   useEffect(() => {
     async function fetchLoanOffersForNFT() {
       const result = await fetch(
@@ -21,7 +26,7 @@ export const useLoanOffersForNFT = ({
     }
 
     fetchLoanOffersForNFT();
-  }, [nftId, nftContractAddress]);
+  }, [nftId, nftContractAddress, cacheCounter]);
 
   if (!offers) {
     return undefined;

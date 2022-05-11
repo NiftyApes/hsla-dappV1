@@ -1,3 +1,5 @@
+import { useAppSelector } from 'app/hooks';
+import { RootState } from 'app/store';
 import { useEffect, useState } from 'react';
 import { useNiftyApesContract } from './useNiftyApesContract';
 
@@ -10,6 +12,8 @@ export const useLoanAuction = ({
 }) => {
   const niftyApesContract = useNiftyApesContract();
 
+  const cacheCounter = useAppSelector((state: RootState) => state.counter);
+
   const [loanAuction, setLoanAuction] = useState<any>();
 
   useEffect(() => {
@@ -18,14 +22,14 @@ export const useLoanAuction = ({
     }
 
     async function getLoanOffer() {
-      if (!niftyApesContract || loanAuction) {
+      if (!niftyApesContract) {
         return;
       }
 
       const result = await niftyApesContract.getLoanAuction(nftContractAddress, nftId);
       setLoanAuction(result);
     }
-  }, [niftyApesContract, nftContractAddress]);
+  }, [niftyApesContract, nftContractAddress, cacheCounter]);
 
   return loanAuction;
 };

@@ -1,3 +1,5 @@
+import { useAppDispatch } from 'app/hooks';
+import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
 import { useNiftyApesContract } from './useNiftyApesContract';
 
@@ -13,6 +15,8 @@ export const useRepayLoanByBorrower = ({
 }) => {
   const niftyApesContract = useNiftyApesContract();
 
+  const dispatch = useAppDispatch();
+
   if (!niftyApesContract) {
     return {
       executeLoanByBorrower: undefined,
@@ -21,9 +25,13 @@ export const useRepayLoanByBorrower = ({
 
   return {
     repayLoanByBorrower: async () => {
-      await niftyApesContract.repayLoan(nftContractAddress, nftId, {
+      const tx = await niftyApesContract.repayLoan(nftContractAddress, nftId, {
         value: ethers.utils.parseEther(TEST_ETH_AMOUNT),
       });
+
+      await tx.wait();
+
+      dispatch(increment());
     },
   };
 };
