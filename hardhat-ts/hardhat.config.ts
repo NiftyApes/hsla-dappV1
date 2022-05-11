@@ -358,60 +358,64 @@ task('withdraw-eth', 'Withdraw ETH liquidity (for testing)').setAction(async (ta
   console.log('Balance after withdraw: ', ethers.utils.formatEther(await ethers.provider.getBalance('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266')));
 });
 
-task('create-offer', 'Create offer').setAction(async (taskArgs, { network, ethers }, hre) => {
-  const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
+task('create-offer', 'Create offer')
+  .addOptionalParam('id', 'NFT id to create offer for')
+  .setAction(async (taskArgs, { network, ethers }, hre) => {
+    const suppliedNftId = taskArgs.id;
 
-  const niftyApes = await ethers.getContractAt('NiftyApes', NiftyApesDeploymentJSON.address);
+    const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
-  const tx = await niftyApes.createOffer({
-    creator: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
-    nftContractAddress: YourCollectibleDeploymentJSON.address,
-    interestRatePerSecond: 3,
-    fixedTerms: true,
-    floorTerm: false,
-    lenderOffer: true,
-    nftId: '1',
-    asset: ETH_ADDRESS,
-    amount: ethers.utils.parseUnits('1', 'ether'),
-    duration: 60 * 60 * 24, // 1 day
-    expiration: Math.floor(Date.now() / 1000 + 60 * 60 * 24 * 5), // 5 days from now
+    const niftyApes = await ethers.getContractAt('NiftyApes', NiftyApesDeploymentJSON.address);
+
+    const tx = await niftyApes.createOffer({
+      creator: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
+      nftContractAddress: YourCollectibleDeploymentJSON.address,
+      interestRatePerSecond: 3,
+      fixedTerms: true,
+      floorTerm: false,
+      lenderOffer: true,
+      nftId: suppliedNftId || '1',
+      asset: ETH_ADDRESS,
+      amount: ethers.utils.parseUnits('1', 'ether'),
+      duration: 60 * 60 * 24, // 1 day
+      expiration: Math.floor(Date.now() / 1000 + 60 * 60 * 24 * 5), // 5 days from now
+    });
+
+    const receipt = await tx.wait();
+    const offer = receipt.events[1].args[4];
+    const offerObj = {
+      creator: offer.creator,
+      nftContractAddress: offer.nftContractAddress,
+      interestRatePerSecond: offer.interestRatePerSecond.toNumber(),
+      fixedTerms: offer.fixedTerms,
+      floorTerm: offer.floorTerm,
+      lenderOffer: offer.lenderOffer,
+      nftId: offer.nftId.toNumber(),
+      asset: offer.asset,
+      amount: offer.amount.toString(),
+      duration: offer.duration,
+      expiration: offer.expiration,
+    };
+
+    const { nftId, creator, interestRatePerSecond, amount, duration, expiration, floorTerm, nftContractAddress } = offerObj;
+
+    await saveOfferInDb({
+      nftId,
+      creator,
+      interestRatePerSecond,
+      amount,
+      duration,
+      expiration,
+      floorTerm,
+      nftContractAddress,
+      offerHash: receipt.events[1].args.offerHash,
+    });
+
+    console.log('Contract address: ', NiftyApesDeploymentJSON.address);
+    console.log('Nft ID: ', offer.nftId);
+    console.log('Offer : ', offerObj);
+    console.log('Offer hash: ', receipt.events[1].args.offerHash);
   });
-
-  const receipt = await tx.wait();
-  const offer = receipt.events[1].args[4];
-  const offerObj = {
-    creator: offer.creator,
-    nftContractAddress: offer.nftContractAddress,
-    interestRatePerSecond: offer.interestRatePerSecond.toNumber(),
-    fixedTerms: offer.fixedTerms,
-    floorTerm: offer.floorTerm,
-    lenderOffer: offer.lenderOffer,
-    nftId: offer.nftId.toNumber(),
-    asset: offer.asset,
-    amount: offer.amount.toString(),
-    duration: offer.duration,
-    expiration: offer.expiration,
-  };
-
-  const { nftId, creator, interestRatePerSecond, amount, duration, expiration, floorTerm, nftContractAddress } = offerObj;
-
-  await saveOfferInDb({
-    nftId,
-    creator,
-    interestRatePerSecond,
-    amount,
-    duration,
-    expiration,
-    floorTerm,
-    nftContractAddress,
-    offerHash: receipt.events[1].args.offerHash,
-  });
-
-  console.log('Contract address: ', NiftyApesDeploymentJSON.address);
-  console.log('Nft ID: ', offer.nftId);
-  console.log('Offer : ', offerObj);
-  console.log('Offer hash: ', receipt.events[1].args.offerHash);
-});
 
 task('mint', 'String to search for')
   .addOptionalParam('to', 'address to mint to')
