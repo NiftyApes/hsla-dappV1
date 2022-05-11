@@ -34,12 +34,6 @@ yarn run prepare
 Make sure that you copy `.env.example` to `.env.development` for local development. For production, make sure that you make `.env.production`.
 The typical env vars should be asked to Zach.
 
-## How to run the app
-
-```shell
-yarn start
-```
-
 ## How to run smart contracts locally with Hardhat
 
 ```shell
@@ -51,7 +45,21 @@ yarn mint --to <address> # mint 6 NFTs to address
 yarn setup-offer # deposit eth liquidity & create offer
 ```
 
+## How to run the app
+
+Make sure you've at least run `yarn chain` and `yarn setup-local-chain` above so that the frontend has access to required generated files.
+
+```shell
+yarn start
+```
+
 ## Notes
+
+Make sure you've added a local network to Metamask.
+
+- _New RPC URL:_ http://localhost:8545
+- _Chain ID:_ 31337
+- _Currency Symbol:_ ETH
 
 If the local chain isn't processing transactions and giving you a "Known transaction" message, try resetting Metamask: Settings > Advanced > Reset Account.
 
