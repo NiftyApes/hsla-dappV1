@@ -3,10 +3,16 @@ import NiftyApesArtifactJSON from '../generated/artifacts/contracts/NiftyApes.so
 import NiftyApesDeploymentJSON from '../generated/deployments/localhost/NiftyApes.json';
 import { getEthersContractWithEIP1193Provider } from './getEthersContractWithEIP1193Provider';
 
+let cachedResult: any;
+
 export function getLocalNiftyApesContract({ provider }: { provider: EIP1193Provider }) {
-  return getEthersContractWithEIP1193Provider({
-    abi: NiftyApesArtifactJSON.abi,
-    address: NiftyApesDeploymentJSON.address,
-    provider,
-  });
+  if (!cachedResult) {
+    cachedResult = getEthersContractWithEIP1193Provider({
+      abi: NiftyApesArtifactJSON.abi,
+      address: NiftyApesDeploymentJSON.address,
+      provider,
+    });
+  }
+
+  return cachedResult;
 }

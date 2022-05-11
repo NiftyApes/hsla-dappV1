@@ -3,6 +3,7 @@ import { Button, Flex, Image, Text } from '@chakra-ui/react';
 import { useERC721ApprovalForAll } from 'hooks/useERC721ApprovalForAll';
 import { Contract } from 'ethers';
 import { useNiftyApesContractAddress } from 'hooks/useNiftyApesContractAddress';
+import LoadingIndicator from 'components/atoms/LoadingIndicator';
 
 interface Props {
   contract?: Contract;
@@ -72,15 +73,19 @@ const NFTNoOfferCard: React.FC<Props> = ({ contract, collectionName, tokenName, 
           h="30px"
           mt="8px"
         >
-          {approvalTxStatus === 'READY'
-            ? 'Approve'
-            : approvalTxStatus === 'PENDING'
-            ? 'Pending'
-            : approvalTxStatus === 'SUCCESS'
-            ? 'Success'
-            : approvalTxStatus === 'ERROR'
-            ? 'Error'
-            : 'Approve'}
+          {approvalTxStatus === 'READY' ? (
+            'Approve'
+          ) : approvalTxStatus === 'PENDING' ? (
+            <span>
+              Pending <LoadingIndicator size="xs" />
+            </span>
+          ) : approvalTxStatus === 'SUCCESS' ? (
+            'Success'
+          ) : approvalTxStatus === 'ERROR' ? (
+            'Error'
+          ) : (
+            'Approve'
+          )}
         </Button>
       )}
       <Button

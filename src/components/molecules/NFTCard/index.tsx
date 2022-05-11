@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
 
 import { CoinSymbol } from 'lib/constants/coinSymbols';
 import Icon from 'components/atoms/Icon';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { formatNumber } from 'lib/helpers/string';
+import { useNiftyApesContractAddress } from 'hooks/useNiftyApesContractAddress';
+import { useERC721ApprovalForAll } from 'hooks/useERC721ApprovalForAll';
+import { Contract } from 'ethers';
+import { useExecuteLoanByBorrower } from 'hooks/useExecuteLoanByBorrower';
+import LoadingIndicator from 'components/atoms/LoadingIndicator';
 
 interface Props {
+  contract?: Contract;
+  id: string;
+  offerHash: string;
   collectionName: string;
   tokenName: string;
   offer: {
@@ -22,7 +30,32 @@ interface Props {
 
 export const NFT_CARD_WIDTH = 264;
 
-const NFTCard: React.FC<Props> = ({ collectionName, tokenName, offer, img, numberOfOffers }) => {
+const NFTCard: React.FC<Props> = ({
+  contract,
+  id,
+  offerHash,
+  collectionName,
+  tokenName,
+  offer,
+  img,
+  numberOfOffers,
+}) => {
+  const niftyApesContractAddress = useNiftyApesContractAddress();
+
+  const { hasApprovalForAll, grantApprovalForAll } = useERC721ApprovalForAll({
+    contract,
+    operator: niftyApesContractAddress,
+  });
+
+  const [approvalTxStatus, setApprovalTxStatus] = useState<string>('READY');
+
+  const { executeLoanByBorrower } = useExecuteLoanByBorrower({
+    nftContractAddress: contract?.address,
+    nftId: id,
+    offerHash,
+    floorTerm: false,
+  });
+
   return (
     <>
       <Flex
@@ -119,17 +152,57 @@ const NFTCard: React.FC<Props> = ({ collectionName, tokenName, offer, img, numbe
             </Text>
             &nbsp;APR
           </Text>
-          <Button
-            variant="notify"
-            className="smash-money-btn"
-            w="100%"
-            borderRadius="10px"
-            mt="5px"
-            display="none"
-            px="5px"
-          >
-            🍌Smash money button
-          </Button>
+          {!hasApprovalForAll && (
+            <Button
+              onClick={async () =>
+                await grantApprovalForAll({
+                  onTxSubmitted: () => setApprovalTxStatus('PENDING'),
+                  onTxMined: () => {
+                    setApprovalTxStatus('SUCCESS');
+                    setTimeout(() => setApprovalTxStatus('READY'), 1000);
+                  },
+                  onError: () => {
+                    setApprovalTxStatus('ERROR');
+                    setTimeout(() => setApprovalTxStatus('READY'), 1000);
+                  },
+                })
+              }
+              variant="secondary"
+              size="xs"
+              py="8px"
+              w="100%"
+              h="30px"
+              mt="8px"
+            >
+              {approvalTxStatus === 'READY' ? (
+                'Approve'
+              ) : approvalTxStatus === 'PENDING' ? (
+                <span>
+                  Pending <LoadingIndicator size="xs" />
+                </span>
+              ) : approvalTxStatus === 'SUCCESS' ? (
+                'Success'
+              ) : approvalTxStatus === 'ERROR' ? (
+                'Error'
+              ) : (
+                'Approve'
+              )}
+            </Button>
+          )}
+          {hasApprovalForAll && (
+            <Button
+              variant="notify"
+              className="smash-money-btn"
+              w="100%"
+              borderRadius="10px"
+              mt="5px"
+              display="none"
+              px="5px"
+              onClick={async () => executeLoanByBorrower && (await executeLoanByBorrower())}
+            >
+              🍌Smash money button
+            </Button>
+          )}
         </Flex>
 
         <Button

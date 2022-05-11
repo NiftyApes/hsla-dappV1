@@ -38,7 +38,7 @@ const Content: React.FC<Props> = ({ isSidebarOpen, showSidebar, ...restProps }) 
         </Button>
       )}
 
-      <SimpleGrid columns={3} spacing={10}>
+      <SimpleGrid columns={3} spacing={10} style={{ padding: '16px' }}>
         {NFTs}
       </SimpleGrid>
     </Box>

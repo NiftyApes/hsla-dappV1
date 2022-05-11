@@ -1,5 +1,6 @@
 import { Contract } from 'ethers';
 import { useEffect, useState } from 'react';
+import { useNiftyApesContract } from './useNiftyApesContract';
 
 export const useSlowWayToGetNFTsOfAddress = ({
   address,
@@ -10,9 +11,11 @@ export const useSlowWayToGetNFTsOfAddress = ({
 }) => {
   const [nfts, setNfts] = useState<any>();
 
+  const niftyApesContract = useNiftyApesContract();
+
   useEffect(() => {
     async function loadNFTs() {
-      if (!address || !contract) {
+      if (!address || !contract || !niftyApesContract) {
         return undefined;
       }
 
@@ -26,7 +29,19 @@ export const useSlowWayToGetNFTsOfAddress = ({
         const response = await fetch(tokenURI);
         const json = await response.json();
         const owner = await contract.ownerOf(tokenId);
-        results.push({ id: tokenId, owner, ...json });
+
+        // Add NFT if directly owned by address
+        // or in NiftyApes but indirectly owned by address
+
+        if (owner.toUpperCase() === address.toUpperCase()) {
+          results.push({ id: tokenId, owner, ...json });
+        } else {
+          const niftyApesOwner = await niftyApesContract.ownerOf(contract.address, tokenId);
+
+          if (niftyApesOwner.toUpperCase() === address.toUpperCase()) {
+            results.push({ id: tokenId, owner, ...json });
+          }
+        }
       }
 
       setNfts(results);
@@ -35,7 +50,7 @@ export const useSlowWayToGetNFTsOfAddress = ({
     if (!nfts) {
       loadNFTs();
     }
-  }, [address, contract]);
+  }, [address, contract, niftyApesContract]);
 
   return nfts;
 };
