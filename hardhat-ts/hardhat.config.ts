@@ -22,9 +22,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as chalk from 'chalk';
 
-const NiftyApesDeploymentJSON = require('./generated/deployments/localhost/NiftyApes.json');
-const YourCollectibleDeploymentJSON = require('./generated/deployments/localhost/YourCollectible.json');
-
 import { Provider, TransactionRequest, TransactionResponse } from '@ethersproject/providers';
 
 import { HardhatUserConfig, task } from 'hardhat/config';
@@ -339,6 +336,8 @@ task('mineContractAddress', 'Looks for a deployer account that will give leading
   });
 
 task('deposit-eth', 'Deposit ETH liquidity (for testing)').setAction(async (taskArgs, { network, ethers }, hre) => {
+  const NiftyApesDeploymentJSON = require('./generated/deployments/localhost/NiftyApes.json');
+
   console.log('Balance before deposit: ', ethers.utils.formatEther(await ethers.provider.getBalance('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266')));
 
   const niftyApes = await ethers.getContractAt('NiftyApes', NiftyApesDeploymentJSON.address);
@@ -349,6 +348,8 @@ task('deposit-eth', 'Deposit ETH liquidity (for testing)').setAction(async (task
 });
 
 task('withdraw-eth', 'Withdraw ETH liquidity (for testing)').setAction(async (taskArgs, { network, ethers }, hre) => {
+  const NiftyApesDeploymentJSON = require('./generated/deployments/localhost/NiftyApes.json');
+
   console.log('Balance before withdraw: ', ethers.utils.formatEther(await ethers.provider.getBalance('0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266')));
 
   const niftyApes = await ethers.getContractAt('NiftyApes', NiftyApesDeploymentJSON.address);
@@ -361,6 +362,9 @@ task('withdraw-eth', 'Withdraw ETH liquidity (for testing)').setAction(async (ta
 task('create-offer', 'Create offer')
   .addOptionalParam('id', 'NFT id to create offer for')
   .setAction(async (taskArgs, { network, ethers }, hre) => {
+    const NiftyApesDeploymentJSON = require('./generated/deployments/localhost/NiftyApes.json');
+    const YourCollectibleDeploymentJSON = require('./generated/deployments/localhost/YourCollectible.json');
+
     const suppliedNftId = taskArgs.id;
 
     const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
@@ -420,6 +424,8 @@ task('create-offer', 'Create offer')
 task('mint', 'String to search for')
   .addOptionalParam('to', 'address to mint to')
   .setAction(async (taskArgs, { network, ethers }, hre) => {
+    const YourCollectibleDeploymentJSON = require('./generated/deployments/localhost/YourCollectible.json');
+
     const {} = hre;
     // This function copy-pasted from scaffold-eth
     const delayMS = 1000;
