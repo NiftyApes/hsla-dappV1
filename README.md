@@ -44,10 +44,13 @@ yarn start
 
 ```shell
 yarn hardhat-yarn-install
-yarn compile
-yarn contracts:build # use yarn contracts:rebuild after first time
 yarn chain
-yarn deploy
+yarn setup-local-chain # clean, compile, build, deploy
 yarn fund-10 --to <address> # give 10 eth to address
 yarn mint --to <address> # mint 6 NFTs to address
+yarn setup-offer # deposit eth liquidity & create offer
 ```
+
+## Notes
+
+If the local chain isn't processing transactions and giving you a "Known transaction" message, try resetting Metamask: Settings > Advanced > Reset Account.

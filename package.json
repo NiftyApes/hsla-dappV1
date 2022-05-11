@@ -94,7 +94,9 @@
     "mint": "cd hardhat-ts && npx hardhat --network localhost mint",
     "deposit-eth": "cd hardhat-ts && npx hardhat --network localhost deposit-eth",
     "withdraw-eth": "cd hardhat-ts && npx hardhat --network localhost withdraw-eth",
-    "create-offer": "cd hardhat-ts && npx hardhat --network localhost create-offer"
+    "create-offer": "cd hardhat-ts && npx hardhat --network localhost create-offer",
+    "setup-local-chain": "yarn clean && yarn compile && yarn contracts:rebuild && yarn deploy",
+    "setup-offer": "yarn deposit-eth && yarn create-offer"
   },
   "eslintConfig": {
     "extends": "react-app",
