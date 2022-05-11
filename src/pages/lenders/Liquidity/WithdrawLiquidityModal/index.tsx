@@ -4,10 +4,13 @@ import { Button, Flex, Grid, GridItem, ModalProps, Text } from '@chakra-ui/react
 import Modal from 'components/atoms/Modal/Modal';
 import Icon from 'components/atoms/Icon';
 import WalletInfo from 'components/molecules/WalletInfo';
-import AddLiquidityCard from './AddLiquidityCard';
+import WithdrawLiquidityCard from './WithdrawLiquidityCard';
 import AffectedOffers from '../AffectedOffers';
 
-const AddLiquidityModal: React.FC<Omit<ModalProps, 'children'>> = ({ onClose, ...restProps }) => {
+const WithdrawLiquidityModal: React.FC<Omit<ModalProps, 'children'>> = ({
+  onClose,
+  ...restProps
+}) => {
   return (
     <Modal size="full" {...restProps}>
       <Flex alignItems="center" justifyContent="space-between" mt="15px" px="15px">
@@ -16,7 +19,7 @@ const AddLiquidityModal: React.FC<Omit<ModalProps, 'children'>> = ({ onClose, ..
             <Icon name="arrow-left" size={16} />
           </Button>
           <Text fontSize="xl" fontWeight="bold">
-            ADD LIQUIDITY
+            WITHDRAW LIQUIDITY
           </Text>
         </Flex>
 
@@ -26,9 +29,9 @@ const AddLiquidityModal: React.FC<Omit<ModalProps, 'children'>> = ({ onClose, ..
       <Grid gridTemplateColumns="repeat(2, minmax(0, 1fr))" columnGap="20px" mt="50px">
         <GridItem>
           <Text fontSize="lg" fontWeight="bold" color="solid.gray0" ml="20px" mb="18px">
-            ADD LIQUIDITY
+            WITHDRAW LIQUIDITY
           </Text>
-          <AddLiquidityCard />
+          <WithdrawLiquidityCard />
         </GridItem>
         <GridItem>
           <Text fontSize="lg" fontWeight="bold" color="solid.gray0" ml="20px" mb="18px">
@@ -41,4 +44,4 @@ const AddLiquidityModal: React.FC<Omit<ModalProps, 'children'>> = ({ onClose, ..
   );
 };
 
-export default AddLiquidityModal;
+export default WithdrawLiquidityModal;
