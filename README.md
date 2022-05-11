@@ -54,3 +54,5 @@ yarn setup-offer # deposit eth liquidity & create offer
 ## Notes
 
 If the local chain isn't processing transactions and giving you a "Known transaction" message, try resetting Metamask: Settings > Advanced > Reset Account.
+
+If the local chain is giving you an error like "Received invalid block tag 14724346. Latest block number is 14724009" (with different block numbers), try resetting Metamask: Settings > Advanced > Reset Account.
