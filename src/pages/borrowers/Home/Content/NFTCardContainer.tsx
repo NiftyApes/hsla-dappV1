@@ -3,6 +3,9 @@ import { Contract, ethers } from 'ethers';
 import NFTNoOfferCard from 'components/molecules/NFTNoOfferCard';
 import { useLoanAuction } from 'hooks/useLoanAuction';
 import { useLoanOffersForNFT } from 'hooks/useLoanOffersForNFT';
+import { formatEther } from '@ethersproject/units';
+import { useRepayLoanByBorrower } from 'hooks/useRepayLoan';
+import { Button } from '@chakra-ui/react';
 
 export const NFTCardContainer = ({ contract, item }: { contract?: Contract; item?: any }) => {
   const loanOffers = useLoanOffersForNFT({
@@ -10,9 +13,15 @@ export const NFTCardContainer = ({ contract, item }: { contract?: Contract; item
     nftId: item.id,
   });
 
-  const loanAuctions = useLoanAuction({ nftContractAddress: contract?.address, nftId: item.id });
+  const loanAuction = useLoanAuction({
+    nftContractAddress: contract?.address,
+    nftId: item.id,
+  });
 
-  console.log('loanAuctions', loanAuctions);
+  const { repayLoanByBorrower } = useRepayLoanByBorrower({
+    nftContractAddress: contract?.address,
+    nftId: item.id,
+  });
 
   if (!contract || !item || !loanOffers) {
     return null;
@@ -20,6 +29,21 @@ export const NFTCardContainer = ({ contract, item }: { contract?: Contract; item
 
   if (!loanOffers) {
     return <div>Loading...</div>;
+  }
+
+  if (loanAuction && loanAuction[0] !== '0x0000000000000000000000000000000000000000') {
+    return (
+      <div>
+        <strong>
+          {item.name} #{item.id.toNumber()}
+        </strong>
+        <div>Amount: {formatEther(loanAuction?.amount)} ETH</div>
+        <div>Amount Drawn: {formatEther(loanAuction?.amountDrawn)} ETH</div>
+        <div>Lender Interest: {formatEther(loanAuction?.accumulatedLenderInterest)} ETH</div>
+        <div>Protocol Interest: {formatEther(loanAuction?.accumulatedProtocolInterest)} ETH</div>
+        <Button onClick={() => repayLoanByBorrower && repayLoanByBorrower()}>Repay</Button>
+      </div>
+    );
   }
 
   if (loanOffers?.length === 0) {
@@ -35,8 +59,7 @@ export const NFTCardContainer = ({ contract, item }: { contract?: Contract; item
     );
   }
 
-  console.log('loanOffers', loanOffers);
-
+  // TODO: Show loan offer with best terms
   const loanOffer = loanOffers[0].offer;
   const offerHash = loanOffers[0].offerHash;
 

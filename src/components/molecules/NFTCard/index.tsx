@@ -9,7 +9,6 @@ import { useNiftyApesContractAddress } from 'hooks/useNiftyApesContractAddress';
 import { useERC721ApprovalForAll } from 'hooks/useERC721ApprovalForAll';
 import { Contract } from 'ethers';
 import { useExecuteLoanByBorrower } from 'hooks/useExecuteLoanByBorrower';
-import { useLoanOfferFromHash } from 'hooks/useLoanOfferFromHash';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 
 interface Props {
@@ -56,15 +55,6 @@ const NFTCard: React.FC<Props> = ({
     offerHash,
     floorTerm: false,
   });
-
-  const r = useLoanOfferFromHash({
-    nftContractAddress: '0x3155755b79aA083bd953911C92705B7aA82a18F9',
-    nftId: Number(id),
-    offerHash: '0x7102528346413c45a011974b64afa13d76f87b19133653d94c7e70ecab5dc636',
-    floorTerm: false,
-  });
-
-  console.log(r);
 
   return (
     <>

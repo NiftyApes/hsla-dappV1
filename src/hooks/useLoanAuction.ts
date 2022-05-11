@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNiftyApesContract } from './useNiftyApesContract';
 
 export const useLoanAuction = ({
@@ -10,20 +10,22 @@ export const useLoanAuction = ({
 }) => {
   const niftyApesContract = useNiftyApesContract();
 
+  const [loanAuction, setLoanAuction] = useState<any>();
+
   useEffect(() => {
     if (niftyApesContract && nftContractAddress) {
       getLoanOffer();
     }
 
     async function getLoanOffer() {
-      if (!niftyApesContract) {
+      if (!niftyApesContract || loanAuction) {
         return;
       }
 
       const result = await niftyApesContract.getLoanAuction(nftContractAddress, nftId);
-      console.log('Loan auction: ', nftContractAddress, nftId, result);
+      setLoanAuction(result);
     }
   }, [niftyApesContract, nftContractAddress]);
 
-  return {};
+  return loanAuction;
 };

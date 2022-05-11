@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNiftyApesContract } from './useNiftyApesContract';
 
 export const useLoanOfferFromHash = ({
@@ -13,6 +13,8 @@ export const useLoanOfferFromHash = ({
   floorTerm?: boolean;
 }) => {
   const niftyApesContract = useNiftyApesContract();
+
+  const [loanOffer, setLoanOffer] = useState<any>();
 
   useEffect(() => {
     if (niftyApesContract && nftContractAddress) {
@@ -30,9 +32,10 @@ export const useLoanOfferFromHash = ({
         offerHash,
         floorTerm,
       );
-      console.log(nftContractAddress, nftId, offerHash, floorTerm, result);
+
+      setLoanOffer(result);
     }
   }, [niftyApesContract, nftContractAddress]);
 
-  return {};
+  return loanOffer;
 };

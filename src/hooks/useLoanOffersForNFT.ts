@@ -27,8 +27,6 @@ export const useLoanOffersForNFT = ({
     return undefined;
   }
 
-  console.log('offers.Items', offers.Items);
-
   return offers.Items.map((item: any) => {
     return {
       offer: {
