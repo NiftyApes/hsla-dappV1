@@ -9,7 +9,7 @@ interface Props extends BoxProps {
   onHide(): void;
 }
 
-export const FILTER_SIDEBAR_WIDTH = 351;
+export const FILTER_SIDEBAR_WIDTH = 350;
 
 const FilterSidebar: React.FC<Props> = ({ onHide, ...restProps }) => {
   return (
@@ -18,7 +18,9 @@ const FilterSidebar: React.FC<Props> = ({ onHide, ...restProps }) => {
       bg="linear-gradient(0deg, #FAFAFA, #FAFAFA), #FFFFFF"
       boxShadow="0px 4px 24px rgba(73, 16, 146, 0.02)"
       borderRadius="0px 15px 15px 0px"
-      pb="20px"
+      height="100vh"
+      overflow="auto"
+      // pb="20px"
       {...restProps}
     >
       {/* Header */}
@@ -36,7 +38,7 @@ const FilterSidebar: React.FC<Props> = ({ onHide, ...restProps }) => {
           <Icon name="arrow-left" color="gray.100" />
         </Button>
       </Flex>
-      <Box pr="24px">
+      <Box pr="5px">
         <Collections />
         <LoanParameters />
       </Box>
