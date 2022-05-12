@@ -4,7 +4,7 @@ import { Flex, useDisclosure } from '@chakra-ui/react';
 import FilterSidebar, { FILTER_SIDEBAR_WIDTH } from './FilterSidebar';
 import Content from './Content';
 
-const SIDEBAR_TRANSITION_TIME = '1s';
+// const SIDEBAR_TRANSITION_TIME = '.25s';
 
 const Borrowers: React.FC = () => {
   const { isOpen: isSidebarVisible, onToggle: onSidebarVisibilityToggle } = useDisclosure({
@@ -14,7 +14,7 @@ const Borrowers: React.FC = () => {
   return (
     <Flex position="relative" flexGrow={1}>
       <FilterSidebar
-        transition={`all ${SIDEBAR_TRANSITION_TIME}`}
+        // transition={`all ${SIDEBAR_TRANSITION_TIME}`}
         position="absolute"
         left="0px"
         top="0px"
@@ -22,8 +22,8 @@ const Borrowers: React.FC = () => {
         onHide={onSidebarVisibilityToggle}
       />
       <Content
-        position="absolute"
-        transition={`all ${SIDEBAR_TRANSITION_TIME}`}
+        margin=".85rem"
+        // transition={`all ${SIDEBAR_TRANSITION_TIME}`}
         left={isSidebarVisible ? FILTER_SIDEBAR_WIDTH : 0}
         isSidebarOpen={isSidebarVisible}
         showSidebar={onSidebarVisibilityToggle}
