@@ -1,4 +1,4 @@
-import { Avatar, Flex, Text } from '@chakra-ui/react';
+import { Checkbox, Flex, Text } from '@chakra-ui/react';
 import React from 'react';
 
 type Props = {
@@ -10,10 +10,14 @@ type Props = {
 const CollectionItem: React.FC<Props> = ({ img, count, name }) => {
   return (
     <Flex alignItems="center" overflow="hidden">
-      <Avatar name={name} src={img} mr="12px" />
-      <Text fontSize="md" fontWeight="bold" isTruncated>
-        ({count}) {name}
-      </Text>
+      {/* 
+      TODO: Fix overflow w/ block-inline, let DOM elements flow naturally
+      <Avatar name={name} src={img} mr="12px" /> */}
+      <Checkbox mr="16px" defaultChecked>
+        <Text fontSize="md" fontWeight="bold" isTruncated>
+          ({count}) {name}
+        </Text>
+      </Checkbox>
     </Flex>
   );
 };
