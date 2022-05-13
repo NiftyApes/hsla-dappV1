@@ -18,7 +18,8 @@ const FilterSidebar: React.FC<Props> = ({ onHide, ...restProps }) => {
       bg="linear-gradient(0deg, #FAFAFA, #FAFAFA), #FFFFFF"
       boxShadow="0px 4px 24px rgba(73, 16, 146, 0.02)"
       borderRadius="0px 15px 15px 0px"
-      height="100vh"
+      // TODO @zherring - determine nav height, add to calc)
+      height="calc(100vh)"
       overflow="auto"
       pb="20px"
       {...restProps}
