@@ -9,7 +9,7 @@
 // This adds support for typescript paths mappings
 //import 'tsconfig-paths/register';
 
-import { BigNumber, Signer, utils } from 'ethers';
+import { Signer, utils } from 'ethers';
 
 import '@typechain/hardhat';
 import '@nomiclabs/hardhat-waffle';
@@ -19,7 +19,6 @@ import 'hardhat-deploy';
 import 'solidity-coverage';
 
 import * as fs from 'fs';
-import * as path from 'path';
 import * as chalk from 'chalk';
 
 import { Provider, TransactionRequest, TransactionResponse } from '@ethersproject/providers';
@@ -27,7 +26,6 @@ import { Provider, TransactionRequest, TransactionResponse } from '@ethersprojec
 import { HardhatUserConfig, task } from 'hardhat/config';
 import { HttpNetworkUserConfig } from 'hardhat/types';
 import { THardhatDeployEthers } from './helpers/types/hardhat-type-extensions';
-import { create } from 'ipfs-http-client';
 
 import { config as envConfig } from 'dotenv';
 import { saveOfferInDb } from './helpers/saveOfferInDb';
