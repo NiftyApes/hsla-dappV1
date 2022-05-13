@@ -1,5 +1,5 @@
-import React from 'react';
-import { Flex, useDisclosure } from '@chakra-ui/react';
+import React, { useState } from 'react';
+import { Flex } from '@chakra-ui/react';
 
 import FilterSidebar, { FILTER_SIDEBAR_WIDTH } from './FilterSidebar';
 import Content from './Content';
@@ -7,27 +7,37 @@ import Content from './Content';
 // const SIDEBAR_TRANSITION_TIME = '.25s';
 
 const Borrowers: React.FC = () => {
-  const { isOpen: isSidebarVisible, onToggle: onSidebarVisibilityToggle } = useDisclosure({
-    defaultIsOpen: true,
-  });
+  const saved = localStorage.getItem('SidebarIsVisible');
+
+  const [toggleFilter, setToggle] = useState(saved);
+  const toggleVisibility = () => {
+    const newToggle = isVisible() ? 'false' : 'true';
+    localStorage.setItem('SidebarIsVisible', newToggle);
+    setToggle(newToggle);
+  };
+
+  const isVisible = () => {
+    return toggleFilter === 'true';
+  };
 
   return (
     <Flex position="relative" flexGrow={1}>
       <FilterSidebar
+        // TODO: Review Custom Transitions
         // transition={`all ${SIDEBAR_TRANSITION_TIME}`}
         position="absolute"
         left="0px"
         top="0px"
-        opacity={isSidebarVisible ? '1' : '0'}
-        onHide={onSidebarVisibilityToggle}
+        opacity={isVisible() ? '1' : '0'}
+        onHide={toggleVisibility}
       />
       <Content
         margin=".85rem"
         position="absolute"
         // transition={`all ${SIDEBAR_TRANSITION_TIME}`}
-        left={isSidebarVisible ? FILTER_SIDEBAR_WIDTH : 0}
-        isSidebarOpen={isSidebarVisible}
-        showSidebar={onSidebarVisibilityToggle}
+        left={isVisible() ? FILTER_SIDEBAR_WIDTH : 0}
+        isSidebarOpen={isVisible()}
+        showSidebar={toggleVisibility}
       />
     </Flex>
   );
