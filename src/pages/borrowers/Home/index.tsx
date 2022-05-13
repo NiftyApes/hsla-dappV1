@@ -23,6 +23,7 @@ const Borrowers: React.FC = () => {
       />
       <Content
         margin=".85rem"
+        position="absolute"
         // transition={`all ${SIDEBAR_TRANSITION_TIME}`}
         left={isSidebarVisible ? FILTER_SIDEBAR_WIDTH : 0}
         isSidebarOpen={isSidebarVisible}

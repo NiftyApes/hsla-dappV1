@@ -20,25 +20,25 @@ const FilterSidebar: React.FC<Props> = ({ onHide, ...restProps }) => {
       borderRadius="0px 15px 15px 0px"
       height="100vh"
       overflow="auto"
-      // pb="20px"
+      pb="20px"
       {...restProps}
     >
       {/* Header */}
-      <Flex p="17px 21px 30px 27px" alignItems="center" justifyContent="space-between">
+      <Flex p="1rem 5px 0 1rem" alignItems="center" justifyContent="space-between">
         <Flex alignItems="center">
           <Icon name="sliders" color="solid.gray0" mr="8px" />
           <Text fontSize="lg" fontWeight="bold" mr="9px">
             FILTERS
           </Text>
-          <Button variant="secondary" size="sm">
-            Reset Filters
-          </Button>
+          {/* <Button variant="secondary" size="sm">
+            Reset
+          </Button> */}
         </Flex>
         <Button variant="link" onClick={onHide}>
-          <Icon name="arrow-left" color="gray.100" />
+          <Icon name="corner-down-left" color="solid.gray1" />
         </Button>
       </Flex>
-      <Box pr="5px">
+      <Box pr="5px" pt="1rem">
         <Collections />
         <LoanParameters />
       </Box>
