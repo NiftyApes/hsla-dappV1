@@ -88,7 +88,7 @@ const NFTNoOfferCard: React.FC<Props> = ({ contract, collectionName, tokenName, 
           )}
         </Button>
       )}
-      <Button
+      {/* <Button
         disabled={!hasApprovalForAll}
         variant="secondary"
         size="xs"
@@ -98,7 +98,7 @@ const NFTNoOfferCard: React.FC<Props> = ({ contract, collectionName, tokenName, 
         mt="8px"
       >
         REQUEST LOAN
-      </Button>
+      </Button> */}
     </Flex>
   );
 };
