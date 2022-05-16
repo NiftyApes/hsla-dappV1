@@ -64,10 +64,10 @@ const AddLiquidityCard: React.FC = () => {
               ethToDeposit: amtToDeposit,
               onPending: () => setDepositEthLiquidityStatus('PENDING'),
               onSuccess: () => {
+                setAmtToDeposit('');
                 setDepositEthLiquidityStatus('SUCCESS');
                 setTimeout(() => {
                   setDepositEthLiquidityStatus('READY');
-                  setAmtToDeposit('');
                 }, 1000);
               },
               onError: (e: any) => alert(e),

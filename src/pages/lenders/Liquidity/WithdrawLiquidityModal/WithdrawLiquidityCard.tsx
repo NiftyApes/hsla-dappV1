@@ -41,6 +41,7 @@ const WithdrawLiquidityCard: React.FC = () => {
           p="16px"
           fontSize="3.5xl"
           h="100%"
+          disabled={withdrawEthLiquidityStatus !== 'READY'}
         />
         <Button
           variant="neutralReverse"
@@ -60,10 +61,10 @@ const WithdrawLiquidityCard: React.FC = () => {
               ethToWithdraw: amtToWithdraw,
               onPending: () => setWithdrawEthLiquidityStatus('PENDING'),
               onSuccess: () => {
+                setAmtToWithdraw('');
                 setWithdrawEthLiquidityStatus('SUCCESS');
                 setTimeout(() => {
                   setWithdrawEthLiquidityStatus('READY');
-                  setAmtToWithdraw('');
                 }, 1000);
               },
               onError: (e: any) => alert(e),
@@ -99,7 +100,7 @@ const WithdrawLiquidityCard: React.FC = () => {
           <Text>{ethLiquidity}</Text>
         </Box>
         <Box>
-          <Text>Balance After Deposit</Text>
+          <Text>Balance After Withdrawal</Text>
           <Text
             style={{ color: Number(ethLiquidity) - Number(amtToWithdraw) < 0 ? 'red' : 'black' }}
           >
