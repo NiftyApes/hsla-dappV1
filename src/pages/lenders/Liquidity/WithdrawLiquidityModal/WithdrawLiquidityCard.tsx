@@ -1,8 +1,16 @@
 import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
-import React from 'react';
+import LoadingIndicator from 'components/atoms/LoadingIndicator';
+import { useWithdrawEthLiquidity } from 'hooks/useWithdrawEthLiquidity';
+import React, { useState } from 'react';
 
-const WithdrawLiqudityCard: React.FC = () => {
+const WithdrawLiquidityCard: React.FC = () => {
+  const [amtToWithdraw, setAmtToWithdraw] = useState('0');
+
+  const { withdrawETHLiquidity, ethLiquidity } = useWithdrawEthLiquidity();
+
+  const [withdrawEthLiquidityStatus, setWithdrawEthLiquidityStatus] = useState<string>('READY');
+
   return (
     <Box
       boxShadow="0px 0px 21px 0px #3A00831A"
@@ -14,7 +22,8 @@ const WithdrawLiqudityCard: React.FC = () => {
     >
       <Flex>
         <Input
-          defaultValue="00.00"
+          value={amtToWithdraw}
+          onChange={(e) => setAmtToWithdraw(e.target.value)}
           bg="accents.100"
           border="none"
           p="16px"
@@ -28,8 +37,29 @@ const WithdrawLiqudityCard: React.FC = () => {
           ml="8px"
           h="66px"
           px="36px"
+          disabled={withdrawEthLiquidityStatus !== 'READY'}
+          onClick={() =>
+            withdrawETHLiquidity &&
+            withdrawETHLiquidity({
+              ethToWithdraw: amtToWithdraw,
+              onTxSubmitted: () => setWithdrawEthLiquidityStatus('PENDING'),
+              onTxMined: () => {
+                setWithdrawEthLiquidityStatus('SUCCESS');
+                setTimeout(() => {
+                  setWithdrawEthLiquidityStatus('READY');
+                  setAmtToWithdraw('0');
+                }, 1000);
+              },
+              onError: (e: any) => alert(e),
+            })
+          }
         >
-          WITHDRAW
+          WITHDRAW{' '}
+          {withdrawEthLiquidityStatus === 'PENDING' ? (
+            <span style={{ paddingLeft: '8px' }}>
+              <LoadingIndicator size="xs" />
+            </span>
+          ) : null}
         </Button>
       </Flex>
       <Flex
@@ -50,11 +80,19 @@ const WithdrawLiqudityCard: React.FC = () => {
       >
         <Box>
           <Text>NiftyApes Protocol Balance</Text>
-          <Text>~340.356..Ξ</Text>
+          <Text>{ethLiquidity}</Text>
         </Box>
         <Box>
           <Text>Balance After Deposit</Text>
-          <Text>340.856..Ξ</Text>
+          <Text>
+            {ethLiquidity &&
+              (Number(ethLiquidity) - Number(amtToWithdraw)).toFixed(
+                Math.max(
+                  2,
+                  (amtToWithdraw.split('.')[1] && amtToWithdraw.split('.')[1].length) || 0,
+                ),
+              )}
+          </Text>
         </Box>
         <Box>
           <Flex alignItems="center">
@@ -75,4 +113,4 @@ const WithdrawLiqudityCard: React.FC = () => {
   );
 };
 
-export default WithdrawLiqudityCard;
+export default WithdrawLiquidityCard;

@@ -76,8 +76,6 @@ const LockedLiquidity: React.FC = () => {
               }}
             >
               <Row />
-              <Row />
-              <Row />
             </Tbody>
           </Table>
         </GridItem>
