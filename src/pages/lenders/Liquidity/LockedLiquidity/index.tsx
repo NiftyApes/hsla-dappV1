@@ -1,5 +1,6 @@
 import { Box, Flex, Grid, GridItem, Table, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
+import { useEthLiquidity } from 'hooks/useEthLiquidity';
 import React from 'react';
 
 import Card from '../Card';
@@ -7,6 +8,7 @@ import LockedLiquidityChart from './LockedLiquidityChart';
 import Row from './Row';
 
 const LockedLiquidity: React.FC = () => {
+  const { ethLiquidity } = useEthLiquidity();
   return (
     <Card h="100%">
       <Text fontSize="18px" fontWeight="bold" color="solid.gray0">
@@ -36,7 +38,7 @@ const LockedLiquidity: React.FC = () => {
               <Text>Current Total Value</Text>
             </Box>
             <Box>
-              <Text>00.00 %</Text>
+              <Text style={{ whiteSpace: 'nowrap' }}>2 %</Text>
               <Text>Yield</Text>
             </Box>
           </Flex>
@@ -57,11 +59,13 @@ const LockedLiquidity: React.FC = () => {
                   },
                 }}
               >
-                <Th>Per Asset</Th>
+                <Th style={{ whiteSpace: 'nowrap' }}>Per Asset</Th>
                 <Th>
                   <Flex alignItems="center">
                     <Icon name="lock" color="solid.gray0" size={10} />
-                    <Text mx="5px">In Use</Text>
+                    <Text mx="5px" style={{ whiteSpace: 'nowrap' }}>
+                      In Use
+                    </Text>
                     <Icon name="circle-question-mark" color="solid.gray2" size={16} />
                   </Flex>
                 </Th>
@@ -75,7 +79,7 @@ const LockedLiquidity: React.FC = () => {
                 },
               }}
             >
-              <Row />
+              <Row ethLiquidity={ethLiquidity} />
             </Tbody>
           </Table>
         </GridItem>
