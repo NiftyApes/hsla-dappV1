@@ -1,6 +1,7 @@
 import NFTCard from 'components/molecules/NFTCard';
 import { Contract, ethers } from 'ethers';
 import NFTNoOfferCard from 'components/molecules/NFTNoOfferCard';
+
 import { useLoanAuction } from 'hooks/useLoanAuction';
 import { useLoanOffersForNFT } from 'hooks/useLoanOffersForNFT';
 import { formatEther } from '@ethersproject/units';

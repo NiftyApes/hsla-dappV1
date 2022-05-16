@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, BoxProps, Button, SimpleGrid } from '@chakra-ui/react';
+import { Box, BoxProps, Button, Flex } from '@chakra-ui/react';
 import { useConnectWallet } from '@web3-onboard/react';
 
 import { LocalhostContent } from './LocalWalletNFTs';
@@ -31,17 +31,14 @@ const Content: React.FC<Props> = ({ isSidebarOpen, showSidebar, ...restProps }) 
     chainId === '0x1' ? <MainnetContent /> : chainId === '0x7a69' ? <LocalhostContent /> : null;
 
   return (
-    <Box {...restProps}>
+    <Flex {...restProps}>
       {!isSidebarOpen && (
         <Button variant="primary" color="solid.gray0" onClick={showSidebar} borderRadius="9px">
           <Icon name="sliders" />
         </Button>
       )}
-
-      <SimpleGrid columns={3} spacing={10} style={{ padding: '16px' }}>
-        {NFTs}
-      </SimpleGrid>
-    </Box>
+      <Box>{NFTs}</Box>
+    </Flex>
   );
 };
 
