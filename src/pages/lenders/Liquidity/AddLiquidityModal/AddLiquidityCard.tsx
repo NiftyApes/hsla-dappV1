@@ -1,8 +1,30 @@
 import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
-import React from 'react';
+import LoadingIndicator from 'components/atoms/LoadingIndicator';
+import { useDepositEthLiquidity } from 'hooks/useDepositEthLiquidity';
+import { useWalletBalance } from 'hooks/useWalletBalance';
+import React, { useState } from 'react';
 
 const AddLiquidityCard: React.FC = () => {
+  const [amtToDeposit, setAmtToDeposit] = useState<string>();
+
+  const ethInWallet = useWalletBalance();
+
+  const { depositETHLiquidity: depositEthLiquidity, ethLiquidity } = useDepositEthLiquidity();
+
+  const [depositEthLiquidityStatus, setDepositEthLiquidityStatus] = useState<string>('READY');
+
+  const newEthLiquidityStrWithAtLeast2Decimals =
+    ethLiquidity &&
+    amtToDeposit &&
+    (Number(ethLiquidity) + Number(amtToDeposit)).toFixed(
+      Math.max(
+        2,
+        (ethLiquidity.split('.')[1] && ethLiquidity.split('.')[1].length) || 0,
+        (amtToDeposit.split('.')[1] && amtToDeposit.split('.')[1].length) || 0,
+      ),
+    );
+
   return (
     <Box
       boxShadow="0px 0px 21px 0px #3A00831A"
@@ -14,12 +36,15 @@ const AddLiquidityCard: React.FC = () => {
     >
       <Flex>
         <Input
-          defaultValue="00.00"
+          placeholder="0"
+          value={amtToDeposit}
+          onChange={(e) => setAmtToDeposit(e.target.value)}
           bg="accents.100"
           border="none"
           p="16px"
           fontSize="3.5xl"
           h="100%"
+          disabled={depositEthLiquidityStatus !== 'READY'}
         />
         <Button
           variant="neutralReverse"
@@ -28,8 +53,33 @@ const AddLiquidityCard: React.FC = () => {
           ml="8px"
           h="66px"
           px="36px"
+          disabled={
+            depositEthLiquidityStatus !== 'READY' ||
+            (ethInWallet !== undefined && ethInWallet < Number(amtToDeposit))
+          }
+          onClick={() =>
+            depositEthLiquidity &&
+            amtToDeposit &&
+            depositEthLiquidity({
+              ethToDeposit: amtToDeposit,
+              onPending: () => setDepositEthLiquidityStatus('PENDING'),
+              onSuccess: () => {
+                setAmtToDeposit('');
+                setDepositEthLiquidityStatus('SUCCESS');
+                setTimeout(() => {
+                  setDepositEthLiquidityStatus('READY');
+                }, 1000);
+              },
+              onError: (e: any) => alert(e),
+            })
+          }
         >
-          LOCK LIQUIDITY
+          LOCK LIQUIDITY{' '}
+          {depositEthLiquidityStatus === 'PENDING' ? (
+            <span style={{ paddingLeft: '8px' }}>
+              <LoadingIndicator size="xs" />
+            </span>
+          ) : null}
         </Button>
       </Flex>
       <Flex
@@ -50,11 +100,15 @@ const AddLiquidityCard: React.FC = () => {
       >
         <Box>
           <Text>NiftyApes Protocol Balance</Text>
-          <Text>~340.356..Ξ</Text>
+          <Text>{ethLiquidity}</Text>
         </Box>
         <Box>
           <Text>Balance After Deposit</Text>
-          <Text>340.856..Ξ</Text>
+          <Text
+            style={{ color: Number(ethLiquidity) - Number(amtToDeposit) < 0 ? 'red' : 'black' }}
+          >
+            {ethLiquidity && amtToDeposit ? newEthLiquidityStrWithAtLeast2Decimals : ethLiquidity}
+          </Text>
         </Box>
         <Box>
           <Flex alignItems="center">

@@ -5,7 +5,11 @@ import React from 'react';
 import AddLiquidityModal from '../AddLiquidityModal';
 import WithdrawLiquidityModal from '../WithdrawLiquidityModal';
 
-const Row: React.FC = () => {
+interface RowProps {
+  ethLiquidity?: string;
+}
+
+const Row: React.FC<RowProps> = ({ ethLiquidity }) => {
   const {
     isOpen: isAddLiquidityModalOpen,
     onOpen: onAddLiqudityModalOpen,
@@ -32,7 +36,7 @@ const Row: React.FC = () => {
           <Flex alignItems="center">
             <CryptoIcon symbol="eth" size={25} />
             <Text fontSize="xl" ml="8px">
-              340.352..Ξ
+              {ethLiquidity}
             </Text>
           </Flex>
         </Td>
@@ -49,7 +53,7 @@ const Row: React.FC = () => {
               <Icon name="lock" size={14} color="solid.white" />
             </Flex>
             <Text fontSize="xl" ml="8px">
-              20.22Ξ
+              tbd
             </Text>
           </Flex>
         </Td>

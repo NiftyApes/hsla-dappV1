@@ -38,12 +38,26 @@ export const useERC721ApprovalForAll = ({
   return {
     hasApprovalForAll,
     hasCheckedApproval,
-    grantApprovalForAll: async ({ onTxSubmitted, onTxMined, onError }: any) => {
+    grantApprovalForAll: async ({
+      onTxSubmitted,
+      onTxMined,
+      onPending,
+      onSuccess,
+      onError,
+    }: {
+      onTxSubmitted?: any;
+      onTxMined?: any;
+      onPending?: any;
+      onSuccess?: any;
+      onError?: any;
+    }) => {
+      onPending && onPending();
       try {
         const tx = await contract?.setApprovalForAll(operator, true);
-        onTxSubmitted(tx);
+        onTxSubmitted && onTxSubmitted(tx);
         const receipt = await tx.wait();
-        onTxMined(receipt);
+        onTxMined && onTxMined(receipt);
+        onSuccess && onSuccess();
       } catch (e) {
         if (onError) {
           onError(e);
@@ -53,12 +67,26 @@ export const useERC721ApprovalForAll = ({
       }
       dispatch(increment());
     },
-    revokeApprovalForAll: async ({ onTxSubmitted, onTxMined, onError }: any) => {
+    revokeApprovalForAll: async ({
+      onTxSubmitted,
+      onTxMined,
+      onPending,
+      onSuccess,
+      onError,
+    }: {
+      onTxSubmitted?: any;
+      onTxMined?: any;
+      onPending?: any;
+      onSuccess?: any;
+      onError?: any;
+    }) => {
+      onPending && onPending();
       try {
         const tx = await contract?.setApprovalForAll(operator, false);
-        onTxSubmitted(tx);
+        onTxSubmitted && onTxSubmitted(tx);
         const receipt = await tx.wait();
-        onTxMined(receipt);
+        onTxMined && onTxMined(receipt);
+        onSuccess && onSuccess();
       } catch (e) {
         if (onError) {
           onError(e);
