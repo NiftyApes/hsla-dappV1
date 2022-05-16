@@ -43,8 +43,8 @@ const AddLiquidityCard: React.FC = () => {
             depositEthLiquidity &&
             depositEthLiquidity({
               ethToDeposit: amtToDeposit,
-              onTxSubmitted: () => setDepositEthLiquidityStatus('PENDING'),
-              onTxMined: () => {
+              onPending: () => setDepositEthLiquidityStatus('PENDING'),
+              onSuccess: () => {
                 setDepositEthLiquidityStatus('SUCCESS');
                 setTimeout(() => {
                   setDepositEthLiquidityStatus('READY');

@@ -42,8 +42,8 @@ const WithdrawLiquidityCard: React.FC = () => {
             withdrawETHLiquidity &&
             withdrawETHLiquidity({
               ethToWithdraw: amtToWithdraw,
-              onTxSubmitted: () => setWithdrawEthLiquidityStatus('PENDING'),
-              onTxMined: () => {
+              onPending: () => setWithdrawEthLiquidityStatus('PENDING'),
+              onSuccess: () => {
                 setWithdrawEthLiquidityStatus('SUCCESS');
                 setTimeout(() => {
                   setWithdrawEthLiquidityStatus('READY');

@@ -39,35 +39,41 @@ export const useWithdrawEthLiquidity = () => {
     getETHLiquidity();
   }, [address, niftyApesContract, cacheCounter]);
 
-  if (!niftyApesContract) {
-    return {
-      executeLoanByBorrower: undefined,
-    };
-  }
-
   return {
     withdrawETHLiquidity: async ({
       ethToWithdraw,
       onTxSubmitted,
       onTxMined,
+      onPending,
+      onSuccess,
       onError,
     }: {
       ethToWithdraw: string;
-      onTxSubmitted: any;
-      onTxMined: any;
-      onError: any;
+      onTxSubmitted?: any;
+      onTxMined?: any;
+      onPending?: any;
+      onSuccess?: any;
+      onError?: any;
     }) => {
       if (isNaN(Number(ethToWithdraw))) {
-        throw Error('Need to supply a numeric value for ETH quantity');
+        alert('Need to supply a numeric value for ETH quantity');
+        return;
       }
+
+      onPending && onPending();
 
       try {
         const tx = await niftyApesContract.withdrawEth(ethers.utils.parseEther(ethToWithdraw));
-        onTxSubmitted(tx);
+        onTxSubmitted && onTxSubmitted(tx);
         const receipt = await tx.wait();
-        onTxMined(receipt);
+        onTxMined && onTxMined(receipt);
+        onSuccess && onSuccess();
       } catch (e) {
-        onError(e);
+        if (onError) {
+          onError(e);
+        } else {
+          alert(e);
+        }
       }
 
       dispatch(increment());

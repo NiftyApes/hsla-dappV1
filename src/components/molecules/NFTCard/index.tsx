@@ -156,8 +156,8 @@ const NFTCard: React.FC<Props> = ({
             <Button
               onClick={async () =>
                 await grantApprovalForAll({
-                  onTxSubmitted: () => setApprovalTxStatus('PENDING'),
-                  onTxMined: () => {
+                  onPending: () => setApprovalTxStatus('PENDING'),
+                  onSuccess: () => {
                     setApprovalTxStatus('SUCCESS');
                     setTimeout(() => setApprovalTxStatus('READY'), 1000);
                   },
