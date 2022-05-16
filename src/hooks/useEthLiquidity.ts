@@ -18,7 +18,7 @@ export const useEthLiquidity = () => {
 
   useEffect(() => {
     async function getETHLiquidity() {
-      if (!address || !niftyApesContract) {
+      if (!address || !niftyApesContract || !cETHContract) {
         return;
       }
 
@@ -35,7 +35,7 @@ export const useEthLiquidity = () => {
     }
 
     getETHLiquidity();
-  }, [address, niftyApesContract, cacheCounter]);
+  }, [address, niftyApesContract, cETHContract, cacheCounter]);
 
   return {
     ethLiquidity,
