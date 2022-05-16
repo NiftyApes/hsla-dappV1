@@ -31,7 +31,7 @@ export const useEthLiquidity = () => {
       const liquidityInEth =
         Number(ethers.utils.formatEther(result)) * Number(ethers.utils.formatEther(exchangeRate));
 
-      setEthLiquidity(liquidityInEth.toFixed(2));
+      setEthLiquidity(String(Number(liquidityInEth.toFixed(5))));
     }
 
     getETHLiquidity();
