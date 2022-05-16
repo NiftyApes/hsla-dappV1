@@ -5,11 +5,22 @@ import { useWithdrawEthLiquidity } from 'hooks/useWithdrawEthLiquidity';
 import React, { useState } from 'react';
 
 const WithdrawLiquidityCard: React.FC = () => {
-  const [amtToWithdraw, setAmtToWithdraw] = useState('0');
+  const [amtToWithdraw, setAmtToWithdraw] = useState<string>();
 
   const { withdrawETHLiquidity, ethLiquidity } = useWithdrawEthLiquidity();
 
   const [withdrawEthLiquidityStatus, setWithdrawEthLiquidityStatus] = useState<string>('READY');
+
+  const newEthLiquidityStrWithAtLeast2Decimals =
+    ethLiquidity &&
+    amtToWithdraw &&
+    (Number(ethLiquidity) - Number(amtToWithdraw)).toFixed(
+      Math.max(
+        2,
+        (ethLiquidity.split('.')[1] && ethLiquidity.split('.')[1].length) || 0,
+        (amtToWithdraw.split('.')[1] && amtToWithdraw.split('.')[1].length) || 0,
+      ),
+    );
 
   return (
     <Box
@@ -22,6 +33,7 @@ const WithdrawLiquidityCard: React.FC = () => {
     >
       <Flex>
         <Input
+          placeholder="0"
           value={amtToWithdraw}
           onChange={(e) => setAmtToWithdraw(e.target.value)}
           bg="accents.100"
@@ -37,9 +49,13 @@ const WithdrawLiquidityCard: React.FC = () => {
           ml="8px"
           h="66px"
           px="36px"
-          disabled={withdrawEthLiquidityStatus !== 'READY'}
+          disabled={
+            withdrawEthLiquidityStatus !== 'READY' ||
+            Number(ethLiquidity) - Number(amtToWithdraw) < 0
+          }
           onClick={() =>
             withdrawETHLiquidity &&
+            amtToWithdraw &&
             withdrawETHLiquidity({
               ethToWithdraw: amtToWithdraw,
               onPending: () => setWithdrawEthLiquidityStatus('PENDING'),
@@ -47,7 +63,7 @@ const WithdrawLiquidityCard: React.FC = () => {
                 setWithdrawEthLiquidityStatus('SUCCESS');
                 setTimeout(() => {
                   setWithdrawEthLiquidityStatus('READY');
-                  setAmtToWithdraw('0');
+                  setAmtToWithdraw('');
                 }, 1000);
               },
               onError: (e: any) => alert(e),
@@ -84,14 +100,10 @@ const WithdrawLiquidityCard: React.FC = () => {
         </Box>
         <Box>
           <Text>Balance After Deposit</Text>
-          <Text>
-            {ethLiquidity &&
-              (Number(ethLiquidity) - Number(amtToWithdraw)).toFixed(
-                Math.max(
-                  2,
-                  (amtToWithdraw.split('.')[1] && amtToWithdraw.split('.')[1].length) || 0,
-                ),
-              )}
+          <Text
+            style={{ color: Number(ethLiquidity) - Number(amtToWithdraw) < 0 ? 'red' : 'black' }}
+          >
+            {ethLiquidity && amtToWithdraw ? newEthLiquidityStrWithAtLeast2Decimals : ethLiquidity}
           </Text>
         </Box>
         <Box>

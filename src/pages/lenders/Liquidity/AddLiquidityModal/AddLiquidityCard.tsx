@@ -2,14 +2,28 @@ import { Box, Button, Flex, Input, Text } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { useDepositEthLiquidity } from 'hooks/useDepositEthLiquidity';
+import { useWalletBalance } from 'hooks/useWalletBalance';
 import React, { useState } from 'react';
 
 const AddLiquidityCard: React.FC = () => {
-  const [amtToDeposit, setAmtToDeposit] = useState('0');
+  const [amtToDeposit, setAmtToDeposit] = useState<string>();
+
+  const ethInWallet = useWalletBalance();
 
   const { depositETHLiquidity: depositEthLiquidity, ethLiquidity } = useDepositEthLiquidity();
 
   const [depositEthLiquidityStatus, setDepositEthLiquidityStatus] = useState<string>('READY');
+
+  const newEthLiquidityStrWithAtLeast2Decimals =
+    ethLiquidity &&
+    amtToDeposit &&
+    (Number(ethLiquidity) + Number(amtToDeposit)).toFixed(
+      Math.max(
+        2,
+        (ethLiquidity.split('.')[1] && ethLiquidity.split('.')[1].length) || 0,
+        (amtToDeposit.split('.')[1] && amtToDeposit.split('.')[1].length) || 0,
+      ),
+    );
 
   return (
     <Box
@@ -22,6 +36,7 @@ const AddLiquidityCard: React.FC = () => {
     >
       <Flex>
         <Input
+          placeholder="0"
           value={amtToDeposit}
           onChange={(e) => setAmtToDeposit(e.target.value)}
           bg="accents.100"
@@ -38,9 +53,13 @@ const AddLiquidityCard: React.FC = () => {
           ml="8px"
           h="66px"
           px="36px"
-          disabled={depositEthLiquidityStatus !== 'READY'}
+          disabled={
+            depositEthLiquidityStatus !== 'READY' ||
+            (ethInWallet !== undefined && ethInWallet < Number(amtToDeposit))
+          }
           onClick={() =>
             depositEthLiquidity &&
+            amtToDeposit &&
             depositEthLiquidity({
               ethToDeposit: amtToDeposit,
               onPending: () => setDepositEthLiquidityStatus('PENDING'),
@@ -48,7 +67,7 @@ const AddLiquidityCard: React.FC = () => {
                 setDepositEthLiquidityStatus('SUCCESS');
                 setTimeout(() => {
                   setDepositEthLiquidityStatus('READY');
-                  setAmtToDeposit('0');
+                  setAmtToDeposit('');
                 }, 1000);
               },
               onError: (e: any) => alert(e),
@@ -85,11 +104,10 @@ const AddLiquidityCard: React.FC = () => {
         </Box>
         <Box>
           <Text>Balance After Deposit</Text>
-          <Text>
-            {ethLiquidity &&
-              (Number(ethLiquidity) + Number(amtToDeposit)).toFixed(
-                Math.max(2, (amtToDeposit.split('.')[1] && amtToDeposit.split('.')[1].length) || 0),
-              )}
+          <Text
+            style={{ color: Number(ethLiquidity) - Number(amtToDeposit) < 0 ? 'red' : 'black' }}
+          >
+            {ethLiquidity && amtToDeposit ? newEthLiquidityStrWithAtLeast2Decimals : ethLiquidity}
           </Text>
         </Box>
         <Box>
