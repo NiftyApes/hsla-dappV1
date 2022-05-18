@@ -67,7 +67,7 @@ const WithdrawLiquidityCard: React.FC = () => {
                   setWithdrawEthLiquidityStatus('READY');
                 }, 1000);
               },
-              onError: (e: any) => alert(e),
+              onError: (e: any) => alert(e.message),
             })
           }
         >

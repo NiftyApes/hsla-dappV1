@@ -58,11 +58,11 @@ export const useERC721ApprovalForAll = ({
         const receipt = await tx.wait();
         onTxMined && onTxMined(receipt);
         onSuccess && onSuccess();
-      } catch (e) {
+      } catch (e: any) {
         if (onError) {
           onError(e);
         } else {
-          alert(e);
+          alert(e.message);
         }
       }
       dispatch(increment());
@@ -87,11 +87,11 @@ export const useERC721ApprovalForAll = ({
         const receipt = await tx.wait();
         onTxMined && onTxMined(receipt);
         onSuccess && onSuccess();
-      } catch (e) {
+      } catch (e: any) {
         if (onError) {
           onError(e);
         } else {
-          alert(e);
+          alert(e.message);
         }
       }
       dispatch(increment());

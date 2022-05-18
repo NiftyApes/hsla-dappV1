@@ -7,6 +7,7 @@ import Icon from 'components/atoms/Icon';
 import MarketData from './MarketData';
 import OfferBook from './OfferBook';
 import CreateCollectionOffer from './CreateCollectionOffer';
+import YourCollectibleJSON from '../../../../generated/deployments/localhost/YourCollectible.json';
 
 const CollectionDetailsModal: React.FC<Omit<ModalProps, 'children'>> = ({
   onClose,
@@ -47,7 +48,7 @@ const CollectionDetailsModal: React.FC<Omit<ModalProps, 'children'>> = ({
           <Text fontWeight="bold" color="solid.gray0" mb="16px">
             CREATE COLLECTION OFFER
           </Text>
-          <CreateCollectionOffer />
+          <CreateCollectionOffer nftContractAddress={YourCollectibleJSON.address} />
         </GridItem>
       </Grid>
     </Modal>

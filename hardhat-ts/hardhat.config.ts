@@ -401,17 +401,12 @@ task('create-offer', 'Create offer')
 
     const { nftId, creator, interestRatePerSecond, amount, duration, expiration, floorTerm, nftContractAddress } = offerObj;
 
-    await saveOfferInDb({
-      nftId,
-      creator,
-      interestRatePerSecond,
-      amount,
-      duration,
-      expiration,
-      floorTerm,
-      nftContractAddress,
+    const result = await saveOfferInDb({
+      offerObj: { nftId, creator, interestRatePerSecond, amount, duration, expiration, floorTerm, nftContractAddress },
       offerHash: receipt.events[1].args.offerHash,
     });
+
+    console.log(await result.json());
 
     console.log('Contract address: ', NiftyApesDeploymentJSON.address);
     console.log('Nft ID: ', offer.nftId);
