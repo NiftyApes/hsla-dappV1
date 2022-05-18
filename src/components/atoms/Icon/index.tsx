@@ -17,6 +17,9 @@ import { ReactComponent as OS } from './assets/os.svg';
 import { ReactComponent as Lock } from './assets/lock.svg';
 import { ReactComponent as CircleQuestionMark } from './assets/circle-question-mark.svg';
 import { ReactComponent as ArrowRight } from './assets/arrow-right.svg';
+import { ReactComponent as Alert } from './assets/alert.svg';
+import { ReactComponent as Update } from './assets/update.svg';
+import { ReactComponent as Mail } from './assets/mail.svg';
 
 export const IconMap = {
   menu: Menu,
@@ -35,6 +38,9 @@ export const IconMap = {
   os: OS,
   lock: Lock,
   'circle-question-mark': CircleQuestionMark,
+  alert: Alert,
+  update: Update,
+  mail: Mail,
 };
 
 interface Props extends BoxProps {
