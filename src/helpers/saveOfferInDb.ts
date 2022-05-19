@@ -1,5 +1,3 @@
-import fetch from 'cross-fetch';
-
 export async function saveOfferInDb({
   offerObj,
   offerHash,
@@ -16,9 +14,18 @@ export async function saveOfferInDb({
   };
   offerHash: string;
 }) {
-  const { nftId, creator, interestRatePerSecond, amount, duration, expiration, floorTerm, nftContractAddress } = offerObj;
+  const {
+    nftId,
+    creator,
+    interestRatePerSecond,
+    amount,
+    duration,
+    expiration,
+    floorTerm,
+    nftContractAddress,
+  } = offerObj;
 
-  return await fetch(`https://qqxeqsrt39.execute-api.us-west-2.amazonaws.com/DEV/api/offers`, {
+  await fetch(`https://qqxeqsrt39.execute-api.us-west-2.amazonaws.com/DEV/api/offers`, {
     method: 'POST',
     body: JSON.stringify({
       nftId,

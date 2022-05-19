@@ -70,7 +70,7 @@ const AddLiquidityCard: React.FC = () => {
                   setDepositEthLiquidityStatus('READY');
                 }, 1000);
               },
-              onError: (e: any) => alert(e),
+              onError: (e: any) => alert(e.message),
             })
           }
         >

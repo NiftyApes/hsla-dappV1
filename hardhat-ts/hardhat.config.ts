@@ -372,7 +372,8 @@ task('create-offer', 'Create offer')
     const tx = await niftyApes.createOffer({
       creator: '0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266',
       nftContractAddress: YourCollectibleDeploymentJSON.address,
-      interestRatePerSecond: 3,
+      // 50% APR
+      interestRatePerSecond: Math.round((((50 / 100) * 1) / (365 * 24 * 60 * 60)) * 1e18),
       fixedTerms: true,
       floorTerm: false,
       lenderOffer: true,
@@ -401,17 +402,12 @@ task('create-offer', 'Create offer')
 
     const { nftId, creator, interestRatePerSecond, amount, duration, expiration, floorTerm, nftContractAddress } = offerObj;
 
-    await saveOfferInDb({
-      nftId,
-      creator,
-      interestRatePerSecond,
-      amount,
-      duration,
-      expiration,
-      floorTerm,
-      nftContractAddress,
+    const result = await saveOfferInDb({
+      offerObj: { nftId, creator, interestRatePerSecond, amount, duration, expiration, floorTerm, nftContractAddress },
       offerHash: receipt.events[1].args.offerHash,
     });
+
+    console.log(await result.json());
 
     console.log('Contract address: ', NiftyApesDeploymentJSON.address);
     console.log('Nft ID: ', offer.nftId);
