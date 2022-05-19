@@ -48,9 +48,9 @@ export const useCreateCollectionOffer = ({
           nftContractAddress,
           // TODO make sure this is right
           interestRatePerSecond: Math.round(
-            ((aprInPercent * amount) / (365 * 24 * 60 * 60)) * 10e18,
+            ((aprInPercent / 100) * (amount * 1e18)) / (365 * 24 * 60 * 60),
           ),
-          nftId: '1',
+          nftId: 0,
           fixedTerms: true,
           floorTerm: true,
           lenderOffer: true,

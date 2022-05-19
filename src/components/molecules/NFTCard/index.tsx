@@ -26,6 +26,7 @@ interface Props {
   };
   img: string;
   numberOfOffers: number;
+  floorTerm: boolean;
 }
 
 export const NFT_CARD_WIDTH = 264;
@@ -39,6 +40,7 @@ const NFTCard: React.FC<Props> = ({
   offer,
   img,
   numberOfOffers,
+  floorTerm,
 }) => {
   const niftyApesContractAddress = useNiftyApesContractAddress();
 
@@ -53,7 +55,7 @@ const NFTCard: React.FC<Props> = ({
     nftContractAddress: contract?.address,
     nftId: id,
     offerHash,
-    floorTerm: false,
+    floorTerm,
   });
 
   return (

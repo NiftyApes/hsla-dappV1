@@ -73,9 +73,15 @@ export const NFTCardContainer = ({ contract, item }: { contract?: Contract; item
         type: 'top',
         price: Number(ethers.utils.formatEther(loanOffer.amount)),
         symbol: 'eth',
-        aprPercentage: Number((loanOffer.interestRatePerSecond * 365 * 24 * 60 * 60).toFixed(2)),
+        // TODO: double check
+        aprPercentage: Number(
+          Number(
+            ((loanOffer.interestRatePerSecond * (365 * 24 * 60 * 60)) / loanOffer.amount) * 100,
+          ).toFixed(2),
+        ),
         days: Number(((loanOffer.expiration - Date.now() / 1000) / (24 * 60 * 60)).toFixed(2)),
       }}
+      floorTerm={loanOffer.floorTerm}
       numberOfOffers={loanOffers.length}
       key={item.id.toNumber()}
       collectionName=""

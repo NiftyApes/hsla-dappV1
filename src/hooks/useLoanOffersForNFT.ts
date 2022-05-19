@@ -31,18 +31,19 @@ export const useLoanOffersForNFT = ({
 
       const json = await result.json();
 
-      const processedOffers = json.Items.filter((item: any) => item.OfferTerms.NftId == nftId).map(
-        (item: any) => {
-          return {
-            offer: {
-              amount: BigNumber.from(String(item.OfferTerms.Amount)),
-              expiration: Number(item.OfferTerms.Expiration),
-              interestRatePerSecond: item.OfferTerms.InterestRatePerSecond,
-            },
-            offerHash: item.OfferHash,
-          };
-        },
-      );
+      const processedOffers = json.Items.filter(
+        (item: any) => item.OfferTerms.NftId == nftId || item.OfferTerms.FloorTerm,
+      ).map((item: any) => {
+        return {
+          offer: {
+            amount: BigNumber.from(String(item.OfferTerms.Amount)),
+            expiration: Number(item.OfferTerms.Expiration),
+            interestRatePerSecond: item.OfferTerms.InterestRatePerSecond,
+            floorTerm: item.OfferTerms.FloorTerm,
+          },
+          offerHash: item.OfferHash,
+        };
+      });
 
       console.log('processedOffers', processedOffers);
 
@@ -59,6 +60,7 @@ export const useLoanOffersForNFT = ({
           nftContractAddress,
           nftId,
           offerHash,
+          floorTerm: processedOffers[i].offer.floorTerm,
         });
 
         console.log('offerFromChain', offerFromChain);
