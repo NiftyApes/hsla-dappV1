@@ -104,9 +104,7 @@ const AddLiquidityCard: React.FC = () => {
         </Box>
         <Box>
           <Text>Balance After Deposit</Text>
-          <Text
-            style={{ color: Number(ethLiquidity) - Number(amtToDeposit) < 0 ? 'red' : 'black' }}
-          >
+          <Text style={{ color: Number(ethInWallet) - Number(amtToDeposit) < 0 ? 'red' : 'black' }}>
             {ethLiquidity && amtToDeposit ? newEthLiquidityStrWithAtLeast2Decimals : ethLiquidity}
           </Text>
         </Box>
