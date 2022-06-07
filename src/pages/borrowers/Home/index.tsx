@@ -36,6 +36,7 @@ const Borrowers: React.FC = () => {
         position="absolute"
         // transition={`all ${SIDEBAR_TRANSITION_TIME}`}
         left={isVisible() ? FILTER_SIDEBAR_WIDTH : 0}
+        right={0}
         isSidebarOpen={isVisible()}
         showSidebar={toggleVisibility}
       />

@@ -36,7 +36,7 @@ export const LocalhostContent: React.FC = () => {
     <>
       <SectionHeader headerText="NFTs with Offers"></SectionHeader>
       {console.log('logging', { walletNfts })}
-      <SimpleGrid columns={3} spacing={10} style={{ padding: '16px' }}>
+      <SimpleGrid minChildWidth="200px" spacing={10} style={{ padding: '16px' }}>
         {walletNfts?.map((item: any) => (
           <NFTCardContainer contract={scaffoldEthNFTContract} item={item} key={item.id} />
         ))}

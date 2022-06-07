@@ -18,6 +18,10 @@ const theme = extendTheme({
   colors,
   components,
   config,
+  fonts: {
+    heading: `'Mulish', sans-serif`,
+    body: `'Mulish', sans-serif`,
+  },
   fontSizes,
   fontWeights,
   styles,
