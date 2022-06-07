@@ -64,3 +64,10 @@ Make sure you've added a local network to Metamask.
 If the local chain isn't processing transactions and giving you a "Known transaction" message, try resetting Metamask: Settings > Advanced > Reset Account.
 
 If the local chain is giving you an error like "Received invalid block tag 14724346. Latest block number is 14724009" (with different block numbers), try resetting Metamask: Settings > Advanced > Reset Account.
+
+Add the following lines to `~/.huskyrc`:
+
+```shell
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+```
