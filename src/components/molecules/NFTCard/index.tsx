@@ -61,7 +61,7 @@ const NFTCard: React.FC<Props> = ({
   return (
     <>
       <Flex
-        w={NFT_CARD_WIDTH}
+        // w={NFT_CARD_WIDTH}
         alignItems="center"
         flexDir="column"
         bg="solid.white"

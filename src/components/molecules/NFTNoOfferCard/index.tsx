@@ -29,7 +29,7 @@ const NFTNoOfferCard: React.FC<Props> = ({ contract, collectionName, tokenName, 
       flexDir="column"
       p="17px 15px 10px 15px"
       fontWeight="bold"
-      w="200px"
+      // w="200px"
       boxShadow="0px 4px 24px rgba(73, 16, 146, 0.1)"
       borderRadius="15px"
     >

@@ -37,7 +37,7 @@ const Content: React.FC<Props> = ({ isSidebarOpen, showSidebar, ...restProps }) 
           <Icon name="sliders" />
         </Button>
       )}
-      <Box>{NFTs}</Box>
+      <Box flexGrow={1}>{NFTs}</Box>
     </Flex>
   );
 };
