@@ -74,7 +74,7 @@ export async function getJson(params: FetchParams): Promise<JSON> {
     : json);
 }
 
-export type DynanmoDbResponse<T> = {
+export type DynamoDbResponse<T> = {
   Count: number;
   Items: Array<T>;
   ScannedCount: number;
@@ -83,9 +83,9 @@ export type DynanmoDbResponse<T> = {
 export async function getData<T>(
   params: FetchParams,
   instantiator?: (json: any) => T,
-): Promise<DynanmoDbResponse<T>> {
+): Promise<DynamoDbResponse<T>> {
   const json = (await getJson(params)) as unknown;
-  const response = json as DynanmoDbResponse<T>;
+  const response = json as DynamoDbResponse<T>;
 
   if (instantiator && response?.Items) {
     return {

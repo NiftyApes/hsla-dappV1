@@ -71,8 +71,6 @@ export const fetchLoanOffersByNFT = createAsyncThunk<FetchLoanOffersResponse, NF
             floorTerm: offer.OfferTerms.FloorTerm,
           });
 
-          return true;
-
           if (offerFromChain?.creator !== '0x0000000000000000000000000000000000000000') {
             return true;
           }

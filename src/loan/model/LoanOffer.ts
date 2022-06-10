@@ -1,5 +1,3 @@
-import { BigNumber } from 'ethers';
-
 export type OfferTerms = {
   NftId: string;
   FloorTerm: boolean;
