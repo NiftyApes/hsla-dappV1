@@ -34,6 +34,10 @@ export const useWithdrawEthLiquidity = () => {
 
       onPending && onPending();
 
+      if (!niftyApesContract) {
+        throw new Error('Contract is not defined');
+      }
+
       try {
         const tx = await niftyApesContract.withdrawEth(ethers.utils.parseEther(ethToWithdraw));
         onTxSubmitted && onTxSubmitted(tx);

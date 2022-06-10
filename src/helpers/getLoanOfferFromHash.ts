@@ -1,4 +1,4 @@
-import { Contract } from 'ethers';
+import { NiftyApesContract } from 'nft/model';
 
 export async function getLoanOfferFromHash({
   niftyApesContract,
@@ -7,9 +7,9 @@ export async function getLoanOfferFromHash({
   offerHash,
   floorTerm = false,
 }: {
-  niftyApesContract: Contract;
+  niftyApesContract: NiftyApesContract;
   nftContractAddress?: string;
-  nftId: number;
+  nftId: string;
   offerHash: string;
   floorTerm?: boolean;
 }) {

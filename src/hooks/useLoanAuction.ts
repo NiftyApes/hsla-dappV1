@@ -8,7 +8,7 @@ export const useLoanAuction = ({
   nftId,
 }: {
   nftContractAddress?: string;
-  nftId: number;
+  nftId: string;
 }) => {
   const niftyApesContract = useNiftyApesContract();
 
@@ -22,14 +22,14 @@ export const useLoanAuction = ({
     }
 
     async function getLoanOffer() {
-      if (!niftyApesContract) {
+      if (!niftyApesContract || !nftContractAddress) {
         return;
       }
 
       const result = await niftyApesContract.getLoanAuction(nftContractAddress, nftId);
       setLoanAuction(result);
     }
-  }, [niftyApesContract, nftContractAddress, cacheCounter]);
+  }, [niftyApesContract, nftContractAddress, nftId, cacheCounter]);
 
   return loanAuction;
 };

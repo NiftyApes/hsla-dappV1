@@ -32,6 +32,10 @@ export const useDepositEthLiquidity = () => {
         return;
       }
 
+      if (!niftyApesContract) {
+        throw new Error('Contract is not defined');
+      }
+
       onPending && onPending();
 
       try {
