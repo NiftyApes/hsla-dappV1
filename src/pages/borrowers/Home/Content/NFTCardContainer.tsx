@@ -1,42 +1,54 @@
-import NFTCard from 'components/molecules/NFTCard';
-import { Contract, ethers } from 'ethers';
-import NFTNoOfferCard from 'components/molecules/NFTNoOfferCard';
-
-import { useLoanAuction } from 'hooks/useLoanAuction';
-import { useLoanOffersForNFT } from 'hooks/useLoanOffersForNFT';
-import { formatEther } from '@ethersproject/units';
-import { useRepayLoanByBorrower } from 'hooks/useRepayLoan';
+/* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect } from 'react';
+import { useAppDispatch } from 'app/hooks';
+import { BigNumber, ethers } from 'ethers';
 import { Button } from '@chakra-ui/react';
+import { formatEther } from '@ethersproject/units';
 
-export const NFTCardContainer = ({ contract, item }: { contract?: Contract; item?: any }) => {
-  const loanOffers = useLoanOffersForNFT({
-    nftContractAddress: contract?.address,
-    nftId: item.id,
-  });
+import NFTCard from 'components/molecules/NFTCard';
+import { Contract, NFT } from 'nft/model';
+import NFTNoOfferCard from 'components/molecules/NFTNoOfferCard';
+import { useRepayLoanByBorrower } from 'hooks/useRepayLoan';
+import {
+  fetchLoanOffersByNFT,
+  fetchLoanAuctionByNFT,
+  useLoanOffersByNFT,
+  useLoanAuctionByNFT,
+} from 'loan';
 
-  const loanAuction = useLoanAuction({
-    nftContractAddress: contract?.address,
-    nftId: item.id,
-  });
+export const NFTCardContainer = ({ contract, item }: { contract: Contract; item: NFT }) => {
+  const dispatch = useAppDispatch();
+
+  const { content: loanOffers, fetching: loanOffersFetching } = useLoanOffersByNFT(item);
+
+  useEffect(() => {
+    if (!loanOffers && !loanOffersFetching) {
+      dispatch(fetchLoanOffersByNFT(item));
+    }
+  }, [item, loanOffersFetching]);
+
+  const { content: loanAuction, fetching: loanAuctionFetching } = useLoanAuctionByNFT(item);
+
+  useEffect(() => {
+    if (!loanOffers && !loanOffersFetching) {
+      dispatch(fetchLoanAuctionByNFT(item));
+    }
+  }, [item, loanAuctionFetching]);
 
   const { repayLoanByBorrower } = useRepayLoanByBorrower({
-    nftContractAddress: contract?.address,
+    nftContractAddress: contract.address,
     nftId: item.id,
   });
 
-  if (!contract || !item || !loanOffers) {
-    return null;
-  }
-
-  if (!loanOffers) {
+  if (!loanOffers || loanOffersFetching) {
     return <div>Loading...</div>;
   }
 
-  if (loanAuction && loanAuction[0] !== '0x0000000000000000000000000000000000000000') {
+  if (loanAuction && loanAuction.nftOwner !== '0x0000000000000000000000000000000000000000') {
     return (
       <div>
         <strong>
-          {item.name} #{item.id.toNumber()}
+          {item.name} #{item.id}
         </strong>
         <div>Amount: {formatEther(loanAuction?.amount)} ETH</div>
         <div>Amount Drawn: {formatEther(loanAuction?.amountDrawn)} ETH</div>
@@ -47,43 +59,38 @@ export const NFTCardContainer = ({ contract, item }: { contract?: Contract; item
     );
   }
 
-  if (loanOffers?.length === 0) {
+  if (loanOffers.length === 0) {
     return (
       <NFTNoOfferCard
         contract={contract}
-        key={item.id.toNumber()}
+        key={item.id}
         collectionName=""
         tokenName={`${item.name}`}
-        id={`${item.id.toNumber()}`}
+        id={item.id}
         img={item.image}
       />
     );
   }
 
   // TODO: Show loan offer with best terms
-  const loanOffer = loanOffers[0].offer;
-  const offerHash = loanOffers[0].offerHash;
+  const offer = loanOffers[0];
+  const offerAmount = BigNumber.from(String(offer.OfferTerms.Amount));
 
   return (
     <NFTCard
       contract={contract}
-      id={`${item.id.toNumber()}`}
-      offerHash={offerHash}
+      id={`${item.id}`}
+      offerHash={offer.OfferHash}
       offer={{
         type: 'top',
-        price: Number(ethers.utils.formatEther(loanOffer.amount)),
+        price: Number(ethers.utils.formatEther(offerAmount)),
         symbol: 'eth',
-        // TODO: double check
-        aprPercentage: Number(
-          Number(
-            ((loanOffer.interestRatePerSecond * (365 * 24 * 60 * 60)) / loanOffer.amount) * 100,
-          ).toFixed(2),
-        ),
-        days: Number(((loanOffer.expiration - Date.now() / 1000) / (24 * 60 * 60)).toFixed(2)),
+        aprPercentage: offer.aprPercentage,
+        days: offer.days,
       }}
-      floorTerm={loanOffer.floorTerm}
+      floorTerm={offer.OfferTerms.FloorTerm}
       numberOfOffers={loanOffers.length}
-      key={item.id.toNumber()}
+      key={item.id}
       collectionName=""
       tokenName={`${item.name}`}
       img={item.image}

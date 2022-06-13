@@ -1,44 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import { useConnectWallet } from '@web3-onboard/react';
-import { useLocalScaffoldEthNFTContract } from '../../../../hooks/useLocalScaffoldEthNFTContract';
-import { useSlowWayToGetNFTsOfAddress } from '../../../../hooks/useSlowWayToGetNFTsOfAddress';
-import { NFTCardContainer } from './NFTCardContainer';
+import React, { useEffect } from 'react';
 import { SimpleGrid } from '@chakra-ui/react';
-
+import { fetchNFTsByWalletAddress, useNFTsByWalletAddress } from 'nft/state/nfts.slice';
+import { useAppDispatch } from 'app/hooks';
+import { useLocalScaffoldEthNFTContract } from 'hooks/useLocalScaffoldEthNFTContract';
+import { NFTCardContainer } from './NFTCardContainer';
 import SectionHeader from 'components/molecules/SectionHeader';
+import { useWalletAddress } from 'hooks/useWalletAddress';
+import { useChainId } from 'hooks/useChainId';
 
 export const LocalhostContent: React.FC = () => {
-  const [{ wallet }] = useConnectWallet();
-
-  const [walletNfts, setWalletNfts] = useState<any>();
-
-  const scaffoldEthNFTContract = useLocalScaffoldEthNFTContract();
-  const scaffoldEthNFTs = useSlowWayToGetNFTsOfAddress({
-    address: wallet?.accounts[0].address,
-    contract: scaffoldEthNFTContract,
-  });
-  const [hasLoadedScaffoldEthFTs, setHasLoadedScaffoldEthNFTs] = useState(false);
+  const dispatch = useAppDispatch();
+  const walletAddress = useWalletAddress();
+  const chainId = useChainId();
+  const contract = useLocalScaffoldEthNFTContract();
+  const nfts = useNFTsByWalletAddress(walletAddress || '');
 
   useEffect(() => {
-    async function processScaffoldEthNFTsAndAddToState() {
-      if (hasLoadedScaffoldEthFTs || !scaffoldEthNFTs) {
-        return;
-      } else {
-        setHasLoadedScaffoldEthNFTs(true);
-        setWalletNfts(scaffoldEthNFTs);
-      }
+    if (walletAddress && contract && !nfts?.fetching) {
+      dispatch(fetchNFTsByWalletAddress({ walletAddress, contract }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [walletAddress, chainId]);
 
-    processScaffoldEthNFTsAndAddToState();
-  }, [scaffoldEthNFTs, wallet]);
+  const walletNfts = nfts?.content || [];
+
+  if (!contract) {
+    return null;
+  }
 
   return (
     <>
       <SectionHeader headerText="NFTs with Offers"></SectionHeader>
-      {console.log('logging', { walletNfts })}
       <SimpleGrid minChildWidth="200px" spacing={10} style={{ padding: '16px' }}>
         {walletNfts?.map((item: any) => (
-          <NFTCardContainer contract={scaffoldEthNFTContract} item={item} key={item.id} />
+          <NFTCardContainer contract={contract} item={item} key={item.id} />
         ))}
       </SimpleGrid>
     </>

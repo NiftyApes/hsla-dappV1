@@ -43,6 +43,14 @@ export const useCreateCollectionOffer = ({
       onPending && onPending();
 
       try {
+        if (!address) {
+          throw new Error('Address is not defined');
+        }
+
+        if (!niftyApesContract) {
+          throw new Error('Contract is not defined');
+        }
+
         const tx = await niftyApesContract.createOffer({
           creator: address,
           nftContractAddress,

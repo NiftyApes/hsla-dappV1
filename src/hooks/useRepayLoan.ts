@@ -25,6 +25,9 @@ export const useRepayLoanByBorrower = ({
 
   return {
     repayLoanByBorrower: async () => {
+      if (!nftContractAddress) {
+        throw new Error('NFT Contract Address not specified');
+      }
       const tx = await niftyApesContract.repayLoan(nftContractAddress, nftId, {
         value: ethers.utils.parseEther(TEST_ETH_AMOUNT),
       });

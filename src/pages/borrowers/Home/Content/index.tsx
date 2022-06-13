@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from 'react';
 import { Box, BoxProps, Button, Flex } from '@chakra-ui/react';
-import { useConnectWallet } from '@web3-onboard/react';
-
+import Icon from 'components/atoms/Icon';
+import { useChainId } from 'hooks/useChainId';
 import { LocalhostContent } from './LocalWalletNFTs';
 import { MainnetContent } from './MainnetWalletNFTs';
-
-import Icon from 'components/atoms/Icon';
 
 interface Props extends BoxProps {
   isSidebarOpen: boolean;
@@ -18,14 +15,7 @@ interface Props extends BoxProps {
 }
 
 const Content: React.FC<Props> = ({ isSidebarOpen, showSidebar, ...restProps }) => {
-  const [{ wallet }] = useConnectWallet();
-  const [chainId, setChainId] = useState<string>();
-
-  useEffect(() => {
-    if (wallet?.chains) {
-      setChainId(wallet?.chains[0].id);
-    }
-  }, [wallet]);
+  const chainId = useChainId();
 
   const NFTs =
     chainId === '0x1' ? <MainnetContent /> : chainId === '0x7a69' ? <LocalhostContent /> : null;

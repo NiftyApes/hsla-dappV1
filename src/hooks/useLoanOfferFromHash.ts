@@ -26,6 +26,10 @@ export const useLoanOfferFromHash = ({
         return;
       }
 
+      if (!nftContractAddress) {
+        throw new Error('NFT Contract Address not specified');
+      }
+
       const result = await niftyApesContract.getOffer(
         nftContractAddress,
         nftId,

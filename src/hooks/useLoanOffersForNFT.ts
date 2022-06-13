@@ -1,8 +1,8 @@
+import { useEffect, useState } from 'react';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { BigNumber } from 'ethers';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
-import { useEffect, useState } from 'react';
 import { useNiftyApesContract } from './useNiftyApesContract';
 import _ from 'lodash';
 
@@ -11,7 +11,7 @@ export const useLoanOffersForNFT = ({
   nftId,
 }: {
   nftContractAddress?: string;
-  nftId: number;
+  nftId: string;
 }) => {
   const [offers, setOffers] = useState<any>();
 
@@ -65,7 +65,7 @@ export const useLoanOffersForNFT = ({
 
         console.log('offerFromChain', offerFromChain);
 
-        if (offerFromChain[0] === '0x0000000000000000000000000000000000000000') {
+        if (!offerFromChain || offerFromChain[0] === '0x0000000000000000000000000000000000000000') {
           processedOffers[i] = undefined;
         }
       }

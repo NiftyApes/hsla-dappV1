@@ -12,5 +12,6 @@ export function getEthersContractWithEIP1193Provider({
 }) {
   const ethersProvider = new ethers.providers.Web3Provider(provider);
   const contract = new ethers.Contract(address, abi, ethersProvider.getUncheckedSigner());
+
   return contract;
 }
