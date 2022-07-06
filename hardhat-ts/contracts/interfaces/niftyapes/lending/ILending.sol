@@ -1,86 +1,64 @@
 //SPDX-License-Identifier: MIT
 pragma solidity 0.8.13;
 
+import "./ILendingAdmin.sol";
 import "./ILendingEvents.sol";
 import "./ILendingStructs.sol";
+import "../offers/IOffersStructs.sol";
 
 /// @title The lending interface for Nifty Apes
 ///        This interface is intended to be used for interacting with loans on the protocol.
-interface ILending is ILendingEvents, ILendingStructs {
+interface ILending is ILendingAdmin, ILendingEvents, ILendingStructs, IOffersStructs {
+    /// @notice Returns the address for the associated offers contract
+    function offersContractAddress() external view returns (address);
+
+    /// @notice Returns the address for the associated liquidity contract
+    function liquidityContractAddress() external view returns (address);
+
+    /// @notice Returns the address for the associated signature lending contract
+    function sigLendingContractAddress() external view returns (address);
+
     /// @notice Returns the fee that computes protocol interest
     ///         This fee is the basis points in order to calculate interest per second
-    function protocolInterestBps() external view returns (uint96);
+    function protocolInterestBps() external view returns (uint16);
 
-    /// @notice Returns the fee for refinancing a loan that the new lender has to pay
-    ///         Fees are denomiated in basis points, parts of 10_000
-    function refinancePremiumLenderBps() external view returns (uint16);
+    /// @notice Returns the bps premium for refinancing a loan that the new lender has to pay
+    ///         This premium is to compensate lenders for the work of originating a loan
+    ///         Fees are denominated in basis points, parts of 10_000
+    function originationPremiumBps() external view returns (uint16);
 
-    /// @notice Returns the fee for refinancing a loan that is paid to the protocol
-    ///         Fees are denomiated in basis points, parts of 10_000
-    function refinancePremiumProtocolBps() external view returns (uint16);
+    /// @notice Returns the bps premium for refinancing a loan before the current lender has earned the equivalent amount of interest
+    ///         The amount paid decreases as the current lender earns interest
+    ///         The maximum amount paid is the value of gasGriefingPremiumBps
+    ///         For example, if the value of gasGriefingPremiumBps is 25 and 10 bps of interest has been earned, the premium will be 15 bps paid to the current lender
+    ///         Fees are denominated in basis points, parts of 10_000
+    function gasGriefingPremiumBps() external view returns (uint16);
 
-    /// @notice Returns the basis points of revenue sent to the Regen Collective
-    ///         Denomiated in basis points, parts of 10_000
-    function regenCollectiveBpsOfRevenue() external view returns (uint16);
+    /// @notice Returns the bps premium paid to the protocol for refinancing a loan before the current lender has earned the equivalent amount of interest
+    ///         This value represents the percentage of the gas griefing premium taken by the protocol.
+    ///         For example, if the value of gasGriefingPremiumBps is 25 and 10 bps of interest has been earned, the premium will be 15 bps paid to the current lender
+    ///         This premium is a percentage of the delta from the gasGriefingPremium. In effect, it is an additional percentage paid equivalent to the interest earned X the gasGriefingProtocol premium
+    ///         Fees are denominated in basis points, parts of 10_000
+    function gasGriefingProtocolPremiumBps() external view returns (uint16);
 
-    /// @notice Returns the address for the Regen Collective
-    function regenCollectiveAddress() external view returns (address);
+    /// @notice Returns the bps premium paid to the protocol for refinancing a loan with terms that do not improve the cumulative terms of the loan by the equivalent basis points
+    ///         For example, if termGriefingPremiumBps is 25 then the cumulative improvement of amount, interestRatePerSecond, and duration must be more than 25 bps
+    ///         If the amount is 8 bps better, interestRatePerSecond is 7 bps better, and duration is 10 bps better, then no premium is paid
+    ///         If any one of those terms is worse then a full premium is paid
+    ///         Fees are denominated in basis points, parts of 10_000
+    function termGriefingPremiumBps() external view returns (uint16);
 
-    /// @notice Returns a loan aution identified by a given nft.
+    /// @notice Returns the bps premium paid to the protocol for refinancing a loan within 1 hour of default
+    ///         Fees are denominated in basis points, parts of 10_000
+    function defaultRefinancePremiumBps() external view returns (uint16);
+
+    /// @notice Returns a loan auction identified by a given nft.
     /// @param nftContractAddress The address of the NFT collection
     /// @param nftId The id of a specified NFT
     function getLoanAuction(address nftContractAddress, uint256 nftId)
         external
         view
         returns (LoanAuction memory auction);
-
-    /// @notice Returns an EIP712 standard compatiable hash for a given offer
-    ///         This hash can be signed to create a valid offer.
-    /// @param offer The offer to compute the hash for
-    function getOfferHash(Offer memory offer) external view returns (bytes32);
-
-    /// @notice Returns the signer of an offer or throws an error.
-    /// @param offer The offer to use for retrieving the signer
-    /// @param signature The signature to use for retrieving the signer
-    function getOfferSigner(Offer memory offer, bytes memory signature) external returns (address);
-
-    /// @notice Returns true if a given signature has been revoked otherwise false
-    /// @param signature The signature to check
-    function getOfferSignatureStatus(bytes calldata signature) external view returns (bool status);
-
-    /// @notice Withdraw a given offer
-    ///         Calling this method allows users to withdraw a given offer by cancelling their signature on chain
-    /// @param offer The offer to withdraw
-    /// @param signature The signature of the offer
-    function withdrawOfferSignature(Offer memory offer, bytes calldata signature) external;
-
-    /// @notice Returns an offer from the on-chain offer books
-    /// @param nftContractAddress The address of the NFT collection
-    /// @param nftId The id of the specified NFT
-    /// @param offerHash The hash of all parameters in an offer
-    /// @param floorTerm Indicates whether this is a floor or individual NFT offer.
-    function getOffer(
-        address nftContractAddress,
-        uint256 nftId,
-        bytes32 offerHash,
-        bool floorTerm
-    ) external view returns (Offer memory offer);
-
-    /// @notice Creates an offer on the on chain offer book
-    /// @param offer The details of offer
-    function createOffer(Offer calldata offer) external returns (bytes32);
-
-    /// @notice Removes an offer from the on-chain offer book
-    /// @param nftContractAddress The address of the NFT collection
-    /// @param nftId The id of the specified NFT
-    /// @param offerHash The hash of all parameters in an offer
-    /// @param floorTerm Indicates whether this is a floor or individual NFT offer.
-    function removeOffer(
-        address nftContractAddress,
-        uint256 nftId,
-        bytes32 offerHash,
-        bool floorTerm
-    ) external;
 
     /// @notice Start a loan as the borrower using an offer from the on chain offer book.
     ///         The caller of this method has to be the current owner of the NFT
@@ -102,11 +80,11 @@ interface ILending is ILendingEvents, ILendingStructs {
     /// @param offer The details of the loan auction offer
     /// @param signature A signed offerHash
     /// @param nftId The id of a specified NFT
-    function executeLoanByBorrowerSignature(
-        Offer calldata offer,
-        bytes memory signature,
-        uint256 nftId
-    ) external payable;
+    // function executeLoanByBorrowerSignature(
+    //     Offer calldata offer,
+    //     bytes memory signature,
+    //     uint256 nftId
+    // ) external payable;
 
     /// @notice Start a loan as the lender using an offer from the on chain offer book.
     ///         Borrowers can make offers for loan terms on their NFTs and thus lenders can
@@ -127,41 +105,54 @@ interface ILending is ILendingEvents, ILendingStructs {
     ///         execute these offers
     /// @param offer The details of the loan auction offer
     /// @param signature A signed offerHash
-    function executeLoanByLenderSignature(Offer calldata offer, bytes calldata signature)
-        external
-        payable;
+    // function executeLoanByLenderSignature(Offer calldata offer, bytes calldata signature)
+    //     external
+    //     payable;
 
     /// @notice Refinance a loan against the on chain offer book as the borrower.
-    ///         The new offer has to cover all interest owed on the loan
+    ///         The new offer has to cover the principle remaining and all lender interest owed on the loan
+    ///         Borrowers can refinance at any time even after loan default as long as their NFT collateral has not been seized
     /// @param nftContractAddress The address of the NFT collection
     /// @param nftId The id of the specified NFT
     /// @param floorTerm Indicates whether this is a floor or individual NFT offer.
-    /// @param offerHash The hash of all parameters in an offer. This is used as the uniquge identifer of an offer.
+    /// @param offerHash The hash of all parameters in an offer. This is used as the unique identifier of an offer.
     function refinanceByBorrower(
         address nftContractAddress,
         uint256 nftId,
         bool floorTerm,
-        bytes32 offerHash
+        bytes32 offerHash,
+        uint32 expectedLastUpdatedTimestamp
     ) external;
 
     /// @notice Refinance a loan against an off chain signed offer as the borrower.
-    ///         The new offer has to cover all interest owed on the loan
+    ///         The new offer has to cover the principle remaining and all lender interest owed on the loan
+    ///         Borrowers can refinance at any time even after loan default as long as their NFT collateral has not been seized
     /// @param offer The details of the loan auction offer
     /// @param signature The signature for the offer
     /// @param nftId The id of a specified NFT
-    function refinanceByBorrowerSignature(
-        Offer calldata offer,
-        bytes memory signature,
-        uint256 nftId
-    ) external;
+    // function refinanceByBorrowerSignature(
+    //     Offer calldata offer,
+    //     bytes memory signature,
+    //     uint256 nftId
+    // ) external;
 
     /// @notice Refinance a loan against a new offer.
-    ///         The new offer has to improve conditions for the borrower
+    ///         The new offer must improve terms for the borrower
+    ///         Lender must improve terms by a cumulative 25 bps or pay a 25 bps premium
+    ///         For example, if termGriefingPremiumBps is 25 then the cumulative improvement of amount, interestRatePerSecond, and duration must be more than 25 bps
+    ///         If the amount is 8 bps better, interestRatePerSecond is 7 bps better, and duration is 10 bps better, then no premium is paid
+    ///         If any one of those terms is worse then a full premium is paid
+    ///         The Lender must allow 25 bps on interest to accrue or pay a gas griefing premium to the current lender
+    ///         This premium is equal to gasGriefingPremiumBps - interestEarned
     /// @param offer The details of the loan auction offer
-    function refinanceByLender(Offer calldata offer) external;
+    /// @param expectedLastUpdatedTimestamp The timestamp of the expected terms. This allows lenders to avoid being frontrun and forced to pay a gasGriefingPremium.
+    ///        Lenders can provide a 0 value if they are willing to pay the gasGriefingPremium in a high volume loanAuction
+    function refinanceByLender(Offer calldata offer, uint32 expectedLastUpdatedTimestamp) external;
 
-    /// @notice Allows borrowers to draw a higher balance on their loan if it has been refiance with a higher maximum amount.
+    /// @notice Allows borrowers to draw a higher balance on their loan if it has been refinanced with a higher maximum amount
     ///         Drawing down value increases the maximum loan pay back amount and so is not automatically imposed on a refinance by lender, hence this function.
+    ///         If a lender does not have liquidity to support a refinanced amount the borrower will draw whatever amount is available,
+    ///         the lender's interest earned so far is slashed, and the loan amount is set to the amount currently drawn
     /// @param nftContractAddress The address of the NFT collection
     /// @param nftId The id of the specified NFT
     /// @param drawAmount The amount of value to draw and add to the loan amountDrawn
@@ -183,13 +174,17 @@ interface ILending is ILendingEvents, ILendingStructs {
     ///         The reason this is broken into another function is to make it harder to accidentally
     ///         be repaying someone elses loan.
     ///         Unless you are intending to repay someone elses loan you should be using #repayLoan instead
+    ///         The main use case for this function is to have a bot repay a loan on behalf of a borrower
     /// @param nftContractAddress The address of the NFT collection
     /// @param nftId The id of the specified NFT
-    function repayLoanForAccount(address nftContractAddress, uint256 nftId) external payable;
+    function repayLoanForAccount(
+        address nftContractAddress,
+        uint256 nftId,
+        uint32 expectedLoanBeginTimestamp
+    ) external payable;
 
-    /// @notice Repay parts of an open loan.
-    ///         Repaying parts of a loan will change interest accumulation for the repaid part and thus some borrors may
-    ///         prefer to repay parts earlier to save on overall payments.
+    /// @notice Repay part of an open loan.
+    ///         Repaying part of a loan will lower the remaining interest accumulated
     /// @param nftContractAddress The address of the NFT collection
     /// @param nftId The id of the specified NFT
     /// @param amount The amount of value to pay down on the principle of the loan
@@ -199,28 +194,12 @@ interface ILending is ILendingEvents, ILendingStructs {
         uint256 amount
     ) external payable;
 
-    /// @notice Seizes an asset if the loan has expired.
+    /// @notice Seizes an asset if the loan has expired and sends it to the lender
     ///         This function can be called by anyone as soon as the loan is expired without having been repaid in full.
     ///         This function allows anyone to call it so that an automated bot may seize the asset on behalf of a lender.
     /// @param nftContractAddress The address of the NFT collection
     /// @param nftId The id of the specified NFT
     function seizeAsset(address nftContractAddress, uint256 nftId) external;
-
-    /// @notice If a loan has expired, allows a lender to sell an NFT and recieve the proceeds.
-    ///         This function can only be called by the lender as soon as the loan is expired without having been repaid.
-    ///         This function is limited to the lender to prevent malicious use of the arbitrary calldata function.
-    /// @param nftContractAddress The address of the NFT collection
-    /// @param nftId The id of the specified NFT
-    /// @param sellAddress The contract address of sell functionality
-    /// @param sellCallData The callData of sell functionality
-    /// @param minAmount The minimum amount the lender will accept for the sale
-    function seizeAssetAndSell(
-        address nftContractAddress,
-        uint256 nftId,
-        address sellAddress,
-        bytes calldata sellCallData,
-        uint256 minAmount
-    ) external;
 
     /// @notice Returns the owner of a given nft if there is a current loan on the NFT, otherwise zero.
     /// @param nftContractAddress The address of the given nft contract
@@ -228,12 +207,64 @@ interface ILending is ILendingEvents, ILendingStructs {
     function ownerOf(address nftContractAddress, uint256 nftId) external view returns (address);
 
     /// @notice Returns interest since the last update to the loan
-    ///         This includes the accumulatedInterest over the life of loan paid to previous lenders to buy refinacne the loan
-    ///         and the interest from the current active interest period.
+    ///         This only includes the interest from the current active interest period.
     /// @param nftContractAddress The address of the NFT collection
     /// @param nftId The id of the specified NFT
     function calculateInterestAccrued(address nftContractAddress, uint256 nftId)
         external
         view
         returns (uint256, uint256);
+
+    /// @notice Returns the protocolInterestRatePerSecond for a given set of terms
+    ///         There is a set protocolInterestRateBps so no interestBps value is provided
+    /// @param amount The amount of the loan
+    /// @param duration The duration of the loan
+    function calculateProtocolInterestPerSecond(uint256 amount, uint256 duration)
+        external
+        view
+        returns (uint96);
+
+    /// @notice Returns the delta between the required accumulated interest and the current accumulated interest
+    /// @param nftContractAddress The address of the NFT collection
+    /// @param nftId The id of the specified NFT
+    function checkSufficientInterestAccumulated(address nftContractAddress, uint256 nftId)
+        external
+        view
+        returns (uint256);
+
+    /// @notice Returns whether the lender has provided sufficient terms to not be charged a term griefing premium
+    /// @param nftContractAddress The address of the NFT collection
+    /// @param nftId The id of the specified NFT
+    function checkSufficientTerms(
+        address nftContractAddress,
+        uint256 nftId,
+        uint128 amount,
+        uint96 interestRatePerSecond,
+        uint32 duration
+    ) external view returns (bool);
+
+    /// @notice Function only callable by the NiftyApesSigLending contract
+    ///         Allows SigLending contract to execute loan directly
+    /// @param offer The details of the loan auction offer
+    /// @param lender The lender of the loan
+    /// @param borrower The borrower of the loan
+    /// @param nftId The id of the specified NFT
+    function doExecuteLoan(
+        Offer memory offer,
+        address lender,
+        address borrower,
+        uint256 nftId
+    ) external;
+
+    /// @notice Function only callable by the NiftyApesSigLending contract
+    ///         Allows SigLending contract to refinance a loan directly
+    /// @param offer The details of the loan auction offer
+    /// @param nftId The id of the specified NFT
+    /// @param nftOwner owner of the nft in the lending.sol lendingAuction
+    function doRefinanceByBorrower(
+        Offer memory offer,
+        uint256 nftId,
+        address nftOwner,
+        uint32 expectedLastUpdatedTimestamp
+    ) external;
 }

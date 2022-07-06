@@ -1,13 +1,13 @@
 //SPDX-License-Identifier: Unlicensed
 pragma solidity 0.8.13;
 
-import "@openzeppelin/contracts/access/OwnableUpgradeable.sol";
-import "@openzeppelin/contracts/security/PausableUpgradeable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuardUpgradeable.sol";
-import "@openzeppelin/contracts/token/ERC20/IERC20Upgradeable.sol";
-import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20Upgradeable.sol";
-import "@openzeppelin/contracts/utils/math/MathUpgradeable.sol";
-import "@openzeppelin/contracts/utils/AddressUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "./interfaces/compound/ICEther.sol";
 import "./interfaces/compound/ICERC20.sol";
 import "./interfaces/niftyapes/liquidity/ILiquidity.sol";
