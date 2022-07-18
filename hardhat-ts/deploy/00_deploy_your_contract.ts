@@ -33,6 +33,16 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     log: true,
   });
 
+  await deploy('YourCollectible', {
+    from: deployer,
+    log: true,
+  });
+
+  await deploy('YourContract', {
+    from: deployer,
+    log: true,
+  });
+
   const { address: liquidityAddress } = liquidityDeployResult;
   const { address: offersAddress } = offersDeployResult;
   const { address: sigLendingAddress } = sigLendingDeployResult;
@@ -84,10 +94,6 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const lendingPauseSanctionsTx = await lendingContract.pauseSanctions();
   await lendingPauseSanctionsTx.wait();
 
-  await deploy('YourCollectible', {
-    from: deployer,
-    log: true,
-  });
   /*
     // Getting a previously deployed contract
     const YourContract = await ethers.getContract("YourContract", deployer);
@@ -97,7 +103,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   */
 };
 export default func;
-func.tags = ['NiftyApesLiquidity', 'NiftyApesOffers', 'NiftyApesSigLending', 'NiftyApesLending'];
+func.tags = ['NiftyApesLiquidity', 'NiftyApesOffers', 'NiftyApesSigLending', 'NiftyApesLending', 'YourContract', 'YourCollectible'];
 
 /*
 Tenderly verification
