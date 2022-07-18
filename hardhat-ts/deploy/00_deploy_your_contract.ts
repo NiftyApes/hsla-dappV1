@@ -6,7 +6,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
 
-  const compContractAddress = 0xbbeb7c67fa3cfb40069d19e598713239497a3ca5;
+  const compContractAddress = '0xbbeb7c67fa3cfb40069d19e598713239497a3ca5';
 
   const liquidityDeployResult = await deploy('NiftyApesLiquidity', {
     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
@@ -59,8 +59,9 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 
   const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
   const CETH_ADDRESS = '0x4Ddc2D193948926D02f9B1fE9e1daa0718270ED5';
-  const USDC_ADDRESS = '0xeb8f08a975Ab53E34D8a0330E0D34de942C95926';
-  const CUSDC_ADDRESS = '0x5B281A6DdA0B271e91ae35DE655Ad301C976edb1';
+  const USDC_ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
+  const CUSDC_ADDRESS = '0x39AA39c021dfbaE8faC545936693aC917d5E7563';
+
   const liquidityXLendingTx = await liquidityContract.updateLendingContractAddress(lendingAddress);
   await liquidityXLendingTx.wait();
   const offersXLendingTx = await offersContract.updateLendingContractAddress(lendingAddress);
@@ -73,8 +74,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const ethSetAddressTx = await liquidityContract.setCAssetAddress(ETH_ADDRESS, CETH_ADDRESS);
   await ethSetAddressTx.wait();
 
-  const ethGetAmountTx = await liquidityContract.assetAmountToCAssetAmount(ETH_ADDRESS, 500);
-  await ethGetAmountTx.wait();
+  const ethGetAmountTx = await liquidityContract.callStatic.assetAmountToCAssetAmount(ETH_ADDRESS, 500);
 
   const ethSetAmountTx = await liquidityContract.setMaxCAssetBalance(CETH_ADDRESS, ethGetAmountTx);
   await ethSetAmountTx.wait();
@@ -82,8 +82,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const USDCSetAddressTx = await liquidityContract.setCAssetAddress(USDC_ADDRESS, CUSDC_ADDRESS);
   await USDCSetAddressTx.wait();
 
-  const USDCGetAmountTx = await liquidityContract.assetAmountToCAssetAmount(USDC_ADDRESS, 500000);
-  await USDCGetAmountTx.wait();
+  const USDCGetAmountTx = await liquidityContract.callStatic.assetAmountToCAssetAmount(USDC_ADDRESS, 500000);
 
   const USDCSetAmountTx = await liquidityContract.setMaxCAssetBalance(CUSDC_ADDRESS, USDCGetAmountTx);
   await USDCSetAmountTx.wait();
