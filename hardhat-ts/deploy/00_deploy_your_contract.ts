@@ -6,7 +6,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
 
-  const compContractAddress = 0xbbeb7c67fa3cfb40069d19e598713239497a3ca5;
+  const compContractAddress = '0xbbeb7c67fa3cfb40069d19e598713239497a3ca5';
 
   const liquidityDeployResult = await deploy('NiftyApesLiquidity', {
     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
@@ -33,6 +33,16 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
     log: true,
   });
 
+  await deploy('YourCollectible', {
+    from: deployer,
+    log: true,
+  });
+
+  await deploy('YourContract', {
+    from: deployer,
+    log: true,
+  });
+
   const { address: liquidityAddress } = liquidityDeployResult;
   const { address: offersAddress } = offersDeployResult;
   const { address: sigLendingAddress } = sigLendingDeployResult;
@@ -49,8 +59,9 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 
   const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
   const CETH_ADDRESS = '0x4Ddc2D193948926D02f9B1fE9e1daa0718270ED5';
-  const USDC_ADDRESS = '0xeb8f08a975Ab53E34D8a0330E0D34de942C95926';
-  const CUSDC_ADDRESS = '0x5B281A6DdA0B271e91ae35DE655Ad301C976edb1';
+  const DAI_ADDRESS = '0x95b58a6Bff3D14B7DB2f5cb5F0Ad413DC2940658';
+  const CDAI_ADDRESS = '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643';
+
   const liquidityXLendingTx = await liquidityContract.updateLendingContractAddress(lendingAddress);
   await liquidityXLendingTx.wait();
   const offersXLendingTx = await offersContract.updateLendingContractAddress(lendingAddress);
@@ -63,20 +74,18 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const ethSetAddressTx = await liquidityContract.setCAssetAddress(ETH_ADDRESS, CETH_ADDRESS);
   await ethSetAddressTx.wait();
 
-  const ethGetAmountTx = await liquidityContract.assetAmountToCAssetAmount(ETH_ADDRESS, 500);
-  await ethGetAmountTx.wait();
+  const ethGetAmount = await liquidityContract.callStatic.assetAmountToCAssetAmount(ETH_ADDRESS, 500 * 1e18);
 
-  const ethSetAmountTx = await liquidityContract.setMaxCAssetBalance(CETH_ADDRESS, ethGetAmountTx);
+  const ethSetAmountTx = await liquidityContract.setMaxCAssetBalance(CETH_ADDRESS, ethGetAmount);
   await ethSetAmountTx.wait();
 
-  const USDCSetAddressTx = await liquidityContract.setCAssetAddress(USDC_ADDRESS, CUSDC_ADDRESS);
-  await USDCSetAddressTx.wait();
+  const DAISetAddressTx = await liquidityContract.setCAssetAddress(DAI_ADDRESS, CDAI_ADDRESS);
+  await DAISetAddressTx.wait();
 
-  const USDCGetAmountTx = await liquidityContract.assetAmountToCAssetAmount(USDC_ADDRESS, 500000);
-  await USDCGetAmountTx.wait();
+  const DAIGetAmount = await liquidityContract.callStatic.assetAmountToCAssetAmount(DAI_ADDRESS, 500000 * 1e18);
 
-  const USDCSetAmountTx = await liquidityContract.setMaxCAssetBalance(CUSDC_ADDRESS, USDCGetAmountTx);
-  await USDCSetAmountTx.wait();
+  const DAISetAmountTx = await liquidityContract.setMaxCAssetBalance(CDAI_ADDRESS, DAIGetAmount);
+  await DAISetAmountTx.wait();
 
   const liquidityPauseSanctionsTx = await liquidityContract.pauseSanctions();
   await liquidityPauseSanctionsTx.wait();
@@ -84,10 +93,6 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const lendingPauseSanctionsTx = await lendingContract.pauseSanctions();
   await lendingPauseSanctionsTx.wait();
 
-  await deploy('YourCollectible', {
-    from: deployer,
-    log: true,
-  });
   /*
     // Getting a previously deployed contract
     const YourContract = await ethers.getContract("YourContract", deployer);
@@ -97,7 +102,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   */
 };
 export default func;
-func.tags = ['NiftyApesLiquidity', 'NiftyApesOffers', 'NiftyApesSigLending', 'NiftyApesLending'];
+func.tags = ['NiftyApesLiquidity', 'NiftyApesOffers', 'NiftyApesSigLending', 'NiftyApesLending', 'YourContract', 'YourCollectible'];
 
 /*
 Tenderly verification
