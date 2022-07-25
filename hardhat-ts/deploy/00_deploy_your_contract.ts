@@ -59,8 +59,8 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
 
   const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
   const CETH_ADDRESS = '0x4Ddc2D193948926D02f9B1fE9e1daa0718270ED5';
-  const USDC_ADDRESS = '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48';
-  const CUSDC_ADDRESS = '0x39AA39c021dfbaE8faC545936693aC917d5E7563';
+  const DAI_ADDRESS = '0x95b58a6Bff3D14B7DB2f5cb5F0Ad413DC2940658';
+  const CDAI_ADDRESS = '0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643';
 
   const liquidityXLendingTx = await liquidityContract.updateLendingContractAddress(lendingAddress);
   await liquidityXLendingTx.wait();
@@ -74,18 +74,18 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const ethSetAddressTx = await liquidityContract.setCAssetAddress(ETH_ADDRESS, CETH_ADDRESS);
   await ethSetAddressTx.wait();
 
-  const ethGetAmountTx = await liquidityContract.callStatic.assetAmountToCAssetAmount(ETH_ADDRESS, 500);
+  const ethGetAmount = await liquidityContract.callStatic.assetAmountToCAssetAmount(ETH_ADDRESS, 500 * 1e18);
 
-  const ethSetAmountTx = await liquidityContract.setMaxCAssetBalance(CETH_ADDRESS, ethGetAmountTx);
+  const ethSetAmountTx = await liquidityContract.setMaxCAssetBalance(CETH_ADDRESS, ethGetAmount);
   await ethSetAmountTx.wait();
 
-  const USDCSetAddressTx = await liquidityContract.setCAssetAddress(USDC_ADDRESS, CUSDC_ADDRESS);
-  await USDCSetAddressTx.wait();
+  const DAISetAddressTx = await liquidityContract.setCAssetAddress(DAI_ADDRESS, CDAI_ADDRESS);
+  await DAISetAddressTx.wait();
 
-  const USDCGetAmountTx = await liquidityContract.callStatic.assetAmountToCAssetAmount(USDC_ADDRESS, 500000);
+  const DAIGetAmount = await liquidityContract.callStatic.assetAmountToCAssetAmount(DAI_ADDRESS, 500000 * 1e18);
 
-  const USDCSetAmountTx = await liquidityContract.setMaxCAssetBalance(CUSDC_ADDRESS, USDCGetAmountTx);
-  await USDCSetAmountTx.wait();
+  const DAISetAmountTx = await liquidityContract.setMaxCAssetBalance(CDAI_ADDRESS, DAIGetAmount);
+  await DAISetAmountTx.wait();
 
   const liquidityPauseSanctionsTx = await liquidityContract.pauseSanctions();
   await liquidityPauseSanctionsTx.wait();
