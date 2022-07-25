@@ -1,15 +1,17 @@
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
-import { useNiftyApesContract } from './useNiftyApesContract';
 import { useEthLiquidity } from './useEthLiquidity';
+import { useWalletProvider } from './useWalletProvider';
+import { getLiquidityContract } from '../helpers/getLendingContract';
 
 export const useWithdrawEthLiquidity = () => {
   const dispatch = useAppDispatch();
 
   const { ethLiquidity } = useEthLiquidity();
 
-  const niftyApesContract = useNiftyApesContract();
+  const provider = useWalletProvider();
+  const niftyApesContract = provider ? getLiquidityContract({ provider }) : null;
 
   return {
     withdrawETHLiquidity: async ({

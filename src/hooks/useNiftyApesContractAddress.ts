@@ -1,5 +1,5 @@
 import { useChainId } from './useChainId';
-import NiftyApesDeploymentJSON from '../generated/deployments/localhost/NiftyApes.json';
+import NiftyApesDeploymentJSON from '../generated/deployments/localhost/NiftyApesLending.json';
 
 export const useNiftyApesContractAddress = () => {
   const chainId = useChainId();

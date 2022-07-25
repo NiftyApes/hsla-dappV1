@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter as Router, Routes } from 'react-router-dom';
 import { useConnectWallet } from '@web3-onboard/react';
-import { setStoreNiftyApesContract, setStoreWallet } from 'app/store';
+import { setStoreLendingContract, setStoreWallet } from 'app/store';
 import { useNiftyApesContract } from 'hooks/useNiftyApesContract';
 import theme from './theme';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
@@ -14,7 +14,7 @@ const App: React.FC = () => {
   const [{ wallet }] = useConnectWallet();
   const niftyApesContract = useNiftyApesContract();
   setStoreWallet(wallet);
-  setStoreNiftyApesContract(niftyApesContract);
+  setStoreLendingContract(niftyApesContract);
 
   return (
     <ChakraProvider theme={theme}>

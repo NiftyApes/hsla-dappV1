@@ -41,9 +41,9 @@ export type FetchLoanAuctionResponse = {
 export const fetchLoanOffersByNFT = createAsyncThunk<FetchLoanOffersResponse, NFT, LoansThunkApi>(
   'loans/fetchLoanOffersByNFT',
   async ({ id: nftId, contractAddress: nftContractAddress }, thunkApi) => {
-    const { niftyApesContract } = thunkApi.extra();
+    const { offersContract } = thunkApi.extra();
 
-    if (!niftyApesContract) {
+    if (!offersContract) {
       return thunkApi.rejectWithValue({
         type: 'global',
         message: 'NiftyApes contract is not available',
@@ -64,7 +64,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<FetchLoanOffersResponse, NF
       data.Items.map(async (offer) => {
         if (offer.OfferTerms.NftId === nftId || offer.OfferTerms.FloorTerm) {
           const offerFromChain = await getLoanOfferFromHash({
-            niftyApesContract,
+            offersContract,
             nftContractAddress,
             nftId,
             offerHash: offer.OfferHash,
@@ -89,16 +89,16 @@ export const fetchLoanOffersByNFT = createAsyncThunk<FetchLoanOffersResponse, NF
 export const fetchLoanAuctionByNFT = createAsyncThunk<FetchLoanAuctionResponse, NFT, LoansThunkApi>(
   'loans/fetchLoanAuctionByNFT',
   async ({ id: nftId, contractAddress: nftContractAddress }, thunkApi) => {
-    const { niftyApesContract } = thunkApi.extra();
+    const { lendingContract } = thunkApi.extra();
 
-    if (!niftyApesContract) {
+    if (!lendingContract) {
       return thunkApi.rejectWithValue({
         type: 'global',
         message: 'NiftyApes contract is not available',
       });
     }
 
-    const result = await niftyApesContract.getLoanAuction(nftContractAddress, nftId);
+    const result = await lendingContract.getLoanAuction(nftContractAddress, nftId);
 
     return {
       content: loanAuction(result),

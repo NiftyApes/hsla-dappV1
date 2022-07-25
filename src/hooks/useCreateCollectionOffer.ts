@@ -1,9 +1,10 @@
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
-import { useNiftyApesContract } from './useNiftyApesContract';
 import { useWalletAddress } from './useWalletAddress';
 import { saveOfferInDb } from '../helpers/saveOfferInDb';
+import { useWalletProvider } from './useWalletProvider';
+import { getOffersContract } from '../helpers/getLendingContract';
 
 const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
@@ -12,7 +13,8 @@ export const useCreateCollectionOffer = ({
 }: {
   nftContractAddress: string;
 }) => {
-  const niftyApesContract = useNiftyApesContract();
+  const provider = useWalletProvider();
+  const niftyApesContract = provider ? getOffersContract({ provider }) : null;
 
   const address = useWalletAddress();
 

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useNiftyApesContract } from './useNiftyApesContract';
+import { useWalletProvider } from './useWalletProvider';
+import { getOffersContract } from '../helpers/getLendingContract';
 
 export const useLoanOfferFromHash = ({
   nftContractAddress,
@@ -12,7 +13,8 @@ export const useLoanOfferFromHash = ({
   offerHash: string;
   floorTerm?: boolean;
 }) => {
-  const niftyApesContract = useNiftyApesContract();
+  const provider = useWalletProvider();
+  const niftyApesContract = provider ? getOffersContract({ provider }) : null;
 
   const [loanOffer, setLoanOffer] = useState<any>();
 

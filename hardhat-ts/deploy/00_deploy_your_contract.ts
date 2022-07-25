@@ -74,7 +74,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const ethSetAddressTx = await liquidityContract.setCAssetAddress(ETH_ADDRESS, CETH_ADDRESS);
   await ethSetAddressTx.wait();
 
-  const ethGetAmount = await liquidityContract.callStatic.assetAmountToCAssetAmount(ETH_ADDRESS, 500 * 1e18);
+  const ethGetAmount = await liquidityContract.callStatic.assetAmountToCAssetAmount(ETH_ADDRESS, '500000000000000000000');
 
   const ethSetAmountTx = await liquidityContract.setMaxCAssetBalance(CETH_ADDRESS, ethGetAmount);
   await ethSetAmountTx.wait();
@@ -82,7 +82,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const DAISetAddressTx = await liquidityContract.setCAssetAddress(DAI_ADDRESS, CDAI_ADDRESS);
   await DAISetAddressTx.wait();
 
-  const DAIGetAmount = await liquidityContract.callStatic.assetAmountToCAssetAmount(DAI_ADDRESS, 500000 * 1e18);
+  const DAIGetAmount = await liquidityContract.callStatic.assetAmountToCAssetAmount(DAI_ADDRESS, '500000000000000000000000');
 
   const DAISetAmountTx = await liquidityContract.setMaxCAssetBalance(CDAI_ADDRESS, DAIGetAmount);
   await DAISetAmountTx.wait();

@@ -3,8 +3,9 @@ import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { BigNumber } from 'ethers';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
-import { useNiftyApesContract } from './useNiftyApesContract';
 import _ from 'lodash';
+import { getOffersContract } from '../helpers/getLendingContract';
+import { useWalletProvider } from './useWalletProvider';
 
 export const useLoanOffersForNFT = ({
   nftContractAddress,
@@ -17,7 +18,8 @@ export const useLoanOffersForNFT = ({
 
   const cacheCounter = useAppSelector((state: RootState) => state.counter);
 
-  const niftyApesContract = useNiftyApesContract();
+  const provider = useWalletProvider();
+  const niftyApesContract = provider ? getOffersContract({ provider }) : null;
 
   useEffect(() => {
     async function fetchLoanOffersForNFT() {
@@ -56,7 +58,7 @@ export const useLoanOffersForNFT = ({
         });
 
         const offerFromChain = await getLoanOfferFromHash({
-          niftyApesContract,
+          offersContract: niftyApesContract,
           nftContractAddress,
           nftId,
           offerHash,

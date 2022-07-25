@@ -1,5 +1,5 @@
 import { useChainId } from './useChainId';
-import { getLocalNiftyApesContract } from 'helpers/getLocalNiftyApesContract';
+import { getLendingContract } from 'helpers/getLendingContract';
 import { useWalletProvider } from './useWalletProvider';
 
 export const useNiftyApesContract = () => {
@@ -12,7 +12,7 @@ export const useNiftyApesContract = () => {
   }
 
   if (chainId === '0x7a69') {
-    return getLocalNiftyApesContract({ provider });
+    return getLendingContract({ provider });
   }
 
   throw Error(
