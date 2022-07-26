@@ -4,14 +4,14 @@ import { LendingContract, LiquidityContract, OffersContract } from 'nft/model';
 
 import LendingDeploymentJSON from '../generated/deployments/localhost/NiftyApesLending.json';
 import Lending from '../generated/artifacts/contracts/Lending.sol/NiftyApesLending.json';
-
 import LiquidityDeploymentJSON from '../generated/deployments/localhost/NiftyApesLiquidity.json';
-import Liquidity from '../generated/artifacts/contracts/Liquidity.sol/NiftyApesLiquidity.json';
 
+import Liquidity from '../generated/artifacts/contracts/Liquidity.sol/NiftyApesLiquidity.json';
 import OffersDeploymentJSON from '../generated/deployments/localhost/NiftyApesOffers.json';
 import Offers from '../generated/artifacts/contracts/Offers.sol/NiftyApesOffers.json';
 
 import { getEthersContractWithEIP1193Provider } from './getEthersContractWithEIP1193Provider';
+
 import {
   getStoreLendingContract,
   getStoreLiquidityContract,
