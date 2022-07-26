@@ -81,7 +81,7 @@ const slice = createSlice({
         ...state.nftsByWalletAddress,
         [action.meta.arg.walletAddress]: {
           ...state.nftsByWalletAddress[action.meta.arg.walletAddress],
-          fetching: false,
+          fetching: true,
           error: undefined,
         },
       };

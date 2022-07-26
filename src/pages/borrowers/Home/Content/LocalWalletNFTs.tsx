@@ -28,6 +28,10 @@ export const LocalhostContent: React.FC = () => {
     return null;
   }
 
+  if (nfts?.fetching) {
+    return <>Loading NFTs...</>;
+  }
+
   return (
     <>
       <SectionHeader headerText="NFTs with Offers"></SectionHeader>

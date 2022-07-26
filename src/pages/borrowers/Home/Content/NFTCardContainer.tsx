@@ -14,31 +14,31 @@ import {
   fetchLoanAuctionByNFT,
   useLoanOffersByNFT,
   useLoanAuctionByNFT,
+  LoanOffer,
 } from 'loan';
 
 export const NFTCardContainer = ({ contract, item }: { contract: Contract; item: NFT }) => {
   const dispatch = useAppDispatch();
 
-  const { content: loanOffers, fetching: loanOffersFetching } = useLoanOffersByNFT(item);
-
-  useEffect(() => {
-    if (!loanOffers && !loanOffersFetching) {
-      dispatch(fetchLoanOffersByNFT(item));
-    }
-  }, [item, loanOffersFetching]);
-
+  let { content: loanOffers, fetching: loanOffersFetching } = useLoanOffersByNFT(item);
   const { content: loanAuction, fetching: loanAuctionFetching } = useLoanAuctionByNFT(item);
-
-  useEffect(() => {
-    if (!loanOffers && !loanOffersFetching) {
-      dispatch(fetchLoanAuctionByNFT(item));
-    }
-  }, [item, loanAuctionFetching]);
-
   const { repayLoanByBorrower } = useRepayLoanByBorrower({
     nftContractAddress: contract.address,
     nftId: item.id,
   });
+
+  useEffect(() => {
+    if (!loanOffers && !loanOffersFetching) {
+      console.log('Fetch loan offers');
+      dispatch(fetchLoanOffersByNFT(item));
+    }
+  }, [item, loanOffersFetching]);
+
+  // useEffect(() => {
+  //     if (!loanOffers && !loanOffersFetching) {
+  //         dispatch(fetchLoanAuctionByNFT(item));
+  //     }
+  // }, [item, loanAuctionFetching]);
 
   if (!loanOffers || loanOffersFetching) {
     return <div>Loading...</div>;

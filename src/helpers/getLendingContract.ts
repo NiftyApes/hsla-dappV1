@@ -24,6 +24,8 @@ import {
 export function getLendingContract({ provider }: { provider: EIP1193Provider }) {
   let contract = getStoreLendingContract();
 
+  console.log('lending-----');
+
   if (!contract) {
     contract = getEthersContractWithEIP1193Provider({
       abi: Lending.abi,
@@ -51,15 +53,19 @@ export function getLiquidityContract({ provider }: { provider: EIP1193Provider }
 }
 
 export function getOffersContract({ provider }: { provider: EIP1193Provider }) {
+  console.log('offers ----');
   let contract = getStoreOffersContract();
   if (!contract) {
+    console.log('NO contract');
+
     contract = getEthersContractWithEIP1193Provider({
       abi: Offers.abi,
       address: OffersDeploymentJSON.address,
       provider,
     }) as OffersContract;
-
     setStoreOffersContract(contract);
+  } else {
+    console.log('ALREADY HAVE IT');
   }
   return contract;
 }
