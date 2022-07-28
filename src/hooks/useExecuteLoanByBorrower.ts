@@ -1,6 +1,6 @@
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
-import { useNiftyApesContract } from './useNiftyApesContract';
+import { useLendingContract } from './useContracts';
 
 export const useExecuteLoanByBorrower = ({
   nftContractAddress,
@@ -13,7 +13,7 @@ export const useExecuteLoanByBorrower = ({
   offerHash: string;
   floorTerm?: boolean;
 }) => {
-  const niftyApesContract = useNiftyApesContract();
+  const niftyApesContract = useLendingContract();
 
   const dispatch = useAppDispatch();
 

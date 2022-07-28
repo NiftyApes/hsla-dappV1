@@ -29,16 +29,15 @@ export const NFTCardContainer = ({ contract, item }: { contract: Contract; item:
 
   useEffect(() => {
     if (!loanOffers && !loanOffersFetching) {
-      console.log('Fetch loan offers');
       dispatch(fetchLoanOffersByNFT(item));
     }
   }, [item, loanOffersFetching]);
 
-  // useEffect(() => {
-  //     if (!loanOffers && !loanOffersFetching) {
-  //         dispatch(fetchLoanAuctionByNFT(item));
-  //     }
-  // }, [item, loanAuctionFetching]);
+  useEffect(() => {
+    if (!loanOffers && !loanOffersFetching) {
+      dispatch(fetchLoanAuctionByNFT(item));
+    }
+  }, [item, loanAuctionFetching]);
 
   if (!loanOffers || loanOffersFetching) {
     return <div>Loading...</div>;

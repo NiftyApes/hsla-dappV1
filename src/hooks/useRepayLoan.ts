@@ -1,7 +1,7 @@
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
-import { useNiftyApesContract } from './useNiftyApesContract';
+import { useLendingContract } from './useContracts';
 
 // TODO: Replace with dynamic value
 const TEST_ETH_AMOUNT = '2.0';
@@ -13,7 +13,7 @@ export const useRepayLoanByBorrower = ({
   nftContractAddress?: string;
   nftId: string;
 }) => {
-  const niftyApesContract = useNiftyApesContract();
+  const niftyApesContract = useLendingContract();
 
   const dispatch = useAppDispatch();
 
