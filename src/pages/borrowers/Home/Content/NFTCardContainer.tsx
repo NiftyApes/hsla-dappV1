@@ -10,11 +10,10 @@ import { Contract, NFT } from 'nft/model';
 import NFTNoOfferCard from 'components/molecules/NFTNoOfferCard';
 import { useRepayLoanByBorrower } from 'hooks/useRepayLoan';
 import {
-  fetchLoanOffersByNFT,
   fetchLoanAuctionByNFT,
-  useLoanOffersByNFT,
+  fetchLoanOffersByNFT,
   useLoanAuctionByNFT,
-  LoanOffer,
+  useLoanOffersByNFT,
 } from 'loan';
 
 export const NFTCardContainer = ({ contract, item }: { contract: Contract; item: NFT }) => {
