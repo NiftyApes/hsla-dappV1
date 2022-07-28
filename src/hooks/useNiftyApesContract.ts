@@ -4,11 +4,14 @@ import { useWalletProvider } from './useWalletProvider';
 
 export const useNiftyApesContract = () => {
   const chainId = useChainId();
-
   const provider = useWalletProvider();
 
-  if (!provider) {
+  if (!provider || !chainId) {
     return;
+  }
+
+  if (chainId === '0x4') {
+    return getLocalNiftyApesContract({ provider });
   }
 
   if (chainId === '0x7a69') {

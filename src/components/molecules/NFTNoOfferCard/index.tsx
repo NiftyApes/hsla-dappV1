@@ -10,7 +10,7 @@ interface Props {
   collectionName: string;
   tokenName: string;
   id: string;
-  img: string;
+  img?: string;
 }
 
 const NFTNoOfferCard: React.FC<Props> = ({ contract, collectionName, tokenName, id, img }) => {
@@ -51,7 +51,7 @@ const NFTNoOfferCard: React.FC<Props> = ({ contract, collectionName, tokenName, 
       <Text mt="8px" color="solid.gray0" fontSize="xs">
         NO OFFERS AVAILABLE
       </Text>
-      {!hasApprovalForAll && (
+      {/* {!hasApprovalForAll && (
         <Button
           onClick={async () =>
             await grantApprovalForAll({
@@ -71,8 +71,7 @@ const NFTNoOfferCard: React.FC<Props> = ({ contract, collectionName, tokenName, 
           py="8px"
           w="100%"
           h="30px"
-          mt="8px"
-        >
+          mt="8px">
           {approvalTxStatus === 'READY' ? (
             'Approve'
           ) : approvalTxStatus === 'PENDING' ? (
@@ -87,7 +86,7 @@ const NFTNoOfferCard: React.FC<Props> = ({ contract, collectionName, tokenName, 
             'Approve'
           )}
         </Button>
-      )}
+      )} */}
       {/* <Button
         disabled={!hasApprovalForAll}
         variant="secondary"

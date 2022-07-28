@@ -1,4 +1,4 @@
-import { ILendingStructs } from 'generated/contract-types/NiftyApes';
+import { ILendingStructs } from 'generated/contract-types/NiftyApesLending';
 
 export interface LoanAuction {
   nftOwner: string;

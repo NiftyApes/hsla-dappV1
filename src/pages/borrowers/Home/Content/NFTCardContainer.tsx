@@ -15,6 +15,7 @@ import {
   useLoanOffersByNFT,
   useLoanAuctionByNFT,
 } from 'loan';
+import NFTCardLoading from 'components/molecules/NFTCardLoading';
 
 export const NFTCardContainer = ({ contract, item }: { contract: Contract; item: NFT }) => {
   const dispatch = useAppDispatch();
@@ -41,7 +42,7 @@ export const NFTCardContainer = ({ contract, item }: { contract: Contract; item:
   });
 
   if (!loanOffers || loanOffersFetching) {
-    return <div>Loading...</div>;
+    return <NFTCardLoading />;
   }
 
   if (loanAuction && loanAuction.nftOwner !== '0x0000000000000000000000000000000000000000') {
@@ -63,7 +64,7 @@ export const NFTCardContainer = ({ contract, item }: { contract: Contract; item:
     return (
       <NFTNoOfferCard
         contract={contract}
-        key={item.id}
+        key={item.uniqueKey}
         collectionName=""
         tokenName={`${item.name}`}
         id={item.id}

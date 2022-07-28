@@ -25,6 +25,10 @@ const WalletInfo: React.FC = () => {
 
   const { isOpen, onToggle } = useDisclosure();
 
+  const formatCurrency = (balance?: number) => {
+    return balance !== undefined ? `${balance}Ξ` : null;
+  };
+
   return (
     <>
       <Flex alignItems="center" position="relative">
@@ -39,7 +43,7 @@ const WalletInfo: React.FC = () => {
             padding="0 .3rem"
           >
             <Text color="solid.gray0" m="11px 14px 11px 18px">
-              {balance}
+              {formatCurrency(balance)}
             </Text>
             <Button variant="primary" borderRadius="40px">
               <Text mr="12px" p="6px 0px 6px 18px">

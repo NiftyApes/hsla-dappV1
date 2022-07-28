@@ -1,6 +1,6 @@
 import { Contract as EthersContract } from 'ethers';
-import { NiftyApes } from 'generated/contract-types/NiftyApes';
+import { NiftyApesLending } from 'generated/contract-types/NiftyApesLending';
 
 export type ContractAddress = string;
 export type Contract = EthersContract;
-export type NiftyApesContract = NiftyApes;
+export type NiftyApesContract = NiftyApesLending;

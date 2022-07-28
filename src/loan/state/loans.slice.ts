@@ -2,18 +2,20 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { useSelector, TypedUseSelectorHook } from 'react-redux';
 import { AppDispatch, ThunkExtra } from 'app/store';
 import { LoanOffer, LoanAuction, loanOffer, loanAuction } from '../model';
-import { ContractAddress, getNFTHash, NFT } from 'nft/model';
+import { ContractAddress, getNFTHash, NFT, WalletAddress } from 'nft/model';
 import { getData, getApiUrl } from 'helpers';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
 
 export type LoansState = {
   loanOffersByNFT: Record<ContractAddress, FetchLoanOffersResponse>;
   loanAuctionByNFT: Record<ContractAddress, FetchLoanAuctionResponse>;
+  loanOffersByWalletAddress: Record<ContractAddress, FetchLoanOffersResponse>;
 };
 
 export const NFTsInitialState: LoansState = {
   loanOffersByNFT: {},
   loanAuctionByNFT: {},
+  loanOffersByWalletAddress: {},
 };
 
 export type RootLoansState = {
@@ -197,6 +199,7 @@ export const useLoansSelector: TypedUseSelectorHook<RootLoansState> = useSelecto
 export const selectors = {
   loanAuctionsByNFT: (s: RootLoansState) => s.loans?.loanAuctionByNFT,
   loanOffersByNFT: (s: RootLoansState) => s.loans?.loanOffersByNFT,
+  loanOffersByWalletAddress: (s: RootLoansState) => s.loans?.loanOffersByWalletAddress,
 };
 
 export const useLoanAuctionByNFT = (nft: NFT) => {
@@ -205,6 +208,10 @@ export const useLoanAuctionByNFT = (nft: NFT) => {
 
 export const useLoanOffersByNFT = (nft: NFT) => {
   return useLoansSelector(selectors.loanOffersByNFT)[getNFTHash(nft)] || {};
+};
+
+export const useLoanOffersByWalletAddress = (walletAddress: WalletAddress) => {
+  return useLoansSelector(selectors.loanOffersByWalletAddress)[walletAddress] || {};
 };
 
 export default slice.reducer;

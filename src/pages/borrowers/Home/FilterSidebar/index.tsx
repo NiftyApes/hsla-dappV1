@@ -14,13 +14,13 @@ export const FILTER_SIDEBAR_WIDTH = 350;
 const FilterSidebar: React.FC<Props> = ({ onHide, ...restProps }) => {
   return (
     <Box
-      w={FILTER_SIDEBAR_WIDTH}
+      maxWidth={FILTER_SIDEBAR_WIDTH}
       bg="linear-gradient(0deg, #FAFAFA, #FAFAFA), #FFFFFF"
       boxShadow="0px 4px 24px rgba(73, 16, 146, 0.02)"
       borderRadius="0px 15px 15px 0px"
       // TODO @zherring - determine nav height, add to calc)
-      height="calc(100vh)"
-      overflow="auto"
+      maxHeight="calc(100vh)"
+      overflowY="auto"
       pb="20px"
       {...restProps}
     >

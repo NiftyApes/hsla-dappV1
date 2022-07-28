@@ -3,6 +3,7 @@
 # dependencies
 /node_modules
 /hardhat-ts/node_modules
+/hardhat-ts-testnet
 /.pnp
 .pnp.js
 

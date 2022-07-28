@@ -20,6 +20,7 @@ const Header: React.FC = () => {
       position="sticky"
       top="0px"
       bg="gradient.primary"
+      mr="20px"
       zIndex={9}
     >
       <Flex alignItems="center">
@@ -34,23 +35,31 @@ const Header: React.FC = () => {
           borderRadius="45px"
           alignItems="center"
           columnGap="46px"
-          fontSize="2.5xs"
-          p="17px 26px"
+          p="10px 26px"
           fontWeight="bold"
         >
-          <Text>
+          <Text textTransform="uppercase" fontSize="2.5xs">
             <Link to={borrowersId(walletAddress || '')}>🍌 Borrow</Link>
           </Text>
-          <Text color="solid.gray0">
+          <Text color="solid.gray0" fontSize="2.5xs">
             <Link to={walletAddress ? borrowersIdDashboard(walletAddress) : ''}>📊 DASH</Link>
           </Text>
         </Flex>
         <Menu>
-          <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} bg="transparent">
-            LENDERS
+          <MenuButton
+            as={Button}
+            rightIcon={<AiOutlineCaretDown />}
+            bg="transparent"
+            textTransform="uppercase"
+            color="solid.gray0"
+            fontSize="md"
+          >
+            Lenders
           </MenuButton>
           <MenuList>
-            <MenuItem>Sample</MenuItem>
+            <MenuItem>Dashboard</MenuItem>
+            <MenuItem>Manage Offers</MenuItem>
+            <MenuItem>Manage Liquidity</MenuItem>
           </MenuList>
         </Menu>
       </Flex>

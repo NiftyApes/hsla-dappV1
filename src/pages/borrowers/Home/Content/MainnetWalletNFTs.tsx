@@ -8,7 +8,7 @@ interface WalletNft {
   totalCount: number;
 }
 
-export const MainnetContent: React.FC = () => {
+export const MainnetWalletNFTs: React.FC = () => {
   const connectedWallets = useWallets();
 
   const [walletNfts, setWalletNfts] = useState<WalletNft>();

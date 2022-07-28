@@ -1,41 +1,53 @@
-import React, { useEffect } from 'react';
 import { SimpleGrid } from '@chakra-ui/react';
-import { fetchNFTsByWalletAddress, useNFTsByWalletAddress } from 'nft/state/nfts.slice';
-import { useAppDispatch } from 'app/hooks';
 import { useLocalScaffoldEthNFTContract } from 'hooks/useLocalScaffoldEthNFTContract';
 import { NFTCardContainer } from './NFTCardContainer';
 import SectionHeader from 'components/molecules/SectionHeader';
 import { useWalletAddress } from 'hooks/useWalletAddress';
-import { useChainId } from 'hooks/useChainId';
+import NFTCardLoading from 'components/molecules/NFTCardLoading';
 
-export const LocalhostContent: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const walletAddress = useWalletAddress();
-  const chainId = useChainId();
-  const contract = useLocalScaffoldEthNFTContract();
-  const nfts = useNFTsByWalletAddress(walletAddress || '');
+export const LocalWalletNFTs: React.FC = () => {
+  return null;
+  // const walletAddress = useWalletAddress();
+  // const contract = useLocalScaffoldEthNFTContract();
+  // const nfts = useNFTsByWalletAddress(walletAddress, contract);
 
-  useEffect(() => {
-    if (walletAddress && contract && !nfts?.fetching) {
-      dispatch(fetchNFTsByWalletAddress({ walletAddress, contract }));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [walletAddress, chainId]);
+  // if (!contract || !nfts) {
+  //   return null;
+  // }
 
-  const walletNfts = nfts?.content || [];
+  // const walletNfts = nfts?.content || [];
 
-  if (!contract) {
-    return null;
-  }
-
-  return (
-    <>
-      <SectionHeader headerText="NFTs with Offers"></SectionHeader>
-      <SimpleGrid minChildWidth="200px" spacing={10} style={{ padding: '16px' }}>
-        {walletNfts?.map((item: any) => (
-          <NFTCardContainer contract={contract} item={item} key={item.id} />
-        ))}
-      </SimpleGrid>
-    </>
-  );
+  // return (
+  //   <>
+  //     <SectionHeader headerText="NFTs with Offers"></SectionHeader>
+  //     <SimpleGrid minChildWidth="200px" spacing={10} style={{ padding: '16px' }}>
+  //       {nfts?.fetching ? (
+  //         <>
+  //           <NFTCardLoading />
+  //           <NFTCardLoading />
+  //           <NFTCardLoading />
+  //           <NFTCardLoading />
+  //           <NFTCardLoading />
+  //           <NFTCardLoading />
+  //           <NFTCardLoading />
+  //           <NFTCardLoading />
+  //         </>
+  //       ) : (
+  //         walletNfts?.map((item: any) => (
+  //           <NFTCardContainer contract={contract} item={item} key={item.id} />
+  //         ))
+  //       )}
+  //     </SimpleGrid>
+  //     <SectionHeader headerText="Your NFTs without Loan Offers"></SectionHeader>
+  //     <SimpleGrid minChildWidth="200px" spacing={10} style={{ padding: '16px' }}>
+  //       {nfts?.fetching ? (
+  //         <NFTCardLoading />
+  //       ) : (
+  //         walletNfts?.map((item: any) => (
+  //           <NFTCardContainer contract={contract} item={item} key={item.id} />
+  //         ))
+  //       )}
+  //     </SimpleGrid>
+  //   </>
+  // );
 };

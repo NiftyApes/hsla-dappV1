@@ -5,7 +5,6 @@ import {
   createConnectorForHardhatContract,
 } from 'eth-hooks/context';
 
-// @ts-ignore
 import hardhatContractsJson from '../generated/hardhat_contracts.json';
 
 import { externalContractsAddressMap } from './externalContractsConfig';
@@ -29,14 +28,35 @@ export const contractConnectorConfig = () => {
   try {
     const result = {
       // 🙋🏽‍♂️ Add your hadrdhat contracts here
-      YourContract: createConnectorForHardhatContract(
-        'YourContract',
-        hardhatContracts.YourContract__factory,
+      // YourContract: createConnectorForHardhatContract(
+      //   'YourContract',
+      //   hardhatContracts.YourContract__factory,
+      //   hardhatContractsJson,
+      // ),
+      // NiftyApes: createConnectorForHardhatContract(
+      //   'NiftyApes',
+      //   hardhatContracts.NiftyApes__factory,
+      //   hardhatContractsJson,
+      // ),
+
+      NiftyApesLending: createConnectorForHardhatContract(
+        'NiftyApesLending',
+        hardhatContracts.NiftyApesLending__factory,
         hardhatContractsJson,
       ),
-      NiftyApes: createConnectorForHardhatContract(
-        'NiftyApes',
-        hardhatContracts.NiftyApes__factory,
+      NiftyApesOffers: createConnectorForHardhatContract(
+        'NiftyApesOffers',
+        hardhatContracts.NiftyApesOffers__factory,
+        hardhatContractsJson,
+      ),
+      NiftyApesLiquidity: createConnectorForHardhatContract(
+        'NiftyApesLiquidity',
+        hardhatContracts.NiftyApesLiquidity__factory,
+        hardhatContractsJson,
+      ),
+      NiftyApesSigLending: createConnectorForHardhatContract(
+        'NiftyApesSigLending',
+        hardhatContracts.NiftyApesSigLending__factory,
         hardhatContractsJson,
       ),
 

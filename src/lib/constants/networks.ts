@@ -44,11 +44,20 @@ export const NETWORKS: Record<TNetworkNames, TNetworkInfo> = {
   rinkeby: {
     name: 'rinkeby',
     color: '#e0d068',
+    // name: 'localhost',
+    // color: '#666666',
     chainId: 4,
-    rpcUrl: `https://rinkeby.infura.io/v3/${INFURA_ID}`,
-    faucet: 'https://faucet.rinkeby.io/',
-    blockExplorer: 'https://rinkeby.etherscan.io/',
+    blockExplorer: '',
+    rpcUrl: 'http://' + hostname + ':8545',
   },
+  // rinkeby: {
+  //   name: 'rinkeby',
+  //   color: '#e0d068',
+  //   chainId: 4,
+  //   rpcUrl: `https://rinkeby.infura.io/v3/${INFURA_ID}`,
+  //   faucet: 'https://faucet.rinkeby.io/',
+  //   blockExplorer: 'https://rinkeby.etherscan.io/',
+  // },
   ropsten: {
     name: 'ropsten',
     color: '#F60D09',
