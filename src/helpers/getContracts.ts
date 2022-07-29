@@ -21,7 +21,7 @@ import {
   setStoreOffersContract,
 } from '../app/store';
 
-export function getLendingContract({ provider }: { provider: EIP1193Provider }) {
+export function getContracts({ provider }: { provider: EIP1193Provider }) {
   let contract = getStoreLendingContract();
   if (!contract) {
     contract = getEthersContractWithEIP1193Provider({

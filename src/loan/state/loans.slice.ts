@@ -5,7 +5,7 @@ import { LoanOffer, LoanAuction, loanOffer, loanAuction } from '../model';
 import { ContractAddress, getNFTHash, NFT } from 'nft/model';
 import { getData, getApiUrl } from 'helpers';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
-import { getOffersContract } from '../../helpers/getLendingContract';
+import { getOffersContract } from '../../helpers/getContracts';
 
 export type LoansState = {
   loanOffersByNFT: Record<ContractAddress, FetchLoanOffersResponse>;

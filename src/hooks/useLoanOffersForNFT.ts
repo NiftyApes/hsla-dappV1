@@ -4,7 +4,7 @@ import { RootState } from 'app/store';
 import { BigNumber } from 'ethers';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
 import _ from 'lodash';
-import { getOffersContract } from '../helpers/getLendingContract';
+import { getOffersContract } from '../helpers/getContracts';
 import { useWalletProvider } from './useWalletProvider';
 
 export const useLoanOffersForNFT = ({

@@ -1,9 +1,5 @@
 import { useChainId } from './useChainId';
-import {
-  getLendingContract,
-  getLiquidityContract,
-  getOffersContract,
-} from 'helpers/getLendingContract';
+import { getContracts, getLiquidityContract, getOffersContract } from 'helpers/getContracts';
 import { useWalletProvider } from './useWalletProvider';
 
 const i18n = {
@@ -43,6 +39,6 @@ export const useLendingContract = () => {
   const chainId = useChainId();
 
   if (provider && isLocalChain(chainId)) {
-    return getLendingContract({ provider });
+    return getContracts({ provider });
   }
 };

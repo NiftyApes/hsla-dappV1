@@ -6,7 +6,7 @@ import { useWalletAddress } from './useWalletAddress';
 import { useCEthContract } from './useCEthContract';
 import cEthJSON from '../external/cEth/cEth.json';
 import { useWalletProvider } from './useWalletProvider';
-import { getLiquidityContract } from '../helpers/getLendingContract';
+import { getLiquidityContract } from '../helpers/getContracts';
 
 export const useEthLiquidity = () => {
   const cacheCounter = useAppSelector((state: RootState) => state.counter);

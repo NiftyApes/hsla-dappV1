@@ -4,7 +4,7 @@ import { ethers } from 'ethers';
 import { useWalletAddress } from './useWalletAddress';
 import { saveOfferInDb } from '../helpers/saveOfferInDb';
 import { useWalletProvider } from './useWalletProvider';
-import { getOffersContract } from '../helpers/getLendingContract';
+import { getOffersContract } from '../helpers/getContracts';
 
 const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 

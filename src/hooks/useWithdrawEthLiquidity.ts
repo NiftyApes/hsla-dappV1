@@ -3,7 +3,7 @@ import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
 import { useEthLiquidity } from './useEthLiquidity';
 import { useWalletProvider } from './useWalletProvider';
-import { getLiquidityContract } from '../helpers/getLendingContract';
+import { getLiquidityContract } from '../helpers/getContracts';
 
 export const useWithdrawEthLiquidity = () => {
   const dispatch = useAppDispatch();

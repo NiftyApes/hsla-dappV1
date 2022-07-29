@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useWalletProvider } from './useWalletProvider';
-import { getOffersContract } from '../helpers/getLendingContract';
+import { getOffersContract } from '../helpers/getContracts';
 
 export const useLoanOfferFromHash = ({
   nftContractAddress,
