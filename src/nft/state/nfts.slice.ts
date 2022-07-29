@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch, ThunkExtra } from 'app/store';
 import { useSelector, TypedUseSelectorHook } from 'react-redux';
-import { NFT, Contract, NiftyApesContract, WalletAddress } from '../model';
+import { NFT, Contract, LendingContract, WalletAddress } from '../model';
 import { getNFTsOfAddress } from 'helpers/getNFTsOfAddress';
 
 export type RootNFTsState = {
@@ -11,7 +11,7 @@ export type RootNFTsState = {
 export type NFTsState = {
   nftsByWalletAddress: Record<WalletAddress, FetchNFTsResponse>;
   selectedWalletAddress?: string;
-  niftyApesContract?: NiftyApesContract;
+  niftyApesContract?: LendingContract;
 };
 
 export const NFTsInitialState: NFTsState = {
@@ -42,13 +42,13 @@ export const fetchNFTsByWalletAddress = createAsyncThunk<
   },
   NFTsThunkApi
 >('nfts/fetchNFTsByWalletAddress', async ({ walletAddress, contract }, thunkApi) => {
-  const { niftyApesContract } = thunkApi.extra();
+  const { lendingContract } = thunkApi.extra();
 
-  if (niftyApesContract) {
+  if (lendingContract) {
     const nfts = await getNFTsOfAddress({
       walletAddress,
       contract,
-      niftyApesContract,
+      lendingContract,
     });
 
     if (nfts) {
@@ -81,7 +81,7 @@ const slice = createSlice({
         ...state.nftsByWalletAddress,
         [action.meta.arg.walletAddress]: {
           ...state.nftsByWalletAddress[action.meta.arg.walletAddress],
-          fetching: false,
+          fetching: true,
           error: undefined,
         },
       };

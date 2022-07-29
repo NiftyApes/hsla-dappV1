@@ -1,6 +1,6 @@
 import { Contract } from 'ethers';
 import { useEffect, useState } from 'react';
-import { useNiftyApesContract } from './useNiftyApesContract';
+import { useLendingContract } from './useContracts';
 
 export const useSlowWayToGetNFTsOfAddress = ({
   address,
@@ -11,7 +11,7 @@ export const useSlowWayToGetNFTsOfAddress = ({
 }) => {
   const [nfts, setNfts] = useState<any>();
 
-  const niftyApesContract = useNiftyApesContract();
+  const niftyApesContract = useLendingContract();
 
   useEffect(() => {
     async function loadNFTs() {

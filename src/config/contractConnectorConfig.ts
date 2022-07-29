@@ -34,11 +34,11 @@ export const contractConnectorConfig = () => {
         hardhatContracts.YourContract__factory,
         hardhatContractsJson,
       ),
-      NiftyApes: createConnectorForHardhatContract(
-        'NiftyApes',
-        hardhatContracts.NiftyApes__factory,
-        hardhatContractsJson,
-      ),
+      // NiftyApes: createConnectorForHardhatContract(
+      //   'NiftyApes',
+      //   hardhatContracts.NiftyApes__factory,
+      //   hardhatContractsJson,
+      // ),
 
       // 🙋🏽‍♂️ Add your external contracts here, make sure to define the address in `externalContractsConfig.ts`
       DAI: createConnectorForExternalContract(

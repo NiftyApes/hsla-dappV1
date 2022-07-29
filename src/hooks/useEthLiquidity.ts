@@ -2,16 +2,20 @@ import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
-import { useNiftyApesContract } from './useNiftyApesContract';
 import { useWalletAddress } from './useWalletAddress';
 import { useCEthContract } from './useCEthContract';
 import cEthJSON from '../external/cEth/cEth.json';
+import { useWalletProvider } from './useWalletProvider';
+import { getLiquidityContract } from '../helpers/getContracts';
 
 export const useEthLiquidity = () => {
   const cacheCounter = useAppSelector((state: RootState) => state.counter);
 
   const address = useWalletAddress();
-  const niftyApesContract = useNiftyApesContract();
+
+  const provider = useWalletProvider();
+  const niftyApesContract = provider ? getLiquidityContract({ provider }) : null;
+
   const cETHContract = useCEthContract();
 
   const [ethLiquidity, setEthLiquidity] = useState<string>();

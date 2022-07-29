@@ -1,14 +1,14 @@
 import { getJson } from 'helpers';
-import { NFT, Contract, NiftyApesContract, nft } from '../nft/model';
+import { NFT, Contract, LendingContract, nft } from '../nft/model';
 
 export const getNFTsOfAddress = async ({
   walletAddress,
   contract,
-  niftyApesContract,
+  lendingContract,
 }: {
   walletAddress: string;
   contract: Contract;
-  niftyApesContract: NiftyApesContract;
+  lendingContract: LendingContract;
 }): Promise<NFT[] | undefined> => {
   if (!walletAddress || !contract || !contract.address) {
     return undefined;
@@ -28,8 +28,8 @@ export const getNFTsOfAddress = async ({
     // or in NiftyApes but indirectly owned by address
     if (owner.toUpperCase() === walletAddress.toUpperCase()) {
       results.push(nft(tokenId, contract.address, owner, json));
-    } else if (niftyApesContract) {
-      const niftyApesOwner = await niftyApesContract.ownerOf(contract.address, tokenId);
+    } else if (lendingContract) {
+      const niftyApesOwner = await lendingContract.ownerOf(contract.address, tokenId);
 
       if (niftyApesOwner.toUpperCase() === walletAddress.toUpperCase()) {
         results.push(nft(tokenId, contract.address, owner, json));

@@ -1,7 +1,7 @@
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { useEffect, useState } from 'react';
-import { useNiftyApesContract } from './useNiftyApesContract';
+import { useLendingContract } from './useContracts';
 
 export const useLoanAuction = ({
   nftContractAddress,
@@ -10,7 +10,7 @@ export const useLoanAuction = ({
   nftContractAddress?: string;
   nftId: string;
 }) => {
-  const niftyApesContract = useNiftyApesContract();
+  const niftyApesContract = useLendingContract();
 
   const cacheCounter = useAppSelector((state: RootState) => state.counter);
 

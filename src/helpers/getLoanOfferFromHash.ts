@@ -1,23 +1,23 @@
-import { NiftyApesContract } from 'nft/model';
+import { OffersContract } from 'nft/model';
 
 export async function getLoanOfferFromHash({
-  niftyApesContract,
+  offersContract,
   nftContractAddress,
   nftId,
   offerHash,
   floorTerm = false,
 }: {
-  niftyApesContract: NiftyApesContract;
+  offersContract: OffersContract;
   nftContractAddress?: string;
   nftId: string;
   offerHash: string;
   floorTerm?: boolean;
 }) {
-  if (!niftyApesContract || !nftContractAddress) {
+  if (!offersContract || !nftContractAddress) {
     return;
   }
 
-  const result = await niftyApesContract.getOffer(nftContractAddress, nftId, offerHash, floorTerm);
+  const result = await offersContract.getOffer(nftContractAddress, nftId, offerHash, floorTerm);
 
   return result;
 }
