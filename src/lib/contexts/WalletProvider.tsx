@@ -23,12 +23,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode | React.ReactN
   const { id } = useParams<{ id: string }>();
   const [{ wallet }, connect] = useConnectWallet();
   const connectedWallets = useWallets();
-
-  // const [web3Onboard, setWeb3Onboard] = useState<OnboardAPI | null>(null);
   const web3Onboard: OnboardAPI = initWeb3Onboard;
   const walletAddress = useMemo(() => wallet?.accounts[0].address, [wallet]);
-
-  console.log('Wallet address', walletAddress);
 
   const {
     isOpen: isWalletConnectModalVisible,
