@@ -8,6 +8,11 @@ import SectionHeader from 'components/molecules/SectionHeader';
 import { useWalletAddress } from 'hooks/useWalletAddress';
 import { useChainId } from 'hooks/useChainId';
 
+const i18n = {
+  loadingText: 'Loading NFTs...',
+  sectionHeaderText: 'NFTs with Offers',
+};
+
 export const LocalhostContent: React.FC = () => {
   const dispatch = useAppDispatch();
   const walletAddress = useWalletAddress();
@@ -29,12 +34,12 @@ export const LocalhostContent: React.FC = () => {
   }
 
   if (nfts?.fetching) {
-    return <>Loading NFTs...</>;
+    return <>{i18n.loadingText}</>;
   }
 
   return (
     <>
-      <SectionHeader headerText="NFTs with Offers"></SectionHeader>
+      <SectionHeader headerText={i18n.sectionHeaderText}></SectionHeader>
       <SimpleGrid minChildWidth="200px" spacing={10} style={{ padding: '16px' }}>
         {walletNfts?.map((item: any) => (
           <NFTCardContainer contract={contract} item={item} key={item.id} />
