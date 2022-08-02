@@ -24,9 +24,11 @@ export const WalletProvider: React.FC<{ children: React.ReactNode | React.ReactN
   const [{ wallet }, connect] = useConnectWallet();
   const connectedWallets = useWallets();
 
-  const [web3Onboard, setWeb3Onboard] = useState<OnboardAPI | null>(null);
-
+  // const [web3Onboard, setWeb3Onboard] = useState<OnboardAPI | null>(null);
+  const web3Onboard: OnboardAPI = initWeb3Onboard;
   const walletAddress = useMemo(() => wallet?.accounts[0].address, [wallet]);
+
+  console.log('Wallet address', walletAddress);
 
   const {
     isOpen: isWalletConnectModalVisible,
@@ -35,23 +37,19 @@ export const WalletProvider: React.FC<{ children: React.ReactNode | React.ReactN
   } = useDisclosure();
 
   useEffect(() => {
-    setWeb3Onboard(initWeb3Onboard);
-  }, []);
-
-  useEffect(() => {
     async function autoConnect() {
-      const connectedWalletsLocalStorage = window.localStorage.getItem('connectedWallets');
+      const localWallets = window.localStorage.getItem('connectedWallets');
+      const serializedLocalWallets = JSON.parse(localWallets!);
 
-      const previouslyConnectedWallets = JSON.parse(connectedWalletsLocalStorage!);
-
-      if (Array.isArray(previouslyConnectedWallets) && previouslyConnectedWallets.length > 0) {
+      if (Array.isArray(serializedLocalWallets) && serializedLocalWallets.length > 0) {
         await initWeb3Onboard.connectWallet({
-          autoSelect: { label: previouslyConnectedWallets[0], disableModals: true },
+          autoSelect: { label: serializedLocalWallets[0], disableModals: true },
         });
       } else {
         showWalletConnectModal();
       }
     }
+
     autoConnect();
   }, [showWalletConnectModal]);
 
@@ -62,6 +60,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode | React.ReactN
     window.localStorage.setItem('connectedWallets', JSON.stringify(connectedWalletsLabelArray));
   }, [connectedWallets]);
 
+  // Navigates to wallet url
   useLayoutEffect(() => {
     if (walletAddress && id !== walletAddress) {
       navigate(walletAddress);
