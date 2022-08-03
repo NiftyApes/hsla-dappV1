@@ -75,7 +75,10 @@ export const DepositLiquidity: React.FC = () => {
       <Flex>
         <DepositBtn
           onClick={() => {
-            depositETHLiquidity({ ethToDeposit: Number(liquidityToDepositStr) });
+            depositETHLiquidity({
+              ethToDeposit: Number(liquidityToDepositStr),
+              cleanup: () => setLiquidityToDepositStr(''),
+            });
           }}
           isDisabled={
             depositStatus !== 'READY' ||

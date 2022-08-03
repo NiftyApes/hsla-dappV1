@@ -23,7 +23,13 @@ export const useWithdrawEthLiquidity = () => {
   const [txReceipt, setTxReceipt] = useState<ethers.ContractReceipt | null>(null);
 
   return {
-    withdrawETHLiquidity: async ({ ethToWithdraw }: { ethToWithdraw: number }) => {
+    withdrawETHLiquidity: async ({
+      ethToWithdraw,
+      cleanup,
+    }: {
+      ethToWithdraw: number;
+      cleanup: () => void;
+    }) => {
       if (!niftyApesContract) {
         throw new Error('Contract is not defined');
       }
@@ -42,6 +48,7 @@ export const useWithdrawEthLiquidity = () => {
           setWithdrawStatus('READY');
           setTxObject(null);
           setTxReceipt(null);
+          cleanup();
         }, 3000);
       } catch (e: any) {
         setWithdrawStatus('ERROR');
@@ -49,6 +56,7 @@ export const useWithdrawEthLiquidity = () => {
           setWithdrawStatus('READY');
           setTxObject(null);
           setTxReceipt(null);
+          cleanup();
         }, 3000);
         console.error(e);
       }

@@ -74,7 +74,10 @@ export const WithdrawLiquidity: React.FC<Props> = ({ maxWithdrawableLiquidity })
       <Flex>
         <WithdrawBtn
           onClick={() => {
-            withdrawETHLiquidity({ ethToWithdraw: Number(liquidityToWithdrawStr) });
+            withdrawETHLiquidity({
+              ethToWithdraw: Number(liquidityToWithdrawStr),
+              cleanup: () => setLiquidityToWithdrawStr(''),
+            });
           }}
           isDisabled={
             withdrawStatus !== 'READY' ||
