@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useAppDispatch } from 'app/hooks';
 import { BigNumber, ethers } from 'ethers';
-import { Button } from '@chakra-ui/react';
+import { Button, Center, Flex } from '@chakra-ui/react';
 import { formatEther } from '@ethersproject/units';
 
 import NFTCard from 'components/molecules/NFTCard';
@@ -15,33 +15,41 @@ import {
   useLoanAuctionByNFT,
   useLoanOffersByNFT,
 } from 'loan';
+import LoadingIndicator from '../../../../components/atoms/LoadingIndicator';
 
-export const NFTCardContainer = ({ contract, item }: { contract: Contract; item: NFT }) => {
+interface Props {
+  contract: Contract;
+  item: NFT;
+}
+
+export const NFTCardContainer = ({ contract, item }: Props) => {
   const dispatch = useAppDispatch();
 
-  let { content: loanOffers, fetching: loanOffersFetching } = useLoanOffersByNFT(item);
-  const { content: loanAuction, fetching: loanAuctionFetching } = useLoanAuctionByNFT(item);
+  const { content: loanOffers, fetching: fetchingOffers } = useLoanOffersByNFT(item);
+  const { content: loanAuction, fetching: fetchingAuctions } = useLoanAuctionByNFT(item);
+
   const { repayLoanByBorrower } = useRepayLoanByBorrower({
     nftContractAddress: contract.address,
     nftId: item.id,
   });
 
   useEffect(() => {
-    if (!loanOffers && !loanOffersFetching) {
+    if (!loanOffers && !fetchingOffers) {
       dispatch(fetchLoanOffersByNFT(item));
     }
-  }, [item, loanOffersFetching]);
+  }, [item, fetchingOffers]);
 
   useEffect(() => {
-    if (!loanOffers && !loanOffersFetching) {
+    if (!loanAuction && !fetchingAuctions) {
       dispatch(fetchLoanAuctionByNFT(item));
     }
-  }, [item, loanAuctionFetching]);
+  }, [item, fetchingAuctions]);
 
-  if (!loanOffers || loanOffersFetching) {
-    return <div>Loading...</div>;
+  if (!loanOffers || fetchingOffers || !loanAuction || fetchingAuctions) {
+    return <LoadingCard />;
   }
 
+  //TODO: Why are we checking null address?
   if (loanAuction && loanAuction.nftOwner !== '0x0000000000000000000000000000000000000000') {
     return (
       <div>
@@ -95,3 +103,18 @@ export const NFTCardContainer = ({ contract, item }: { contract: Contract; item:
     />
   );
 };
+
+const LoadingCard = () => (
+  <Flex
+    alignItems="center"
+    borderRadius="15px"
+    boxShadow="0px 4px 24px rgba(73, 16, 146, 0.1)"
+    flexDir="column"
+    fontWeight="bold"
+    p="17px 15px 10px 15px"
+  >
+    <Center w="100px" h="200px">
+      <LoadingIndicator />
+    </Center>
+  </Flex>
+);

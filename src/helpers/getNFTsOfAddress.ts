@@ -1,15 +1,17 @@
 import { getJson } from 'helpers';
 import { NFT, Contract, LendingContract, nft } from '../nft/model';
 
+interface Props {
+  walletAddress: string;
+  contract: Contract;
+  lendingContract: LendingContract;
+}
+
 export const getNFTsOfAddress = async ({
   walletAddress,
   contract,
   lendingContract,
-}: {
-  walletAddress: string;
-  contract: Contract;
-  lendingContract: LendingContract;
-}): Promise<NFT[] | undefined> => {
+}: Props): Promise<NFT[] | undefined> => {
   if (!walletAddress || !contract || !contract.address) {
     return undefined;
   }
