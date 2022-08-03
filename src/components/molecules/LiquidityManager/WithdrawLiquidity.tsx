@@ -1,4 +1,6 @@
 import { Box, Button, Flex, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
+import LoadingIndicator from 'components/atoms/LoadingIndicator';
+import { useWithdrawEthLiquidity } from 'hooks/useWithdrawEthLiquidity';
 import { useState } from 'react';
 import { WithdrawBtn } from './WithdrawBtn';
 
@@ -7,14 +9,20 @@ interface Props {
 }
 
 export const WithdrawLiquidity: React.FC<Props> = ({ maxWithdrawableLiquidity }) => {
+  const { withdrawETHLiquidity, withdrawStatus, txObject, ethLiquidity } =
+    useWithdrawEthLiquidity();
+
   const [liquidityToWithdrawStr, setLiquidityToWithdrawStr] = useState('');
 
   const isInputBlank = liquidityToWithdrawStr === '';
 
   const isInputConvertibleToNumber = !isNaN(Number(liquidityToWithdrawStr));
 
-  const doesInputExceedsMax =
-    isInputConvertibleToNumber && Number(liquidityToWithdrawStr) > maxWithdrawableLiquidity;
+  const doesInputExceedsMax = !!(
+    isInputConvertibleToNumber &&
+    ethLiquidity &&
+    Number(liquidityToWithdrawStr) > Number(ethLiquidity)
+  );
 
   return (
     <div>
@@ -30,13 +38,30 @@ export const WithdrawLiquidity: React.FC<Props> = ({ maxWithdrawableLiquidity })
             <Button
               h="1.75rem"
               size="sm"
-              onClick={() => setLiquidityToWithdrawStr(String(maxWithdrawableLiquidity))}
+              onClick={() => ethLiquidity && setLiquidityToWithdrawStr(ethLiquidity)}
             >
               max
             </Button>
           </InputRightElement>
         </InputGroup>
       </Flex>
+      {withdrawStatus === 'PENDING' && (
+        <Box ml="0.25rem" mt="0.25rem">
+          Withdrawing liquidity <LoadingIndicator size="sm" />
+          <br />
+          {txObject?.hash}
+        </Box>
+      )}
+      {withdrawStatus === 'SUCCESS' && (
+        <Box ml="0.25rem" mt="0.25rem" color="green.500">
+          Liquidity withdrawn successfully!
+        </Box>
+      )}
+      {withdrawStatus === 'ERROR' && (
+        <Box ml="0.25rem" mt="0.25rem" color="red.500">
+          There was an error when attempting to withdraw liquidity.
+        </Box>
+      )}
       {(!isInputConvertibleToNumber || doesInputExceedsMax) && (
         <Box fontSize="small" ml="0.25rem" color="red.500">
           {!isInputConvertibleToNumber
@@ -48,7 +73,15 @@ export const WithdrawLiquidity: React.FC<Props> = ({ maxWithdrawableLiquidity })
       )}
       <Flex>
         <WithdrawBtn
-          isDisabled={isInputBlank || !isInputConvertibleToNumber || doesInputExceedsMax}
+          onClick={() => {
+            withdrawETHLiquidity({ ethToWithdraw: Number(liquidityToWithdrawStr) });
+          }}
+          isDisabled={
+            withdrawStatus !== 'READY' ||
+            isInputBlank ||
+            !isInputConvertibleToNumber ||
+            doesInputExceedsMax
+          }
         />
       </Flex>
     </div>

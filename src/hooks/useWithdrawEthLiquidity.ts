@@ -1,9 +1,10 @@
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
+import { useState } from 'react';
+import { getLiquidityContract } from '../helpers/getContracts';
 import { useEthLiquidity } from './useEthLiquidity';
 import { useWalletProvider } from './useWalletProvider';
-import { getLiquidityContract } from '../helpers/getContracts';
 
 export const useWithdrawEthLiquidity = () => {
   const dispatch = useAppDispatch();
@@ -13,50 +14,50 @@ export const useWithdrawEthLiquidity = () => {
   const provider = useWalletProvider();
   const niftyApesContract = provider ? getLiquidityContract({ provider }) : null;
 
+  const [withdrawStatus, setWithdrawStatus] = useState<'PENDING' | 'SUCCESS' | 'ERROR' | 'READY'>(
+    'READY',
+  );
+
+  const [txObject, setTxObject] = useState<ethers.ContractTransaction | null>(null);
+
+  const [txReceipt, setTxReceipt] = useState<ethers.ContractReceipt | null>(null);
+
   return {
-    withdrawETHLiquidity: async ({
-      ethToWithdraw,
-      onTxSubmitted,
-      onTxMined,
-      onPending,
-      onSuccess,
-      onError,
-    }: {
-      ethToWithdraw: string;
-      onTxSubmitted?: any;
-      onTxMined?: any;
-      onPending?: any;
-      onSuccess?: any;
-      onError?: any;
-    }) => {
-      if (isNaN(Number(ethToWithdraw))) {
-        alert('Need to supply a numeric value for ETH quantity');
-        return;
-      }
-
-      onPending && onPending();
-
+    withdrawETHLiquidity: async ({ ethToWithdraw }: { ethToWithdraw: number }) => {
       if (!niftyApesContract) {
         throw new Error('Contract is not defined');
       }
 
+      setWithdrawStatus('PENDING');
+
       try {
-        const tx = await niftyApesContract.withdrawEth(ethers.utils.parseEther(ethToWithdraw));
-        onTxSubmitted && onTxSubmitted(tx);
+        const tx = await niftyApesContract.withdrawEth(
+          ethers.utils.parseEther(ethToWithdraw.toString()),
+        );
+        setTxObject(tx);
         const receipt = await tx.wait();
-        onTxMined && onTxMined(receipt);
-        onSuccess && onSuccess();
+        setTxReceipt(receipt);
+        setWithdrawStatus('SUCCESS');
+        setTimeout(() => {
+          setWithdrawStatus('READY');
+          setTxObject(null);
+          setTxReceipt(null);
+        }, 3000);
       } catch (e: any) {
-        if (onError) {
-          onError(e);
-        } else {
-          alert(e.message);
-        }
+        setWithdrawStatus('ERROR');
+        setTimeout(() => {
+          setWithdrawStatus('READY');
+          setTxObject(null);
+          setTxReceipt(null);
+        }, 3000);
+        console.error(e);
       }
 
       dispatch(increment());
     },
-
+    withdrawStatus,
+    txObject,
+    txReceipt,
     ethLiquidity,
   };
 };
