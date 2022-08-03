@@ -6,14 +6,14 @@ import { useNiftyApesContractAddress } from 'hooks/useNiftyApesContractAddress';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 
 interface Props {
+  collectionName?: string;
   contract?: Contract;
-  collectionName: string;
+  img?: string;
+  tokenId: string;
   tokenName: string;
-  id: string;
-  img: string;
 }
 
-const NFTNoOfferCard: React.FC<Props> = ({ contract, collectionName, tokenName, id, img }) => {
+const NFTNoOfferCard: React.FC<Props> = ({ collectionName, contract, img, tokenId, tokenName }) => {
   const niftyApesContractAddress = useNiftyApesContractAddress();
 
   const { hasApprovalForAll, grantApprovalForAll } = useERC721ApprovalForAll({
@@ -29,15 +29,16 @@ const NFTNoOfferCard: React.FC<Props> = ({ contract, collectionName, tokenName, 
       flexDir="column"
       p="17px 15px 10px 15px"
       fontWeight="bold"
-      // w="200px"
       boxShadow="0px 4px 24px rgba(73, 16, 146, 0.1)"
       borderRadius="15px"
     >
-      <Text color="solid.gray0" fontSize="2.5xs">
-        {collectionName}
-      </Text>
+      {collectionName && (
+        <Text color="solid.gray0" fontSize="2.5xs">
+          {collectionName}
+        </Text>
+      )}
       <Text fontSize="xl" mt="5px" maxW="100%" isTruncated>
-        {tokenName} #{id}
+        {tokenName}
       </Text>
       <Image
         src={img}
@@ -51,6 +52,7 @@ const NFTNoOfferCard: React.FC<Props> = ({ contract, collectionName, tokenName, 
       <Text mt="8px" color="solid.gray0" fontSize="xs">
         NO OFFERS AVAILABLE
       </Text>
+
       {!hasApprovalForAll && (
         <Button
           onClick={async () =>

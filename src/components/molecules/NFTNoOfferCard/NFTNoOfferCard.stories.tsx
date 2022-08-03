@@ -17,5 +17,5 @@ Default.args = {
   img: MockImg1,
   collectionName: 'CRYPTOMANGA GENESIS',
   tokenName: 'CryptoManga',
-  id: '1232',
+  tokenId: '1232',
 };

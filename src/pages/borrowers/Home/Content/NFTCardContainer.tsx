@@ -64,7 +64,7 @@ export const NFTCardContainer = ({ contract, item }: { contract: Contract; item:
         key={item.id}
         collectionName=""
         tokenName={`${item.name}`}
-        id={item.id}
+        tokenId={item.id}
         img={item.image}
       />
     );
