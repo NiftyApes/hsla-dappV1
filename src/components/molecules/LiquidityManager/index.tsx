@@ -24,7 +24,7 @@ export const LiquidityManager: React.FC = () => {
             <DepositLiquidity />
           </TabPanel>
           <TabPanel>
-            <WithdrawLiquidity maxWithdrawableLiquidity={10} />
+            <WithdrawLiquidity />
           </TabPanel>
         </TabPanels>
       </Tabs>

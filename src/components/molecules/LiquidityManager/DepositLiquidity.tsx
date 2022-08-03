@@ -9,6 +9,8 @@ import { DepositMsg } from './DepositMsg';
 export const DepositLiquidity: React.FC = () => {
   const balance = useWalletBalance();
 
+  const { depositETHLiquidity, depositStatus, txObject } = useDepositEthLiquidity();
+
   const [liquidityToDepositStr, setLiquidityToDepositStr] = useState('');
 
   const isInputBlank = liquidityToDepositStr === '';
@@ -20,8 +22,6 @@ export const DepositLiquidity: React.FC = () => {
     balance &&
     Number(liquidityToDepositStr) > balance
   );
-
-  const { depositETHLiquidity, depositStatus, txObject } = useDepositEthLiquidity();
 
   return (
     <div>

@@ -4,11 +4,7 @@ import { useWithdrawEthLiquidity } from 'hooks/useWithdrawEthLiquidity';
 import { useState } from 'react';
 import { WithdrawBtn } from './WithdrawBtn';
 
-interface Props {
-  maxWithdrawableLiquidity: number;
-}
-
-export const WithdrawLiquidity: React.FC<Props> = ({ maxWithdrawableLiquidity }) => {
+export const WithdrawLiquidity: React.FC = () => {
   const { withdrawETHLiquidity, withdrawStatus, txObject, ethLiquidity } =
     useWithdrawEthLiquidity();
 
