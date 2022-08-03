@@ -3,7 +3,7 @@ import { Box } from '@chakra-ui/react';
 export const DepositMsg: React.FC = () => {
   return (
     <Box>
-      <Box textAlign="center">
+      <Box textAlign="center" mt="1rem">
         <strong>Why Lock Liquidity?</strong>
       </Box>
       <Box textAlign="center" mt="1rem">

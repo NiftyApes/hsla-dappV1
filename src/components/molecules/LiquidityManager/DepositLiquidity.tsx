@@ -1,21 +1,27 @@
 import { Box, Button, Flex, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
+import LoadingIndicator from 'components/atoms/LoadingIndicator';
+import { useDepositEthLiquidity } from 'hooks/useDepositEthLiquidity';
+import { useWalletBalance } from 'hooks/useWalletBalance';
 import { useState } from 'react';
 import { DepositBtn } from './DepositBtn';
 import { DepositMsg } from './DepositMsg';
 
-interface Props {
-  walletMax: number;
-}
+export const DepositLiquidity: React.FC = () => {
+  const balance = useWalletBalance();
 
-export const DepositLiquidity: React.FC<Props> = ({ walletMax }) => {
   const [liquidityToDepositStr, setLiquidityToDepositStr] = useState('');
 
   const isInputBlank = liquidityToDepositStr === '';
 
   const isInputConvertibleToNumber = !isNaN(Number(liquidityToDepositStr));
 
-  const doesInputExceedsMax =
-    isInputConvertibleToNumber && Number(liquidityToDepositStr) > walletMax;
+  const doesInputExceedsMax = !!(
+    isInputConvertibleToNumber &&
+    balance &&
+    Number(liquidityToDepositStr) > balance
+  );
+
+  const { depositETHLiquidity, depositStatus, txObject } = useDepositEthLiquidity();
 
   return (
     <div>
@@ -25,20 +31,38 @@ export const DepositLiquidity: React.FC<Props> = ({ walletMax }) => {
             pr="4.5rem"
             value={liquidityToDepositStr}
             onChange={(e) => setLiquidityToDepositStr(e.target.value)}
+            disabled={depositStatus !== 'READY'}
           />
-
           <InputRightElement width="5.5rem">
             <Box mr="0.5rem">Ξ</Box>
             <Button
               h="1.75rem"
               size="sm"
-              onClick={() => setLiquidityToDepositStr(String(walletMax))}
+              onClick={() => setLiquidityToDepositStr(String(balance))}
+              disabled={depositStatus !== 'READY'}
             >
               max
             </Button>
           </InputRightElement>
         </InputGroup>
       </Flex>
+      {depositStatus === 'PENDING' && (
+        <Box ml="0.25rem" mt="0.25rem">
+          Depositing liquidity <LoadingIndicator size="sm" />
+          <br />
+          {txObject?.hash}
+        </Box>
+      )}
+      {depositStatus === 'SUCCESS' && (
+        <Box ml="0.25rem" mt="0.25rem" color="green.500">
+          Liquidity deposited successfully!
+        </Box>
+      )}
+      {depositStatus === 'ERROR' && (
+        <Box ml="0.25rem" mt="0.25rem" color="red.500">
+          There was an error when attempting to deposit liquidity.
+        </Box>
+      )}
       {(!isInputConvertibleToNumber || doesInputExceedsMax) && (
         <Box fontSize="small" ml="0.25rem" color="red.500">
           {!isInputConvertibleToNumber
@@ -50,12 +74,18 @@ export const DepositLiquidity: React.FC<Props> = ({ walletMax }) => {
       )}
       <Flex>
         <DepositBtn
-          isDisabled={isInputBlank || !isInputConvertibleToNumber || doesInputExceedsMax}
+          onClick={() => {
+            depositETHLiquidity({ ethToDeposit: Number(liquidityToDepositStr) });
+          }}
+          isDisabled={
+            depositStatus !== 'READY' ||
+            isInputBlank ||
+            !isInputConvertibleToNumber ||
+            doesInputExceedsMax
+          }
         />
       </Flex>
-      <Box mt="1rem">
-        <DepositMsg />
-      </Box>
+      <DepositMsg />
     </div>
   );
 };
