@@ -32,7 +32,7 @@ module.exports = {
   rules: {
     '@typescript-eslint/no-unused-vars': ['warn'],
     'no-duplicate-imports': 'error',
-    'react/no-unescaped-entities': 'error',
+    'react/no-unescaped-entities': 'warn',
     quotes: 'off',
   },
 };
