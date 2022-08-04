@@ -15,7 +15,7 @@ import {
   useLoanAuctionByNFT,
   useLoanOffersByNFT,
 } from 'loan';
-import LoadingIndicator from '../../../../components/atoms/LoadingIndicator';
+import { NFTLoadingCard } from '../../../../components/molecules/NFTLoadingCard';
 
 interface Props {
   contract: Contract;
@@ -46,7 +46,7 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
   }, [item, fetchingAuctions]);
 
   if (!loanOffers || fetchingOffers || !loanAuction || fetchingAuctions) {
-    return <LoadingCard />;
+    return <NFTLoadingCard />;
   }
 
   //TODO: Why are we checking null address?
@@ -103,18 +103,3 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
     />
   );
 };
-
-const LoadingCard = () => (
-  <Flex
-    alignItems="center"
-    borderRadius="15px"
-    boxShadow="0px 4px 24px rgba(73, 16, 146, 0.1)"
-    flexDir="column"
-    fontWeight="bold"
-    p="17px 15px 10px 15px"
-  >
-    <Center w="100px" h="200px">
-      <LoadingIndicator />
-    </Center>
-  </Flex>
-);

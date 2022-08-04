@@ -4,6 +4,8 @@ import { useERC721ApprovalForAll } from 'hooks/useERC721ApprovalForAll';
 import { Contract } from 'ethers';
 import { useNiftyApesContractAddress } from 'hooks/useNiftyApesContractAddress';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
+import { NFTCardContainer } from '../NFTCard/NFTCardContainer';
+import { NFTCardLayout } from '../NFTCard/NFTCardLayout';
 
 interface Props {
   collectionName?: string;
@@ -24,73 +26,57 @@ const NFTNoOfferCard: React.FC<Props> = ({ collectionName, contract, img, tokenI
   const [approvalTxStatus, setApprovalTxStatus] = useState<string>('READY');
 
   return (
-    <Flex
-      alignItems="center"
-      flexDir="column"
-      p="17px 15px 10px 15px"
-      fontWeight="bold"
-      boxShadow="0px 4px 24px rgba(73, 16, 146, 0.1)"
-      borderRadius="15px"
-    >
-      {collectionName && (
-        <Text color="solid.gray0" fontSize="2.5xs">
-          {collectionName}
-        </Text>
-      )}
-      <Text fontSize="xl" mt="5px" maxW="100%" isTruncated>
-        {tokenName}
-      </Text>
-      <Image
-        src={img}
-        alt="No Offer Card"
-        w="156px"
-        h="127px"
-        objectFit="cover"
-        borderRadius="25px"
-        mt="12px"
-      />
-      <Text mt="8px" color="solid.gray0" fontSize="xs">
-        NO OFFERS AVAILABLE
-      </Text>
+    <NFTCardContainer>
+      <NFTCardLayout
+        img={img}
+        tokenId={tokenId}
+        tokenName={tokenName}
+        collectionName={collectionName}
+      >
+        <Flex p="10px" textAlign="center" flexDir="column" w="100%">
+          <Text mt="8px" color="solid.gray0" fontSize="xs">
+            NO OFFERS AVAILABLE
+          </Text>
 
-      {!hasApprovalForAll && (
-        <Button
-          onClick={async () =>
-            await grantApprovalForAll({
-              onPending: () => setApprovalTxStatus('PENDING'),
-              onSuccess: () => {
-                setApprovalTxStatus('SUCCESS');
-                setTimeout(() => setApprovalTxStatus('READY'), 1000);
-              },
-              onError: () => {
-                setApprovalTxStatus('ERROR');
-                setTimeout(() => setApprovalTxStatus('READY'), 1000);
-              },
-            })
-          }
-          variant="secondary"
-          size="xs"
-          py="8px"
-          w="100%"
-          h="30px"
-          mt="8px"
-        >
-          {approvalTxStatus === 'READY' ? (
-            'Approve'
-          ) : approvalTxStatus === 'PENDING' ? (
-            <span>
-              Pending <LoadingIndicator size="xs" />
-            </span>
-          ) : approvalTxStatus === 'SUCCESS' ? (
-            'Success'
-          ) : approvalTxStatus === 'ERROR' ? (
-            'Error'
-          ) : (
-            'Approve'
+          {!hasApprovalForAll && (
+            <Button
+              onClick={async () =>
+                await grantApprovalForAll({
+                  onPending: () => setApprovalTxStatus('PENDING'),
+                  onSuccess: () => {
+                    setApprovalTxStatus('SUCCESS');
+                    setTimeout(() => setApprovalTxStatus('READY'), 1000);
+                  },
+                  onError: () => {
+                    setApprovalTxStatus('ERROR');
+                    setTimeout(() => setApprovalTxStatus('READY'), 1000);
+                  },
+                })
+              }
+              variant="secondary"
+              size="xs"
+              py="8px"
+              w="100%"
+              h="30px"
+              mt="8px"
+            >
+              {approvalTxStatus === 'READY' ? (
+                'Approve'
+              ) : approvalTxStatus === 'PENDING' ? (
+                <span>
+                  Pending <LoadingIndicator size="xs" />
+                </span>
+              ) : approvalTxStatus === 'SUCCESS' ? (
+                'Success'
+              ) : approvalTxStatus === 'ERROR' ? (
+                'Error'
+              ) : (
+                'Approve'
+              )}
+            </Button>
           )}
-        </Button>
-      )}
-      {/* <Button
+        </Flex>
+        {/* <Button
         disabled={!hasApprovalForAll}
         variant="secondary"
         size="xs"
@@ -101,7 +87,8 @@ const NFTNoOfferCard: React.FC<Props> = ({ collectionName, contract, img, tokenI
       >
         REQUEST LOAN
       </Button> */}
-    </Flex>
+      </NFTCardLayout>
+    </NFTCardContainer>
   );
 };
 
