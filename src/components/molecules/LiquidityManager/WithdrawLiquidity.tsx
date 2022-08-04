@@ -20,6 +20,12 @@ export const WithdrawLiquidity: React.FC = () => {
     Number(liquidityToWithdrawStr) > Number(ethLiquidity)
   );
 
+  const isWithdrawBtnDisabled =
+    withdrawStatus !== 'READY' ||
+    isInputBlank ||
+    !isInputConvertibleToNumber ||
+    doesInputExceedsMax;
+
   return (
     <div>
       <Flex>
@@ -75,12 +81,7 @@ export const WithdrawLiquidity: React.FC = () => {
               cleanup: () => setLiquidityToWithdrawStr(''),
             });
           }}
-          isDisabled={
-            withdrawStatus !== 'READY' ||
-            isInputBlank ||
-            !isInputConvertibleToNumber ||
-            doesInputExceedsMax
-          }
+          isDisabled={isWithdrawBtnDisabled}
         />
       </Flex>
     </div>

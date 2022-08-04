@@ -23,6 +23,9 @@ export const DepositLiquidity: React.FC = () => {
     Number(liquidityToDepositStr) > balance
   );
 
+  const isDepositBtnDisabled =
+    depositStatus !== 'READY' || isInputBlank || !isInputConvertibleToNumber || doesInputExceedsMax;
+
   return (
     <div>
       <Flex>
@@ -80,12 +83,7 @@ export const DepositLiquidity: React.FC = () => {
               cleanup: () => setLiquidityToDepositStr(''),
             });
           }}
-          isDisabled={
-            depositStatus !== 'READY' ||
-            isInputBlank ||
-            !isInputConvertibleToNumber ||
-            doesInputExceedsMax
-          }
+          isDisabled={isDepositBtnDisabled}
         />
       </Flex>
       <DepositMsg />
