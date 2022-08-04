@@ -1,7 +1,7 @@
 import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
+import { LiquidityManager } from 'components/molecules/LiquidityManager';
 import React from 'react';
 import LockedLiquidity from './LockedLiquidity';
-import PlatformInfo from './PlatformInfo';
 import TransactionHistoryTable from './TransactionHistoryTable';
 
 const Liquidity: React.FC = () => {
@@ -15,7 +15,7 @@ const Liquidity: React.FC = () => {
           <LockedLiquidity />
         </GridItem>
         <GridItem colSpan={1}>
-          <PlatformInfo />
+          <LiquidityManager />
         </GridItem>
       </Grid>
       <Text fontSize="xl" fontWeight="bold" color="solid.gray0" textAlign="center" mt="50px">

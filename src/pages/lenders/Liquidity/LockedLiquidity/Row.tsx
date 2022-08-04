@@ -2,8 +2,6 @@ import { Button, Flex, Td, Text, Tr, useDisclosure } from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import Icon from 'components/atoms/Icon';
 import React from 'react';
-import AddLiquidityModal from '../AddLiquidityModal';
-import WithdrawLiquidityModal from '../WithdrawLiquidityModal';
 
 interface RowProps {
   ethLiquidity?: string;
@@ -79,11 +77,6 @@ const Row: React.FC<RowProps> = ({ ethLiquidity }) => {
           </Flex>
         </Td>
       </Tr>
-      <AddLiquidityModal isOpen={isAddLiquidityModalOpen} onClose={onAddLiqudityModalClose} />
-      <WithdrawLiquidityModal
-        isOpen={isWithdrawLiquidityModalOpen}
-        onClose={onWithdrawLiqudityModalClose}
-      />
     </>
   );
 };
