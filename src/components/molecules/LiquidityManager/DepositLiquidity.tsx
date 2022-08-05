@@ -66,7 +66,7 @@ export const DepositLiquidity: React.FC = () => {
           There was an error when attempting to deposit liquidity.
         </Box>
       )}
-      {(!isInputConvertibleToNumber || doesInputExceedsMax) && (
+      {depositStatus === 'READY' && (!isInputConvertibleToNumber || doesInputExceedsMax) && (
         <Box fontSize="small" ml="0.25rem" color="red.500">
           {!isInputConvertibleToNumber
             ? 'Input is not a number'
