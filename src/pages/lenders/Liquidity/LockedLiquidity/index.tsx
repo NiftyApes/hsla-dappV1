@@ -10,10 +10,7 @@ import Row from './Row';
 const LockedLiquidity: React.FC = () => {
   const { ethLiquidity } = useEthLiquidity();
   return (
-    <Card h="100%">
-      <Text fontSize="18px" fontWeight="bold" color="solid.gray0">
-        LOCKED LIQUIDITY
-      </Text>
+    <Card>
       <Grid gridTemplateColumns="repeat(3, minmax(0, 1fr))" columnGap="50px">
         <GridItem colSpan={1}>
           <LockedLiquidityChart />

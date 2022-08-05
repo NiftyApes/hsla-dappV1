@@ -22,9 +22,7 @@ const Header: React.FC = () => {
       p="20px 15px 32px 20px"
       alignItems="center"
       justifyContent="space-between"
-      position="sticky"
       top="0px"
-      bg="gradient.primary"
       zIndex={9}
     >
       <Flex alignItems="center">

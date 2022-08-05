@@ -14,9 +14,9 @@ export const LiquidityManager: React.FC = () => {
       minWidth="248px"
       maxWidth="448px"
     >
-      <Tabs isFitted variant="soft-rounded" colorScheme="purple">
+      <Tabs isFitted variant="line" colorScheme="purple">
         <TabList pl="1rem" pr="1rem">
-          <Tab>Deposit</Tab>
+          <Tab padding="1.5rem">Deposit</Tab>
           <Tab>Withdraw</Tab>
         </TabList>
         <TabPanels>
