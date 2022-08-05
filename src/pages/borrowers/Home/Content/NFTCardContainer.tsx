@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import { useAppDispatch } from 'app/hooks';
 import { BigNumber, ethers } from 'ethers';
-import { Button, Center, Flex } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import { formatEther } from '@ethersproject/units';
 
 import NFTCard from 'components/molecules/NFTCard';
@@ -52,10 +52,11 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
     return <NFTLoadingCard />;
   }
 
+  console.log(loanAuction);
+
   //TODO: Why are we checking null address?
   if (loanAuction && loanAuction.nftOwner !== '0x0000000000000000000000000000000000000000') {
     //Active loan card
-
     return (
       <div>
         <strong>
@@ -103,13 +104,29 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
   //     }}
   //     img={item.image}
   // />
+  //
+  // return (
+  //   <NFTActiveLoanCard
+  //     contract={contract}
+  //     key={item.id}
+  //     collectionName="TEST"
+  //     tokenName={`${item.name}`}
+  //     id={`${item.id}`}
+  //     offerHash={offer.OfferHash}
+  //     offer={{
+  //       type: 'top',
+  //       price: Number(ethers.utils.formatEther(offerAmount)),
+  //       symbol: 'eth',
+  //       aprPercentage: offer.aprPercentage,
+  //       days: offer.days,
+  //     }}
+  //     img={item.image}
+  //   />
+  // );
 
   return (
-    <NFTActiveLoanCard
+    <NFTCard
       contract={contract}
-      key={item.id}
-      collectionName="TEST"
-      tokenName={`${item.name}`}
       id={`${item.id}`}
       offerHash={offer.OfferHash}
       offer={{
@@ -119,28 +136,12 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
         aprPercentage: offer.aprPercentage,
         days: offer.days,
       }}
+      floorTerm={offer.OfferTerms.FloorTerm}
+      numberOfOffers={loanOffers.length}
+      key={item.id}
+      collectionName=""
+      tokenName={`${item.name}`}
       img={item.image}
     />
   );
-
-  // return (
-  //     <NFTCard
-  //         contract={contract}
-  //         id={`${item.id}`}
-  //         offerHash={offer.OfferHash}
-  //         offer={{
-  //             type: 'top',
-  //             price: Number(ethers.utils.formatEther(offerAmount)),
-  //             symbol: 'eth',
-  //             aprPercentage: offer.aprPercentage,
-  //             days: offer.days,
-  //         }}
-  //         floorTerm={offer.OfferTerms.FloorTerm}
-  //         numberOfOffers={loanOffers.length}
-  //         key={item.id}
-  //         collectionName=""
-  //         tokenName={`${item.name}`}
-  //         img={item.image}
-  //     />
-  // );
 };
