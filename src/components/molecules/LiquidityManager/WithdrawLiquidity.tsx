@@ -1,8 +1,18 @@
-import { Box, Button, Flex, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Input,
+  InputGroup,
+  InputRightElement,
+  InputLeftElement,
+} from '@chakra-ui/react';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { useWithdrawEthLiquidity } from 'hooks/useWithdrawEthLiquidity';
 import { useState } from 'react';
 import { WithdrawBtn } from './WithdrawBtn';
+import { WithdrawMsg } from './WithdrawMsg';
+import CryptoIcon from 'components/atoms/CryptoIcon';
 
 export const WithdrawLiquidity: React.FC = () => {
   const { withdrawETHLiquidity, withdrawStatus, txObject, ethLiquidity } =
@@ -30,16 +40,24 @@ export const WithdrawLiquidity: React.FC = () => {
     <div>
       <Flex>
         <InputGroup size="md">
+          <InputLeftElement m=".25rem">
+            <CryptoIcon symbol="eth" size={25} />
+          </InputLeftElement>
           <Input
+            size="lg"
+            type="number"
             pr="4.5rem"
             value={liquidityToWithdrawStr}
             onChange={(e) => setLiquidityToWithdrawStr(e.target.value)}
           />
           <InputRightElement width="5.5rem">
-            <Box mr="0.5rem">Ξ</Box>
             <Button
-              h="1.75rem"
-              size="sm"
+              colorScheme="purple"
+              variant="link"
+              size="lg"
+              pt=".5rem"
+              // pr="3.5rem"
+              textTransform={'uppercase'}
               onClick={() => ethLiquidity && setLiquidityToWithdrawStr(ethLiquidity)}
             >
               max
@@ -84,6 +102,7 @@ export const WithdrawLiquidity: React.FC = () => {
           isDisabled={isWithdrawBtnDisabled}
         />
       </Flex>
+      <WithdrawMsg />
     </div>
   );
 };
