@@ -13,6 +13,7 @@ export default Stories;
 const Template: ComponentStory<typeof NFTNoOfferCard> = (args) => <NFTNoOfferCard {...args} />;
 
 export const Default = Template.bind({});
+
 Default.args = {
   img: MockImg1,
   collectionName: 'CRYPTOMANGA GENESIS',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Image, Text } from '@chakra-ui/react';
+import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { NFTCardContainer } from './NFTCardContainer';
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
   children: JSX.Element;
 }
 
-export const NFTCardLayout: React.FC<Props> = ({
+export const NFTCardHeader: React.FC<Props> = ({
   children,
   collectionName,
   img,
@@ -22,22 +22,15 @@ export const NFTCardLayout: React.FC<Props> = ({
   return (
     <NFTCardContainer>
       <>
-        <Image
-          w="200px"
-          h="200px"
-          src={img}
-          alt="No Offer Card"
-          objectFit="cover"
-          borderRadius="8px 8px 0 0"
-        />
+        <Image borderRadius="8px 8px 0 0" h="260px" objectFit="cover" src={img} w="260px" />
 
-        <Flex align="center" flexDir="column" mt="150px" position="absolute">
+        <Flex align="center" flexDir="column" mt="200px" position="absolute">
           {collectionName && (
             <Text
-              maxW="100%"
+              color="white"
               fontSize="sm"
               fontWeight="bold"
-              color="white"
+              maxW="100%"
               textShadow="0px 0px 4px #000000"
               textTransform="uppercase"
             >
@@ -46,19 +39,21 @@ export const NFTCardLayout: React.FC<Props> = ({
           )}
 
           <Text
-            mt={tokenPadding}
+            color="white"
             fontSize="xl"
             fontWeight="semibold"
+            isTruncated
             maxW="100%"
-            color="white"
+            mt={tokenPadding}
             textShadow="0px 0px 4px #000000"
             textTransform="uppercase"
-            isTruncated
           >
             {tokenName} #{tokenId}
           </Text>
         </Flex>
-        {children}
+        <Box w="100%" p="0 8px 8px 8px">
+          {children}
+        </Box>
       </>
     </NFTCardContainer>
   );

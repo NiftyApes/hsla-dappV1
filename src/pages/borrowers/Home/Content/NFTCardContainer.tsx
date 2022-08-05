@@ -41,6 +41,7 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
 
   useEffect(() => {
     if (!loanAuction && !fetchingAuctions) {
+      //  Getting active loans
       dispatch(fetchLoanAuctionByNFT(item));
     }
   }, [item, fetchingAuctions]);
