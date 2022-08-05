@@ -1,6 +1,6 @@
 import { Box, Flex, Grid, GridItem, Table, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
-import { useEthLiquidity } from 'hooks/useEthLiquidity';
+import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
 import React from 'react';
 
 import Card from '../Card';
@@ -8,7 +8,7 @@ import LockedLiquidityChart from './LockedLiquidityChart';
 import Row from './Row';
 
 const LockedLiquidity: React.FC = () => {
-  const { ethLiquidity } = useEthLiquidity();
+  const { ethLiquidity } = useAvailableEthLiquidity();
   return (
     <Card h="100%">
       <Text fontSize="18px" fontWeight="bold" color="solid.gray0">

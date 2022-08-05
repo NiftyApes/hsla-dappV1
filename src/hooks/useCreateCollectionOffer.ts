@@ -1,10 +1,10 @@
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
-import { useWalletAddress } from './useWalletAddress';
-import { saveOfferInDb } from '../helpers/saveOfferInDb';
-import { useWalletProvider } from './useWalletProvider';
 import { getOffersContract } from '../helpers/getContracts';
+import { saveOfferInDb } from '../helpers/saveOfferInDb';
+import { useWalletAddress } from './useWalletAddress';
+import { useWalletProvider } from './useWalletProvider';
 
 const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
@@ -74,9 +74,13 @@ export const useCreateCollectionOffer = ({
 
         const receipt: any = await tx.wait();
 
+        console.log('receipt', receipt, JSON.stringify(receipt, void 0, 2));
+
         onTxMined && onTxMined(receipt);
 
-        const offer = receipt.events[1].args[4];
+        const offer = receipt.events[1].args[3];
+
+        console.log('offer', offer);
 
         const offerObj = {
           creator: offer.creator,

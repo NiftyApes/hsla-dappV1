@@ -1,5 +1,6 @@
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
+import { saveLoanInDb } from 'helpers/saveLoanInDb';
 import { useLendingContract } from './useContracts';
 
 export const useExecuteLoanByBorrower = ({
@@ -35,7 +36,24 @@ export const useExecuteLoanByBorrower = ({
         floorTerm,
       );
 
-      await tx.wait();
+      const receipt: any = await tx.wait();
+
+      const loan = receipt.events[6].args[2];
+
+      console.log('receipt', receipt);
+
+      console.log(loan, loan.nftId);
+
+      const loanObj = {
+        creator: loan.creator,
+        nftContractAddress: loan.nftContractAddress,
+        nftId: String(Number(receipt.events[6].topics[2])),
+        amount: loan.amount.toString(),
+      };
+
+      await saveLoanInDb({
+        loanObj,
+      });
 
       dispatch(increment());
     },

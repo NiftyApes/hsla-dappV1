@@ -1,4 +1,5 @@
 import { useConnectWallet } from '@web3-onboard/react';
+import { ethers } from 'ethers';
 
 export const useWalletAddress = () => {
   const [{ wallet }] = useConnectWallet();
@@ -7,5 +8,5 @@ export const useWalletAddress = () => {
     return undefined;
   }
 
-  return wallet?.accounts[0] && wallet?.accounts[0].address;
+  return wallet?.accounts[0] && ethers.utils.getAddress(wallet?.accounts[0].address);
 };

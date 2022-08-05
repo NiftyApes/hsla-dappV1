@@ -40,7 +40,7 @@ export const WithdrawLiquidity: React.FC = () => {
             <Button
               h="1.75rem"
               size="sm"
-              onClick={() => ethLiquidity && setLiquidityToWithdrawStr(ethLiquidity)}
+              onClick={() => ethLiquidity && setLiquidityToWithdrawStr(String(ethLiquidity))}
             >
               max
             </Button>

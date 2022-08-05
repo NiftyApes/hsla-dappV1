@@ -1,26 +1,26 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from 'react';
-import { useAppDispatch } from 'app/hooks';
-import { BigNumber, ethers } from 'ethers';
 import { Button } from '@chakra-ui/react';
 import { formatEther } from '@ethersproject/units';
+import { useAppDispatch } from 'app/hooks';
+import { BigNumber, ethers } from 'ethers';
+import { useEffect } from 'react';
 
 import NFTCard from 'components/molecules/NFTCard';
-import { Contract, NFT } from 'nft/model';
 import NFTNoOfferCard from 'components/molecules/NFTNoOfferCard';
+import { useLoanAuction } from 'hooks/useLoanAuction';
 import { useRepayLoanByBorrower } from 'hooks/useRepayLoan';
-import {
-  fetchLoanAuctionByNFT,
-  fetchLoanOffersByNFT,
-  useLoanAuctionByNFT,
-  useLoanOffersByNFT,
-} from 'loan';
+import { fetchLoanOffersByNFT, useLoanOffersByNFT } from 'loan';
+import { Contract, NFT } from 'nft/model';
 
 export const NFTCardContainer = ({ contract, item }: { contract: Contract; item: NFT }) => {
   const dispatch = useAppDispatch();
 
   let { content: loanOffers, fetching: loanOffersFetching } = useLoanOffersByNFT(item);
-  const { content: loanAuction, fetching: loanAuctionFetching } = useLoanAuctionByNFT(item);
+
+  //const { content: loanAuction, fetching: loanAuctionFetching } = useLoanAuctionByNFT(item);
+
+  const loanAuction = useLoanAuction({ nftContractAddress: contract.address, nftId: item.id });
+
   const { repayLoanByBorrower } = useRepayLoanByBorrower({
     nftContractAddress: contract.address,
     nftId: item.id,
@@ -32,11 +32,11 @@ export const NFTCardContainer = ({ contract, item }: { contract: Contract; item:
     }
   }, [item, loanOffersFetching]);
 
-  useEffect(() => {
-    if (!loanOffers && !loanOffersFetching) {
-      dispatch(fetchLoanAuctionByNFT(item));
-    }
-  }, [item, loanAuctionFetching]);
+  // useEffect(() => {
+  //   if (!loanOffers && !loanOffersFetching) {
+  //     dispatch(fetchLoanAuctionByNFT(item));
+  //   }
+  // }, [item, loanAuctionFetching]);
 
   if (!loanOffers || loanOffersFetching) {
     return <div>Loading...</div>;
