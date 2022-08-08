@@ -95,7 +95,7 @@ const NFTCard: React.FC<Props> = ({
 
   const renderInitOfferButton = () => {
     if (!hasApprovalForAll) {
-      const buttonLablel = () => {
+      const buttonLabel = () => {
         switch (approvalTxStatus) {
           case 'READY':
             return 'Initiate Loan';
@@ -119,7 +119,7 @@ const NFTCard: React.FC<Props> = ({
           variant="outline"
           w="100%"
         >
-          {buttonLablel()}
+          {buttonLabel()}
         </Button>
       );
     }
