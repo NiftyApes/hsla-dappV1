@@ -1,5 +1,18 @@
 import React, { useState } from 'react';
-import { Button, Center, Container, Flex, Text } from '@chakra-ui/react';
+import {
+  Button,
+  Center,
+  Container,
+  Flex,
+  Text,
+  Modal,
+  ModalHeader,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  ModalBody,
+  useDisclosure,
+} from '@chakra-ui/react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
@@ -11,6 +24,7 @@ import { formatNumber } from 'lib/helpers/string';
 import { useERC721ApprovalForAll } from 'hooks/useERC721ApprovalForAll';
 import { useExecuteLoanByBorrower } from 'hooks/useExecuteLoanByBorrower';
 import { useNiftyApesContractAddress } from 'hooks/useNiftyApesContractAddress';
+import BorrowOfferDetailsCard from '../BorrowOfferDetailsCard';
 
 interface Props {
   collectionName: string;
@@ -33,6 +47,7 @@ interface Props {
 const i18n = {
   offerLabel: (type: string) => `${type} offer`,
   moneyButtonLabel: '🍌Smash money button',
+  initLoanButtonLabel: 'initiate loan',
   viewAllOffers: (numOffers: number) => `View All Offers (${formatNumber(numOffers)})`,
 };
 
@@ -49,12 +64,14 @@ const NFTCard: React.FC<Props> = ({
 }) => {
   const niftyApesContractAddress = useNiftyApesContractAddress();
 
-  const { hasApprovalForAll, grantApprovalForAll } = useERC721ApprovalForAll({
+  const { hasApprovalForAll, hasCheckedApproval, grantApprovalForAll } = useERC721ApprovalForAll({
     contract,
     operator: niftyApesContractAddress,
   });
 
   const [approvalTxStatus, setApprovalTxStatus] = useState<string>('READY');
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { executeLoanByBorrower } = useExecuteLoanByBorrower({
     nftContractAddress: contract?.address,
@@ -63,19 +80,19 @@ const NFTCard: React.FC<Props> = ({
     floorTerm,
   });
 
-  const onApproveForAll = async () => {
-    await grantApprovalForAll({
-      onPending: () => setApprovalTxStatus('PENDING'),
-      onSuccess: () => {
-        setApprovalTxStatus('SUCCESS');
-        setTimeout(() => setApprovalTxStatus('READY'), 1000);
-      },
-      onError: () => {
-        setApprovalTxStatus('ERROR');
-        setTimeout(() => setApprovalTxStatus('READY'), 1000);
-      },
-    });
-  };
+  // const onApproveForAll = async () => {
+  //     await grantApprovalForAll({
+  //         onPending: () => setApprovalTxStatus('PENDING'),
+  //         onSuccess: () => {
+  //             setApprovalTxStatus('SUCCESS');
+  //             setTimeout(() => setApprovalTxStatus('READY'), 1000);
+  //         },
+  //         onError: () => {
+  //             setApprovalTxStatus('ERROR');
+  //             setTimeout(() => setApprovalTxStatus('READY'), 1000);
+  //         },
+  //     });
+  // };
 
   const renderBestOffer = () => {
     return (
@@ -94,35 +111,33 @@ const NFTCard: React.FC<Props> = ({
   };
 
   const renderInitOfferButton = () => {
-    if (!hasApprovalForAll) {
-      const buttonLabel = () => {
-        switch (approvalTxStatus) {
-          case 'READY':
-            return 'Initiate Loan';
-          case 'PENDING':
-            return <LoadingIndicator size="xs" />;
-          case 'ERROR':
-            return 'Error';
-          default:
-            return 'Initiate Loan';
-        }
-      };
+    const btnLabel = () => {
+      switch (approvalTxStatus) {
+        case 'READY':
+          return i18n.initLoanButtonLabel;
+        case 'PENDING':
+          return <LoadingIndicator size="xs" />;
+        case 'ERROR':
+          return 'Error';
+        default:
+          return approvalTxStatus;
+      }
+    };
 
-      return (
-        <Button
-          borderRadius="8px"
-          colorScheme="purple"
-          onClick={onApproveForAll}
-          py="6px"
-          size="lg"
-          textTransform="uppercase"
-          variant="outline"
-          w="100%"
-        >
-          {buttonLabel()}
-        </Button>
-      );
-    }
+    return (
+      <Button
+        colorScheme="purple"
+        onClick={onOpen}
+        py="6px"
+        size="lg"
+        textTransform="uppercase"
+        variant="outline"
+        w="100%"
+        borderRadius="8px"
+      >
+        {btnLabel()}
+      </Button>
+    );
   };
 
   const renderMoneyButton = () => {
@@ -184,6 +199,22 @@ const NFTCard: React.FC<Props> = ({
           <Center mt="8px" mb="8px">
             {i18n.viewAllOffers(numberOfOffers)}
           </Center>
+
+          {isOpen && (
+            <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+              <ModalOverlay />
+              <ModalContent>
+                <ModalCloseButton />
+
+                <BorrowOfferDetailsCard
+                  img={img}
+                  offer={offer}
+                  tokenId={id}
+                  tokenName={tokenName}
+                />
+              </ModalContent>
+            </Modal>
+          )}
         </>
       </NFTCardHeader>
     </NFTCardContainer>

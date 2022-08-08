@@ -24,6 +24,7 @@ const BorrowOfferDetailsModal: React.FC<ModalProps> = ({ onClose, ...restProps }
 
       <Flex flexDir="column" alignItems="center" mt="40px" textAlign="center">
         <BorrowOfferDetailsCard
+          tokenId="12345"
           img="/assets/mocks/bored_ape.png"
           offer={{ type: 'floor', price: 42.167, days: 120, aprPercentage: 25, symbol: 'eth' }}
           tokenName="Bored Ape Yacht Club"

@@ -18,6 +18,7 @@ export const Default = Template.bind({});
 Default.args = {
   img: MockImg1,
   tokenName: 'Bored Ape Yatch Club',
+  tokenId: '222',
   offer: {
     type: 'floor',
     price: 42.167,

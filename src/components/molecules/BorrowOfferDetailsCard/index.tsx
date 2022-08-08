@@ -7,6 +7,7 @@ import CryptoIcon from 'components/atoms/CryptoIcon';
 
 interface Props {
   img: string;
+  tokenId: string;
   tokenName: string;
   offer: {
     type: 'top' | 'floor';
@@ -17,26 +18,26 @@ interface Props {
   };
 }
 
-const BorrowOfferDetailsCard: React.FC<Props> = ({ img, offer, tokenName }) => {
+const BorrowOfferDetailsCard: React.FC<Props> = ({ tokenId, tokenName, img, offer }) => {
+  //TODO: FIX ME
+  const totalInterst = () => {
+    const apr = offer.aprPercentage / 100;
+    const total = (apr * offer.price).toFixed(2);
+
+    return `~${total}  ..${offer.symbol}`;
+  };
+
   return (
     <Grid
       gridTemplateColumns="repeat(2, minmax(0, 1fr))"
       gridColumnGap="20px"
-      w="484px"
+      w="660px"
       p="13px"
-      border="1px solid"
       borderColor="solid.lightPurple"
-      borderRadius="10px"
       textAlign="center"
       bgColor="solid.white"
     >
-      <Flex
-        flexDir="column"
-        alignItems="center"
-        bg="solid.gray3"
-        borderRadius="10px"
-        padding=".2rem .5rem"
-      >
+      <Flex flexDir="column" alignItems="center" bg="solid.gray3" borderRadius="10px">
         <Text mt="24px" fontWeight="bold" fontSize="sm" color="solid.gray0">
           YOUR COLLATERAL
         </Text>
@@ -55,7 +56,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ img, offer, tokenName }) => {
           {tokenName}
         </Text>
         <Text mt="1px" fontSize="2xl" color="solid.black" fontWeight="bold" lineHeight="28px">
-          #43
+          #{tokenId}
         </Text>
         <Text mt="27px" color="solid.gray0" fontSize="2xs">
           ASSET DETAILS
@@ -90,13 +91,11 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ img, offer, tokenName }) => {
         <Flex alignItems="center">
           <CryptoIcon symbol={offer.symbol} size={32} />
           <Text ml="6px" fontSize="3.5xl">
-            {offer.price}Ξ
+            {offer.price} {offer.symbol}
           </Text>
         </Flex>
         <Text fontSize="lg" color="solid.black" mt="5px">
-          {offer.days}
-          &nbsp;days at&nbsp;
-          {offer.aprPercentage}% &nbsp;APR
+          {offer.days} days at {offer.aprPercentage}% APR
         </Text>
         <Text mt="12px">
           {offer.price}% will be sent to your wallet address once your loan is executed.
@@ -110,7 +109,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ img, offer, tokenName }) => {
         <Flex alignItems="center" mt="30px">
           <CryptoIcon symbol={offer.symbol} size={32} />
           <Text ml="6px" fontSize="3.5xl">
-            ~1.48..Ξ
+            {totalInterst()}
           </Text>
         </Flex>
         <Text fontSize="sm" color="solid.black" mb="20px">
