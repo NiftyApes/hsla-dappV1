@@ -24,6 +24,13 @@ interface Props {
   tokenName: string;
 }
 
+const i18n = {
+  actionButtonHelperText: 'What does this mean?',
+  actionButtonText: 'repay loan',
+  loanStatus: 'defaulted',
+  loanDuration: 'X Days remaining',
+};
+
 const NFTActiveLoanCard: React.FC<Props> = ({
   collectionName,
   contract,
@@ -57,7 +64,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({
               w="100%"
             >
               <Text textTransform="uppercase" fontWeight="bold" fontSize="md" color="orange.600">
-                active loan
+                {i18n.loanStatus}
               </Text>
             </Box>
             <Flex alignItems="center">
@@ -77,7 +84,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({
               </Text>
               &nbsp;APR
             </Text>
-            <Text>X Days remaining</Text>
+            <Text>{i18n.loanDuration}</Text>
           </Flex>
           <Button
             borderRadius="8px"
@@ -88,11 +95,11 @@ const NFTActiveLoanCard: React.FC<Props> = ({
             variant="solid"
             w="100%"
           >
-            repay loan
+            {i18n.actionButtonText}
           </Button>
 
           <Center mt="8px" mb="8px">
-            Refinance Loan
+            {i18n.actionButtonHelperText}
           </Center>
         </>
       </NFTCardHeader>

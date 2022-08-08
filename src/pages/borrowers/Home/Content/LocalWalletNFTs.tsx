@@ -40,7 +40,7 @@ export const LocalhostContent: React.FC = () => {
   return (
     <>
       <SectionHeader headerText={i18n.sectionHeaderText}></SectionHeader>
-      <SimpleGrid minChildWidth="200px" spacing={10} style={{ padding: '16px' }}>
+      <SimpleGrid minChildWidth="240px" spacing={10} style={{ padding: '16px' }}>
         {walletNfts?.map((item: any) => (
           <NFTCardContainer contract={contract} item={item} key={item.id} />
         ))}

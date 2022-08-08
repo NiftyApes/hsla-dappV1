@@ -18,6 +18,7 @@ import {
 import { NFTLoadingCard } from '../../../../components/molecules/NFTLoadingCard';
 import NFTActiveLoanCard from '../../../../components/molecules/NFTActiveLoanCard';
 import NFTDefaultedLoanCard from '../../../../components/molecules/NFTDefaultedLoanCard';
+import { useLoanAuction } from '../../../../hooks/useLoanAuction';
 
 interface Props {
   contract: Contract;
@@ -28,7 +29,8 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
   const dispatch = useAppDispatch();
 
   const { content: loanOffers, fetching: fetchingOffers } = useLoanOffersByNFT(item);
-  const { content: loanAuction, fetching: fetchingAuctions } = useLoanAuctionByNFT(item);
+  // const { content: loanAuction, fetching: fetchingAuctions } = useLoanAuctionByNFT(item);
+  const loanAuction = useLoanAuction({ nftContractAddress: contract.address, nftId: item.id });
 
   const { repayLoanByBorrower } = useRepayLoanByBorrower({
     nftContractAddress: contract.address,
@@ -41,18 +43,16 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
     }
   }, [item, fetchingOffers]);
 
-  useEffect(() => {
-    if (!loanAuction && !fetchingAuctions) {
-      //  Getting active loans
-      dispatch(fetchLoanAuctionByNFT(item));
-    }
-  }, [item, fetchingAuctions]);
+  // useEffect(() => {
+  //   if (!loanAuction && !fetchingAuctions) {
+  //     //  Getting active loans
+  //     dispatch(fetchLoanAuctionByNFT(item));
+  //   }
+  // }, [item, fetchingAuctions]);
 
-  if (!loanOffers || fetchingOffers || !loanAuction || fetchingAuctions) {
+  if (!loanOffers || fetchingOffers) {
     return <NFTLoadingCard />;
   }
-
-  console.log(loanAuction);
 
   //TODO: Why are we checking null address?
   if (loanAuction && loanAuction.nftOwner !== '0x0000000000000000000000000000000000000000') {

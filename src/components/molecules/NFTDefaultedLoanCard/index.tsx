@@ -24,6 +24,14 @@ interface Props {
   tokenName: string;
 }
 
+const i18n = {
+  actionButtonHelperText: 'What does this mean?',
+  actionButtonText: 'repay loan',
+  assetStatus: 'Asset has not been seized',
+  loanStatus: 'defaulted',
+  owed: 'Owed',
+};
+
 const NFTDefaultedLoanCard: React.FC<Props> = ({
   collectionName,
   contract,
@@ -58,7 +66,7 @@ const NFTDefaultedLoanCard: React.FC<Props> = ({
               w="100%"
             >
               <Text textTransform="uppercase" fontWeight="bold" fontSize="md" color="white">
-                defaulted
+                {i18n.loanStatus}
               </Text>
             </Box>
             <Flex alignItems="center">
@@ -68,13 +76,13 @@ const NFTDefaultedLoanCard: React.FC<Props> = ({
                   {offer.price}Ξ
                 </Text>
                 <Text fontSize="md" mt="9px" ml="6px" color="red.600">
-                  Owed
+                  {i18n.owed}
                 </Text>
               </Flex>
             </Flex>
 
             <Text fontSize="md" color="red.600" fontWeight="bold">
-              Asset has not been seized
+              {i18n.assetStatus}
             </Text>
           </Flex>
           <Button
@@ -86,11 +94,11 @@ const NFTDefaultedLoanCard: React.FC<Props> = ({
             variant="solid"
             w="100%"
           >
-            repay loan
+            {i18n.actionButtonText}
           </Button>
 
           <Center mt="8px" mb="8px">
-            What does this mean?
+            {i18n.actionButtonHelperText}
           </Center>
         </>
       </NFTCardHeader>

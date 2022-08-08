@@ -5,7 +5,7 @@ import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
 
 export const NFTLoadingCard: React.FC = () => (
   <NFTCardContainer>
-    <Center h="280px">
+    <Center h="298px">
       <LoadingIndicator />
     </Center>
   </NFTCardContainer>

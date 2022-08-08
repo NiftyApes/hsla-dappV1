@@ -30,6 +30,12 @@ interface Props {
   tokenName: string;
 }
 
+const i18n = {
+  offerLabel: (type: string) => `${type} offer`,
+  moneyButtonLabel: '🍌Smash money button',
+  viewAllOffers: (numOffers: number) => `View All Offers (${formatNumber(numOffers)})`,
+};
+
 const NFTCard: React.FC<Props> = ({
   collectionName,
   contract,
@@ -82,7 +88,7 @@ const NFTCard: React.FC<Props> = ({
         borderColor="accents.100"
         fontSize="md"
       >
-        {offer.type} offer
+        {i18n.offerLabel(offer.type)}
       </Container>
     );
   };
@@ -132,7 +138,7 @@ const NFTCard: React.FC<Props> = ({
           variant="notify"
           w="100%"
         >
-          🍌Smash money button
+          {i18n.moneyButtonLabel}
         </Button>
       );
     }
@@ -176,7 +182,7 @@ const NFTCard: React.FC<Props> = ({
           {renderInitOfferButton()}
           {renderMoneyButton()}
           <Center mt="8px" mb="8px">
-            View All Offers ({formatNumber(numberOfOffers)})
+            {i18n.viewAllOffers(numberOfOffers)}
           </Center>
         </>
       </NFTCardHeader>
