@@ -6,11 +6,8 @@ import {
   Flex,
   Text,
   Modal,
-  ModalHeader,
-  ModalCloseButton,
   ModalContent,
   ModalOverlay,
-  ModalBody,
   useDisclosure,
 } from '@chakra-ui/react';
 
@@ -28,6 +25,7 @@ import BorrowOfferDetailsCard from '../BorrowOfferDetailsCard';
 
 interface Props {
   collectionName: string;
+  contractAddress: string;
   contract?: Contract;
   floorTerm: boolean;
   id: string;
@@ -35,9 +33,11 @@ interface Props {
   numberOfOffers: number;
   offer: {
     aprPercentage: number;
-    days: number;
+    durationDays: number;
+    expirationDays: number;
     price: number;
     symbol: CoinSymbol;
+    totalInterest: number;
     type: 'top' | 'floor';
   };
   offerHash: string;
@@ -54,6 +54,7 @@ const i18n = {
 const NFTCard: React.FC<Props> = ({
   collectionName,
   contract,
+  contractAddress,
   floorTerm,
   id,
   img,
@@ -69,8 +70,6 @@ const NFTCard: React.FC<Props> = ({
     operator: niftyApesContractAddress,
   });
 
-  const [approvalTxStatus, setApprovalTxStatus] = useState<string>('READY');
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { executeLoanByBorrower } = useExecuteLoanByBorrower({
@@ -79,20 +78,6 @@ const NFTCard: React.FC<Props> = ({
     offerHash,
     floorTerm,
   });
-
-  // const onApproveForAll = async () => {
-  //     await grantApprovalForAll({
-  //         onPending: () => setApprovalTxStatus('PENDING'),
-  //         onSuccess: () => {
-  //             setApprovalTxStatus('SUCCESS');
-  //             setTimeout(() => setApprovalTxStatus('READY'), 1000);
-  //         },
-  //         onError: () => {
-  //             setApprovalTxStatus('ERROR');
-  //             setTimeout(() => setApprovalTxStatus('READY'), 1000);
-  //         },
-  //     });
-  // };
 
   const renderBestOffer = () => {
     return (
@@ -110,35 +95,7 @@ const NFTCard: React.FC<Props> = ({
     );
   };
 
-  const renderInitOfferButton = () => {
-    const btnLabel = () => {
-      switch (approvalTxStatus) {
-        case 'READY':
-          return i18n.initLoanButtonLabel;
-        case 'PENDING':
-          return <LoadingIndicator size="xs" />;
-        case 'ERROR':
-          return 'Error';
-        default:
-          return approvalTxStatus;
-      }
-    };
-
-    return (
-      <Button
-        colorScheme="purple"
-        onClick={onOpen}
-        py="6px"
-        size="lg"
-        textTransform="uppercase"
-        variant="outline"
-        w="100%"
-        borderRadius="8px"
-      >
-        {btnLabel()}
-      </Button>
-    );
-  };
+  const renderInitOfferButton = () => {};
 
   const renderMoneyButton = () => {
     if (hasApprovalForAll) {
@@ -185,7 +142,7 @@ const NFTCard: React.FC<Props> = ({
 
             <Text fontSize="lg" color="solid.gray0">
               <Text as="span" color="solid.black">
-                {offer.days}
+                {offer.durationDays}
               </Text>
               &nbsp;days at&nbsp;
               <Text as="span" color="solid.black">
@@ -194,7 +151,19 @@ const NFTCard: React.FC<Props> = ({
               &nbsp;APR
             </Text>
           </Flex>
-          {renderInitOfferButton()}
+          <Button
+            colorScheme="purple"
+            onClick={onOpen}
+            py="6px"
+            size="lg"
+            textTransform="uppercase"
+            variant="outline"
+            w="100%"
+            borderRadius="8px"
+          >
+            {i18n.initLoanButtonLabel}
+          </Button>
+
           {renderMoneyButton()}
           <Center mt="8px" mb="8px">
             {i18n.viewAllOffers(numberOfOffers)}
@@ -203,12 +172,14 @@ const NFTCard: React.FC<Props> = ({
           {isOpen && (
             <Modal isOpen={isOpen} onClose={onClose} size="2xl">
               <ModalOverlay />
-              <ModalContent>
-                <ModalCloseButton />
-
+              <ModalContent p="5px">
                 <BorrowOfferDetailsCard
+                  contract={contract}
+                  contractAddress={contractAddress}
+                  floorTerm={floorTerm}
                   img={img}
                   offer={offer}
+                  offerHash={offerHash}
                   tokenId={id}
                   tokenName={tokenName}
                 />

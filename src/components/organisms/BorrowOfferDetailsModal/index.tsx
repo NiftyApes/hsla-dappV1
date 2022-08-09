@@ -23,12 +23,24 @@ const BorrowOfferDetailsModal: React.FC<ModalProps> = ({ onClose, ...restProps }
       </Flex>
 
       <Flex flexDir="column" alignItems="center" mt="40px" textAlign="center">
-        <BorrowOfferDetailsCard
-          tokenId="12345"
-          img="/assets/mocks/bored_ape.png"
-          offer={{ type: 'floor', price: 42.167, days: 120, aprPercentage: 25, symbol: 'eth' }}
-          tokenName="Bored Ape Yacht Club"
-        />
+        {/*<BorrowOfferDetailsCard*/}
+        {/*    contract={{}}*/}
+        {/*    floorTerm={false}*/}
+        {/*    offerHash='xxxxxx'*/}
+        {/*    contractAddress={"0xABC"}*/}
+        {/*    tokenId="12345"*/}
+        {/*    img="/assets/mocks/bored_ape.png"*/}
+        {/*    offer={{*/}
+        {/*        aprPercentage: 25,*/}
+        {/*        durationDays: 30,*/}
+        {/*        expirationDays: 120,*/}
+        {/*        price: 42.167,*/}
+        {/*        symbol: 'eth',*/}
+        {/*        totalInterest: 1234,*/}
+        {/*        type: 'floor',*/}
+        {/*    }}*/}
+        {/*    tokenName="Bored Ape Yacht Club"*/}
+        {/*/>*/}
         <Text textTransform="uppercase" mt="30px" fontSize="xl">
           Liquidity awaits!
         </Text>

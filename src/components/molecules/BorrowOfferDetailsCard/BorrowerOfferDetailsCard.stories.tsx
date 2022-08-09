@@ -20,10 +20,12 @@ Default.args = {
   tokenName: 'Bored Ape Yatch Club',
   tokenId: '222',
   offer: {
-    type: 'floor',
-    price: 42.167,
-    days: 120,
     aprPercentage: 25,
+    expirationDays: 120,
+    durationDays: 30,
+    price: 42.167,
     symbol: 'eth',
+    totalInterest: 124,
+    type: 'floor',
   },
 };

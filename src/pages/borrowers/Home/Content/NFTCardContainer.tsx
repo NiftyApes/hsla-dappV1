@@ -127,14 +127,17 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
   return (
     <NFTCard
       contract={contract}
+      contractAddress={item.contractAddress}
       id={`${item.id}`}
       offerHash={offer.OfferHash}
       offer={{
-        type: 'top',
-        price: Number(ethers.utils.formatEther(offerAmount)),
-        symbol: 'eth',
         aprPercentage: offer.aprPercentage,
-        days: offer.days,
+        expirationDays: offer.expirationDays,
+        durationDays: offer.durationDays,
+        price: Number(ethers.utils.formatEther(offerAmount)),
+        totalInterest: offer.totalInterest,
+        symbol: 'eth',
+        type: 'top',
       }}
       floorTerm={offer.OfferTerms.FloorTerm}
       numberOfOffers={loanOffers.length}
