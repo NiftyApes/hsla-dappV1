@@ -40,7 +40,8 @@ const colors = {
   // lightPurple: '#EAD9FF',
   // },
   gradient: {
-    primary: 'linear-gradient(101.3deg, #F0F0F0 0.17%, #F8F3FF 85.61%)',
+    primary: 'linear-gradient(180deg, #FFFFFF 0%, #F9F5FE 100%)',
+    button: 'linear-gradient(101.94deg, #F8F7EE -23.23%, #F8F3FF 85.22%)',
   },
 };
 

@@ -1,10 +1,19 @@
-import { Box, Button, Flex, Input, InputGroup, InputRightElement } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Input,
+  InputGroup,
+  InputRightElement,
+  InputLeftElement,
+} from '@chakra-ui/react';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { useDepositEthLiquidity } from 'hooks/useDepositEthLiquidity';
 import { useWalletBalance } from 'hooks/useWalletBalance';
 import { useState } from 'react';
 import { DepositBtn } from './DepositBtn';
 import { DepositMsg } from './DepositMsg';
+import CryptoIcon from 'components/atoms/CryptoIcon';
 
 export const DepositLiquidity: React.FC = () => {
   const balance = useWalletBalance();
@@ -30,17 +39,25 @@ export const DepositLiquidity: React.FC = () => {
     <div>
       <Flex>
         <InputGroup size="md">
+          <InputLeftElement m=".25rem">
+            <CryptoIcon symbol="eth" size={25} />
+          </InputLeftElement>
+          {/* <InputLeftAddon children='ETH' /> */}
           <Input
             pr="4.5rem"
+            size="lg"
+            type="number"
             value={liquidityToDepositStr}
             onChange={(e) => setLiquidityToDepositStr(e.target.value)}
             disabled={depositStatus !== 'READY'}
           />
           <InputRightElement width="5.5rem">
-            <Box mr="0.5rem">Ξ</Box>
             <Button
-              h="1.75rem"
-              size="sm"
+              colorScheme="purple"
+              variant="link"
+              size="lg"
+              pt=".5rem"
+              textTransform={'uppercase'}
               onClick={() => setLiquidityToDepositStr(String(balance))}
               disabled={depositStatus !== 'READY'}
             >
@@ -66,7 +83,7 @@ export const DepositLiquidity: React.FC = () => {
           There was an error when attempting to deposit liquidity.
         </Box>
       )}
-      {(!isInputConvertibleToNumber || doesInputExceedsMax) && (
+      {depositStatus === 'READY' && (!isInputConvertibleToNumber || doesInputExceedsMax) && (
         <Box fontSize="small" ml="0.25rem" color="red.500">
           {!isInputConvertibleToNumber
             ? 'Input is not a number'
