@@ -9,6 +9,7 @@ export const LiquidityPieChart: React.FC = () => {
 
   const { availableEthLiquidity } = useAvailableEthLiquidity();
 
+  // We use _.isNil so that these evaluate to true if they're equal to 0.
   if (_.isNil(totalEthLoanedOut) || _.isNil(availableEthLiquidity)) {
     return null;
   }
@@ -18,7 +19,7 @@ export const LiquidityPieChart: React.FC = () => {
   if (totalEthLoanedOut) {
     data.push({
       title: 'In Use',
-      value: Number(String(totalEthLoanedOut.toFixed(2))),
+      value: Number(totalEthLoanedOut.toFixed(2)),
       color: '#f8c743',
     });
   }
@@ -26,7 +27,7 @@ export const LiquidityPieChart: React.FC = () => {
   if (availableEthLiquidity) {
     data.push({
       title: 'Available',
-      value: Number(String(availableEthLiquidity.toFixed(2))),
+      value: Number(availableEthLiquidity.toFixed(2)),
       color: '#9ecbf9',
     });
   }
@@ -42,12 +43,10 @@ export const LiquidityPieChart: React.FC = () => {
           radius={120}
           data={data}
           label={({ dataEntry }) =>
-            `${dataEntry.title === 'In Use' ? '🔒' : ''}${String(
-              Number(dataEntry.value.toFixed(2)),
-            )}Ξ`
+            `${dataEntry.title === 'In Use' ? '🔒' : ''}${Number(dataEntry.value.toFixed(2))}Ξ`
           }
           viewBoxSize={[400, 400]}
-          center={[220, 180]}
+          center={[200, 180]}
         />
       </Box>
     </Box>

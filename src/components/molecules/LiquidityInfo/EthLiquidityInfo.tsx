@@ -12,6 +12,8 @@ export const EthLiquidityInfo: React.FC = () => {
 
   const { availableEthLiquidity } = useAvailableEthLiquidity();
 
+  // We use _.isNil so that these evaluate to true if they're equal to 0.
+  // We just want to avoid a NaN flash before they load.
   if (_.isNil(availableEthLiquidity) || _.isNil(totalEthLoanedOut)) {
     return null;
   }
