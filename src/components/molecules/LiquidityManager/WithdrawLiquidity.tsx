@@ -56,7 +56,6 @@ export const WithdrawLiquidity: React.FC = () => {
               variant="link"
               size="lg"
               pt=".5rem"
-              // pr="3.5rem"
               textTransform={'uppercase'}
               onClick={() =>
                 availableEthLiquidity && setLiquidityToWithdrawStr(String(availableEthLiquidity))
