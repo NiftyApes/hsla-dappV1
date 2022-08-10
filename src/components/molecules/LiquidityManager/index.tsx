@@ -17,7 +17,7 @@ export const LiquidityManager: React.FC = () => {
       <Tabs isFitted variant="line" colorScheme="purple">
         <TabList pl="1rem" pr="1rem">
           <Tab padding="1.5rem">Deposit</Tab>
-          <Tab>Withdraw</Tab>
+          <Tab padding="1.5rem">Withdraw</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
