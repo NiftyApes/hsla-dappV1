@@ -5,6 +5,7 @@ import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
 import { useTotalEthLoanedOut } from 'hooks/useTotalEthLoanedOut';
 import _ from 'lodash';
 import { AvailablePopover } from './AvailablePopover';
+import { InUsePopover } from './InUsePopover';
 
 export const EthLiquidityInfo: React.FC = () => {
   const { totalEthLoanedOut } = useTotalEthLoanedOut();
@@ -45,7 +46,7 @@ export const EthLiquidityInfo: React.FC = () => {
                 <Text mx="5px" style={{ whiteSpace: 'nowrap' }}>
                   In Use
                 </Text>
-                <Icon name="circle-question-mark" color="solid.gray2" size={16} />
+                <InUsePopover />
               </Flex>
             </Th>
           </Tr>
