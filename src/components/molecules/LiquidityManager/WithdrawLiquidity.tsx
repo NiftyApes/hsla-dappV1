@@ -4,18 +4,18 @@ import {
   Flex,
   Input,
   InputGroup,
-  InputRightElement,
   InputLeftElement,
+  InputRightElement,
 } from '@chakra-ui/react';
+import CryptoIcon from 'components/atoms/CryptoIcon';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { useWithdrawEthLiquidity } from 'hooks/useWithdrawEthLiquidity';
 import { useState } from 'react';
 import { WithdrawBtn } from './WithdrawBtn';
 import { WithdrawMsg } from './WithdrawMsg';
-import CryptoIcon from 'components/atoms/CryptoIcon';
 
 export const WithdrawLiquidity: React.FC = () => {
-  const { withdrawETHLiquidity, withdrawStatus, txObject, ethLiquidity } =
+  const { withdrawETHLiquidity, withdrawStatus, txObject, availableEthLiquidity } =
     useWithdrawEthLiquidity();
 
   const [liquidityToWithdrawStr, setLiquidityToWithdrawStr] = useState('');
@@ -26,8 +26,8 @@ export const WithdrawLiquidity: React.FC = () => {
 
   const doesInputExceedsMax = !!(
     isInputConvertibleToNumber &&
-    ethLiquidity &&
-    Number(liquidityToWithdrawStr) > Number(ethLiquidity)
+    availableEthLiquidity &&
+    Number(liquidityToWithdrawStr) > availableEthLiquidity
   );
 
   const isWithdrawBtnDisabled =
@@ -56,9 +56,10 @@ export const WithdrawLiquidity: React.FC = () => {
               variant="link"
               size="lg"
               pt=".5rem"
-              // pr="3.5rem"
               textTransform={'uppercase'}
-              onClick={() => ethLiquidity && setLiquidityToWithdrawStr(ethLiquidity)}
+              onClick={() =>
+                availableEthLiquidity && setLiquidityToWithdrawStr(String(availableEthLiquidity))
+              }
             >
               max
             </Button>

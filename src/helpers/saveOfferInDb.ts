@@ -1,3 +1,5 @@
+import { getApiUrl } from './getApiUrl';
+
 export async function saveOfferInDb({
   offerObj,
   offerHash,
@@ -25,7 +27,7 @@ export async function saveOfferInDb({
     nftContractAddress,
   } = offerObj;
 
-  await fetch(`https://qqxeqsrt39.execute-api.us-west-2.amazonaws.com/DEV/api/offers`, {
+  await fetch(getApiUrl('offers'), {
     method: 'POST',
     body: JSON.stringify({
       nftId,

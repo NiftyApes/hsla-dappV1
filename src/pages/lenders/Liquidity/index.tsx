@@ -1,15 +1,18 @@
 import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
+import { LiquidityInfo } from 'components/molecules/LiquidityInfo';
 import { LiquidityManager } from 'components/molecules/LiquidityManager';
 import React from 'react';
-import LockedLiquidity from './LockedLiquidity';
 import TransactionHistoryTable from './TransactionHistoryTable';
 
 const Liquidity: React.FC = () => {
   return (
-    <Box p="1.5rem">
-      <Grid gridTemplateColumns="repeat(3, minmax(0, 1fr))" columnGap="20px" mt="36px">
+    <Box p="21px">
+      <Text fontSize="xl" fontWeight="bold" color="solid.gray0">
+        💧 Your Liquidity
+      </Text>
+      <Grid gridTemplateColumns="repeat(3, minmax(0, 1fr))" columnGap="20px" mt="36px" minW="960px">
         <GridItem colSpan={2}>
-          <LockedLiquidity />
+          <LiquidityInfo />
         </GridItem>
         <GridItem colSpan={1}>
           <LiquidityManager />
