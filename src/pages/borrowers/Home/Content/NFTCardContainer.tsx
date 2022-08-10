@@ -32,11 +32,6 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
   // const { content: loanAuction, fetching: fetchingAuctions } = useLoanAuctionByNFT(item);
   const loanAuction = useLoanAuction({ nftContractAddress: contract.address, nftId: item.id });
 
-  const { repayLoanByBorrower } = useRepayLoanByBorrower({
-    nftContractAddress: contract.address,
-    nftId: item.id,
-  });
-
   useEffect(() => {
     if (!loanOffers && !fetchingOffers) {
       dispatch(fetchLoanOffersByNFT(item));
@@ -54,20 +49,31 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
     return <NFTLoadingCard />;
   }
 
+  // TODO: Show loan offer with best terms
+  const offer = loanOffers[0];
+
   //TODO: Why are we checking null address?
   if (loanAuction && loanAuction.nftOwner !== '0x0000000000000000000000000000000000000000') {
     //Active loan card
     return (
-      <div>
-        <strong>
-          {item.name} #{item.id}
-        </strong>
-        <div>Amount: {formatEther(loanAuction?.amount)} ETH</div>
-        <div>Amount Drawn: {formatEther(loanAuction?.amountDrawn)} ETH</div>
-        <div>Lender Interest: {formatEther(loanAuction?.accumulatedLenderInterest)} ETH</div>
-        <div>Protocol Interest: {formatEther(loanAuction?.accumulatedProtocolInterest)} ETH</div>
-        <Button onClick={() => repayLoanByBorrower && repayLoanByBorrower()}>Repay</Button>
-      </div>
+      <NFTActiveLoanCard
+        contract={contract}
+        key={item.id}
+        collectionName="TEST"
+        tokenName={`${item.name}`}
+        tokenId={`${item.id}`}
+        loan={{
+          amountEth: loanAuction?.amount,
+          amount: formatEther(loanAuction?.amount),
+          amountDrawn: formatEther(loanAuction?.amountDrawn),
+          interestRatePerSecond: loanAuction?.interestRatePerSecond,
+          lenderInterest: formatEther(loanAuction?.accumulatedLenderInterest),
+          loanBeginTimestamp: loanAuction?.loanBeginTimestamp,
+          loanEndTimestamp: loanAuction?.loanEndTimestamp,
+          protocolInterest: formatEther(loanAuction?.accumulatedProtocolInterest),
+        }}
+        img={item.image}
+      />
     );
   }
 
@@ -84,8 +90,6 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
     );
   }
 
-  // TODO: Show loan offer with best terms
-  const offer = loanOffers[0];
   const offerAmount = BigNumber.from(String(offer.OfferTerms.Amount));
 
   // return <NFTDefaultedLoanCard
@@ -104,25 +108,6 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
   //     }}
   //     img={item.image}
   // />
-  //
-  // return (
-  //   <NFTActiveLoanCard
-  //     contract={contract}
-  //     key={item.id}
-  //     collectionName="TEST"
-  //     tokenName={`${item.name}`}
-  //     id={`${item.id}`}
-  //     offerHash={offer.OfferHash}
-  //     offer={{
-  //       type: 'top',
-  //       price: Number(ethers.utils.formatEther(offerAmount)),
-  //       symbol: 'eth',
-  //       aprPercentage: offer.aprPercentage,
-  //       days: offer.days,
-  //     }}
-  //     img={item.image}
-  //   />
-  // );
 
   return (
     <NFTCard

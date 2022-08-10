@@ -85,7 +85,7 @@ const config: HardhatUserConfig = {
       chainId: 31337,
       forking: {
         url: `https://eth-mainnet.alchemyapi.io/v2/Of3Km_--Ow1fNnMhaETmwnmWBFFHF3ZY`,
-        blockNumber: 14724006,
+        // blockNumber: 14724006,
       },
       mining: {
         auto: false,

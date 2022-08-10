@@ -12,15 +12,12 @@ import {
 } from '@chakra-ui/react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { CoinSymbol } from 'lib/constants/coinSymbols';
 import { Contract } from 'ethers';
 import { NFTCardContainer } from './components/NFTCardContainer';
 import { NFTCardHeader } from './components/NFTCardHeader';
 import { formatNumber } from 'lib/helpers/string';
-import { useERC721ApprovalForAll } from 'hooks/useERC721ApprovalForAll';
 import { useExecuteLoanByBorrower } from 'hooks/useExecuteLoanByBorrower';
-import { useNiftyApesContractAddress } from 'hooks/useNiftyApesContractAddress';
 import BorrowOfferDetailsCard from '../BorrowOfferDetailsCard';
 
 interface Props {
@@ -61,13 +58,6 @@ const NFTCard: React.FC<Props> = ({
   offerHash,
   tokenName,
 }) => {
-  const niftyApesContractAddress = useNiftyApesContractAddress();
-
-  const { hasApprovalForAll, hasCheckedApproval, grantApprovalForAll } = useERC721ApprovalForAll({
-    contract,
-    operator: niftyApesContractAddress,
-  });
-
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { executeLoanByBorrower } = useExecuteLoanByBorrower({
@@ -91,27 +81,6 @@ const NFTCard: React.FC<Props> = ({
         {i18n.offerLabel(offer.type)}
       </Container>
     );
-  };
-
-  const renderInitOfferButton = () => {};
-
-  const renderMoneyButton = () => {
-    if (hasApprovalForAll) {
-      return (
-        <Button
-          borderRadius="10px"
-          className="smash-money-btn"
-          display="none"
-          mt="5px"
-          onClick={async () => executeLoanByBorrower && (await executeLoanByBorrower())}
-          px="5px"
-          variant="notify"
-          w="100%"
-        >
-          {i18n.moneyButtonLabel}
-        </Button>
-      );
-    }
   };
 
   return (
@@ -162,7 +131,6 @@ const NFTCard: React.FC<Props> = ({
             {i18n.initLoanButtonLabel}
           </Button>
 
-          {renderMoneyButton()}
           <Center mt="8px" mb="8px">
             {i18n.viewAllOffers(numberOfOffers)}
           </Center>

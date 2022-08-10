@@ -31,6 +31,7 @@ interface Offer {
 }
 
 const i18n = {
+  allowButton: 'allow niftyapes to transfer nft',
   approveButton: 'approve transfer',
   approveMessage: (tokenId: string, tokenName: string, offer: Offer) =>
     `Approve and transfer ${tokenName} #${tokenId} to the NiftyApes smart contract to borrow ${offer.price}${offer.symbol} for ${offer.durationDays} days`,
@@ -55,16 +56,14 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
   tokenId,
   tokenName,
 }) => {
-  const niftyApesContractAddress = useNiftyApesContractAddress();
-  const [approvalTxStatus, setApprovalTxStatus] = useState<string>('READY');
+  const esNftUrl = `https://etherscan.io/token/${contract?.address}?a=${tokenId}`;
+  const osNftUrl = `https://opensea.io/assets/ethereum/${contract?.address}/${tokenId}`;
 
+  const operator = useNiftyApesContractAddress();
   const { hasApprovalForAll, hasCheckedApproval, grantApprovalForAll } = useERC721ApprovalForAll({
     contract,
-    operator: niftyApesContractAddress,
+    operator,
   });
-
-  const etherscanUrl = () => `https://etherscan.io/token/${contract?.address}?a=${tokenId}`;
-  const openseaUrl = () => `https://opensea.io/assets/ethereum/${contract?.address}/${tokenId}`;
 
   const { executeLoanByBorrower } = useExecuteLoanByBorrower({
     nftContractAddress: contract?.address,
@@ -72,40 +71,36 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
     offerHash,
     floorTerm,
   });
+  const [isExecuting, setExecuting] = useState<boolean>(false);
+  const onExecuteLoan = async () => {
+    if (executeLoanByBorrower) {
+      setExecuting(true);
+      await executeLoanByBorrower().then(() => {
+        setExecuting(false);
+      });
+    }
+  };
 
-  const onApproveForAll = async () => {
+  const [transferApprovalStatus, setTransferApprovalStatus] = useState<string>('READY');
+  const onApproveTransfer = async () => {
     await grantApprovalForAll({
-      onPending: () => setApprovalTxStatus('PENDING'),
+      onPending: () => setTransferApprovalStatus('PENDING'),
       onSuccess: () => {
-        setApprovalTxStatus('SUCCESS');
-        setTimeout(() => setApprovalTxStatus('READY'), 1000);
+        setTransferApprovalStatus('SUCCESS');
+        setTimeout(() => setTransferApprovalStatus('READY'), 1000);
       },
       onError: () => {
-        setApprovalTxStatus('ERROR');
-        setTimeout(() => setApprovalTxStatus('READY'), 1000);
+        setTransferApprovalStatus('ERROR');
+        setTimeout(() => setTransferApprovalStatus('READY'), 1000);
       },
     });
   };
 
-  const renderButtons = () => {
-    const btnLabel = () => {
-      switch (approvalTxStatus) {
-        case 'READY':
-          return i18n.approveButton;
-        case 'PENDING':
-          return <LoadingIndicator size="xs" />;
-        case 'ERROR':
-          return 'Error';
-        default:
-          return approvalTxStatus;
-      }
-    };
-
-    return (
-      <>
+  const renderTransferButton = () => {
+    if (!hasApprovalForAll && hasCheckedApproval) {
+      return (
         <Button
-          isDisabled={hasApprovalForAll && hasCheckedApproval}
-          onClick={onApproveForAll}
+          onClick={onApproveTransfer}
           colorScheme="purple"
           mt="30px"
           py="6px"
@@ -114,23 +109,27 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
           variant="outline"
           width="100%"
         >
-          Allow NiftyApes to transfer NFT
+          {transferApprovalStatus === 'PENDING' ? <LoadingIndicator size="xs" /> : i18n.allowButton}
         </Button>
+      );
+    }
+  };
 
-        <Button
-          isDisabled={!hasApprovalForAll && hasCheckedApproval}
-          onClick={async () => executeLoanByBorrower && (await executeLoanByBorrower())}
-          colorScheme="purple"
-          mt="20px"
-          py="6px"
-          size="lg"
-          textTransform="uppercase"
-          variant="outline"
-          width="100%"
-        >
-          {btnLabel()}
-        </Button>
-      </>
+  const renderLoanButton = () => {
+    return (
+      <Button
+        isDisabled={!hasApprovalForAll && hasCheckedApproval}
+        onClick={onExecuteLoan}
+        colorScheme="purple"
+        mt="20px"
+        py="6px"
+        size="lg"
+        textTransform="uppercase"
+        variant="outline"
+        width="100%"
+      >
+        {isExecuting ? <LoadingIndicator size="xs" /> : i18n.approveButton}
+      </Button>
     );
   };
 
@@ -179,10 +178,10 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
               <Text isTruncated={true} width="100px">
                 {contract?.address}
               </Text>
-              <Link isExternal href={etherscanUrl()}>
+              <Link isExternal href={esNftUrl}>
                 <Icon name="etherscan" />
               </Link>
-              <Link isExternal href={openseaUrl()}>
+              <Link isExternal href={osNftUrl}>
                 <Icon name="os" />
               </Link>
             </HStack>
@@ -240,7 +239,8 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
           <Text textAlign="center">{i18n.approveMessage(tokenId, tokenName, offer)}</Text>
         </Flex>
 
-        {renderButtons()}
+        {renderTransferButton()}
+        {renderLoanButton()}
       </Flex>
     </Box>
   );
