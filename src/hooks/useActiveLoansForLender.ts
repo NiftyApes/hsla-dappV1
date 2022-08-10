@@ -1,6 +1,7 @@
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { BigNumber } from 'ethers';
+import { getApiUrl } from 'helpers';
 import { getLoanForNft } from 'helpers/getLoanForNft';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
@@ -20,9 +21,7 @@ export const useActiveLoansForLender = () => {
         return;
       }
 
-      const result = await fetch(
-        `https://qqxeqsrt39.execute-api.us-west-2.amazonaws.com/DEV/api/loans?creator=${address}&status=ACTIVE`,
-      );
+      const result = await fetch(getApiUrl(`loans?creator=${address}&status=ACTIVE`));
 
       const json = await result.json();
 
