@@ -55,9 +55,5 @@ export const useActiveLoansForLender = () => {
     fetchLoanOffersForNFT();
   }, [address, lendingContract, cacheCounter]);
 
-  if (!loans) {
-    return undefined;
-  }
-
   return loans;
 };
