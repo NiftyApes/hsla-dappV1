@@ -21,6 +21,4 @@ export async function saveLoanInDb({
       amount,
     }),
   });
-
-  console.log('result', result);
 }
