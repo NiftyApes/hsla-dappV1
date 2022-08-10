@@ -40,10 +40,6 @@ export const useExecuteLoanByBorrower = ({
 
       const loan = receipt.events[6].args[2];
 
-      console.log('receipt', receipt);
-
-      console.log(loan, loan.nftId);
-
       const loanObj = {
         creator: loan.creator,
         nftContractAddress: loan.nftContractAddress,

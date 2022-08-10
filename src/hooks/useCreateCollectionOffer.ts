@@ -74,8 +74,6 @@ export const useCreateCollectionOffer = ({
 
         const receipt: any = await tx.wait();
 
-        console.log('receipt', receipt, JSON.stringify(receipt, void 0, 2));
-
         onTxMined && onTxMined(receipt);
 
         const offer = receipt.events[1].args[4];

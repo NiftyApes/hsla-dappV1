@@ -6,14 +6,12 @@ import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useLendingContract } from './useContracts';
 import { useWalletAddress } from './useWalletAddress';
-import { useWalletProvider } from './useWalletProvider';
 
 export const useActiveLoansForLender = () => {
   const [loans, setLoans] = useState<any>();
   const address = useWalletAddress();
   const cacheCounter = useAppSelector((state: RootState) => state.counter);
 
-  const provider = useWalletProvider();
   const lendingContract = useLendingContract();
 
   useEffect(() => {
@@ -27,8 +25,6 @@ export const useActiveLoansForLender = () => {
       );
 
       const json = await result.json();
-
-      console.log('1', json);
 
       const processedLoans = json.Items.map((item: any) => {
         return {
@@ -46,8 +42,6 @@ export const useActiveLoansForLender = () => {
           nftId: loan.nftId,
           lendingContract,
         });
-
-        console.log(loan.nftContractAddress, loan.nftId, loanFromChain);
 
         if (!loanFromChain || loanFromChain[0] === '0x0000000000000000000000000000000000000000') {
           processedLoans[i] = undefined;
