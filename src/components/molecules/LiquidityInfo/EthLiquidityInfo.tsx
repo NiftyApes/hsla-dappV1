@@ -3,6 +3,7 @@ import CryptoIcon from 'components/atoms/CryptoIcon';
 import Icon from 'components/atoms/Icon';
 import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
 import { useTotalEthLoanedOut } from 'hooks/useTotalEthLoanedOut';
+import _ from 'lodash';
 import { AvailablePopover } from './AvailablePopover';
 
 export const EthLiquidityInfo: React.FC = () => {
@@ -10,7 +11,7 @@ export const EthLiquidityInfo: React.FC = () => {
 
   const { ethLiquidity } = useAvailableEthLiquidity();
 
-  if (!ethLiquidity && !totalEthLoanedOut) {
+  if (_.isNil(ethLiquidity) || _.isNil(totalEthLoanedOut)) {
     return null;
   }
 
