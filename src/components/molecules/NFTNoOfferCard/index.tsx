@@ -1,105 +1,37 @@
-import React, { useState } from 'react';
-import { Button, Flex, Image, Text } from '@chakra-ui/react';
-import { useERC721ApprovalForAll } from 'hooks/useERC721ApprovalForAll';
+import React from 'react';
+import { Center, Text } from '@chakra-ui/react';
 import { Contract } from 'ethers';
-import { useNiftyApesContractAddress } from 'hooks/useNiftyApesContractAddress';
-import LoadingIndicator from 'components/atoms/LoadingIndicator';
+import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
+import { NFTCardHeader } from '../NFTCard/components/NFTCardHeader';
 
 interface Props {
+  collectionName?: string;
   contract?: Contract;
-  collectionName: string;
+  img?: string;
+  tokenId: string;
   tokenName: string;
-  id: string;
-  img: string;
 }
 
-const NFTNoOfferCard: React.FC<Props> = ({ contract, collectionName, tokenName, id, img }) => {
-  const niftyApesContractAddress = useNiftyApesContractAddress();
+const i18n = {
+  noOffers: 'no offers available',
+};
 
-  const { hasApprovalForAll, grantApprovalForAll } = useERC721ApprovalForAll({
-    contract,
-    operator: niftyApesContractAddress,
-  });
-
-  const [approvalTxStatus, setApprovalTxStatus] = useState<string>('READY');
-
+const NFTNoOfferCard: React.FC<Props> = ({ collectionName, contract, img, tokenId, tokenName }) => {
   return (
-    <Flex
-      alignItems="center"
-      flexDir="column"
-      p="17px 15px 10px 15px"
-      fontWeight="bold"
-      // w="200px"
-      boxShadow="0px 4px 24px rgba(73, 16, 146, 0.1)"
-      borderRadius="15px"
-    >
-      <Text color="solid.gray0" fontSize="2.5xs">
-        {collectionName}
-      </Text>
-      <Text fontSize="xl" mt="5px" maxW="100%" isTruncated>
-        {tokenName} #{id}
-      </Text>
-      <Image
-        src={img}
-        alt="No Offer Card"
-        w="156px"
-        h="127px"
-        objectFit="cover"
-        borderRadius="25px"
-        mt="12px"
-      />
-      <Text mt="8px" color="solid.gray0" fontSize="xs">
-        NO OFFERS AVAILABLE
-      </Text>
-      {!hasApprovalForAll && (
-        <Button
-          onClick={async () =>
-            await grantApprovalForAll({
-              onPending: () => setApprovalTxStatus('PENDING'),
-              onSuccess: () => {
-                setApprovalTxStatus('SUCCESS');
-                setTimeout(() => setApprovalTxStatus('READY'), 1000);
-              },
-              onError: () => {
-                setApprovalTxStatus('ERROR');
-                setTimeout(() => setApprovalTxStatus('READY'), 1000);
-              },
-            })
-          }
-          variant="secondary"
-          size="xs"
-          py="8px"
-          w="100%"
-          h="30px"
-          mt="8px"
-        >
-          {approvalTxStatus === 'READY' ? (
-            'Approve'
-          ) : approvalTxStatus === 'PENDING' ? (
-            <span>
-              Pending <LoadingIndicator size="xs" />
-            </span>
-          ) : approvalTxStatus === 'SUCCESS' ? (
-            'Success'
-          ) : approvalTxStatus === 'ERROR' ? (
-            'Error'
-          ) : (
-            'Approve'
-          )}
-        </Button>
-      )}
-      {/* <Button
-        disabled={!hasApprovalForAll}
-        variant="secondary"
-        size="xs"
-        py="8px"
-        w="100%"
-        h="30px"
-        mt="8px"
+    <NFTCardContainer>
+      <NFTCardHeader
+        img={img}
+        tokenId={tokenId}
+        tokenName={tokenName}
+        collectionName={collectionName}
       >
-        REQUEST LOAN
-      </Button> */}
-    </Flex>
+        <Center mt="8px">
+          <Text color="solid.gray0" fontSize="sm" textTransform="uppercase">
+            {i18n.noOffers}
+          </Text>
+        </Center>
+      </NFTCardHeader>
+    </NFTCardContainer>
   );
 };
 

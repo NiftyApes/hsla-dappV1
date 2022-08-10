@@ -1,10 +1,10 @@
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
-import { useWalletAddress } from './useWalletAddress';
-import { saveOfferInDb } from '../helpers/saveOfferInDb';
-import { useWalletProvider } from './useWalletProvider';
 import { getOffersContract } from '../helpers/getContracts';
+import { saveOfferInDb } from '../helpers/saveOfferInDb';
+import { useWalletAddress } from './useWalletAddress';
+import { useWalletProvider } from './useWalletProvider';
 
 const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 

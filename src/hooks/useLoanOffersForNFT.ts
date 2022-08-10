@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { BigNumber } from 'ethers';
+import { getApiUrl } from 'helpers';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
 import _ from 'lodash';
+import { useEffect, useState } from 'react';
 import { getOffersContract } from '../helpers/getContracts';
 import { useWalletProvider } from './useWalletProvider';
 
@@ -27,9 +28,7 @@ export const useLoanOffersForNFT = ({
         return;
       }
 
-      const result = await fetch(
-        `https://qqxeqsrt39.execute-api.us-west-2.amazonaws.com/DEV/api/offers?nftContractAddress=${nftContractAddress}`,
-      );
+      const result = await fetch(getApiUrl(`offers?nftContractAddress=${nftContractAddress}`));
 
       const json = await result.json();
 
