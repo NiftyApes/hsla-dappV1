@@ -16,7 +16,6 @@ export const Default = Template.bind({});
 Default.args = {
   img: MockImg1,
   collectionName: 'COLLECTION.NAME',
-  contractAddress: '0xFF',
   tokenName: 'TOKEN.NAME',
   offer: {
     aprPercentage: 25,

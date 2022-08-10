@@ -12,7 +12,6 @@ import LoadingIndicator from '../../atoms/LoadingIndicator';
 
 interface Props {
   contract?: Contract;
-  contractAddress: string;
   floorTerm: boolean;
   img: string;
   offer: Offer;
@@ -49,7 +48,6 @@ const i18n = {
 
 const BorrowOfferDetailsCard: React.FC<Props> = ({
   contract,
-  contractAddress,
   floorTerm,
   img,
   offer,
@@ -65,8 +63,8 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
     operator: niftyApesContractAddress,
   });
 
-  const etherscanUrl = () => `https://etherscan.io/token/${contractAddress}?a=${tokenId}`;
-  const openseaUrl = () => `https://opensea.io/assets/ethereum/${contractAddress}/${tokenId}`;
+  const etherscanUrl = () => `https://etherscan.io/token/${contract?.address}?a=${tokenId}`;
+  const openseaUrl = () => `https://opensea.io/assets/ethereum/${contract?.address}/${tokenId}`;
 
   const { executeLoanByBorrower } = useExecuteLoanByBorrower({
     nftContractAddress: contract?.address,
@@ -179,7 +177,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
           <Flex alignItems="center" mt="10px">
             <HStack>
               <Text isTruncated={true} width="100px">
-                {contractAddress}
+                {contract?.address}
               </Text>
               <Link isExternal href={etherscanUrl()}>
                 <Icon name="etherscan" />

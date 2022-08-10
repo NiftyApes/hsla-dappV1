@@ -127,7 +127,6 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
   return (
     <NFTCard
       contract={contract}
-      contractAddress={item.contractAddress}
       id={`${item.id}`}
       offerHash={offer.OfferHash}
       offer={{

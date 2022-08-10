@@ -25,7 +25,6 @@ import BorrowOfferDetailsCard from '../BorrowOfferDetailsCard';
 
 interface Props {
   collectionName: string;
-  contractAddress: string;
   contract?: Contract;
   floorTerm: boolean;
   id: string;
@@ -54,7 +53,6 @@ const i18n = {
 const NFTCard: React.FC<Props> = ({
   collectionName,
   contract,
-  contractAddress,
   floorTerm,
   id,
   img,
@@ -175,7 +173,6 @@ const NFTCard: React.FC<Props> = ({
               <ModalContent p="5px">
                 <BorrowOfferDetailsCard
                   contract={contract}
-                  contractAddress={contractAddress}
                   floorTerm={floorTerm}
                   img={img}
                   offer={offer}
