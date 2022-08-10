@@ -1,26 +1,5 @@
-import {
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
-} from '@chakra-ui/react';
-import Icon from 'components/atoms/Icon';
+import { LiquidityPopover } from './LiquidityPopover';
 
 export const InUsePopover = () => (
-  <Popover placement="top">
-    <PopoverTrigger>
-      <span style={{ cursor: 'pointer' }}>
-        <Icon name="circle-question-mark" color="solid.gray2" size={16} />
-      </span>
-    </PopoverTrigger>
-    <PopoverContent style={{ textTransform: 'none' }}>
-      <PopoverArrow />
-      <PopoverCloseButton />
-      <PopoverHeader>Liquidity Locked in Loans</PopoverHeader>
-      <PopoverBody>Some descriptive text</PopoverBody>
-    </PopoverContent>
-  </Popover>
+  <LiquidityPopover Header={<strong>In Use</strong>} Body={'Body'} />
 );
