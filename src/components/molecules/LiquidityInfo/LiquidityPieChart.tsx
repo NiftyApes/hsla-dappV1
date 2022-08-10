@@ -34,19 +34,21 @@ export const LiquidityPieChart: React.FC = () => {
 
   return (
     <Box>
-      <Center sx={{ fontWeight: 'bold', color: 'solid.gray0' }}>LIQUIDITY BREAKDOWN</Center>
+      <Center sx={{ fontWeight: 'bold', color: 'solid.gray0' }} mt="2rem">
+        LIQUIDITY BREAKDOWN
+      </Center>
       <Box minW="max(25vw, 240px)" minH="max(25vh, 240px)" mt="1rem">
         <PieChart
           lineWidth={25}
           labelPosition={116}
-          labelStyle={() => ({ fontSize: '24px' })}
-          radius={120}
+          labelStyle={() => ({ fontSize: '20px' })}
+          radius={100}
           data={data}
           label={({ dataEntry }) =>
             `${dataEntry.title === 'In Use' ? '🔒' : ''}${Number(dataEntry.value.toFixed(2))}Ξ`
           }
-          viewBoxSize={[400, 400]}
-          center={[200, 180]}
+          viewBoxSize={[400, 300]}
+          center={[200, 130]}
         />
       </Box>
     </Box>
