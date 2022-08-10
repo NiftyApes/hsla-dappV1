@@ -9,7 +9,7 @@ import { useWalletProvider } from './useWalletProvider';
 export const useWithdrawEthLiquidity = () => {
   const dispatch = useAppDispatch();
 
-  const { ethLiquidity } = useAvailableEthLiquidity();
+  const { availableEthLiquidity } = useAvailableEthLiquidity();
 
   const provider = useWalletProvider();
   const niftyApesContract = provider ? getLiquidityContract({ provider }) : null;
@@ -66,6 +66,6 @@ export const useWithdrawEthLiquidity = () => {
     withdrawStatus,
     txObject,
     txReceipt,
-    ethLiquidity,
+    availableEthLiquidity,
   };
 };

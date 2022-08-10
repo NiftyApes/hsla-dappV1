@@ -7,9 +7,9 @@ import { PieChart } from 'react-minimal-pie-chart';
 export const LiquidityPieChart: React.FC = () => {
   const { totalEthLoanedOut } = useTotalEthLoanedOut();
 
-  const { ethLiquidity } = useAvailableEthLiquidity();
+  const { availableEthLiquidity } = useAvailableEthLiquidity();
 
-  if (_.isNil(totalEthLoanedOut) || _.isNil(ethLiquidity)) {
+  if (_.isNil(totalEthLoanedOut) || _.isNil(availableEthLiquidity)) {
     return null;
   }
 
@@ -23,10 +23,10 @@ export const LiquidityPieChart: React.FC = () => {
     });
   }
 
-  if (ethLiquidity) {
+  if (availableEthLiquidity) {
     data.push({
       title: 'Available',
-      value: Number(String(ethLiquidity.toFixed(2))),
+      value: Number(String(availableEthLiquidity.toFixed(2))),
       color: '#9ecbf9',
     });
   }

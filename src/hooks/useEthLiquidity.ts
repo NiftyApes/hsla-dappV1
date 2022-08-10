@@ -18,7 +18,7 @@ export const useAvailableEthLiquidity = () => {
 
   const cETHContract = useCEthContract();
 
-  const [ethLiquidity, setEthLiquidity] = useState<number>();
+  const [availableEthLiquidity, setAvailableEthLiquidity] = useState<number>();
 
   useEffect(() => {
     async function getETHLiquidity() {
@@ -35,13 +35,13 @@ export const useAvailableEthLiquidity = () => {
       const liquidityInEth =
         Number(ethers.utils.formatEther(result)) * Number(ethers.utils.formatEther(exchangeRate));
 
-      setEthLiquidity(Number(liquidityInEth.toFixed(5)));
+      setAvailableEthLiquidity(Number(liquidityInEth.toFixed(5)));
     }
 
     getETHLiquidity();
   }, [address, niftyApesContract, cETHContract, cacheCounter]);
 
   return {
-    ethLiquidity,
+    availableEthLiquidity,
   };
 };

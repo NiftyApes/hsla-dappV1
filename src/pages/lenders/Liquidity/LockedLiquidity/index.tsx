@@ -8,7 +8,7 @@ import LockedLiquidityChart from './LockedLiquidityChart';
 import Row from './Row';
 
 const LockedLiquidity: React.FC = () => {
-  const { ethLiquidity } = useAvailableEthLiquidity();
+  const { availableEthLiquidity } = useAvailableEthLiquidity();
   return (
     <Card>
       <Grid gridTemplateColumns="repeat(3, minmax(0, 1fr))" columnGap="50px">
@@ -76,7 +76,7 @@ const LockedLiquidity: React.FC = () => {
                 },
               }}
             >
-              <Row ethLiquidity={ethLiquidity} />
+              <Row ethLiquidity={availableEthLiquidity} />
             </Tbody>
           </Table>
         </GridItem>

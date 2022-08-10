@@ -10,9 +10,9 @@ import { InUsePopover } from './InUsePopover';
 export const EthLiquidityInfo: React.FC = () => {
   const { totalEthLoanedOut } = useTotalEthLoanedOut();
 
-  const { ethLiquidity } = useAvailableEthLiquidity();
+  const { availableEthLiquidity } = useAvailableEthLiquidity();
 
-  if (_.isNil(ethLiquidity) || _.isNil(totalEthLoanedOut)) {
+  if (_.isNil(availableEthLiquidity) || _.isNil(totalEthLoanedOut)) {
     return null;
   }
 
@@ -65,13 +65,15 @@ export const EthLiquidityInfo: React.FC = () => {
             <Td>
               <Flex alignItems="center">
                 <CryptoIcon symbol="eth" size={25} />
-                <Text ml="8px">{Number((ethLiquidity + totalEthLoanedOut).toFixed(2))}</Text>
+                <Text ml="8px">
+                  {Number((availableEthLiquidity + totalEthLoanedOut).toFixed(2))}
+                </Text>
               </Flex>
             </Td>
             <Td>
               <Flex alignItems="center">
                 <CryptoIcon symbol="eth" size={25} />
-                <Text ml="8px">{Number(ethLiquidity.toFixed(2))}</Text>
+                <Text ml="8px">{Number(availableEthLiquidity.toFixed(2))}</Text>
               </Flex>
             </Td>
             <Td>
