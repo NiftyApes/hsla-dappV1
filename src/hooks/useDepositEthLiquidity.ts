@@ -3,13 +3,13 @@ import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
 import { useState } from 'react';
 import { getLiquidityContract } from '../helpers/getContracts';
-import { useEthLiquidity } from './useEthLiquidity';
+import { useAvailableEthLiquidity } from './useEthLiquidity';
 import { useWalletProvider } from './useWalletProvider';
 
 export const useDepositEthLiquidity = () => {
   const dispatch = useAppDispatch();
 
-  const { ethLiquidity } = useEthLiquidity();
+  const { availableEthLiquidity } = useAvailableEthLiquidity();
 
   const provider = useWalletProvider();
   const niftyApesContract = provider ? getLiquidityContract({ provider }) : null;
@@ -66,6 +66,6 @@ export const useDepositEthLiquidity = () => {
     depositStatus,
     txObject,
     txReceipt,
-    ethLiquidity,
+    availableEthLiquidity,
   };
 };

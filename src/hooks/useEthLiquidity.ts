@@ -2,13 +2,13 @@ import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
-import { useWalletAddress } from './useWalletAddress';
-import { useCEthContract } from './useCEthContract';
 import cEthJSON from '../external/cEth/cEth.json';
-import { useWalletProvider } from './useWalletProvider';
 import { getLiquidityContract } from '../helpers/getContracts';
+import { useCEthContract } from './useCEthContract';
+import { useWalletAddress } from './useWalletAddress';
+import { useWalletProvider } from './useWalletProvider';
 
-export const useEthLiquidity = () => {
+export const useAvailableEthLiquidity = () => {
   const cacheCounter = useAppSelector((state: RootState) => state.counter);
 
   const address = useWalletAddress();
@@ -18,7 +18,7 @@ export const useEthLiquidity = () => {
 
   const cETHContract = useCEthContract();
 
-  const [ethLiquidity, setEthLiquidity] = useState<string>();
+  const [availableEthLiquidity, setAvailableEthLiquidity] = useState<number>();
 
   useEffect(() => {
     async function getETHLiquidity() {
@@ -35,13 +35,13 @@ export const useEthLiquidity = () => {
       const liquidityInEth =
         Number(ethers.utils.formatEther(result)) * Number(ethers.utils.formatEther(exchangeRate));
 
-      setEthLiquidity(String(Number(liquidityInEth.toFixed(5))));
+      setAvailableEthLiquidity(Number(liquidityInEth.toFixed(5)));
     }
 
     getETHLiquidity();
   }, [address, niftyApesContract, cETHContract, cacheCounter]);
 
   return {
-    ethLiquidity,
+    availableEthLiquidity,
   };
 };

@@ -4,7 +4,7 @@ import Icon from 'components/atoms/Icon';
 import React from 'react';
 
 interface RowProps {
-  ethLiquidity?: string;
+  ethLiquidity?: number;
 }
 
 const Row: React.FC<RowProps> = ({ ethLiquidity }) => {
