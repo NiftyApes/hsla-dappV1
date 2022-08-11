@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Button,
   Center,
@@ -17,7 +17,6 @@ import { Contract } from 'ethers';
 import { NFTCardContainer } from './components/NFTCardContainer';
 import { NFTCardHeader } from './components/NFTCardHeader';
 import { formatNumber } from 'lib/helpers/string';
-import { useExecuteLoanByBorrower } from 'hooks/useExecuteLoanByBorrower';
 import BorrowOfferDetailsCard from '../BorrowOfferDetailsCard';
 
 interface Props {
@@ -42,7 +41,8 @@ interface Props {
 
 const i18n = {
   offerLabel: (type: string) => `${type} offer`,
-  moneyButtonLabel: '🍌Smash money button',
+  offerDuration: (duration: number) => `${duration} days`,
+  offerApr: (apr: number) => `${Math.round(apr)}% APR`,
   initLoanButtonLabel: 'initiate loan',
   viewAllOffers: (numOffers: number) => `View All Offers (${formatNumber(numOffers)})`,
 };
@@ -59,13 +59,6 @@ const NFTCard: React.FC<Props> = ({
   tokenName,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const { executeLoanByBorrower } = useExecuteLoanByBorrower({
-    nftContractAddress: contract?.address,
-    nftId: id,
-    offerHash,
-    floorTerm,
-  });
 
   const renderBestOffer = () => {
     return (
@@ -93,6 +86,7 @@ const NFTCard: React.FC<Props> = ({
             borderRadius="8px"
             border="1px solid"
             borderColor="accents.100"
+            minHeight="128px"
             bg="#C4C4C41A"
             w="100%"
             mt="8px"
@@ -103,19 +97,18 @@ const NFTCard: React.FC<Props> = ({
             <Flex alignItems="center">
               <CryptoIcon symbol={offer.symbol} size={25} />
               <Text ml="6px" fontSize="3.5xl" fontWeight="bold">
-                {offer.price}Ξ
+                {offer.price.toFixed(1)}Ξ
               </Text>
             </Flex>
 
             <Text fontSize="lg" color="solid.gray0">
-              <Text as="span" color="solid.black">
-                {offer.durationDays}
+              <Text as="span" color="solid.black" fontWeight="semibold">
+                {i18n.offerDuration(offer.durationDays)}
               </Text>
-              &nbsp;days at&nbsp;
-              <Text as="span" color="solid.black">
-                {offer.aprPercentage}%
+              &nbsp;at&nbsp;
+              <Text as="span" color="solid.black" fontWeight="semibold">
+                {i18n.offerApr(offer.aprPercentage)}
               </Text>
-              &nbsp;APR
             </Text>
           </Flex>
           <Button

@@ -1,8 +1,7 @@
 import React from 'react';
-import { Button, Center, Box, Flex, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, Text } from '@chakra-ui/react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import { CoinSymbol } from 'lib/constants/coinSymbols';
 import { Contract } from 'ethers';
 
 import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
@@ -33,9 +32,10 @@ interface Props {
 const i18n = {
   actionButtonHelperText: 'What does this mean?',
   actionButtonText: 'repay loan',
+  loanApr: (apr: number) => `${apr}% APR`,
+  loanDuration: (duration: number) => `${duration} days`,
   loanStatus: 'active loan',
-  loanDetails: (duration: number, apr: string) => `${duration} Days at ${apr}% APR`,
-  loanTimeRemaining: (time: number) => `${time} days remaining`,
+  loanTimeRemaining: (distance: string) => `${distance} remaining...`,
 };
 
 const NFTActiveLoanCard: React.FC<Props> = ({
@@ -51,17 +51,15 @@ const NFTActiveLoanCard: React.FC<Props> = ({
     nftId: tokenId,
   });
 
+  // TODO: Extract this into the utils common method
   const secondsInDay = 86400;
   const secondsInYear = 3.154e7;
-  const apr = Number(((loan.interestRatePerSecond * secondsInYear) / loan.amountEth) * 100).toFixed(
-    2,
-  );
+  const apr = Math.round(((loan.interestRatePerSecond * secondsInYear) / loan.amountEth) * 100);
   const duration = Math.round((loan.loanEndTimestamp - loan.loanBeginTimestamp) / secondsInDay);
-  const remaining = loan.loanBeginTimestamp - new Date().getSeconds();
+  const timeRemaining = moment(loan.loanEndTimestamp * 1000).toNow(true);
 
-  // console.log(moment(loan.loanEndTimestamp).format());
-
-  const onReplayLoan = async () => {
+  // TODO: Wire me in
+  const onRepayLoan = async () => {
     if (repayLoanByBorrower) {
       await repayLoanByBorrower();
     }
@@ -82,6 +80,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({
             borderRadius="8px"
             border="1px solid"
             borderColor="orange"
+            minHeight="128px"
             bg="orange.50"
             w="100%"
             mt="8px"
@@ -95,7 +94,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({
               textAlign="center"
               w="100%"
             >
-              <Text textTransform="uppercase" fontWeight="bold" fontSize="md" color="orange.600">
+              <Text textTransform="uppercase" fontWeight="bold" fontSize="md" color="orange.400">
                 {i18n.loanStatus}
               </Text>
             </Box>
@@ -107,11 +106,17 @@ const NFTActiveLoanCard: React.FC<Props> = ({
             </Flex>
 
             <Text fontSize="lg" color="solid.gray0">
-              <Text as="span" color="solid.black">
-                {i18n.loanDetails(duration, apr)}
+              <Text as="span" color="solid.black" fontWeight="semibold">
+                {i18n.loanDuration(duration)}
+              </Text>
+              &nbsp;at&nbsp;
+              <Text as="span" color="solid.black" fontWeight="semibold">
+                {i18n.loanApr(apr)}
               </Text>
             </Text>
-            <Text>{i18n.loanTimeRemaining(332)}</Text>
+            <Text color="solid.black" fontSize="sm">
+              {i18n.loanTimeRemaining(timeRemaining)}
+            </Text>
           </Flex>
           <Button
             borderRadius="8px"

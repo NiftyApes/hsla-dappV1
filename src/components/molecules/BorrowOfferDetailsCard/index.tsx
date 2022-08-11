@@ -75,9 +75,14 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
   const onExecuteLoan = async () => {
     if (executeLoanByBorrower) {
       setExecuting(true);
-      await executeLoanByBorrower().then(() => {
-        setExecuting(false);
-      });
+      await executeLoanByBorrower()
+        .then(() => {
+          setExecuting(false);
+        })
+        .catch((error) => {
+          setExecuting(false);
+          console.log('Error', error.data.message);
+        });
     }
   };
 
