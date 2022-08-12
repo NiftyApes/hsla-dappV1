@@ -33,9 +33,10 @@ import { saveOfferInDb } from './helpers/saveOfferInDb';
 import { btoa } from 'buffer';
 
 envConfig({ path: '../vite-app-ts/.env' });
+envConfig({ path: '.env' });
 
-const INFURA_ID = '2DBD1zglb219GKfSPETOobzC9jN';
-const INFURA_PASS = 'e01f3de8c9919cb5c07927d0971c5d6b';
+const INFURA_ID = process.env.INFURA_IPFS_ID;
+const INFURA_PASS = process.env.INFURA_IPFS_SECRET;
 
 const ipfs = create({
   host: 'ipfs.infura.io',
