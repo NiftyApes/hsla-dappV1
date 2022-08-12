@@ -3,6 +3,7 @@ export type OfferTerms = {
   FloorTerm: boolean;
   Amount: string;
   Expiration: string;
+  Duration: number;
   InterestRatePerSecond: number;
 };
 
@@ -15,16 +16,19 @@ export enum OfferStatus {
 }
 
 export interface LoanOffer {
+  Creator: string;
   OfferHash: string;
   OfferStatus: string;
   OfferStatusEnum?: OfferStatus;
   OfferTerms: OfferTerms;
-  Creator: string;
   Timestamp: number;
   amount: number;
   aprPercentage: number;
-  days: number;
+  duration: number;
+  durationDays: number;
   expiration: number;
+  expirationDays: number;
+  totalInterest: number;
   interestRatePerSecond: number;
 }
 
@@ -32,21 +36,29 @@ const loanOffer = (json: any): LoanOffer => {
   const amount = json.OfferTerms.Amount;
   const interestRatePerSecond = Number(json.OfferTerms.InterestRatePerSecond);
   const expiration = Number(json.OfferTerms.Expiration);
+  const duration = Number(json.OfferTerms.Duration);
   const offerStatus: keyof typeof OfferStatus = json.OfferStatus;
+
+  const secondsInDay = 86400;
+  const secondsInYear = 3.154e7;
 
   return {
     ...json,
     OfferStatusEnum:
       json.OfferStatus && OfferStatus[offerStatus] ? OfferStatus[offerStatus] : undefined,
-    amount,
-    interestRatePerSecond,
-    expiration,
     // TODO: double check
+    amount,
     aprPercentage:
       amount !== 0
-        ? Number(Number(((interestRatePerSecond * (365 * 24 * 60 * 60)) / amount) * 100).toFixed(2))
+        ? Number(Number(((interestRatePerSecond * secondsInYear) / amount) * 100).toFixed(2))
         : 0,
-    days: Number(((Number(expiration) - Date.now() / 1000) / (24 * 60 * 60)).toFixed(2)),
+    duration,
+    durationDays: duration / secondsInDay,
+    expiration,
+    expirationDays: Number(((Number(expiration) - Date.now() / 1000) / secondsInDay).toFixed(2)),
+    interestRatePerSecond,
+    // Actual interest over the period of a loan
+    totalInterest: ((interestRatePerSecond * duration) / amount) * 100,
   };
 };
 

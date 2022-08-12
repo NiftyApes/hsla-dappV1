@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
-import { NFTCardContainer } from './NFTCardContainer';
 
 interface Props {
   collectionName?: string;
@@ -20,41 +19,39 @@ export const NFTCardHeader: React.FC<Props> = ({
   const tokenPadding = collectionName ? '-5px' : '16px';
 
   return (
-    <NFTCardContainer>
-      <>
-        <Image borderRadius="8px 8px 0 0" h="260px" objectFit="cover" src={img} w="260px" />
+    <>
+      <Image borderRadius="8px 8px 0 0" h="260px" objectFit="cover" src={img} w="260px" />
 
-        <Flex align="center" flexDir="column" mt="200px" position="absolute">
-          {collectionName && (
-            <Text
-              color="white"
-              fontSize="sm"
-              fontWeight="bold"
-              maxW="100%"
-              textShadow="0px 0px 4px #000000"
-              textTransform="uppercase"
-            >
-              {collectionName}
-            </Text>
-          )}
-
+      <Flex align="center" flexDir="column" mt="200px" position="absolute">
+        {collectionName && (
           <Text
             color="white"
-            fontSize="xl"
-            fontWeight="semibold"
-            isTruncated
+            fontSize="sm"
+            fontWeight="bold"
             maxW="100%"
-            mt={tokenPadding}
             textShadow="0px 0px 4px #000000"
             textTransform="uppercase"
           >
-            {tokenName} #{tokenId}
+            {collectionName}
           </Text>
-        </Flex>
-        <Box w="100%" p="0 8px 8px 8px">
-          {children}
-        </Box>
-      </>
-    </NFTCardContainer>
+        )}
+
+        <Text
+          color="white"
+          fontSize="xl"
+          fontWeight="semibold"
+          isTruncated
+          maxW="100%"
+          mt={tokenPadding}
+          textShadow="0px 0px 4px #000000"
+          textTransform="uppercase"
+        >
+          {tokenName} #{tokenId}
+        </Text>
+      </Flex>
+      <Box w="100%" p="0 8px 8px 8px">
+        {children}
+      </Box>
+    </>
   );
 };

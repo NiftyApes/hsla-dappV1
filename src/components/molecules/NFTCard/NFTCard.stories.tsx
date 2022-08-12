@@ -18,11 +18,13 @@ Default.args = {
   collectionName: 'COLLECTION.NAME',
   tokenName: 'TOKEN.NAME',
   offer: {
-    type: 'floor',
-    price: 42.167,
-    days: 120,
     aprPercentage: 25,
+    durationDays: 30,
+    expirationDays: 120,
+    price: 42.167,
     symbol: 'eth',
+    totalInterest: 123,
+    type: 'floor',
   },
   numberOfOffers: 1425,
 };

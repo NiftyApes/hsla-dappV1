@@ -20,6 +20,7 @@ import Icon from 'components/atoms/Icon';
 import WalletInfo from 'components/molecules/WalletInfo';
 import BorrowOfferDetailsCard from 'components/molecules/BorrowOfferDetailsCard';
 import CryptoIcon from 'components/atoms/CryptoIcon';
+import { Contract } from 'ethers';
 
 const RepayLoanModal: React.FC<Omit<ModalProps, 'children'>> = ({ onClose, ...restProps }) => {
   const { onToggle, isOpen: isMakePaymentOpen } = useDisclosure();
@@ -40,11 +41,22 @@ const RepayLoanModal: React.FC<Omit<ModalProps, 'children'>> = ({ onClose, ...re
       </Flex>
 
       <Flex flexDir="column" alignItems="center" mt="40px" textAlign="center">
-        <BorrowOfferDetailsCard
-          img="/assets/mocks/bored_ape.png"
-          offer={{ type: 'floor', price: 42.167, days: 120, aprPercentage: 25, symbol: 'eth' }}
-          tokenName="Bored Ape Yacht Club"
-        />
+        {/*<BorrowOfferDetailsCard*/}
+        {/*    contractAddress="0xABC"*/}
+        {/*    tokenId={'12345'}*/}
+        {/*    img="/assets/mocks/bored_ape.png"*/}
+        {/*    offer={{*/}
+        {/*        floorTerm: false,*/}
+        {/*        aprPercentage: 25,*/}
+        {/*        durationDays: 100,*/}
+        {/*        expirationDays: 120,*/}
+        {/*        price: 42.167,*/}
+        {/*        symbol: 'eth',*/}
+        {/*        totalInterest: 123,*/}
+        {/*        type: 'floor',*/}
+        {/*    }}*/}
+        {/*    tokenName="Bored Ape Yacht Club"*/}
+        {/*/>*/}
 
         <Text fontSize="md" color="solid.gray0" mt="32px">
           Repay the full loan amount to unlock your asset

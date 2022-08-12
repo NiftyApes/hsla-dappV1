@@ -22,6 +22,7 @@ import * as fs from 'fs';
 import * as chalk from 'chalk';
 
 import { Provider, TransactionRequest, TransactionResponse } from '@ethersproject/providers';
+import { create } from 'ipfs-http-client';
 
 import { HardhatUserConfig, task } from 'hardhat/config';
 import { HttpNetworkUserConfig } from 'hardhat/types';
@@ -29,13 +30,21 @@ import { THardhatDeployEthers } from './helpers/types/hardhat-type-extensions';
 
 import { config as envConfig } from 'dotenv';
 import { saveOfferInDb } from './helpers/saveOfferInDb';
-envConfig({ path: '../vite-app-ts/.env' });
+import { btoa } from 'buffer';
 
-const ipfsAPI = require('ipfs-http-client');
-const ipfs = ipfsAPI.create({
+envConfig({ path: '../vite-app-ts/.env' });
+envConfig({ path: '.env' });
+
+const INFURA_ID = process.env.INFURA_IPFS_ID;
+const INFURA_PASS = process.env.INFURA_IPFS_SECRET;
+
+const ipfs = create({
   host: 'ipfs.infura.io',
-  port: '5001',
+  port: 5001,
   protocol: 'https',
+  headers: {
+    Authorization: 'Basic ' + btoa(INFURA_ID + ':' + INFURA_PASS),
+  },
 });
 
 /**
@@ -93,9 +102,9 @@ const config: HardhatUserConfig = {
       blockGasLimit: 0x1fffffffffffff,
       allowUnlimitedContractSize: true,
       /*
-        if there is no mnemonic, it will just use account 0 of the hardhat node to deploy
-        (you can put in a mnemonic here to set the deployer locally)
-      */
+                    if there is no mnemonic, it will just use account 0 of the hardhat node to deploy
+                    (you can put in a mnemonic here to set the deployer locally)
+                  */
       // accounts: {
       //   mnemonic: mnemonic(),
       // },
@@ -403,7 +412,16 @@ task('create-offer', 'Create offer')
     const { nftId, creator, interestRatePerSecond, amount, duration, expiration, floorTerm, nftContractAddress } = offerObj;
 
     const result = await saveOfferInDb({
-      offerObj: { nftId, creator, interestRatePerSecond, amount, duration, expiration, floorTerm, nftContractAddress },
+      offerObj: {
+        nftId,
+        creator,
+        interestRatePerSecond,
+        amount,
+        duration,
+        expiration,
+        floorTerm,
+        nftContractAddress,
+      },
       offerHash: receipt.events[1].args.offerHash,
     });
 

@@ -76,7 +76,7 @@ export const useCreateCollectionOffer = ({
 
         onTxMined && onTxMined(receipt);
 
-        const offer = receipt.events[1].args[4];
+        const offer = receipt.events[1].args[3];
 
         const offerObj = {
           creator: offer.creator,

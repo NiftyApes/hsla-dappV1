@@ -30,6 +30,7 @@ export const useERC721ApprovalForAll = ({
       }
 
       const result = await contract.isApprovedForAll(owner, operator);
+
       setHasApprovalForAll(result);
       setHasCheckedApproval(true);
     }

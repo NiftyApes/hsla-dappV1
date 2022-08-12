@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
-import { Button, Center, Container, Flex, Text } from '@chakra-ui/react';
+import React from 'react';
+import {
+  Button,
+  Center,
+  Container,
+  Flex,
+  Text,
+  Modal,
+  ModalContent,
+  ModalOverlay,
+  useDisclosure,
+} from '@chakra-ui/react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { CoinSymbol } from 'lib/constants/coinSymbols';
 import { Contract } from 'ethers';
 import { NFTCardContainer } from './components/NFTCardContainer';
 import { NFTCardHeader } from './components/NFTCardHeader';
 import { formatNumber } from 'lib/helpers/string';
-import { useERC721ApprovalForAll } from 'hooks/useERC721ApprovalForAll';
-import { useExecuteLoanByBorrower } from 'hooks/useExecuteLoanByBorrower';
-import { useNiftyApesContractAddress } from 'hooks/useNiftyApesContractAddress';
+import BorrowOfferDetailsCard from '../BorrowOfferDetailsCard';
 
 interface Props {
   collectionName: string;
@@ -21,9 +28,11 @@ interface Props {
   numberOfOffers: number;
   offer: {
     aprPercentage: number;
-    days: number;
+    durationDays: number;
+    expirationDays: number;
     price: number;
     symbol: CoinSymbol;
+    totalInterest: number;
     type: 'top' | 'floor';
   };
   offerHash: string;
@@ -32,7 +41,9 @@ interface Props {
 
 const i18n = {
   offerLabel: (type: string) => `${type} offer`,
-  moneyButtonLabel: '🍌Smash money button',
+  offerDuration: (duration: number) => `${duration} days`,
+  offerApr: (apr: number) => `${Math.round(apr)}% APR`,
+  initLoanButtonLabel: 'initiate loan',
   viewAllOffers: (numOffers: number) => `View All Offers (${formatNumber(numOffers)})`,
 };
 
@@ -47,35 +58,7 @@ const NFTCard: React.FC<Props> = ({
   offerHash,
   tokenName,
 }) => {
-  const niftyApesContractAddress = useNiftyApesContractAddress();
-
-  const { hasApprovalForAll, grantApprovalForAll } = useERC721ApprovalForAll({
-    contract,
-    operator: niftyApesContractAddress,
-  });
-
-  const [approvalTxStatus, setApprovalTxStatus] = useState<string>('READY');
-
-  const { executeLoanByBorrower } = useExecuteLoanByBorrower({
-    nftContractAddress: contract?.address,
-    nftId: id,
-    offerHash,
-    floorTerm,
-  });
-
-  const onApproveForAll = async () => {
-    await grantApprovalForAll({
-      onPending: () => setApprovalTxStatus('PENDING'),
-      onSuccess: () => {
-        setApprovalTxStatus('SUCCESS');
-        setTimeout(() => setApprovalTxStatus('READY'), 1000);
-      },
-      onError: () => {
-        setApprovalTxStatus('ERROR');
-        setTimeout(() => setApprovalTxStatus('READY'), 1000);
-      },
-    });
-  };
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const renderBestOffer = () => {
     return (
@@ -93,57 +76,6 @@ const NFTCard: React.FC<Props> = ({
     );
   };
 
-  const renderInitOfferButton = () => {
-    if (!hasApprovalForAll) {
-      const buttonLabel = () => {
-        switch (approvalTxStatus) {
-          case 'READY':
-            return 'Initiate Loan';
-          case 'PENDING':
-            return <LoadingIndicator size="xs" />;
-          case 'ERROR':
-            return 'Error';
-          default:
-            return 'Initiate Loan';
-        }
-      };
-
-      return (
-        <Button
-          borderRadius="8px"
-          colorScheme="purple"
-          onClick={onApproveForAll}
-          py="6px"
-          size="lg"
-          textTransform="uppercase"
-          variant="outline"
-          w="100%"
-        >
-          {buttonLabel()}
-        </Button>
-      );
-    }
-  };
-
-  const renderMoneyButton = () => {
-    if (hasApprovalForAll) {
-      return (
-        <Button
-          borderRadius="10px"
-          className="smash-money-btn"
-          display="none"
-          mt="5px"
-          onClick={async () => executeLoanByBorrower && (await executeLoanByBorrower())}
-          px="5px"
-          variant="notify"
-          w="100%"
-        >
-          {i18n.moneyButtonLabel}
-        </Button>
-      );
-    }
-  };
-
   return (
     <NFTCardContainer>
       <NFTCardHeader img={img} tokenId={id} tokenName={tokenName} collectionName={collectionName}>
@@ -154,6 +86,7 @@ const NFTCard: React.FC<Props> = ({
             borderRadius="8px"
             border="1px solid"
             borderColor="accents.100"
+            minHeight="128px"
             bg="#C4C4C41A"
             w="100%"
             mt="8px"
@@ -164,26 +97,53 @@ const NFTCard: React.FC<Props> = ({
             <Flex alignItems="center">
               <CryptoIcon symbol={offer.symbol} size={25} />
               <Text ml="6px" fontSize="3.5xl" fontWeight="bold">
-                {offer.price}Ξ
+                {offer.price.toFixed(1)}Ξ
               </Text>
             </Flex>
 
             <Text fontSize="lg" color="solid.gray0">
-              <Text as="span" color="solid.black">
-                {offer.days}
+              <Text as="span" color="solid.black" fontWeight="semibold">
+                {i18n.offerDuration(offer.durationDays)}
               </Text>
-              &nbsp;days at&nbsp;
-              <Text as="span" color="solid.black">
-                {offer.aprPercentage}%
+              &nbsp;at&nbsp;
+              <Text as="span" color="solid.black" fontWeight="semibold">
+                {i18n.offerApr(offer.aprPercentage)}
               </Text>
-              &nbsp;APR
             </Text>
           </Flex>
-          {renderInitOfferButton()}
-          {renderMoneyButton()}
+          <Button
+            colorScheme="purple"
+            onClick={onOpen}
+            py="6px"
+            size="lg"
+            textTransform="uppercase"
+            variant="outline"
+            w="100%"
+            borderRadius="8px"
+          >
+            {i18n.initLoanButtonLabel}
+          </Button>
+
           <Center mt="8px" mb="8px">
             {i18n.viewAllOffers(numberOfOffers)}
           </Center>
+
+          {isOpen && (
+            <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+              <ModalOverlay />
+              <ModalContent p="5px">
+                <BorrowOfferDetailsCard
+                  contract={contract}
+                  floorTerm={floorTerm}
+                  img={img}
+                  offer={offer}
+                  offerHash={offerHash}
+                  tokenId={id}
+                  tokenName={tokenName}
+                />
+              </ModalContent>
+            </Modal>
+          )}
         </>
       </NFTCardHeader>
     </NFTCardContainer>
