@@ -1,4 +1,5 @@
 import { Box, Grid, GridItem, Text } from '@chakra-ui/react';
+import { LenderTransactionHistory } from 'components/molecules/LenderTransactionHistory';
 import { LiquidityInfo } from 'components/molecules/LiquidityInfo';
 import { LiquidityManager } from 'components/molecules/LiquidityManager';
 import React from 'react';
@@ -21,6 +22,7 @@ const Liquidity: React.FC = () => {
       <Text fontSize="xl" fontWeight="bold" color="solid.gray0" textAlign="center" mt="50px">
         TRANSACTION HISTORY
       </Text>
+      <LenderTransactionHistory />
       <TransactionHistoryTable />
     </Box>
   );

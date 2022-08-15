@@ -1,12 +1,15 @@
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
+import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
 import { useState } from 'react';
 import { getLiquidityContract } from '../helpers/getContracts';
 import { useAvailableEthLiquidity } from './useEthLiquidity';
 import { useWalletProvider } from './useWalletProvider';
 
 export const useWithdrawEthLiquidity = () => {
+  const walletProvider = useWalletProvider();
+
   const dispatch = useAppDispatch();
 
   const { availableEthLiquidity } = useAvailableEthLiquidity();
@@ -40,8 +43,29 @@ export const useWithdrawEthLiquidity = () => {
         const tx = await niftyApesContract.withdrawEth(
           ethers.utils.parseEther(ethToWithdraw.toString()),
         );
+
         setTxObject(tx);
-        const receipt = await tx.wait();
+
+        const receipt: any = await tx.wait();
+
+        const block: any = await walletProvider?.request({
+          method: 'eth_getBlockByNumber',
+          params: [`0x${receipt.blockNumber.toString(16)}`, false],
+        });
+
+        const timestamp = Number(block.timestamp);
+
+        await saveTransactionInDb({
+          from: receipt.from,
+          transactionType: 'WITHDRAW_LIQUIDITY',
+          timestamp,
+          transactionHash: receipt.transactionHash,
+          args: {
+            amount: receipt.events[4].args.amount.toString(),
+            asset: 'ETH',
+          },
+        });
+
         setTxReceipt(receipt);
         setWithdrawStatus('SUCCESS');
         setTimeout(() => {
