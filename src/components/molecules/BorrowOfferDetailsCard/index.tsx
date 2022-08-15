@@ -9,6 +9,7 @@ import { useERC721ApprovalForAll } from '../../../hooks/useERC721ApprovalForAll'
 import { Contract } from 'ethers';
 import { useExecuteLoanByBorrower } from '../../../hooks/useExecuteLoanByBorrower';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
+import { humanizeContractError } from '../../../helpers/errorsMap';
 
 interface Props {
   contract?: Contract;
@@ -72,6 +73,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
     floorTerm,
   });
   const [isExecuting, setExecuting] = useState<boolean>(false);
+
   const onExecuteLoan = async () => {
     if (executeLoanByBorrower) {
       setExecuting(true);
@@ -81,7 +83,8 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
         })
         .catch((error) => {
           setExecuting(false);
-          console.log('Error', error.data.message);
+
+          console.log(humanizeContractError(error.data.message));
         });
     }
   };
