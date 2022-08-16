@@ -1,21 +1,23 @@
-import { ColorModeScript } from '@chakra-ui/react';
-import * as React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import theme from 'theme';
-import { store } from './app/store';
-import { App } from './App';
-import reportWebVitals from './reportWebVitals';
-import * as serviceWorker from './serviceWorker';
+import { StrictMode } from 'react';
 
-ReactDOM.render(
-  <React.StrictMode>
+import * as serviceWorker from './serviceWorker';
+import reportWebVitals from './reportWebVitals';
+import theme from 'theme';
+import { App } from './App';
+import { ColorModeScript } from '@chakra-ui/react';
+import { Provider } from 'react-redux';
+import { createRoot } from 'react-dom/client';
+import { store } from './app/store';
+
+const container: HTMLElement | any = document.getElementById('root');
+const root = createRoot(container);
+root.render(
+  <StrictMode>
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />
     <Provider store={store}>
       <App />
     </Provider>
-  </React.StrictMode>,
-  document.getElementById('root'),
+  </StrictMode>,
 );
 
 // If you want your app to work offline and load faster, you can change

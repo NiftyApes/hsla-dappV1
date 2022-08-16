@@ -44,7 +44,7 @@ const RecentLoans: React.FC = () => {
               },
             }}
           >
-            <Td d="flex" flexDir="column" textAlign="center" alignItems="center">
+            <Td display="flex" flexDir="column" textAlign="center" alignItems="center">
               <Flex>
                 <Image src="/assets/mocks/bored_ape_square.png" />
                 <Grid gap="3px">

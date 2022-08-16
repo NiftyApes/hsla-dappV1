@@ -54,7 +54,7 @@ const OfferBook: React.FC = () => {
               },
             }}
           >
-            <Td d="flex" alignItems="center">
+            <Td display="flex" alignItems="center">
               <CryptoIcon symbol="eth" size={20} />
               <Text ml="8px">25.500</Text>
             </Td>

@@ -19,7 +19,7 @@ const Collection: React.FC = () => {
         onClick={onOpen}
       >
         <Flex textAlign="center" alignItems="center" justifyContent="center" mb="7px">
-          <Text fontSize="sm" fontWeight="bold" isTruncated>
+          <Text fontSize="sm" fontWeight="bold" noOfLines={1}>
             BORED APE YACHT CLUB.
           </Text>
           <Icon name="etherscan" size={18} mx="3px" />

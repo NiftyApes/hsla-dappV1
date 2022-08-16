@@ -9,7 +9,6 @@ import { useERC721ApprovalForAll } from '../../../hooks/useERC721ApprovalForAll'
 import { Contract } from 'ethers';
 import { useExecuteLoanByBorrower } from '../../../hooks/useExecuteLoanByBorrower';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
-import { humanizeContractError } from '../../../helpers/errorsMap';
 
 interface Props {
   contract?: Contract;
@@ -83,8 +82,6 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
         })
         .catch((error) => {
           setExecuting(false);
-
-          console.log(humanizeContractError(error.data.message));
         });
     }
   };
@@ -183,7 +180,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
           </Text>
           <Flex alignItems="center" mt="10px">
             <HStack>
-              <Text isTruncated={true} width="100px">
+              <Text noOfLines={1} width="100px">
                 {contract?.address}
               </Text>
               <Link isExternal href={esNftUrl}>

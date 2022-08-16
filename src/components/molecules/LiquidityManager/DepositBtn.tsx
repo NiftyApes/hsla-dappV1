@@ -8,7 +8,7 @@ interface Props {
 export const DepositBtn: React.FC<Props> = ({ isDisabled, onClick }) => {
   return (
     <Button
-      isFullWidth
+      width="100%"
       mt="1rem"
       variant="neutralReverse"
       isDisabled={isDisabled}
