@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Flex, Link, Box, Grid, Image, Text, HStack } from '@chakra-ui/react';
+import { Button, Flex, Link, Box, Grid, Image, Text, HStack, useToast } from '@chakra-ui/react';
 
 import { CoinSymbol } from 'lib/constants/coinSymbols';
 import Icon from 'components/atoms/Icon';
@@ -9,6 +9,7 @@ import { useERC721ApprovalForAll } from '../../../hooks/useERC721ApprovalForAll'
 import { Contract } from 'ethers';
 import { useExecuteLoanByBorrower } from '../../../hooks/useExecuteLoanByBorrower';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
+import { humanizeContractError } from '../../../helpers/errorsMap';
 
 interface Props {
   contract?: Contract;
@@ -32,7 +33,7 @@ interface Offer {
 
 const i18n = {
   allowButton: 'allow niftyapes to transfer nft',
-  approveButton: 'approve transfer',
+  approveButton: 'borrow money',
   approveMessage: (tokenId: string, tokenName: string, offer: Offer) =>
     `Approve and transfer ${tokenName} #${tokenId} to the NiftyApes smart contract to borrow ${offer.price}${offer.symbol} for ${offer.durationDays} days`,
   assetDetails: 'asset details',
@@ -45,6 +46,9 @@ const i18n = {
   totalInterestDescription: 'The most you could owe at the end of your loan.',
   transferDetails: (offer: Offer) =>
     `${offer.price}${offer.symbol} will be sent to your wallet address once your loan is executed.`,
+  toastApproveTransferSuccess: 'NFT Transfer approved',
+  toastApproveTransferError: 'Unable to approve NFT transfer',
+  toastLoanSuccess: 'Loan executed successfully',
 };
 
 const BorrowOfferDetailsCard: React.FC<Props> = ({
@@ -56,9 +60,11 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
   tokenId,
   tokenName,
 }) => {
+  //TODO: Implement chain id
   const esNftUrl = `https://etherscan.io/token/${contract?.address}?a=${tokenId}`;
   const osNftUrl = `https://opensea.io/assets/ethereum/${contract?.address}/${tokenId}`;
 
+  const toast = useToast();
   const operator = useNiftyApesContractAddress();
   const { hasApprovalForAll, hasCheckedApproval, grantApprovalForAll } = useERC721ApprovalForAll({
     contract,
@@ -78,9 +84,23 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
       setExecuting(true);
       await executeLoanByBorrower()
         .then(() => {
+          toast({
+            title: 'Loan executed successfully',
+            status: 'success',
+            position: 'top-right',
+            isClosable: true,
+          });
+
           setExecuting(false);
         })
         .catch((error) => {
+          toast({
+            title: `Error: ${humanizeContractError(error.reason)}`,
+            status: 'error',
+            position: 'top-right',
+            isClosable: true,
+          });
+
           setExecuting(false);
         });
     }
@@ -92,9 +112,22 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
       onPending: () => setTransferApprovalStatus('PENDING'),
       onSuccess: () => {
         setTransferApprovalStatus('SUCCESS');
+
+        toast({
+          title: i18n.toastApproveTransferSuccess,
+          status: 'success',
+          position: 'top-right',
+          isClosable: true,
+        });
         setTimeout(() => setTransferApprovalStatus('READY'), 1000);
       },
       onError: () => {
+        toast({
+          title: i18n.toastApproveTransferError,
+          status: 'error',
+          position: 'top-right',
+          isClosable: true,
+        });
         setTransferApprovalStatus('ERROR');
         setTimeout(() => setTransferApprovalStatus('READY'), 1000);
       },
