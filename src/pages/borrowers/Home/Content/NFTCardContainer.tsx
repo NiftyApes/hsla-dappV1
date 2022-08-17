@@ -7,7 +7,7 @@ import { formatEther } from '@ethersproject/units';
 import NFTCard from 'components/molecules/NFTCard';
 import { Contract, NFT } from 'nft/model';
 import NFTNoOfferCard from 'components/molecules/NFTNoOfferCard';
-import { fetchLoanOffersByNFT, useLoanOffersByNFT } from 'loan';
+import { fetchLoanOffersByNFT, LoanOffer, useLoanOffersByNFT } from 'loan';
 import { NFTLoadingCard } from '../../../../components/molecules/NFTLoadingCard';
 import NFTActiveLoanCard from '../../../../components/molecules/NFTActiveLoanCard';
 import { useLoanAuction } from '../../../../hooks/useLoanAuction';
@@ -23,6 +23,16 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
   const { content: loanOffers, fetching: fetchingOffers } = useLoanOffersByNFT(item);
   const loanAuction = useLoanAuction({ nftContractAddress: contract.address, nftId: item.id });
 
+  /**
+   * Returns best offer sorted by interest rate
+   * @param offers
+   */
+  const bestOffer = (offers: Array<LoanOffer>): LoanOffer => {
+    return Array.from(offers).sort(
+      (a: LoanOffer, b: LoanOffer) => a.interestRatePerSecond - b.interestRatePerSecond,
+    )[0];
+  };
+
   useEffect(() => {
     if (!loanOffers && !fetchingOffers) {
       dispatch(fetchLoanOffersByNFT(item));
@@ -32,9 +42,6 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
   if (!loanOffers || fetchingOffers) {
     return <NFTLoadingCard />;
   }
-
-  // TODO: Show loan offer with best terms
-  const offer = loanOffers[0];
 
   if (loanAuction && loanAuction.nftOwner !== '0x0000000000000000000000000000000000000000') {
     //Active loan card
@@ -73,6 +80,7 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
     );
   }
 
+  const offer = bestOffer(loanOffers);
   const offerAmount = BigNumber.from(String(offer.OfferTerms.Amount));
 
   return (

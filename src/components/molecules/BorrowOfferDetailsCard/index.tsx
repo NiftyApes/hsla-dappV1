@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Flex, Link, Box, Grid, Image, Text, HStack, useToast } from '@chakra-ui/react';
-
+import { Box, Button, Flex, Grid, HStack, Image, Link, Text, useToast } from '@chakra-ui/react';
 import { CoinSymbol } from 'lib/constants/coinSymbols';
 import Icon from 'components/atoms/Icon';
 import CryptoIcon from 'components/atoms/CryptoIcon';
@@ -60,7 +59,6 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
   tokenId,
   tokenName,
 }) => {
-  //TODO: Implement chain id
   const esNftUrl = `https://etherscan.io/token/${contract?.address}?a=${tokenId}`;
   const osNftUrl = `https://opensea.io/assets/ethereum/${contract?.address}/${tokenId}`;
 
