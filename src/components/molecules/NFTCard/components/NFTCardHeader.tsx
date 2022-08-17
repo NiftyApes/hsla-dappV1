@@ -40,7 +40,7 @@ export const NFTCardHeader: React.FC<Props> = ({
           color="white"
           fontSize="xl"
           fontWeight="semibold"
-          isTruncated
+          noOfLines={1}
           maxW="100%"
           mt={tokenPadding}
           textShadow="0px 0px 4px #000000"
