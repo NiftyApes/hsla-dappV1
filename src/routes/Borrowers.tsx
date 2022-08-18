@@ -14,7 +14,7 @@ const Borrowers = (
   <Route path={borrowers()} element={<BorrowersLayout />}>
     <Route index element={<DisconnectedView />} />
     <Route path=":id" element={<BorrowersHome />} />
-    <Route path={`:id/${ROUTE_BORROWERS_OFFERS}`} element={<Offers />} />
+    <Route path={`:id/:tokenId`} element={<Offers />} />
     <Route path={`:id/${ROUTE_BORROWERS_DASHBOARD}`} element={<Dashboard />} />
   </Route>
 );

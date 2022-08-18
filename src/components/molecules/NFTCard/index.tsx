@@ -18,6 +18,7 @@ import { NFTCardContainer } from './components/NFTCardContainer';
 import { NFTCardHeader } from './components/NFTCardHeader';
 import { formatNumber } from 'lib/helpers/string';
 import BorrowOfferDetailsCard from '../BorrowOfferDetailsCard';
+import { Link as RouterLink } from 'react-router-dom';
 
 interface Props {
   collectionName: string;
@@ -125,7 +126,9 @@ const NFTCard: React.FC<Props> = ({
           </Button>
 
           <Center mt="8px" mb="8px">
-            {i18n.viewAllOffers(numberOfOffers)}
+            <RouterLink to={`/borrowers/${contract?.address}/${id}`}>
+              {i18n.viewAllOffers(numberOfOffers)}
+            </RouterLink>
           </Center>
 
           {isOpen && (
