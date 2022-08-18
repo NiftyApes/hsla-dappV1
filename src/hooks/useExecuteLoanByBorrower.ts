@@ -3,6 +3,7 @@ import { increment } from 'counter/counterSlice';
 import { saveLoanInDb } from 'helpers/saveLoanInDb';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
 import { useLendingContract } from './useContracts';
+import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
 import { useWalletProvider } from './useWalletProvider';
 
 export const useExecuteLoanByBorrower = ({
@@ -21,6 +22,8 @@ export const useExecuteLoanByBorrower = ({
   const niftyApesContract = useLendingContract();
 
   const dispatch = useAppDispatch();
+
+  const { getTransactionTimestamp } = useGetTransactionTimestamp();
 
   if (!niftyApesContract) {
     return {
@@ -55,12 +58,7 @@ export const useExecuteLoanByBorrower = ({
         loanObj: offerObj,
       });
 
-      const block: any = await walletProvider?.request({
-        method: 'eth_getBlockByNumber',
-        params: [`0x${receipt.blockNumber.toString(16)}`, false],
-      });
-
-      const timestamp = Number(block.timestamp);
+      const timestamp = await getTransactionTimestamp(receipt);
 
       await saveTransactionInDb({
         transactionHash: receipt.transactionHash,

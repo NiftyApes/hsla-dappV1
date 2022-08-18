@@ -5,11 +5,10 @@ import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
 import { useState } from 'react';
 import { getLiquidityContract } from '../helpers/getContracts';
 import { useAvailableEthLiquidity } from './useEthLiquidity';
+import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
 import { useWalletProvider } from './useWalletProvider';
 
 export const useWithdrawEthLiquidity = () => {
-  const walletProvider = useWalletProvider();
-
   const dispatch = useAppDispatch();
 
   const { availableEthLiquidity } = useAvailableEthLiquidity();
@@ -24,6 +23,8 @@ export const useWithdrawEthLiquidity = () => {
   const [txObject, setTxObject] = useState<ethers.ContractTransaction | null>(null);
 
   const [txReceipt, setTxReceipt] = useState<ethers.ContractReceipt | null>(null);
+
+  const { getTransactionTimestamp } = useGetTransactionTimestamp();
 
   return {
     withdrawETHLiquidity: async ({
@@ -48,12 +49,7 @@ export const useWithdrawEthLiquidity = () => {
 
         const receipt: any = await tx.wait();
 
-        const block: any = await walletProvider?.request({
-          method: 'eth_getBlockByNumber',
-          params: [`0x${receipt.blockNumber.toString(16)}`, false],
-        });
-
-        const timestamp = Number(block.timestamp);
+        const timestamp = await getTransactionTimestamp(receipt);
 
         await saveTransactionInDb({
           from: receipt.from,
