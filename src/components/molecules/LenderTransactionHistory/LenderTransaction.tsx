@@ -4,6 +4,7 @@ import CryptoIcon from 'components/atoms/CryptoIcon';
 import Icon from 'components/atoms/Icon';
 import { ethers } from 'ethers';
 import moment from 'moment';
+
 export const LenderTransaction = ({ tx }: { tx: any }) => {
   return (
     <Tr
@@ -27,7 +28,9 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
           {tx.Args.asset === 'ETH' && <CryptoIcon symbol="eth" size={25} />}
         </Flex>
       </Td>
-      <Td textAlign="center">{moment(tx.Timestamp).format('h:mma, MMM DD YYYY')}</Td>
+      <Td textAlign="center">
+        <Text fontSize="small">{moment(tx.Timestamp).format('h:mma, MMM D YYYY')}</Text>
+      </Td>
       <Td textAlign="center">
         {tx.TransactionType === 'DEPOSIT_LIQUIDITY'
           ? 'Deposit Liquidity'
@@ -54,7 +57,8 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
           >
             {tx.TransactionType === 'DEPOSIT_LIQUIDITY'
               ? '+'
-              : tx.TransactionType === 'WITHDRAW_LIQUIDITY'
+              : tx.TransactionType === 'WITHDRAW_LIQUIDITY' ||
+                tx.TransactionType === 'LOAN_EXECUTED_BY_BORROWER'
               ? '-'
               : ''}
             {ethers.utils.formatEther(tx.Args.amount)}Ξ
