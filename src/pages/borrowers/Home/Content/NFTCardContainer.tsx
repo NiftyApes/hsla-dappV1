@@ -28,6 +28,10 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
    * @param offers
    */
   const bestOffer = (offers: Array<LoanOffer>): LoanOffer => {
+    if (offers.length === 1) {
+      return offers[0];
+    }
+
     return Array.from(offers).sort(
       (a: LoanOffer, b: LoanOffer) => a.interestRatePerSecond - b.interestRatePerSecond,
     )[0];

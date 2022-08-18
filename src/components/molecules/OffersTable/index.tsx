@@ -1,38 +1,13 @@
 import React from 'react';
-import {
-  Table,
-  Thead,
-  Tr,
-  Th,
-  Tbody,
-  Td,
-  Flex,
-  Box,
-  Text,
-  Button,
-  Checkbox,
-} from '@chakra-ui/react';
-import Icon from 'components/atoms/Icon';
+import { Box, Button, Flex, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+
 import CryptoIcon from 'components/atoms/CryptoIcon';
 
 const OffersTable: React.FC = () => {
   return (
     <Box>
       <Flex justifyContent="space-between" alignItems="center" mb="30px">
-        <Flex alignItems="center">
-          <Button variant="icon" background="gray.300" mr="16px">
-            <Icon name="search" size={15} />
-          </Button>
-          <Text color="solid.gray0" fontSize="lg" fontWeight="bold">
-            ALL MATCHING OFFERS
-          </Text>
-        </Flex>
-        <Flex alignItems="center">
-          Filters
-          <Icon name="sliders" size={15} color="solid.gray0" ml="6px" mr="20px" />
-          Smart Filter
-          <Checkbox type="checkbox" checked ml="6px" />
-        </Flex>
+        HELLO
       </Flex>
       <Table>
         <Thead>

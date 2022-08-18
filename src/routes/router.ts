@@ -8,6 +8,7 @@ export const home = () => {
 
 export const ROUTE_BORROWERS = 'borrowers';
 export const ROUTE_BORROWERS_DASHBOARD = 'dashboard';
+export const ROUTE_BORROWERS_OFFERS = 'offers';
 
 export const borrowers = () => {
   return path([ROUTE_BORROWERS]);
