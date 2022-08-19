@@ -14,7 +14,7 @@ const CollectionItem: React.FC<Props> = ({ img, count, name }) => {
       TODO: Fix overflow w/ block-inline, let DOM elements flow naturally
       <Avatar name={name} src={img} mr="12px" /> */}
       <Checkbox mr="16px" defaultChecked>
-        <Text fontSize="md" fontWeight="bold" isTruncated>
+        <Text fontSize="md" fontWeight="bold" noOfLines={1}>
           ({count}) {name}
         </Text>
       </Checkbox>

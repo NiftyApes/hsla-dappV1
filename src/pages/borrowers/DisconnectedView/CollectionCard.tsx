@@ -44,7 +44,7 @@ const CollectionCard: React.FC = () => {
           </MenuList>
         </Menu>
 
-        <Text maxW="100%" fontSize="lg" fontWeight="bold" isTruncated>
+        <Text maxW="100%" fontSize="lg" fontWeight="bold" noOfLines={1}>
           COLLECTION.NAME
         </Text>
 

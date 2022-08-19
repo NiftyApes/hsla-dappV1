@@ -72,6 +72,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
     floorTerm,
   });
   const [isExecuting, setExecuting] = useState<boolean>(false);
+
   const onExecuteLoan = async () => {
     if (executeLoanByBorrower) {
       setExecuting(true);
@@ -81,7 +82,6 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
         })
         .catch((error) => {
           setExecuting(false);
-          console.log('Error', error.data.message);
         });
     }
   };
@@ -180,7 +180,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
           </Text>
           <Flex alignItems="center" mt="10px">
             <HStack>
-              <Text isTruncated={true} width="100px">
+              <Text noOfLines={1} width="100px">
                 {contract?.address}
               </Text>
               <Link isExternal href={esNftUrl}>
