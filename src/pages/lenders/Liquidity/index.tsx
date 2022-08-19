@@ -3,7 +3,6 @@ import { LenderTransactionHistory } from 'components/molecules/LenderTransaction
 import { LiquidityInfo } from 'components/molecules/LiquidityInfo';
 import { LiquidityManager } from 'components/molecules/LiquidityManager';
 import React from 'react';
-import TransactionHistoryTable from './TransactionHistoryTable';
 
 const Liquidity: React.FC = () => {
   return (
@@ -23,7 +22,6 @@ const Liquidity: React.FC = () => {
         TRANSACTION HISTORY
       </Text>
       <LenderTransactionHistory />
-      <TransactionHistoryTable />
     </Box>
   );
 };

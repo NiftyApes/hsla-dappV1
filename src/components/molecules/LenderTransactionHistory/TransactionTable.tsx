@@ -23,19 +23,19 @@ export const TransactionTable: React.FC = () => {
           <Th textAlign="center" width="1rem">
             Asset
           </Th>
-          <Th textAlign="center" width="20rem">
+          <Th textAlign="center" width="16rem">
             Timestamp
           </Th>
-          <Th textAlign="center" minW="20rem">
+          <Th textAlign="center" minW="16rem">
             Type
           </Th>
-          <Th textAlign="center" width="10rem">
+          <Th textAlign="center" width="8rem">
             Amount
           </Th>
           <Th textAlign="center" minW="20rem">
             Loan (if applicable)
           </Th>
-          <Th textAlign="center" width="10rem">
+          <Th textAlign="center" width="1rem">
             Etherscan
           </Th>
         </Tr>

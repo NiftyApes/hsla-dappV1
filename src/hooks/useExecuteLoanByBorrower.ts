@@ -5,7 +5,7 @@ import { saveLoanInDb } from 'helpers/saveLoanInDb';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
 import { useLendingContract } from './useContracts';
 import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
-import { useWalletProvider } from './useWalletProvider';
+import { useWalletAddress } from './useWalletAddress';
 
 export const useExecuteLoanByBorrower = ({
   nftContractAddress,
@@ -18,8 +18,7 @@ export const useExecuteLoanByBorrower = ({
   offerHash: string;
   floorTerm?: boolean;
 }) => {
-  const walletProvider = useWalletProvider();
-
+  const address = useWalletAddress();
   const niftyApesContract = useLendingContract();
 
   const dispatch = useAppDispatch();
@@ -34,9 +33,14 @@ export const useExecuteLoanByBorrower = ({
 
   return {
     executeLoanByBorrower: async () => {
+      if (!address) {
+        throw new Error('No address to send txn from');
+      }
+
       if (!nftContractAddress) {
         throw new Error('NFT Contract Address not specified');
       }
+
       const tx = await niftyApesContract.executeLoanByBorrower(
         nftContractAddress,
         nftId,
@@ -48,15 +52,16 @@ export const useExecuteLoanByBorrower = ({
 
       const offer = receipt.events[6].args[2];
 
-      const offerObj = {
-        creator: offer.creator,
-        nftContractAddress: offer.nftContractAddress,
-        nftId: offer.nftId.toString(),
-        amount: offer.amount.toString(),
-      };
+      const loan = await niftyApesContract.getLoanAuction(nftContractAddress, nftId);
 
       await saveLoanInDb({
-        loanObj: offerObj,
+        nftContractAddress,
+        nftId,
+        lastUpdatedTimestamp: loan.lastUpdatedTimestamp,
+        creator: offer.creator,
+        amount: offer.amount.toString(),
+        borrower: address,
+        lender: offer.creator,
       });
 
       const timestamp = await getTransactionTimestamp(receipt);

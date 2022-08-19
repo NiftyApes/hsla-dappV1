@@ -3,7 +3,7 @@ import { TransactionTable } from './TransactionTable';
 
 export const LenderTransactionHistory: React.FC = () => {
   return (
-    <Box maxW="1600px" minW="800px">
+    <Box maxW="1600px" minW="700px">
       <TransactionTable />
     </Box>
   );

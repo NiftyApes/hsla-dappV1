@@ -21,7 +21,7 @@ export const useActiveLoansForLender = () => {
         return;
       }
 
-      const result = await fetch(getApiUrl(`loans?creator=${address}&status=ACTIVE`));
+      const result = await fetch(getApiUrl(`loans?lender=${address}`));
 
       const json = await result.json();
 
