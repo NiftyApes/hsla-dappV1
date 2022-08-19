@@ -1,4 +1,5 @@
 import { useAppDispatch } from 'app/hooks';
+import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
@@ -53,7 +54,7 @@ export const useWithdrawEthLiquidity = () => {
 
         await saveTransactionInDb({
           from: receipt.from,
-          transactionType: 'WITHDRAW_LIQUIDITY',
+          transactionType: transactionTypes.WITHDRAW_LIQUIDITY,
           timestamp,
           transactionHash: receipt.transactionHash,
           args: {

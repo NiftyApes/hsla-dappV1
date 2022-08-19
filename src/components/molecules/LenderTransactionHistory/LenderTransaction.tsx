@@ -2,6 +2,7 @@ import { Flex, Td, Text, Tr } from '@chakra-ui/react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import Icon from 'components/atoms/Icon';
+import { transactionTypes } from 'constants/transactionTypes';
 import { ethers } from 'ethers';
 import moment from 'moment';
 
@@ -32,11 +33,11 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
         <Text fontSize="small">{moment(tx.Timestamp).format('h:mma, MMM D YYYY')}</Text>
       </Td>
       <Td textAlign="center">
-        {tx.TransactionType === 'DEPOSIT_LIQUIDITY'
+        {tx.TransactionType === transactionTypes.DEPOSIT_LIQUIDITY
           ? 'Deposit Liquidity'
-          : tx.TransactionType === 'WITHDRAW_LIQUIDITY'
+          : tx.TransactionType === transactionTypes.WITHDRAW_LIQUIDITY
           ? 'Withdraw Liquidity'
-          : tx.TransactionType === 'LOAN_EXECUTED_BY_BORROWER'
+          : tx.TransactionType === transactionTypes.LOAN_EXECUTED_BY_BORROWER
           ? 'Loan Executed By Borrower'
           : 'Other'}
       </Td>
@@ -46,19 +47,19 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
             fontSize="2md"
             ml="4px"
             color={
-              tx.TransactionType === 'DEPOSIT_LIQUIDITY'
+              tx.TransactionType === transactionTypes.DEPOSIT_LIQUIDITY
                 ? 'green.500'
-                : tx.TransactionType === 'WITHDRAW_LIQUIDITY'
+                : tx.TransactionType === transactionTypes.WITHDRAW_LIQUIDITY
                 ? 'red.500'
-                : tx.TransactionType === 'LOAN_EXECUTED_BY_BORROWER'
+                : tx.TransactionType === transactionTypes.LOAN_EXECUTED_BY_BORROWER
                 ? 'blue.500'
                 : ''
             }
           >
-            {tx.TransactionType === 'DEPOSIT_LIQUIDITY'
+            {tx.TransactionType === transactionTypes.DEPOSIT_LIQUIDITY
               ? '+'
-              : tx.TransactionType === 'WITHDRAW_LIQUIDITY' ||
-                tx.TransactionType === 'LOAN_EXECUTED_BY_BORROWER'
+              : tx.TransactionType === transactionTypes.WITHDRAW_LIQUIDITY ||
+                tx.TransactionType === transactionTypes.LOAN_EXECUTED_BY_BORROWER
               ? '-'
               : ''}
             {ethers.utils.formatEther(tx.Args.amount)}Ξ
@@ -67,7 +68,7 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
       </Td>
       <Td>
         <Flex alignItems="center" justifyContent="center">
-          {tx.TransactionType === 'LOAN_EXECUTED_BY_BORROWER' ? (
+          {tx.TransactionType === transactionTypes.LOAN_EXECUTED_BY_BORROWER ? (
             <span>
               {ethers.utils.formatEther(tx.Args.amount)}Ξ @ on all {tx.Args.nftContractAddress}
             </span>

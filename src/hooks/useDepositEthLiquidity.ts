@@ -1,4 +1,5 @@
 import { useAppDispatch } from 'app/hooks';
+import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
 import { useState } from 'react';
@@ -53,7 +54,7 @@ export const useDepositEthLiquidity = () => {
 
         await saveTransactionInDb({
           from: receipt.from,
-          transactionType: 'DEPOSIT_LIQUIDITY',
+          transactionType: transactionTypes.DEPOSIT_LIQUIDITY,
           timestamp,
           transactionHash: receipt.transactionHash,
           args: {

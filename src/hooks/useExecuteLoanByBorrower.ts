@@ -1,4 +1,5 @@
 import { useAppDispatch } from 'app/hooks';
+import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
 import { saveLoanInDb } from 'helpers/saveLoanInDb';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
@@ -63,7 +64,7 @@ export const useExecuteLoanByBorrower = ({
       await saveTransactionInDb({
         transactionHash: receipt.transactionHash,
         from: receipt.from,
-        transactionType: 'LOAN_EXECUTED_BY_BORROWER',
+        transactionType: transactionTypes.LOAN_EXECUTED_BY_BORROWER,
         timestamp,
         borrower: offer.nftOwner,
         lender: offer.creator,

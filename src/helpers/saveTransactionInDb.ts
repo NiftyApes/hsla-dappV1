@@ -1,3 +1,4 @@
+import { TransactionType } from 'constants/transactionTypes';
 import { getApiUrl } from './getApiUrl';
 
 export async function saveTransactionInDb({
@@ -11,13 +12,7 @@ export async function saveTransactionInDb({
   args,
 }: {
   from: string;
-  transactionType:
-    | 'DEPOSIT_LIQUIDITY'
-    | 'WITHDRAW_LIQUIDITY'
-    | 'LOAN_EXECUTED_BY_BORROWER'
-    | 'REFINANCE_EXECUTED_BY_LENDER'
-    | 'LOAN_FULLY_REPAID_BY_BORROWER'
-    | 'ASSET_SEIZED_BY_LENDER';
+  transactionType: TransactionType;
   timestamp: number;
   transactionHash: string;
   borrower?: string;
