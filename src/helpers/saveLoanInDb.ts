@@ -1,24 +1,32 @@
 import { getApiUrl } from './getApiUrl';
 
 export async function saveLoanInDb({
-  loanObj,
+  nftContractAddress,
+  nftId,
+  lastUpdatedTimestamp,
+  creator,
+  amount,
+  borrower,
+  lender,
 }: {
-  loanObj: {
-    nftContractAddress: string;
-    nftId: string;
-    creator: string;
-    amount: number;
-  };
+  nftContractAddress: string;
+  nftId: string;
+  lastUpdatedTimestamp: number;
+  creator: string;
+  amount: number;
+  borrower: string;
+  lender: string;
 }) {
-  const { nftContractAddress, nftId, creator, amount } = loanObj;
-
   const result = await fetch(getApiUrl('loans'), {
     method: 'POST',
     body: JSON.stringify({
       nftContractAddress,
       nftId,
+      lastUpdatedTimestamp,
       creator,
       amount,
+      borrower,
+      lender,
     }),
   });
 }

@@ -1,9 +1,12 @@
 import { useAppDispatch } from 'app/hooks';
+import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
 import { useState } from 'react';
 import { getLiquidityContract } from '../helpers/getContracts';
+import { saveTransactionInDb } from '../helpers/saveTransactionInDb';
 import { useAvailableEthLiquidity } from './useEthLiquidity';
+import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
 import { useWalletProvider } from './useWalletProvider';
 
 export const useDepositEthLiquidity = () => {
@@ -21,6 +24,8 @@ export const useDepositEthLiquidity = () => {
   const [txObject, setTxObject] = useState<ethers.ContractTransaction | null>(null);
 
   const [txReceipt, setTxReceipt] = useState<ethers.ContractReceipt | null>(null);
+
+  const { getTransactionTimestamp } = useGetTransactionTimestamp();
 
   return {
     depositETHLiquidity: async ({
@@ -40,8 +45,24 @@ export const useDepositEthLiquidity = () => {
         const tx = await niftyApesContract.supplyEth({
           value: ethers.utils.parseEther(ethToDeposit.toString()),
         });
+
         setTxObject(tx);
-        const receipt = await tx.wait();
+
+        const receipt: any = await tx.wait();
+
+        const timestamp = await getTransactionTimestamp(receipt);
+
+        await saveTransactionInDb({
+          from: receipt.from,
+          transactionType: transactionTypes.DEPOSIT_LIQUIDITY,
+          timestamp,
+          transactionHash: receipt.transactionHash,
+          args: {
+            amount: ethers.utils.parseEther(ethToDeposit.toString()),
+            asset: 'ETH',
+          },
+        });
+
         setTxReceipt(receipt);
         setDepositStatus('SUCCESS');
         setTimeout(() => {
