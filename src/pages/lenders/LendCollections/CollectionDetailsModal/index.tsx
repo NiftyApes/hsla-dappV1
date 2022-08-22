@@ -1,57 +1,61 @@
-import React from 'react';
-import { Button, Flex, Grid, GridItem, Image, ModalProps, Text } from '@chakra-ui/react';
+import { Box, Flex, Grid, GridItem, Text } from '@chakra-ui/react';
+import React, { useState } from 'react';
 
-import Modal from 'components/atoms/Modal/Modal';
-import WalletInfo from 'components/molecules/WalletInfo';
 import Icon from 'components/atoms/Icon';
-import MarketData from './MarketData';
-import OfferBook from './OfferBook';
-import CreateCollectionOffer from './CreateCollectionOffer';
+import { useParams } from 'react-router-dom';
 import YourCollectibleJSON from '../../../../generated/deployments/localhost/YourCollectible.json';
+import CreateCollectionOffer from './CreateCollectionOffer';
+import OfferBook from './OfferBook';
 
-const CollectionDetailsModal: React.FC<Omit<ModalProps, 'children'>> = ({
-  onClose,
-  ...restProps
-}) => {
+const CollectionDetailsModal: React.FC = () => {
+  const { collectionAddress } = useParams();
+
+  const [collectionOfferAmt, setCollectionOfferAmt] = useState<string>('');
+  const [apr, setApr] = useState<string>('');
+  const [duration, setDuration] = useState<string>('');
+  const [expiration, setExpiration] = useState<string>('');
+
   return (
-    <Modal size="full" {...restProps}>
+    <Box minW="1100px" maxW="1600px">
       <Flex alignItems="center" justifyContent="space-between" mt="15px" px="15px" mb="40px">
         <Flex alignItems="center">
-          <Button variant="circle" bg="gray.100" mr="13px" p="8px" onClick={onClose}>
-            <Icon name="arrow-left" size={16} />
-          </Button>
-          <Image
-            src="/assets/mocks/bored_ape.png"
-            alt="Collection"
-            w="34px"
-            h="34px"
-            mr="9px"
-            borderRadius="50%"
-          />
           <Text fontSize="xl" fontWeight="bold" mr="8px">
-            Bored Ape Yacht Club
+            {collectionAddress}
           </Text>
           <Icon name="etherscan" size={22} mr="4px" />
           <Icon name="os" size={25} />
         </Flex>
-        <WalletInfo />
       </Flex>
 
-      <Grid gridTemplateColumns="repeat(3, minmax(0, 1fr))" columnGap="8px" px="20px">
+      <Grid
+        mt="16px"
+        gridTemplateColumns="max(1100*0.60px, min(60vw, 1600*0.60px)) 1fr"
+        columnGap="8px"
+        px="20px"
+      >
         <GridItem>
-          <MarketData />
+          <OfferBook
+            collectionOfferAmt={collectionOfferAmt}
+            apr={apr}
+            duration={duration}
+            expiration={expiration}
+          />
         </GridItem>
         <GridItem>
-          <OfferBook />
-        </GridItem>
-        <GridItem>
-          <Text fontWeight="bold" color="solid.gray0" mb="16px">
-            CREATE COLLECTION OFFER
-          </Text>
-          <CreateCollectionOffer nftContractAddress={YourCollectibleJSON.address} />
+          <CreateCollectionOffer
+            collectionOfferAmt={collectionOfferAmt}
+            setCollectionOfferAmt={setCollectionOfferAmt}
+            apr={apr}
+            setApr={setApr}
+            duration={duration}
+            setDuration={setDuration}
+            expiration={expiration}
+            setExpiration={setExpiration}
+            nftContractAddress={YourCollectibleJSON.address}
+          />
         </GridItem>
       </Grid>
-    </Modal>
+    </Box>
   );
 };
 

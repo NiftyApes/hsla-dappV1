@@ -1,16 +1,21 @@
+import { Box, Flex, Image, LinkBox, LinkOverlay, Text, useDisclosure } from '@chakra-ui/react';
 import React from 'react';
-import { Box, Flex, Image, Text, useDisclosure } from '@chakra-ui/react';
 
-import Icon from 'components/atoms/Icon';
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import CollectionDetailsModal from './CollectionDetailsModal';
+import Icon from 'components/atoms/Icon';
+import { useLocalScaffoldEthNFTContract } from 'hooks/useLocalScaffoldEthNFTContract';
+import { useWalletAddress } from 'hooks/useWalletAddress';
 
 const Collection: React.FC = () => {
   const { onOpen, onClose, isOpen } = useDisclosure();
 
+  const contract = useLocalScaffoldEthNFTContract();
+
+  const address = useWalletAddress();
+
   return (
     <>
-      <Box
+      <LinkBox
         borderRadius="18px"
         p="7px"
         boxShadow="0px 2.87612px 17.2567px rgba(73, 16, 146, 0.1)"
@@ -19,9 +24,11 @@ const Collection: React.FC = () => {
         onClick={onOpen}
       >
         <Flex textAlign="center" alignItems="center" justifyContent="center" mb="7px">
-          <Text fontSize="sm" fontWeight="bold" noOfLines={1}>
-            BORED APE YACHT CLUB.
-          </Text>
+          <LinkOverlay href={`/lenders/${address}/create-collection-offer/${contract?.address}`}>
+            <Text fontSize="sm" fontWeight="bold" noOfLines={1}>
+              BORED APE YACHT CLUB.
+            </Text>
+          </LinkOverlay>
           <Icon name="etherscan" size={18} mx="3px" />
           <Icon name="os" size={21} />
         </Flex>
@@ -81,8 +88,7 @@ const Collection: React.FC = () => {
             </Flex>
           </Flex>
         </Box>
-      </Box>
-      <CollectionDetailsModal isOpen={isOpen} onClose={onClose} />
+      </LinkBox>
     </>
   );
 };
