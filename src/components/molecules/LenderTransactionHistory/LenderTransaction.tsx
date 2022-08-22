@@ -4,6 +4,7 @@ import CryptoIcon from 'components/atoms/CryptoIcon';
 import Icon from 'components/atoms/Icon';
 import { transactionTypes } from 'constants/transactionTypes';
 import { ethers } from 'ethers';
+import { getAPR } from 'helpers/getAPR';
 import moment from 'moment';
 
 export const LenderTransaction = ({ tx }: { tx: any }) => {
@@ -70,7 +71,12 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
         <Flex alignItems="center" justifyContent="center">
           {tx.TransactionType === transactionTypes.LOAN_EXECUTED_BY_BORROWER ? (
             <span>
-              {ethers.utils.formatEther(tx.Data.Amount)}Ξ @ on all {tx.Data.NftContractAddress}
+              {ethers.utils.formatEther(tx.Data.Amount)}Ξ @{' '}
+              {getAPR({
+                amount: tx.Data.Amount,
+                interestRatePerSecond: tx.Data.InterestRatePerSecond,
+              })}
+              % APR on all {tx.Data.NftContractAddress}
             </span>
           ) : (
             '-'
