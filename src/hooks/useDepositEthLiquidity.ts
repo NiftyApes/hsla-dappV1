@@ -58,7 +58,7 @@ export const useDepositEthLiquidity = () => {
           timestamp,
           transactionHash: receipt.transactionHash,
           args: {
-            amount: ethers.utils.parseEther(ethToDeposit.toString()),
+            amount: ethers.utils.parseEther(ethToDeposit.toString()).toString(),
             asset: 'ETH',
           },
         });
