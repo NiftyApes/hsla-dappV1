@@ -57,7 +57,7 @@ export const useWithdrawEthLiquidity = () => {
           transactionType: transactionTypes.WITHDRAW_LIQUIDITY,
           timestamp,
           transactionHash: receipt.transactionHash,
-          args: {
+          data: {
             amount: ethers.utils.parseEther(ethToWithdraw.toString()).toString(),
             asset: 'ETH',
           },

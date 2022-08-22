@@ -9,7 +9,7 @@ export async function saveTransactionInDb({
   borrower,
   lender,
   refinancedLender,
-  args,
+  data,
 }: {
   from: string;
   transactionType: TransactionType;
@@ -18,7 +18,7 @@ export async function saveTransactionInDb({
   borrower?: string;
   lender?: string;
   refinancedLender?: string;
-  args: any;
+  data: any;
 }) {
   const result = await fetch(getApiUrl('transactions'), {
     method: 'POST',
@@ -30,7 +30,7 @@ export async function saveTransactionInDb({
       lender,
       borrower,
       refinancedLender,
-      args,
+      data,
     }),
   });
 }
