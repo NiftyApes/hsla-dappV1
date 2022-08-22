@@ -7,10 +7,15 @@ export function getAPR({
   amount: number;
   interestRatePerSecond: number;
 }) {
-  return amount !== 0
-    ? Math.max(
-        Number((((interestRatePerSecond * SECONDS_IN_YEAR) / amount) * 100).toFixed(2)),
-        Number((((interestRatePerSecond * SECONDS_IN_YEAR) / amount) * 100).toPrecision(2)),
-      )
-    : 0;
+  if (amount === 0) {
+    return 0;
+  }
+
+  const unroundedNumber = ((interestRatePerSecond * SECONDS_IN_YEAR) / amount) * 100;
+
+  if (unroundedNumber >= 0.1) {
+    return Number(unroundedNumber.toFixed(2));
+  } else {
+    return Number(unroundedNumber.toPrecision(2));
+  }
 }
