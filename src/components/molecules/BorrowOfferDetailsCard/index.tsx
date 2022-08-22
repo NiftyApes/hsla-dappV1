@@ -1,69 +1,60 @@
 import React, { useState } from 'react';
 import { Box, Button, Flex, Grid, HStack, Image, Link, Text, useToast } from '@chakra-ui/react';
-import { CoinSymbol } from 'lib/constants/coinSymbols';
 import Icon from 'components/atoms/Icon';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { useNiftyApesContractAddress } from '../../../hooks/useNiftyApesContractAddress';
 import { useERC721ApprovalForAll } from '../../../hooks/useERC721ApprovalForAll';
-import { Contract } from 'ethers';
+import { BigNumber, Contract, ethers } from 'ethers';
 import { useExecuteLoanByBorrower } from '../../../hooks/useExecuteLoanByBorrower';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
 import { humanizeContractError } from '../../../helpers/errorsMap';
+import { LoanOffer } from '../../../loan';
+import { NFT } from '../../../nft';
 
 interface Props {
   contract?: Contract;
-  floorTerm: boolean;
-  img: string;
-  offer: Offer;
-  offerHash: string;
-  tokenId: string;
-  tokenName: string;
-}
-
-interface Offer {
-  aprPercentage: number;
-  durationDays: number;
-  expirationDays: number;
-  price: number;
-  symbol: CoinSymbol;
-  totalInterest: number;
-  type: 'top' | 'floor';
+  nft: NFT;
+  offer: LoanOffer;
 }
 
 const i18n = {
   allowButton: 'allow niftyapes to transfer nft',
   approveButton: 'borrow money',
-  approveMessage: (tokenId: string, tokenName: string, offer: Offer) =>
-    `Approve and transfer ${tokenName} #${tokenId} to the NiftyApes smart contract to borrow ${offer.price}${offer.symbol} for ${offer.durationDays} days`,
+  approveMessage: (nft: NFT, offer: LoanOffer) =>
+    `Approve and transfer ${nft.name} #${
+      nft.id
+    } to the NiftyApes smart contract to borrow ${ethers.utils.formatEther(
+      BigNumber.from(String(offer.OfferTerms.Amount)),
+    )} ${offer.symbol} for ${offer.durationDays} days`,
   assetDetails: 'asset details',
   collateralDescription: 'Your collateral will be locked in escrow over the lifespan of your loan.',
   collateralLabel: 'your collateral',
   dealTermsLabel: 'deal terms',
   liquidityAwaits: 'Liquidity Awaits',
-  offerTerms: (offer: Offer) => `${offer.durationDays} days at ${offer.aprPercentage}% APR`,
+  offerTerms: (offer: LoanOffer) => `${offer.durationDays} days at ${offer.aprPercentage}% APR`,
+  toastApproveTransferError: 'Unable to approve NFT transfer',
+  toastApproveTransferSuccess: 'NFT Transfer approved',
+  toastLoanSuccess: 'Loan executed successfully',
   totalInterest: 'total interest',
   totalInterestDescription: 'The most you could owe at the end of your loan.',
-  transferDetails: (offer: Offer) =>
-    `${offer.price}${offer.symbol} will be sent to your wallet address once your loan is executed.`,
-  toastApproveTransferSuccess: 'NFT Transfer approved',
-  toastApproveTransferError: 'Unable to approve NFT transfer',
-  toastLoanSuccess: 'Loan executed successfully',
+  transferDetails: (amount: string, symbol: string) =>
+    `${amount} ${symbol} will be sent to your wallet address once your loan is executed.`,
 };
 
-const BorrowOfferDetailsCard: React.FC<Props> = ({
-  contract,
-  floorTerm,
-  img,
-  offer,
-  offerHash,
-  tokenId,
-  tokenName,
-}) => {
-  const esNftUrl = `https://etherscan.io/token/${contract?.address}?a=${tokenId}`;
-  const osNftUrl = `https://opensea.io/assets/ethereum/${contract?.address}/${tokenId}`;
-
+const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
   const toast = useToast();
   const operator = useNiftyApesContractAddress();
+
+  const esNftUrl = `https://etherscan.io/token/${contract?.address}?a=${nft.id}`;
+  const osNftUrl = `https://opensea.io/assets/ethereum/${contract?.address}/${nft.id}`;
+
+  const fmtOfferAmount: string = ethers.utils.formatEther(
+    BigNumber.from(String(offer.OfferTerms.Amount)),
+  );
+  const fmtTotalInterest: string = Number(
+    (offer.totalInterest / 100) * Number(fmtOfferAmount),
+  ).toFixed(2);
+
   const { hasApprovalForAll, hasCheckedApproval, grantApprovalForAll } = useERC721ApprovalForAll({
     contract,
     operator,
@@ -71,9 +62,9 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
 
   const { executeLoanByBorrower } = useExecuteLoanByBorrower({
     nftContractAddress: contract?.address,
-    nftId: tokenId,
-    offerHash,
-    floorTerm,
+    nftId: nft.id,
+    offerHash: offer.OfferHash,
+    floorTerm: offer.OfferTerms.FloorTerm,
   });
   const [isExecuting, setExecuting] = useState<boolean>(false);
 
@@ -83,7 +74,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
       await executeLoanByBorrower()
         .then(() => {
           toast({
-            title: 'Loan executed successfully',
+            title: i18n.toastLoanSuccess,
             status: 'success',
             position: 'top-right',
             isClosable: true,
@@ -190,8 +181,8 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
             {i18n.collateralLabel}
           </Text>
           <Image
-            src={img}
-            alt={tokenName}
+            src={nft.image}
+            alt={nft.name}
             border="6px solid"
             borderColor="solid.white"
             borderRadius="23px"
@@ -201,10 +192,10 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
             mt="26px"
           />
           <Text mt="8px" fontSize="sm" color="solid.black">
-            {tokenName}
+            {nft.name}
           </Text>
           <Text mt="1px" fontSize="2xl" color="solid.black" fontWeight="bold" lineHeight="28px">
-            #{tokenId}
+            #{nft.id}
           </Text>
           <Text mt="27px" color="solid.gray0" textTransform="uppercase" fontSize="2xs">
             {i18n.assetDetails}
@@ -240,13 +231,13 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
           <Flex alignItems="center">
             <CryptoIcon symbol={offer.symbol} size={32} />
             <Text ml="6px" fontSize="3.5xl">
-              {offer.price} {offer.symbol}
+              {fmtOfferAmount} {offer.symbol}
             </Text>
           </Flex>
           <Text fontSize="lg" color="solid.black" mt="5px">
             {i18n.offerTerms(offer)}
           </Text>
-          <Text mt="12px">{i18n.transferDetails(offer)}</Text>
+          <Text mt="12px">{i18n.transferDetails(fmtOfferAmount, offer.symbol)}</Text>
           <Flex alignItems="center" mt="50px">
             <Text fontSize="sm" color="solid.gray0" mr="3px" textTransform="uppercase">
               {i18n.totalInterest}
@@ -256,7 +247,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
           <Flex alignItems="center" mt="30px">
             <CryptoIcon symbol={offer.symbol} size={32} />
             <Text ml="6px" fontSize="3.5xl">
-              {Number((offer.totalInterest / 100) * offer.price).toFixed(2)} {offer.symbol}
+              {fmtTotalInterest} {offer.symbol}
             </Text>
           </Flex>
           <Text fontSize="sm" color="solid.black" mb="20px">
@@ -272,7 +263,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({
           </Text>
         </Flex>
         <Flex mt="10px">
-          <Text textAlign="center">{i18n.approveMessage(tokenId, tokenName, offer)}</Text>
+          <Text textAlign="center">{i18n.approveMessage(nft, offer)}</Text>
         </Flex>
 
         {renderTransferButton()}

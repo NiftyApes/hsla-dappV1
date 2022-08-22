@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Flex, Grid, GridItem, ModalProps, Text } from '@chakra-ui/react';
 
+import { LoanOffer } from '../../../loan';
 import Modal from 'components/atoms/Modal/Modal';
 import Icon from 'components/atoms/Icon';
 import WalletInfo from 'components/molecules/WalletInfo';
@@ -12,6 +13,8 @@ const BorrowerAllMatchingOffersModal: React.FC<Omit<ModalProps, 'children'>> = (
   onClose,
   ...restProps
 }) => {
+  const offers: Array<LoanOffer> = [];
+
   return (
     <Modal size="full" {...restProps}>
       <Flex alignItems="center" justifyContent="space-between" mt="15px" px="15px">
@@ -36,7 +39,7 @@ const BorrowerAllMatchingOffersModal: React.FC<Omit<ModalProps, 'children'>> = (
           />
         </GridItem>
         <GridItem colSpan={3}>
-          <OffersTable />
+          <OffersTable offers={offers} onClick={() => {}} />
         </GridItem>
         <GridItem colSpan={2}>
           <RecentLoans />

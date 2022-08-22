@@ -1,3 +1,5 @@
+import { CoinSymbol } from '../../lib/constants/coinSymbols';
+
 export type OfferTerms = {
   NftId: string;
   FloorTerm: boolean;
@@ -30,6 +32,8 @@ export interface LoanOffer {
   expirationDays: number;
   totalInterest: number;
   interestRatePerSecond: number;
+  type: 'top' | 'floor';
+  symbol: CoinSymbol;
 }
 
 const loanOffer = (json: any): LoanOffer => {
@@ -59,6 +63,8 @@ const loanOffer = (json: any): LoanOffer => {
     interestRatePerSecond,
     // Actual interest over the period of a loan
     totalInterest: ((interestRatePerSecond * duration) / amount) * 100,
+    type: 'top',
+    symbol: 'eth',
   };
 };
 

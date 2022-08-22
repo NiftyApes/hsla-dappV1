@@ -1,64 +1,49 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Box, Grid, GridItem } from '@chakra-ui/react';
 import Collateral from '../../../components/molecules/Collateral';
 import OffersTable from '../../../components/molecules/OffersTable';
-import { useParams } from 'react-router-dom';
-import { fetchLoanOffersByNFT, useLoanOffersByNFT } from '../../../loan';
-import { getNFTHash, nft, NFT } from '../../../nft';
-import { useAppDispatch } from '../../../app/hooks';
-import LoanOffer from '../../../loan/model/LoanOffer';
+import { NFT } from '../../../nft';
+import { LoanOffer } from '../../../loan/model/LoanOffer';
+import { useExecuteLoanByBorrower } from '../../../hooks/useExecuteLoanByBorrower';
 
-const Offers: React.FC = () => {
-  const { id: contractAddress, tokenId } = useParams<{ id: string; tokenId: string }>();
+interface Props {
+  nft: NFT;
+  offers: Array<LoanOffer>;
+}
 
-  const dispatch = useAppDispatch();
+const Offers: React.FC<Props> = ({ offers, nft }) => {
+  // const {executeLoanByBorrower} = useExecuteLoanByBorrower({
+  //     nftContractAddress: contract?.address,
+  //     nftId: nft.id,
+  //     offerHash: offer.OfferHash,
+  //     floorTerm: offer.OfferTerms.FloorTerm,
+  // });
 
-  const item: NFT = {
-    id: tokenId || '',
-    contractAddress: contractAddress || '',
-
-    attributes: [],
-    description: '',
-    external_url: '',
-    image: '',
-    name: '',
-    owner: '',
+  const onBorrow = (hash: string) => {
+    console.log(hash);
   };
 
-  console.log('HASH', getNFTHash(item));
-  //
-  // const loanOffers:[] = [];
-  // const fetchingOffers = false;
-
-  const { content: loanOffers, fetching: fetchingOffers } = useLoanOffersByNFT(item);
-
-  useEffect(() => {
-    if (!loanOffers && !fetchingOffers) {
-      console.log('Fetching nftss....');
-      dispatch(fetchLoanOffersByNFT(item));
-    }
-  }, [getNFTHash(item), fetchingOffers]);
-
-  if (!loanOffers || fetchingOffers) {
-    return <Box>Loading...</Box>;
-  }
-
   return (
-    <Box>
-      {`${loanOffers.length} active offers`}
-      <Grid gridTemplateColumns="repeat(6, minmax(0, 1fr))" flexGrow={1} p="13px" columnGap="22px">
-        <GridItem colSpan={1}>
-          <Collateral
-            collectionName="Collection Name"
-            tokenName="Token Name"
-            img="/assets/mocks/bored_ape.png"
-          />
-        </GridItem>
-        <GridItem colSpan={5}>
-          <OffersTable />
-        </GridItem>
-      </Grid>
-    </Box>
+    <OffersTable
+      offers={Array.from(offers).sort(
+        (a: LoanOffer, b: LoanOffer) => a.interestRatePerSecond - b.interestRatePerSecond,
+      )}
+      onClick={onBorrow}
+    />
+    // <Box>
+    //     <Grid gridTemplateColumns="repeat(6, minmax(0, 1fr))" flexGrow={1} p="13px" columnGap="22px">
+    //         <GridItem colSpan={1}>
+    //             <Collateral
+    //                 collectionName="XXXX"
+    //                 tokenName={nft.name}
+    //                 img={nft.image}
+    //             />
+    //         </GridItem>
+    //         <GridItem colSpan={5}>
+    //             <OffersTable offers={offers} onClick={onBorrow}/>
+    //         </GridItem>
+    //     </Grid>
+    // </Box>
   );
 };
 

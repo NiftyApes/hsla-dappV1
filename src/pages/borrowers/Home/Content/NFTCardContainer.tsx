@@ -85,28 +85,6 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
   }
 
   const offer = bestOffer(loanOffers);
-  const offerAmount = BigNumber.from(String(offer.OfferTerms.Amount));
 
-  return (
-    <NFTCard
-      contract={contract}
-      id={`${item.id}`}
-      offerHash={offer.OfferHash}
-      offer={{
-        aprPercentage: offer.aprPercentage,
-        expirationDays: offer.expirationDays,
-        durationDays: offer.durationDays,
-        price: Number(ethers.utils.formatEther(offerAmount)),
-        totalInterest: offer.totalInterest,
-        symbol: 'eth',
-        type: 'top',
-      }}
-      floorTerm={offer.OfferTerms.FloorTerm}
-      numberOfOffers={loanOffers.length}
-      key={item.id}
-      collectionName=""
-      tokenName={`${item.name}`}
-      img={item.image}
-    />
-  );
+  return <NFTCard offer={offer} contract={contract} key={item.id} nft={item} offers={loanOffers} />;
 };
