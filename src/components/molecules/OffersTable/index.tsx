@@ -1,14 +1,24 @@
 import React from 'react';
 import { Button, Flex, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
-
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { LoanOffer } from '../../../loan';
 import { BigNumber, ethers } from 'ethers';
 
+interface callbackType {
+  (offer: LoanOffer): void;
+}
+
 interface Props {
   offers: Array<LoanOffer>;
-  onClick: void;
+  onClick: callbackType;
 }
+
+const i18n = {
+  colDuration: 'duration',
+  colApr: 'apr',
+  colAmount: 'amount',
+  action: 'borrow',
+};
 
 const OffersTable: React.FC<Props> = ({ offers, onClick }) => {
   return (
@@ -28,9 +38,9 @@ const OffersTable: React.FC<Props> = ({ offers, onClick }) => {
             },
           }}
         >
-          <Th borderRadius="8px 0px 0px 8px">amt</Th>
-          <Th>duration</Th>
-          <Th>apr</Th>
+          <Th borderRadius="8px 0px 0px 8px">{i18n.colAmount}</Th>
+          <Th>{i18n.colDuration}</Th>
+          <Th>{i18n.colApr}</Th>
           <Th borderRadius="0px 8px 8px 0px"></Th>
         </Tr>
       </Thead>
@@ -58,16 +68,16 @@ const OffersTable: React.FC<Props> = ({ offers, onClick }) => {
                 <Text>{offer.durationDays} days</Text>
               </Td>
               <Td>
-                <Text>{offer.aprPercentage}</Text>
+                <Text>{offer.aprPercentage}%</Text>
               </Td>
               <Td>
                 <Button
                   variant="link"
                   color="notification.notify"
                   fontSize="2xs"
-                  onClick={() => onClick(offer.OfferHash)}
+                  onClick={() => onClick(offer)}
                 >
-                  BORROW
+                  {i18n.action}
                 </Button>
               </Td>
             </Tr>

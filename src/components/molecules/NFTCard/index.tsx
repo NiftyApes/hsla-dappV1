@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Center,
@@ -20,10 +20,9 @@ import { formatNumber } from 'lib/helpers/string';
 import BorrowOfferDetailsCard from '../BorrowOfferDetailsCard';
 import Offers from '../../../pages/borrowers/Offers';
 import { NFT } from '../../../nft';
-import { LoanOffer } from '../../../loan';
+import { getBestLoanOffer, LoanOffer } from '../../../loan';
 
 interface Props {
-  offer: LoanOffer;
   contract?: Contract;
   nft: NFT;
   offers: Array<LoanOffer>;
@@ -37,21 +36,36 @@ const i18n = {
   viewAllOffers: (count: number) => `View All Offers (${formatNumber(count)})`,
 };
 
-const NFTCard: React.FC<Props> = ({ offer, contract, nft, offers }) => {
+const NFTCard: React.FC<Props> = ({ contract, nft, offers }) => {
   const {
     isOpen: isOfferDetailsOpen,
     onOpen: onOfferDetailsOpen,
     onClose: onOfferDetailsClose,
   } = useDisclosure();
+
   const {
     isOpen: isAllOffersOpen,
     onOpen: onAllOffersOpen,
     onClose: onAllOffersClose,
   } = useDisclosure();
 
-  const fmtOfferAmount: string = ethers.utils.formatEther(
-    BigNumber.from(String(offer.OfferTerms.Amount)),
-  );
+  const bestOffer: LoanOffer = getBestLoanOffer(offers);
+  const [activeOffer, setActiveOffer] = useState(bestOffer);
+
+  const fmtOfferAmount = (offer: LoanOffer): string =>
+    ethers.utils.formatEther(BigNumber.from(String(offer.OfferTerms.Amount)));
+
+  const onSecondaryOffer = (offer: LoanOffer) => {
+    setActiveOffer(offer);
+    onAllOffersClose();
+    onOfferDetailsOpen();
+  };
+
+  const onBestOffer = () => {
+    // Reset active offer to the best offer
+    setActiveOffer(bestOffer);
+    onOfferDetailsOpen();
+  };
 
   const renderBestOffer = () => {
     return (
@@ -64,7 +78,7 @@ const NFTCard: React.FC<Props> = ({ offer, contract, nft, offers }) => {
         textAlign="center"
         textTransform="uppercase"
       >
-        {i18n.offerLabel(offer.type)}
+        {i18n.offerLabel(bestOffer.type)}
       </Container>
     );
   };
@@ -95,23 +109,23 @@ const NFTCard: React.FC<Props> = ({ offer, contract, nft, offers }) => {
             <Flex alignItems="center">
               <CryptoIcon symbol="eth" size={25} />
               <Text ml="6px" fontSize="3.5xl" fontWeight="bold">
-                {fmtOfferAmount}Ξ
+                {fmtOfferAmount(bestOffer)}Ξ
               </Text>
             </Flex>
 
             <Text fontSize="lg" color="solid.gray0">
               <Text as="span" color="solid.black" fontWeight="semibold">
-                {i18n.offerDuration(offer.durationDays)}
+                {i18n.offerDuration(bestOffer.durationDays)}
               </Text>
               &nbsp;at&nbsp;
               <Text as="span" color="solid.black" fontWeight="semibold">
-                {i18n.offerApr(offer.aprPercentage)}
+                {i18n.offerApr(bestOffer.aprPercentage)}
               </Text>
             </Text>
           </Flex>
           <Button
             colorScheme="purple"
-            onClick={onOfferDetailsOpen}
+            onClick={onBestOffer}
             py="6px"
             size="lg"
             textTransform="uppercase"
@@ -130,7 +144,7 @@ const NFTCard: React.FC<Props> = ({ offer, contract, nft, offers }) => {
             <Modal isOpen={true} onClose={onAllOffersClose} size="xl">
               <ModalOverlay />
               <ModalContent p="5px">
-                <Offers nft={nft} offers={offers} />
+                <Offers nft={nft} offers={offers} onOfferSelect={onSecondaryOffer} />
               </ModalContent>
             </Modal>
           )}
@@ -139,7 +153,7 @@ const NFTCard: React.FC<Props> = ({ offer, contract, nft, offers }) => {
             <Modal isOpen={true} onClose={onOfferDetailsClose} size="xl">
               <ModalOverlay />
               <ModalContent p="5px" maxW="800px">
-                <BorrowOfferDetailsCard contract={contract} offer={offer} nft={nft} />
+                <BorrowOfferDetailsCard contract={contract} offer={activeOffer} nft={nft} />
               </ModalContent>
             </Modal>
           )}

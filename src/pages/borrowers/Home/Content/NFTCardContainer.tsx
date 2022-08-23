@@ -23,20 +23,6 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
   const { content: loanOffers, fetching: fetchingOffers } = useLoanOffersByNFT(item);
   const loanAuction = useLoanAuction({ nftContractAddress: contract.address, nftId: item.id });
 
-  /**
-   * Returns best offer sorted by interest rate
-   * @param offers
-   */
-  const bestOffer = (offers: Array<LoanOffer>): LoanOffer => {
-    if (offers.length === 1) {
-      return offers[0];
-    }
-
-    return Array.from(offers).sort(
-      (a: LoanOffer, b: LoanOffer) => a.interestRatePerSecond - b.interestRatePerSecond,
-    )[0];
-  };
-
   useEffect(() => {
     if (!loanOffers && !fetchingOffers) {
       dispatch(fetchLoanOffersByNFT(item));
@@ -84,7 +70,5 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
     );
   }
 
-  const offer = bestOffer(loanOffers);
-
-  return <NFTCard offer={offer} contract={contract} key={item.id} nft={item} offers={loanOffers} />;
+  return <NFTCard contract={contract} key={item.id} nft={item} offers={loanOffers} />;
 };

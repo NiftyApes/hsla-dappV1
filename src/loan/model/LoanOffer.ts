@@ -69,3 +69,13 @@ const loanOffer = (json: any): LoanOffer => {
 };
 
 export default loanOffer;
+
+export const getBestLoanOffer = (offers: Array<LoanOffer>): LoanOffer => {
+  if (offers.length === 1) {
+    return offers[0];
+  }
+
+  return Array.from(offers).sort(
+    (a: LoanOffer, b: LoanOffer) => a.interestRatePerSecond - b.interestRatePerSecond,
+  )[0];
+};
