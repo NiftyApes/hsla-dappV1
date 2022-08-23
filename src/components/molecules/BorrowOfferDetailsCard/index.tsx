@@ -10,6 +10,7 @@ import LoadingIndicator from '../../atoms/LoadingIndicator';
 import { humanizeContractError } from '../../../helpers/errorsMap';
 import { LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
+import Collateral from '../Collateral';
 
 interface Props {
   contract?: Contract;
@@ -26,9 +27,6 @@ const i18n = {
     } to the NiftyApes smart contract to borrow ${ethers.utils.formatEther(
       BigNumber.from(String(offer.OfferTerms.Amount)),
     )} ${offer.symbol} for ${offer.durationDays} days`,
-  assetDetails: 'asset details',
-  collateralDescription: 'Your collateral will be locked in escrow over the lifespan of your loan.',
-  collateralLabel: 'your collateral',
   dealTermsLabel: 'deal terms',
   liquidityAwaits: 'Liquidity Awaits',
   offerTerms: (offer: LoanOffer) => `${offer.durationDays} days at ${offer.aprPercentage}% APR`,
@@ -44,9 +42,6 @@ const i18n = {
 const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
   const toast = useToast();
   const operator = useNiftyApesContractAddress();
-
-  const esNftUrl = `https://etherscan.io/token/${contract?.address}?a=${nft.id}`;
-  const osNftUrl = `https://opensea.io/assets/ethereum/${contract?.address}/${nft.id}`;
 
   const fmtOfferAmount: string = ethers.utils.formatEther(
     BigNumber.from(String(offer.OfferTerms.Amount)),
@@ -165,69 +160,17 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
       <Grid
         gridTemplateColumns="repeat(2, minmax(0, 1fr))"
         gridColumnGap="20px"
-        w="660px"
+        w="100%"
         borderColor="solid.lightPurple"
         textAlign="center"
         bgColor="solid.white"
       >
-        <Flex flexDir="column" alignItems="center" bg="solid.gray3" borderRadius="10px">
-          <Text
-            mt="24px"
-            fontWeight="bold"
-            textTransform="uppercase"
-            fontSize="sm"
-            color="solid.gray0"
-          >
-            {i18n.collateralLabel}
-          </Text>
-          <Image
-            src={nft.image}
-            alt={nft.name}
-            border="6px solid"
-            borderColor="solid.white"
-            borderRadius="23px"
-            w="114px"
-            h="108px"
-            objectFit="cover"
-            mt="26px"
-          />
-          <Text mt="8px" fontSize="sm" color="solid.black">
-            {nft.name}
-          </Text>
-          <Text mt="1px" fontSize="2xl" color="solid.black" fontWeight="bold" lineHeight="28px">
-            #{nft.id}
-          </Text>
-          <Text mt="27px" color="solid.gray0" textTransform="uppercase" fontSize="2xs">
-            {i18n.assetDetails}
-          </Text>
-          <Flex alignItems="center" mt="10px">
-            <HStack>
-              <Text noOfLines={1} width="100px">
-                {contract?.address}
-              </Text>
-              <Link isExternal href={esNftUrl}>
-                <Icon name="etherscan" />
-              </Link>
-              <Link isExternal href={osNftUrl}>
-                <Icon name="os" />
-              </Link>
-            </HStack>
-          </Flex>
-          <Text mt="10px" fontSize="sm" mb="19px">
-            {i18n.collateralDescription}
-          </Text>
-        </Flex>
-
         <Flex flexDir="column" alignItems="center">
-          <Text
-            mt="24px"
-            fontWeight="bold"
-            textTransform="uppercase"
-            fontSize="sm"
-            color="solid.gray0"
-          >
-            {i18n.dealTermsLabel}
-          </Text>
+          <Flex alignItems="center" mt="50px">
+            <Text fontSize="sm" color="solid.gray0" mr="3px" textTransform="uppercase">
+              {i18n.dealTermsLabel}
+            </Text>
+          </Flex>
           <Flex alignItems="center">
             <CryptoIcon symbol={offer.symbol} size={32} />
             <Text ml="6px" fontSize="3.5xl">
@@ -238,13 +181,17 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
             {i18n.offerTerms(offer)}
           </Text>
           <Text mt="12px">{i18n.transferDetails(fmtOfferAmount, offer.symbol)}</Text>
+        </Flex>
+
+        <Flex flexDir="column" alignItems="center">
           <Flex alignItems="center" mt="50px">
             <Text fontSize="sm" color="solid.gray0" mr="3px" textTransform="uppercase">
               {i18n.totalInterest}
             </Text>
             <Icon name="help-circle" color="solid.gray0" />
           </Flex>
-          <Flex alignItems="center" mt="30px">
+
+          <Flex alignItems="center">
             <CryptoIcon symbol={offer.symbol} size={32} />
             <Text ml="6px" fontSize="3.5xl">
               {fmtTotalInterest} {offer.symbol}

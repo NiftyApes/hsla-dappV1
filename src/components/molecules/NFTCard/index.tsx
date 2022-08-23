@@ -6,6 +6,7 @@ import {
   Flex,
   Link,
   Modal,
+  ModalCloseButton,
   ModalContent,
   ModalOverlay,
   Text,
@@ -21,6 +22,7 @@ import BorrowOfferDetailsCard from '../BorrowOfferDetailsCard';
 import Offers from '../../../pages/borrowers/Offers';
 import { NFT } from '../../../nft';
 import { getBestLoanOffer, LoanOffer } from '../../../loan';
+import { CollateralHeader } from '../CollateralHeader';
 
 interface Props {
   contract?: Contract;
@@ -34,6 +36,8 @@ const i18n = {
   offerDuration: (duration: number) => `${duration} days`,
   offerLabel: (type: string) => `${type} offer`,
   viewAllOffers: (count: number) => `View All Offers (${formatNumber(count)})`,
+  topOffer: 'top offer for',
+  allOffers: 'all offers for',
 };
 
 const NFTCard: React.FC<Props> = ({ contract, nft, offers }) => {
@@ -144,6 +148,8 @@ const NFTCard: React.FC<Props> = ({ contract, nft, offers }) => {
             <Modal isOpen={true} onClose={onAllOffersClose} size="xl">
               <ModalOverlay />
               <ModalContent p="5px">
+                <CollateralHeader title={i18n.allOffers} nft={nft} />
+                <ModalCloseButton />
                 <Offers nft={nft} offers={offers} onOfferSelect={onSecondaryOffer} />
               </ModalContent>
             </Modal>
@@ -152,7 +158,9 @@ const NFTCard: React.FC<Props> = ({ contract, nft, offers }) => {
           {isOfferDetailsOpen && (
             <Modal isOpen={true} onClose={onOfferDetailsClose} size="xl">
               <ModalOverlay />
-              <ModalContent p="5px" maxW="800px">
+              <ModalContent p="5px">
+                <CollateralHeader title={i18n.topOffer} nft={nft} />
+                <ModalCloseButton />
                 <BorrowOfferDetailsCard contract={contract} offer={activeOffer} nft={nft} />
               </ModalContent>
             </Modal>
