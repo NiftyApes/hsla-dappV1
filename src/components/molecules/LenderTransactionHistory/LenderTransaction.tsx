@@ -4,6 +4,7 @@ import CryptoIcon from 'components/atoms/CryptoIcon';
 import Icon from 'components/atoms/Icon';
 import { transactionTypes } from 'constants/transactionTypes';
 import { ethers } from 'ethers';
+import { getAPR } from 'helpers/getAPR';
 import moment from 'moment';
 
 export const LenderTransaction = ({ tx }: { tx: any }) => {
@@ -26,7 +27,7 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
     >
       <Td width="1rem" textAlign="center">
         <Flex justifyContent="center">
-          {tx.Args.asset === 'ETH' && <CryptoIcon symbol="eth" size={25} />}
+          {tx.Data.Asset === 'ETH' && <CryptoIcon symbol="eth" size={25} />}
         </Flex>
       </Td>
       <Td textAlign="center">
@@ -62,7 +63,7 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
                 tx.TransactionType === transactionTypes.LOAN_EXECUTED_BY_BORROWER
               ? '-'
               : ''}
-            {ethers.utils.formatEther(tx.Args.amount)}Ξ
+            {ethers.utils.formatEther(tx.Data.Amount)}Ξ
           </Text>
         </Flex>
       </Td>
@@ -70,7 +71,12 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
         <Flex alignItems="center" justifyContent="center">
           {tx.TransactionType === transactionTypes.LOAN_EXECUTED_BY_BORROWER ? (
             <span>
-              {ethers.utils.formatEther(tx.Args.amount)}Ξ @ on all {tx.Args.nftContractAddress}
+              {ethers.utils.formatEther(tx.Data.Amount)}Ξ @{' '}
+              {getAPR({
+                amount: tx.Data.Amount,
+                interestRatePerSecond: tx.Data.InterestRatePerSecond,
+              })}
+              % APR on all {tx.Data.NftContractAddress}
             </span>
           ) : (
             '-'

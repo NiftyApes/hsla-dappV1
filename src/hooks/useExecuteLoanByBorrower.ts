@@ -73,7 +73,7 @@ export const useExecuteLoanByBorrower = ({
         timestamp,
         borrower: offer.nftOwner,
         lender: offer.creator,
-        args: {
+        data: {
           lender: offer.creator,
           nftContractAddress: offer.nftContractAddress,
           nftId,

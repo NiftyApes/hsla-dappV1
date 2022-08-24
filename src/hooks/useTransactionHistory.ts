@@ -15,16 +15,8 @@ export const useTransactionHistory = () => {
       const result = await fetch(getApiUrl(`transactions?from=${address}&lender=${address}`));
       const json = await result.json();
       const items = json;
-      // Note: an item's SK attribute is a string consisting
-      // of its timestamp and transaction hash joined by "#"
-      // i.e., `${timestamp}#${transactionHash}`
-      const sortedItems = _.sortBy(items, (i) => -Number(i.SK.split('#')[0]));
-      const processedItems = sortedItems.map((item: any) => ({
-        ...item,
-        Timestamp: item.SK.split('#')[0] * 1000,
-        TransactionHash: item.SK.split('#')[1],
-      }));
-      setTransactions(processedItems);
+      const sortedItems = _.sortBy(items, (i) => -i.Timestamp);
+      setTransactions(sortedItems);
     }
 
     if (address) {

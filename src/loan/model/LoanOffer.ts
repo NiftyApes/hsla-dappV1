@@ -1,4 +1,5 @@
 import { CoinSymbol } from '../../lib/constants/coinSymbols';
+import { getAPR } from 'helpers/getAPR';
 
 export type OfferTerms = {
   NftId: string;
@@ -52,10 +53,7 @@ const loanOffer = (json: any): LoanOffer => {
       json.OfferStatus && OfferStatus[offerStatus] ? OfferStatus[offerStatus] : undefined,
     // TODO: double check
     amount,
-    aprPercentage:
-      amount !== 0
-        ? Number(Number(((interestRatePerSecond * secondsInYear) / amount) * 100).toFixed(2))
-        : 0,
+    aprPercentage: getAPR({ amount, interestRatePerSecond }),
     duration,
     durationDays: duration / secondsInDay,
     expiration,
