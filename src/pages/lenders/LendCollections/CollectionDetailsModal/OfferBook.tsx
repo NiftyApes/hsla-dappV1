@@ -1,15 +1,24 @@
-import { Box, Flex, Table, Tag, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import { Box, Center, Flex, Table, Tag, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
+import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { ethers } from 'ethers';
 import { getAPR } from 'helpers/getAPR';
 import { roundForDisplay } from 'helpers/roundForDisplay';
 import { useCollectionOffers } from 'hooks/useCollectionOffers';
 import { useWalletAddress } from 'hooks/useWalletAddress';
+import _ from 'lodash';
 import moment from 'moment';
-import React from 'react';
+import React, { useState } from 'react';
+import { FaSort } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 
-const OfferBook: React.FC<any> = ({ collectionOfferAmt, apr, duration, expiration }: any) => {
+const OfferBook: React.FC<any> = ({
+  collectionOfferAmt,
+  apr,
+  duration,
+  expiration,
+  newlyAddedOfferHashes,
+}: any) => {
   const { collectionAddress } = useParams();
 
   const walletAddress = useWalletAddress();
@@ -24,6 +33,44 @@ const OfferBook: React.FC<any> = ({ collectionOfferAmt, apr, duration, expiratio
       : expiration === '30_DAYS'
       ? 3600 * 24 * 30 * 1000
       : 0;
+
+  const [sortOrder, setSortOrder] = useState<string>();
+
+  const sortedOffers = !sortOrder
+    ? offers
+    : sortOrder === 'AMOUNT_ASC'
+    ? _.sortBy(offers, (o) => o.amount)
+    : sortOrder === 'AMOUNT_DESC'
+    ? _.sortBy(offers, (o) => -o.amount)
+    : sortOrder === 'APR_ASC'
+    ? _.sortBy(offers, (o) =>
+        getAPR({
+          amount: o.amount,
+          interestRatePerSecond: o.interestRatePerSecond,
+        }),
+      )
+    : sortOrder === 'APR_DESC'
+    ? _.sortBy(
+        offers,
+        (o) =>
+          -getAPR({
+            amount: o.amount,
+            interestRatePerSecond: o.interestRatePerSecond,
+          }),
+      )
+    : sortOrder === 'DURATION_ASC'
+    ? _.sortBy(offers, (o) => o.duration)
+    : sortOrder === 'DURATION_DESC'
+    ? _.sortBy(offers, (o) => -o.duration)
+    : sortOrder === 'EXPIRATION_ASC'
+    ? _.sortBy(offers, (o) => o.expiration)
+    : sortOrder === 'EXPIRATION_DESC'
+    ? _.sortBy(offers, (o) => -o.expiration)
+    : offers;
+
+  console.log('sortOrder', sortOrder);
+
+  console.log('sortedOffers', sortedOffers);
 
   return (
     <Box ml="48px">
@@ -65,10 +112,74 @@ const OfferBook: React.FC<any> = ({ collectionOfferAmt, apr, duration, expiratio
               },
             }}
           >
-            <Th>Amount</Th>
-            <Th>APR</Th>
-            <Th>Loan Duration</Th>
-            <Th minW="15rem">Offer Expires</Th>
+            <Th>
+              <Flex alignItems="center" justifyContent="center">
+                Amount{' '}
+                <span
+                  style={{ cursor: 'pointer', marginLeft: '2px' }}
+                  onClick={() => {
+                    if (sortOrder !== 'AMOUNT_ASC') {
+                      setSortOrder('AMOUNT_ASC');
+                    } else {
+                      setSortOrder('AMOUNT_DESC');
+                    }
+                  }}
+                >
+                  <FaSort size="18px" />
+                </span>
+              </Flex>
+            </Th>
+            <Th>
+              <Flex alignItems="center" justifyContent="center">
+                APR{' '}
+                <span
+                  style={{ cursor: 'pointer', marginLeft: '2px' }}
+                  onClick={() => {
+                    if (sortOrder !== 'APR_ASC') {
+                      setSortOrder('APR_ASC');
+                    } else {
+                      setSortOrder('APR_DESC');
+                    }
+                  }}
+                >
+                  <FaSort size="18px" />
+                </span>
+              </Flex>
+            </Th>
+            <Th>
+              <Flex alignItems="center" justifyContent="center">
+                Loan Duration{' '}
+                <span
+                  style={{ cursor: 'pointer', marginLeft: '2px' }}
+                  onClick={() => {
+                    if (sortOrder !== 'DURATION_ASC') {
+                      setSortOrder('DURATION_ASC');
+                    } else {
+                      setSortOrder('DURATION_DESC');
+                    }
+                  }}
+                >
+                  <FaSort size="18px" />
+                </span>
+              </Flex>
+            </Th>
+            <Th minW="15rem">
+              <Flex alignItems="center" justifyContent="center">
+                Offer Expires{' '}
+                <span
+                  style={{ cursor: 'pointer', marginLeft: '2px' }}
+                  onClick={() => {
+                    if (sortOrder !== 'EXPIRATION_ASC') {
+                      setSortOrder('EXPIRATION_ASC');
+                    } else {
+                      setSortOrder('EXPIRATION_DESC');
+                    }
+                  }}
+                >
+                  <FaSort size="18px" />
+                </span>
+              </Flex>
+            </Th>
             <Th></Th>{' '}
           </Tr>
         </Thead>
@@ -148,18 +259,25 @@ const OfferBook: React.FC<any> = ({ collectionOfferAmt, apr, duration, expiratio
             <Td></Td>
           </Tr>
 
-          {offers?.map(({ offer }: any, i: number) => (
+          {sortedOffers?.map((offer: any, i: number) => (
             <Tr
               key={i}
               sx={{
                 td: {
+                  backgroundColor: newlyAddedOfferHashes.includes(offer.offerHash)
+                    ? 'yellow.100'
+                    : 'auto',
                   border: 'none',
                   fontSize: 'md',
                   textAlign: 'center',
                 },
               }}
             >
-              <Td sx={{ position: 'relative' }}>
+              <Td
+                sx={{
+                  position: 'relative',
+                }}
+              >
                 <span style={{ whiteSpace: 'nowrap' }}>
                   {walletAddress === offer.creator && (
                     <Tag
@@ -207,6 +325,14 @@ const OfferBook: React.FC<any> = ({ collectionOfferAmt, apr, duration, expiratio
           ))}
         </Tbody>
       </Table>
+      {!sortedOffers && (
+        <Center fontSize="24px" my="2rem">
+          Loading offers{' '}
+          <Box ml="3rem">
+            <LoadingIndicator />
+          </Box>
+        </Center>
+      )}
     </Box>
   );
 };

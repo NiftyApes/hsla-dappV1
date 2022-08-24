@@ -1,6 +1,7 @@
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
+import { SECONDS_IN_YEAR } from 'helpers/getAPR';
 import { getOffersContract } from '../helpers/getContracts';
 import { saveOfferInDb } from '../helpers/saveOfferInDb';
 import { useWalletAddress } from './useWalletAddress';
@@ -58,7 +59,7 @@ export const useCreateCollectionOffer = ({
           nftContractAddress,
           // TODO make sure this is right
           interestRatePerSecond: Math.round(
-            ((aprInPercent / 100) * (amount * 1e18)) / (365 * 24 * 60 * 60),
+            ((aprInPercent / 100) * (amount * 1e18)) / SECONDS_IN_YEAR,
           ),
           nftId: 0,
           fixedTerms: true,
@@ -97,7 +98,7 @@ export const useCreateCollectionOffer = ({
           offerHash: receipt.events[1].args.offerHash,
         });
 
-        onSuccess && onSuccess();
+        onSuccess && onSuccess(receipt.events[1].args.offerHash);
       } catch (e: any) {
         if (onError) {
           onError(e);

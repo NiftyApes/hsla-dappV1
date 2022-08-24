@@ -36,6 +36,7 @@ export const useCollectionOffers = ({ nftContractAddress }: { nftContractAddress
             floorTerm: item.OfferTerms.FloorTerm,
             createdAt: item.CreatedAt,
             creator: item.Creator,
+            offerHash: item.OfferHash,
           },
           offerHash: item.OfferHash,
         };
@@ -69,5 +70,5 @@ export const useCollectionOffers = ({ nftContractAddress }: { nftContractAddress
     return undefined;
   }
 
-  return _.sortBy(offers, (o) => -o.offer.createdAt);
+  return _.sortBy(offers, (o) => -o.offer.createdAt).map((o) => o.offer);
 };

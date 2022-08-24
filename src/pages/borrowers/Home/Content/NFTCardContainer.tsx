@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from 'react';
+import { formatEther } from '@ethersproject/units';
 import { useAppDispatch } from 'app/hooks';
 import { BigNumber, ethers } from 'ethers';
-import { formatEther } from '@ethersproject/units';
+import { useEffect } from 'react';
 
 import NFTCard from 'components/molecules/NFTCard';
-import { Contract, NFT } from 'nft/model';
 import NFTNoOfferCard from 'components/molecules/NFTNoOfferCard';
 import { fetchLoanOffersByNFT, useLoanOffersByNFT } from 'loan';
-import { NFTLoadingCard } from '../../../../components/molecules/NFTLoadingCard';
+import { Contract, NFT } from 'nft/model';
 import NFTActiveLoanCard from '../../../../components/molecules/NFTActiveLoanCard';
+import { NFTLoadingCard } from '../../../../components/molecules/NFTLoadingCard';
 import { useLoanAuction } from '../../../../hooks/useLoanAuction';
 
 interface Props {
@@ -34,7 +34,7 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
   }
 
   // TODO: Show loan offer with best terms
-  const offer = loanOffers[0];
+  const offer = loanOffers[loanOffers.length - 1];
 
   if (loanAuction && loanAuction.nftOwner !== '0x0000000000000000000000000000000000000000') {
     //Active loan card

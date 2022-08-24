@@ -9,14 +9,24 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Select,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { useCreateCollectionOffer } from 'hooks/useCreateCollectionOffer';
 import { useEasyOfferForCollection } from 'hooks/useEasyOfferForCollection';
+import { useWalletAddress } from 'hooks/useWalletAddress';
 import React, { useState } from 'react';
+import { IoMdClose } from 'react-icons/io';
+import { Link } from 'react-router-dom';
 import { EasyBtnPopover } from './EasyBtnPopover';
 
 interface CreateCollectionOfferProps {
@@ -33,7 +43,10 @@ const CreateCollectionOffer: React.FC<any> = ({
   setDuration,
   expiration,
   setExpiration,
+  addNewlyAddedOfferHash,
 }: any) => {
+  const walletAddress = useWalletAddress();
+
   const { createCollectionOffer } = useCreateCollectionOffer({ nftContractAddress });
 
   const [createCollectionOfferStatus, setCreateCollectionOfferStatus] = useState<string>('READY');
@@ -41,6 +54,10 @@ const CreateCollectionOffer: React.FC<any> = ({
   const { easyOfferAmount, easyOfferApr, easyOfferDuration } = useEasyOfferForCollection({
     nftContractAddress,
   });
+
+  console.log('easyOfferApr', easyOfferApr);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Box maxW="600px" sx={{ position: 'relative', left: '-40px', top: '-16px' }}>
@@ -69,10 +86,11 @@ const CreateCollectionOffer: React.FC<any> = ({
         <Grid gridTemplateColumns="repeat(3, minmax(0, 1fr))" my="18px" alignItems="center">
           <GridItem colSpan={2}>
             <InputGroup>
-              <InputLeftElement sx={{ top: '16px', left: '16px' }}>
+              <InputLeftElement sx={{ top: '17px', left: '16px' }}>
                 <CryptoIcon symbol="eth" size={36} />
               </InputLeftElement>
               <Input
+                type="number"
                 textAlign="right"
                 value={collectionOfferAmt}
                 onChange={(e) => setCollectionOfferAmt(e.target.value)}
@@ -123,6 +141,7 @@ const CreateCollectionOffer: React.FC<any> = ({
             </Text>
             <Box position="relative">
               <Input
+                type="number"
                 value={apr}
                 onChange={(e) => setApr(e.target.value)}
                 bg="#F9F3FF"
@@ -151,6 +170,7 @@ const CreateCollectionOffer: React.FC<any> = ({
             </Text>
             <Box position="relative">
               <Input
+                type="number"
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
                 bg="#F9F3FF"
@@ -219,11 +239,13 @@ const CreateCollectionOffer: React.FC<any> = ({
             aprInPercent: Number(apr),
             durationInDays: Number(duration),
             onPending: () => setCreateCollectionOfferStatus('PENDING'),
-            onSuccess: () => {
+            onSuccess: (offerHash: string) => {
               setCollectionOfferAmt('');
               setApr('');
               setDuration('');
               setCreateCollectionOfferStatus('SUCCESS');
+              addNewlyAddedOfferHash(offerHash);
+              onOpen();
               setTimeout(() => setCreateCollectionOfferStatus('READY'), 1000);
             },
             onError: (e: any) => {
@@ -242,6 +264,32 @@ const CreateCollectionOffer: React.FC<any> = ({
           </span>
         ) : null}
       </Button>
+      <Modal isOpen={isOpen} onClose={onClose} size="2xl">
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader borderBottom="1px solid #ccc" py="0.75rem">
+            <Flex alignItems="center" justifyContent="space-between">
+              <span></span>
+              <span style={{ color: '#777' }}>🎉 Offer Made 🎉</span>
+              <IoMdClose onClick={onClose} style={{ cursor: 'pointer' }} />
+            </Flex>
+          </ModalHeader>
+          <ModalBody fontSize="1.1rem">
+            <Text mt="0.75rem">Your offer has been made!</Text>
+            <Text mt="1.25rem" mb="5rem">
+              Go to the <strong>Dashboard</strong> to view and cancel your Offer.
+            </Text>
+          </ModalBody>
+          <ModalFooter>
+            <Box mr="1.25rem">
+              <Link to={`/lenders/${walletAddress}/dashboard`}>
+                <Button variant="neutralReverse">Dashboard</Button>
+              </Link>
+            </Box>
+            <Button onClick={onClose}>Create More Offers</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };

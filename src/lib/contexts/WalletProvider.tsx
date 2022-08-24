@@ -59,7 +59,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode | React.ReactN
 
   // Navigates to wallet url
   useLayoutEffect(() => {
-    if (walletAddress && id !== walletAddress) {
+    if (walletAddress && id?.toLowerCase() !== walletAddress.toLowerCase()) {
       navigate(walletAddress);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

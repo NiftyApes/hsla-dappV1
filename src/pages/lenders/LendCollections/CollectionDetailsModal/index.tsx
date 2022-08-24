@@ -14,9 +14,10 @@ const CollectionDetailsModal: React.FC = () => {
   const [apr, setApr] = useState<string>('');
   const [duration, setDuration] = useState<string>('');
   const [expiration, setExpiration] = useState<string>('');
+  const [newlyAddedOfferHashes, setNewlyAddedOfferHashes] = useState<string[]>([]);
 
   return (
-    <Box minW="1100px" maxW="1600px">
+    <Box minW="1120px" maxW="1600px">
       <Flex alignItems="center" justifyContent="space-between" mt="15px" px="15px" mb="40px">
         <Flex alignItems="center">
           <Text fontSize="xl" fontWeight="bold" mr="8px">
@@ -29,7 +30,7 @@ const CollectionDetailsModal: React.FC = () => {
 
       <Grid
         mt="16px"
-        gridTemplateColumns="max(1100*0.60px, min(60vw, 1600*0.60px)) 1fr"
+        gridTemplateColumns="max(1140*0.60px, min(60vw, 1600*0.60px)) 1fr"
         columnGap="8px"
         px="20px"
       >
@@ -39,6 +40,7 @@ const CollectionDetailsModal: React.FC = () => {
             apr={apr}
             duration={duration}
             expiration={expiration}
+            newlyAddedOfferHashes={newlyAddedOfferHashes}
           />
         </GridItem>
         <GridItem>
@@ -52,6 +54,9 @@ const CollectionDetailsModal: React.FC = () => {
             expiration={expiration}
             setExpiration={setExpiration}
             nftContractAddress={YourCollectibleJSON.address}
+            addNewlyAddedOfferHash={(offerHash: string) => {
+              setNewlyAddedOfferHashes([...newlyAddedOfferHashes, offerHash]);
+            }}
           />
         </GridItem>
       </Grid>
