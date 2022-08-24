@@ -1,39 +1,64 @@
-import { Flex, FlexProps, Image, Text } from '@chakra-ui/react';
 import React from 'react';
+import { Flex, FlexProps, HStack, Image, Link, Text } from '@chakra-ui/react';
+import Icon from '../../atoms/Icon';
+import { NFT } from '../../../nft';
 
 interface Props extends FlexProps {
-  collectionName: string;
-  img: string;
-  tokenName: string;
+  nft: NFT;
 }
 
-const Collateral: React.FC<Props> = ({ collectionName, tokenName, img, ...rest }) => {
+const i18n = {
+  collateralLabel: 'your collateral',
+  assetDetails: 'asset details',
+  collateralDescription: 'Your collateral will be locked in escrow over the lifespan of your loan.',
+};
+
+const Collateral: React.FC<Props> = ({ nft }) => {
+  const esNftUrl = `https://etherscan.io/token/${nft.contractAddress}?a=${nft.id}`;
+  const osNftUrl = `https://opensea.io/assets/ethereum/${nft.contractAddress}/${nft.id}`;
+
   return (
-    <Flex
-      flexDir="column"
-      alignItems="center"
-      textAlign="center"
-      bg="solid.gray3"
-      borderRadius="10px"
-      h="100%"
-      w="100%"
-      p="23px"
-      {...rest}
-    >
-      <Text color="solid.gray0" fontWeight="bold" fontSize="lg">
-        YOUR COLLATERAL
+    <>
+      <Text mt="24px" fontWeight="bold" textTransform="uppercase" fontSize="sm" color="solid.gray0">
+        {i18n.collateralLabel}
       </Text>
-      <Image src={img} w="120px" h="120px" objectFit="cover" mt="22px" borderRadius="10px" />
-      <Text fontSize="sm" mt="8px">
-        {collectionName}
+      <Image
+        src={nft.image}
+        alt={nft.name}
+        border="4px solid"
+        borderColor="solid.white"
+        borderRadius="23px"
+        w="150px"
+        h="150px"
+        objectFit="cover"
+        mt="26px"
+      />
+      <Text mt="8px" fontSize="sm" color="solid.black">
+        {nft.name}
       </Text>
-      <Text fontWeight="bold" fontSize="2xl" mt="1px">
-        {tokenName}
+      <Text mt="1px" fontSize="2xl" color="solid.black" fontWeight="bold" lineHeight="28px">
+        #{nft.id}
       </Text>
-      <Text maxW="170px" fontSize="sm">
-        Your collateral will be locked in escrow over the lifespan of your loan.
+      <Text mt="27px" color="solid.gray0" textTransform="uppercase" fontSize="2xs">
+        {i18n.assetDetails}
       </Text>
-    </Flex>
+      <Flex alignItems="center" mt="10px">
+        <HStack>
+          <Text noOfLines={1} width="100px">
+            {nft.contractAddress}
+          </Text>
+          <Link isExternal href={esNftUrl}>
+            <Icon name="etherscan" />
+          </Link>
+          <Link isExternal href={osNftUrl}>
+            <Icon name="os" />
+          </Link>
+        </HStack>
+      </Flex>
+      <Text mt="10px" fontSize="sm" mb="19px">
+        {i18n.collateralDescription}
+      </Text>
+    </>
   );
 };
 
