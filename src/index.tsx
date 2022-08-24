@@ -1,5 +1,3 @@
-import { StrictMode } from 'react';
-
 import * as serviceWorker from './serviceWorker';
 import reportWebVitals from './reportWebVitals';
 import theme from 'theme';
@@ -12,12 +10,12 @@ import { store } from './app/store';
 const container: HTMLElement | any = document.getElementById('root');
 const root = createRoot(container);
 root.render(
-  <StrictMode>
+  <>
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />
     <Provider store={store}>
       <App />
     </Provider>
-  </StrictMode>,
+  </>,
 );
 
 // If you want your app to work offline and load faster, you can change
