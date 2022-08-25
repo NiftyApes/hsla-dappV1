@@ -1,13 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
 import { useAppDispatch } from 'app/hooks';
-import { BigNumber, ethers } from 'ethers';
 import { formatEther } from '@ethersproject/units';
 
 import NFTCard from 'components/molecules/NFTCard';
 import { Contract, NFT } from 'nft/model';
 import NFTNoOfferCard from 'components/molecules/NFTNoOfferCard';
-import { fetchLoanOffersByNFT, LoanOffer, useLoanOffersByNFT } from 'loan';
+import { fetchLoanOffersByNFT, useLoanOffersByNFT } from 'loan';
 import { NFTLoadingCard } from '../../../../components/molecules/NFTLoadingCard';
 import NFTActiveLoanCard from '../../../../components/molecules/NFTActiveLoanCard';
 import { useLoanAuction } from '../../../../hooks/useLoanAuction';
@@ -39,6 +38,7 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
       <NFTActiveLoanCard
         contract={contract}
         key={item.id}
+        nft={item}
         collectionName=""
         tokenName={`${item.name}`}
         tokenId={`${item.id}`}

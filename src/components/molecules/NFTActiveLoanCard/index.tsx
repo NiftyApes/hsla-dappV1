@@ -1,5 +1,16 @@
 import React from 'react';
-import { Box, Button, Center, Flex, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { Contract } from 'ethers';
@@ -8,6 +19,9 @@ import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
 import { NFTCardHeader } from '../NFTCard/components/NFTCardHeader';
 import { useRepayLoanByBorrower } from '../../../hooks/useRepayLoan';
 import moment from 'moment';
+import { NFT } from '../../../nft';
+import { CollateralHeader } from '../CollateralHeader';
+import Offers from '../../../pages/borrowers/Offers';
 
 interface Loan {
   amount: string;
@@ -26,6 +40,7 @@ interface Props {
   tokenId: string;
   img: string;
   loan: Loan;
+  nft: NFT;
   tokenName: string;
 }
 
@@ -43,6 +58,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({
   contract,
   img,
   loan,
+  nft,
   tokenId,
   tokenName,
 }) => {
@@ -51,18 +67,25 @@ const NFTActiveLoanCard: React.FC<Props> = ({
     nftId: tokenId,
   });
 
+  const {
+    isOpen: isRepayLoanOpen,
+    onOpen: onRepayLoanOpen,
+    onClose: onRepayLoanClose,
+  } = useDisclosure();
+
   // TODO: Extract this into the utils common method
   const secondsInDay = 86400;
   const secondsInYear = 3.154e7;
+
   const apr = Math.round(((loan.interestRatePerSecond * secondsInYear) / loan.amountEth) * 100);
   const duration = Math.round((loan.loanEndTimestamp - loan.loanBeginTimestamp) / secondsInDay);
   const timeRemaining = moment(loan.loanEndTimestamp * 1000).toNow(true);
 
   // TODO: Wire me in
   const onRepayLoan = async () => {
-    if (repayLoanByBorrower) {
-      await repayLoanByBorrower();
-    }
+    // if (repayLoanByBorrower) {
+    //   await repayLoanByBorrower();
+    // }
   };
 
   return (
@@ -126,6 +149,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({
             textTransform="uppercase"
             variant="solid"
             w="100%"
+            onClick={onRepayLoanOpen}
           >
             {i18n.actionButtonText}
           </Button>
@@ -133,6 +157,16 @@ const NFTActiveLoanCard: React.FC<Props> = ({
           <Center mt="8px" mb="8px">
             {i18n.actionButtonHelperText}
           </Center>
+
+          {isRepayLoanOpen && (
+            <Modal isOpen={true} onClose={onRepayLoanClose} size="xl">
+              <ModalOverlay />
+              <ModalContent p="5px">
+                <CollateralHeader title={'REPLAY'} nft={nft} />
+                <ModalCloseButton />
+              </ModalContent>
+            </Modal>
+          )}
         </>
       </NFTCardHeader>
     </NFTCardContainer>

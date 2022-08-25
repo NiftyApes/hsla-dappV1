@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Flex, Grid, HStack, Image, Link, Text, useToast } from '@chakra-ui/react';
+import { Box, Button, Flex, Grid, Text, useToast } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { useNiftyApesContractAddress } from '../../../hooks/useNiftyApesContractAddress';
@@ -10,7 +10,6 @@ import LoadingIndicator from '../../atoms/LoadingIndicator';
 import { humanizeContractError } from '../../../helpers/errorsMap';
 import { LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
-import Collateral from '../Collateral';
 
 interface Props {
   contract?: Contract;
