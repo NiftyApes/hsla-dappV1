@@ -1,5 +1,5 @@
 import { getJson } from 'helpers';
-import { NFT, Contract, LendingContract, nft } from '../nft/model';
+import { Contract, LendingContract, NFT, nft } from '../nft/model';
 
 interface Props {
   walletAddress: string;
@@ -15,6 +15,8 @@ export const getNFTsOfAddress = async ({
   if (!walletAddress || !contract || !contract.address) {
     return undefined;
   }
+
+  console.log('contract.address', contract.address);
 
   const totalSupplyNumber = (await contract.totalSupply()).toNumber();
   const results = [];
