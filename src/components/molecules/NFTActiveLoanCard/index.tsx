@@ -23,6 +23,7 @@ import { NFTCardHeader } from '../NFTCard/components/NFTCardHeader';
 import { CollateralHeader } from '../CollateralHeader';
 import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
 import { formatEther } from 'ethers/lib/utils';
+import { getAPR } from '../../../helpers/getAPR';
 
 interface Props {
   loan: LoanAuction;
@@ -45,13 +46,11 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
     onClose: onRepayLoanClose,
   } = useDisclosure();
 
-  // TODO: Extract this into the utils common method
-  const secondsInDay = 86400;
-  const secondsInYear = 3.154e7;
+  const { amount, interestRatePerSecond, loanBeginTimestamp, loanEndTimestamp } = loan;
 
-  const apr = Math.round(((loan.interestRatePerSecond * secondsInYear) / loan.amount) * 100);
-  const duration = Math.round((loan.loanEndTimestamp - loan.loanBeginTimestamp) / secondsInDay);
-  const timeRemaining = moment(loan.loanEndTimestamp * 1000).toNow(true);
+  const apr = getAPR({ amount, interestRatePerSecond });
+  const duration = Math.round((loanEndTimestamp - loanBeginTimestamp) / 86400);
+  const timeRemaining = moment(loanEndTimestamp * 1000).toNow(true);
 
   return (
     <NFTCardContainer>

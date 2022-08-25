@@ -10,6 +10,8 @@ import { humanizeContractError } from '../../../helpers/errorsMap';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
 import { useCalculateInterestAccrued } from '../../../hooks/useCalculateInterestAccrued';
 import { BigNumber } from 'ethers';
+import moment from 'moment';
+import { getAPR } from '../../../helpers/getAPR';
 
 interface Props {
   loan: LoanAuction;
@@ -20,6 +22,10 @@ const i18n = {
   toastSuccess: 'Loan repaid successfully',
   actionButton: 'repay loan',
   paymentType: 'max payment',
+  loanTimeRemaining: (distance: string) => `Time remaining: ${distance}`,
+  loanApr: (val: number) => `Loan APR: ${val}% APR`,
+  loanInterest: (val: string) => `Total interest ${val}Ξ`,
+  loanBorrowed: (val: string) => `Total borrowed ${val}Ξ`,
 };
 
 const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
@@ -32,13 +38,19 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
     nftId: nft.id,
   });
 
-  const loanAmount: BigNumber = BigNumber.from(loan.amount);
+  const { amount, interestRatePerSecond, loanEndTimestamp } = loan;
+
+  const loanAmount: BigNumber = BigNumber.from(amount);
   const totalAccruedInterest: BigNumber = accruedInterest
     ? accruedInterest[0].add(accruedInterest[1])
     : BigNumber.from(0);
+
   // Additional 20 minutes worth of interest
-  const padding: BigNumber = BigNumber.from(loan.interestRatePerSecond * 1200);
+  const padding: BigNumber = BigNumber.from(interestRatePerSecond * 1200);
   const totalOwed: BigNumber = loanAmount.add(totalAccruedInterest).add(padding);
+  const apr = getAPR({ amount, interestRatePerSecond });
+
+  const timeRemaining = moment(loanEndTimestamp * 1000).toNow(true);
 
   const { repayLoanByBorrower } = useRepayLoanByBorrower({
     nftContractAddress: nft.contractAddress,
@@ -78,6 +90,11 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
         <Text fontSize="md" color="solid.gray0">
           Repay the full loan amount to unlock your asset
         </Text>
+        <Text>{i18n.loanTimeRemaining(timeRemaining)}</Text>
+        <Text>{i18n.loanApr(apr)}</Text>
+        <Text>{i18n.loanBorrowed(formatEther(amount))}</Text>
+        <Text>{i18n.loanInterest(formatEther(totalAccruedInterest))}</Text>
+
         <Flex
           width="100%"
           flexDir="column"
@@ -93,7 +110,7 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
               <Text ml="4px" mr="14px" color="solid.gray0" fontWeight="bold">
                 ETH
               </Text>
-              <Text fontSize="3.5xl">{formatEther(loan.amount)}Ξ</Text>
+              <Text fontSize="3.5xl">{formatEther(totalOwed)}Ξ</Text>
             </Flex>
             <Text fontSize="sm" color="solid.gray0" textTransform="uppercase">
               {i18n.paymentType}
