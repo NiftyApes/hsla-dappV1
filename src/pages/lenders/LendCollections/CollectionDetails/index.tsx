@@ -13,7 +13,7 @@ const CollectionDetailsModal: React.FC = () => {
   const [collectionOfferAmt, setCollectionOfferAmt] = useState<string>('');
   const [apr, setApr] = useState<string>('');
   const [duration, setDuration] = useState<string>('');
-  const [expiration, setExpiration] = useState<string>('');
+  const [expiration, setExpiration] = useState<string>('1_DAY');
   const [newlyAddedOfferHashes, setNewlyAddedOfferHashes] = useState<string[]>([]);
 
   return (
@@ -27,7 +27,6 @@ const CollectionDetailsModal: React.FC = () => {
           <Icon name="os" size={25} />
         </Flex>
       </Flex>
-
       <Grid
         mt="16px"
         gridTemplateColumns="max(1140*0.60px, min(60vw, 1600*0.60px)) 1fr"
