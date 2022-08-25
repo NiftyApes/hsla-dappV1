@@ -12,36 +12,21 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
+import moment from 'moment';
+import { NFT } from '../../../nft';
+import { LoanAuction } from '../../../loan';
+
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import { Contract } from 'ethers';
 
 import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
 import { NFTCardHeader } from '../NFTCard/components/NFTCardHeader';
-import { useRepayLoanByBorrower } from '../../../hooks/useRepayLoan';
-import moment from 'moment';
-import { NFT } from '../../../nft';
 import { CollateralHeader } from '../CollateralHeader';
-import Offers from '../../../pages/borrowers/Offers';
-
-interface Loan {
-  amount: string;
-  amountEth: number;
-  amountDrawn: string;
-  interestRatePerSecond: number;
-  lenderInterest: string;
-  loanBeginTimestamp: number;
-  loanEndTimestamp: number;
-  protocolInterest: string;
-}
+import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
+import { formatEther } from 'ethers/lib/utils';
 
 interface Props {
-  collectionName: string;
-  contract?: Contract;
-  tokenId: string;
-  img: string;
-  loan: Loan;
+  loan: LoanAuction;
   nft: NFT;
-  tokenName: string;
 }
 
 const i18n = {
@@ -53,20 +38,7 @@ const i18n = {
   loanTimeRemaining: (distance: string) => `${distance} remaining...`,
 };
 
-const NFTActiveLoanCard: React.FC<Props> = ({
-  collectionName,
-  contract,
-  img,
-  loan,
-  nft,
-  tokenId,
-  tokenName,
-}) => {
-  const { repayLoanByBorrower } = useRepayLoanByBorrower({
-    nftContractAddress: contract?.address,
-    nftId: tokenId,
-  });
-
+const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
   const {
     isOpen: isRepayLoanOpen,
     onOpen: onRepayLoanOpen,
@@ -77,25 +49,13 @@ const NFTActiveLoanCard: React.FC<Props> = ({
   const secondsInDay = 86400;
   const secondsInYear = 3.154e7;
 
-  const apr = Math.round(((loan.interestRatePerSecond * secondsInYear) / loan.amountEth) * 100);
+  const apr = Math.round(((loan.interestRatePerSecond * secondsInYear) / loan.amount) * 100);
   const duration = Math.round((loan.loanEndTimestamp - loan.loanBeginTimestamp) / secondsInDay);
   const timeRemaining = moment(loan.loanEndTimestamp * 1000).toNow(true);
 
-  // TODO: Wire me in
-  const onRepayLoan = async () => {
-    // if (repayLoanByBorrower) {
-    //   await repayLoanByBorrower();
-    // }
-  };
-
   return (
     <NFTCardContainer>
-      <NFTCardHeader
-        img={img}
-        tokenId={tokenId}
-        tokenName={tokenName}
-        collectionName={collectionName}
-      >
+      <NFTCardHeader img={nft.image} tokenId={nft.id} tokenName={nft.name} collectionName={''}>
         <>
           <Flex
             flexDir="column"
@@ -124,7 +84,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({
             <Flex alignItems="center">
               <CryptoIcon symbol={'eth'} size={25} />
               <Text ml="6px" fontSize="3.5xl" fontWeight="bold">
-                {loan.amount}Ξ
+                {formatEther(loan.amount)}Ξ
               </Text>
             </Flex>
 
@@ -162,7 +122,8 @@ const NFTActiveLoanCard: React.FC<Props> = ({
             <Modal isOpen={true} onClose={onRepayLoanClose} size="xl">
               <ModalOverlay />
               <ModalContent p="5px">
-                <CollateralHeader title={'REPLAY'} nft={nft} />
+                <CollateralHeader title={'REPAY LOAN ON'} nft={nft} />
+                <BorrowLoanRepayCard loan={loan} nft={nft} />
                 <ModalCloseButton />
               </ModalContent>
             </Modal>

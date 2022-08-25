@@ -1,17 +1,16 @@
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
-import { ethers } from 'ethers';
 import { useLendingContract } from './useContracts';
-
-// TODO: Replace with dynamic value
-const TEST_ETH_AMOUNT = '2.0';
+import { BigNumber } from 'ethers';
 
 export const useRepayLoanByBorrower = ({
   nftContractAddress,
   nftId,
+  amount,
 }: {
   nftContractAddress?: string;
   nftId: string;
+  amount: BigNumber;
 }) => {
   const niftyApesContract = useLendingContract();
 
@@ -29,7 +28,7 @@ export const useRepayLoanByBorrower = ({
         throw new Error('NFT Contract Address not specified');
       }
       const tx = await niftyApesContract.repayLoan(nftContractAddress, nftId, {
-        value: ethers.utils.parseEther(TEST_ETH_AMOUNT),
+        value: amount,
       });
 
       await tx.wait();

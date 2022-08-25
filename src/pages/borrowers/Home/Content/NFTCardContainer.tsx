@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from 'react';
 import { useAppDispatch } from 'app/hooks';
-import { formatEther } from '@ethersproject/units';
 
 import NFTCard from 'components/molecules/NFTCard';
 import { Contract, NFT } from 'nft/model';
@@ -32,29 +31,9 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
     return <NFTLoadingCard />;
   }
 
+  //Active loan card
   if (loanAuction && loanAuction.nftOwner !== '0x0000000000000000000000000000000000000000') {
-    //Active loan card
-    return (
-      <NFTActiveLoanCard
-        contract={contract}
-        key={item.id}
-        nft={item}
-        collectionName=""
-        tokenName={`${item.name}`}
-        tokenId={`${item.id}`}
-        loan={{
-          amountEth: loanAuction?.amount,
-          amount: formatEther(loanAuction?.amount),
-          amountDrawn: formatEther(loanAuction?.amountDrawn),
-          interestRatePerSecond: loanAuction?.interestRatePerSecond,
-          lenderInterest: formatEther(loanAuction?.accumulatedLenderInterest),
-          loanBeginTimestamp: loanAuction?.loanBeginTimestamp,
-          loanEndTimestamp: loanAuction?.loanEndTimestamp,
-          protocolInterest: formatEther(loanAuction?.accumulatedProtocolInterest),
-        }}
-        img={item.image}
-      />
-    );
+    return <NFTActiveLoanCard key={item.id} nft={item} loan={loanAuction} />;
   }
 
   if (loanOffers.length === 0) {
