@@ -16,7 +16,7 @@ const LendCollections = lazy(() => import('../pages/lenders/LendCollections'));
 const Liquidity = lazy(() => import('../pages/lenders/Liquidity'));
 const Offers = lazy(() => import('../pages/lenders/Offers'));
 const CollectionDetailsModal = lazy(
-  () => import('../pages/lenders/LendCollections/CollectionDetailsModal'),
+  () => import('../pages/lenders/LendCollections/CollectionDetails'),
 );
 
 const Lenders = (
