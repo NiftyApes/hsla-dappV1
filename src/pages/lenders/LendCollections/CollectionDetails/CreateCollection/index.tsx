@@ -27,7 +27,7 @@ import { useWalletAddress } from 'hooks/useWalletAddress';
 import React, { useState } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { Link } from 'react-router-dom';
-import { EasyBtnPopover } from './EasyBtnPopover';
+import { EasyBtnPopover } from '../EasyBtnPopover';
 
 interface CreateCollectionOfferProps {
   nftContractAddress: string;

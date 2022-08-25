@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Icon from 'components/atoms/Icon';
 import { useParams } from 'react-router-dom';
 import YourCollectibleJSON from '../../../../generated/deployments/localhost/YourCollectible.json';
-import CreateCollectionOffer from './CreateCollectionOffer';
+import CreateCollectionOffer from './CreateCollection';
 import OfferBook from './OfferBook';
 
 const CollectionDetailsModal: React.FC = () => {
