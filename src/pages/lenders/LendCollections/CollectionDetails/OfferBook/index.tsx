@@ -112,37 +112,39 @@ const OfferBook: React.FC<any> = ({
 
   const [sortOrder, setSortOrder] = useState<string>('APR_ASC');
 
-  const sortedOffers: any = !sortOrder
-    ? offers
-    : sortOrder === 'AMOUNT_ASC'
-    ? _.sortBy(offers, (o) => o.amount)
-    : sortOrder === 'AMOUNT_DESC'
-    ? _.sortBy(offers, (o) => -o.amount)
-    : sortOrder === 'APR_ASC'
-    ? _.sortBy(offers, (o) =>
-        getAPR({
-          amount: o.amount,
-          interestRatePerSecond: o.interestRatePerSecond,
-        }),
-      )
-    : sortOrder === 'APR_DESC'
-    ? _.sortBy(
-        offers,
-        (o) =>
-          -getAPR({
+  const sortedOffers: any =
+    offers &&
+    (!sortOrder
+      ? offers
+      : sortOrder === 'AMOUNT_ASC'
+      ? _.sortBy(offers, (o) => o.amount)
+      : sortOrder === 'AMOUNT_DESC'
+      ? _.sortBy(offers, (o) => -o.amount)
+      : sortOrder === 'APR_ASC'
+      ? _.sortBy(offers, (o) =>
+          getAPR({
             amount: o.amount,
             interestRatePerSecond: o.interestRatePerSecond,
           }),
-      )
-    : sortOrder === 'DURATION_ASC'
-    ? _.sortBy(offers, (o) => o.duration)
-    : sortOrder === 'DURATION_DESC'
-    ? _.sortBy(offers, (o) => -o.duration)
-    : sortOrder === 'EXPIRATION_ASC'
-    ? _.sortBy(offers, (o) => o.expiration)
-    : sortOrder === 'EXPIRATION_DESC'
-    ? _.sortBy(offers, (o) => -o.expiration)
-    : offers;
+        )
+      : sortOrder === 'APR_DESC'
+      ? _.sortBy(
+          offers,
+          (o) =>
+            -getAPR({
+              amount: o.amount,
+              interestRatePerSecond: o.interestRatePerSecond,
+            }),
+        )
+      : sortOrder === 'DURATION_ASC'
+      ? _.sortBy(offers, (o) => o.duration)
+      : sortOrder === 'DURATION_DESC'
+      ? _.sortBy(offers, (o) => -o.duration)
+      : sortOrder === 'EXPIRATION_ASC'
+      ? _.sortBy(offers, (o) => o.expiration)
+      : sortOrder === 'EXPIRATION_DESC'
+      ? _.sortBy(offers, (o) => -o.expiration)
+      : offers);
 
   const sortDraftOfferIndex =
     sortedOffers &&
@@ -321,7 +323,7 @@ const OfferBook: React.FC<any> = ({
         </Thead>
         <Tbody
           sx={
-            !sortedOffers.includes('DRAFT_OFFER')
+            !sortedOffers?.includes('DRAFT_OFFER')
               ? {
                   'tr:nth-child(2n)': {
                     backgroundColor: 'solid.white',
