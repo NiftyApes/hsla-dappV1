@@ -11,15 +11,15 @@
 
 import { Signer, utils } from 'ethers';
 
-import '@typechain/hardhat';
-import '@nomiclabs/hardhat-waffle';
 import '@nomiclabs/hardhat-ethers';
+import '@nomiclabs/hardhat-waffle';
 import '@tenderly/hardhat-tenderly';
+import '@typechain/hardhat';
 import 'hardhat-deploy';
 import 'solidity-coverage';
 
-import * as fs from 'fs';
 import * as chalk from 'chalk';
+import * as fs from 'fs';
 
 import { Provider, TransactionRequest, TransactionResponse } from '@ethersproject/providers';
 import { create } from 'ipfs-http-client';
@@ -28,9 +28,9 @@ import { HardhatUserConfig, task } from 'hardhat/config';
 import { HttpNetworkUserConfig } from 'hardhat/types';
 import { THardhatDeployEthers } from './helpers/types/hardhat-type-extensions';
 
+import { btoa } from 'buffer';
 import { config as envConfig } from 'dotenv';
 import { saveOfferInDb } from './helpers/saveOfferInDb';
-import { btoa } from 'buffer';
 
 envConfig({ path: '../vite-app-ts/.env' });
 envConfig({ path: '.env' });
@@ -86,7 +86,7 @@ const config: HardhatUserConfig = {
       chainId: 31337,
       forking: {
         url: `https://eth-mainnet.alchemyapi.io/v2/Of3Km_--Ow1fNnMhaETmwnmWBFFHF3ZY`,
-        blockNumber: 14724006,
+        //blockNumber: 14724006,
       },
       mining: {
         auto: false,

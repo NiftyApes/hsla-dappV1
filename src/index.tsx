@@ -1,11 +1,11 @@
-import * as serviceWorker from './serviceWorker';
-import reportWebVitals from './reportWebVitals';
+import { ColorModeScript } from '@chakra-ui/react';
+import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
 import theme from 'theme';
 import { App } from './App';
-import { ColorModeScript } from '@chakra-ui/react';
-import { Provider } from 'react-redux';
-import { createRoot } from 'react-dom/client';
 import { store } from './app/store';
+import reportWebVitals from './reportWebVitals';
+import * as serviceWorker from './serviceWorker';
 
 const container: HTMLElement | any = document.getElementById('root');
 const root = createRoot(container);

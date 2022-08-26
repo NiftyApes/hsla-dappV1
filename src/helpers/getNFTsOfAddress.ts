@@ -1,5 +1,5 @@
 import { getJson } from 'helpers';
-import { NFT, Contract, LendingContract, nft } from '../nft/model';
+import { Contract, LendingContract, NFT, nft } from '../nft/model';
 
 interface Props {
   walletAddress: string;

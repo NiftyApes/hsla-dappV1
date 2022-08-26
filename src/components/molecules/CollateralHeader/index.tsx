@@ -19,7 +19,7 @@ export const CollateralHeader: React.FC<{ title: string; nft: NFT }> = (props) =
         src={nft.image}
       />
       <Flex m="15px 0 0 10px" fontSize="md" textTransform="uppercase" fontWeight="bold">
-        <Text color="solid.gray0" mr="3px">
+        <Text color="solid.gray0" mr="5px">
           {title}
         </Text>
         <Text color="solid.black">

@@ -23,6 +23,7 @@ import Offers from '../../../pages/borrowers/Offers';
 import { NFT } from '../../../nft';
 import { getBestLoanOffer, LoanOffer } from '../../../loan';
 import { CollateralHeader } from '../CollateralHeader';
+import { roundForDisplay } from '../../../helpers/roundForDisplay';
 
 interface Props {
   contract?: Contract;
@@ -32,7 +33,7 @@ interface Props {
 
 const i18n = {
   initLoanButtonLabel: 'initiate loan',
-  offerApr: (apr: number) => `${Math.round(apr)}% APR`,
+  offerApr: (apr: number) => `${roundForDisplay(apr)}% APR`,
   offerDuration: (duration: number) => `${duration} days`,
   offerLabel: (type: string) => `${type} offer`,
   viewAllOffers: (count: number) => `View All Offers (${formatNumber(count)})`,

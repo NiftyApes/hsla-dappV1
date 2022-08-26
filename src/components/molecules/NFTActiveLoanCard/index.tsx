@@ -24,6 +24,7 @@ import { CollateralHeader } from '../CollateralHeader';
 import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
 import { formatEther } from 'ethers/lib/utils';
 import { getAPR } from '../../../helpers/getAPR';
+import { roundForDisplay } from '../../../helpers/roundForDisplay';
 
 interface Props {
   loan: LoanAuction;
@@ -33,6 +34,7 @@ interface Props {
 const i18n = {
   actionButtonHelperText: 'What does this mean?',
   actionButtonText: 'repay loan',
+  repayLoanHeader: 'repay loan on ',
   loanApr: (apr: number) => `${apr}% APR`,
   loanDuration: (duration: number) => `${duration} days`,
   loanStatus: 'active loan',
@@ -48,7 +50,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
 
   const { amount, interestRatePerSecond, loanBeginTimestamp, loanEndTimestamp } = loan;
 
-  const apr = getAPR({ amount, interestRatePerSecond });
+  const apr = roundForDisplay(getAPR({ amount, interestRatePerSecond }));
   const duration = Math.round((loanEndTimestamp - loanBeginTimestamp) / 86400);
   const timeRemaining = moment(loanEndTimestamp * 1000).toNow(true);
 
@@ -121,7 +123,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
             <Modal isOpen={true} onClose={onRepayLoanClose} size="xl">
               <ModalOverlay />
               <ModalContent p="5px">
-                <CollateralHeader title={'REPAY LOAN ON'} nft={nft} />
+                <CollateralHeader title={i18n.repayLoanHeader} nft={nft} />
                 <BorrowLoanRepayCard loan={loan} nft={nft} />
                 <ModalCloseButton />
               </ModalContent>

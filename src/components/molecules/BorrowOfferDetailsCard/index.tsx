@@ -10,6 +10,7 @@ import LoadingIndicator from '../../atoms/LoadingIndicator';
 import { humanizeContractError } from '../../../helpers/errorsMap';
 import { LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
+import { roundForDisplay } from '../../../helpers/roundForDisplay';
 
 interface Props {
   contract?: Contract;
@@ -28,7 +29,8 @@ const i18n = {
     )} ${offer.symbol} for ${offer.durationDays} days`,
   dealTermsLabel: 'deal terms',
   liquidityAwaits: 'Liquidity Awaits',
-  offerTerms: (offer: LoanOffer) => `${offer.durationDays} days at ${offer.aprPercentage}% APR`,
+  offerTerms: (offer: LoanOffer) =>
+    `${offer.durationDays} days at ${roundForDisplay(offer.aprPercentage)}% APR`,
   toastApproveTransferError: 'Unable to approve NFT transfer',
   toastApproveTransferSuccess: 'NFT Transfer approved',
   toastLoanSuccess: 'Loan executed successfully',

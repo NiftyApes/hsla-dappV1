@@ -1,8 +1,11 @@
-import React from 'react';
-import { Box, Flex, Grid, Image, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+// Currently not used or hooked up to real data
+// Keeping in here as reference after we've implemented fetching collection stats
 
-import Icon from 'components/atoms/Icon';
+import { Box, Flex, Grid, Image, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import React from 'react';
+
 import CryptoIcon from 'components/atoms/CryptoIcon';
+import Icon from 'components/atoms/Icon';
 
 const MarketData: React.FC = () => {
   return (
