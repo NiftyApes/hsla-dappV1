@@ -6,14 +6,14 @@ interface DraftOfferProps {
   collectionOfferAmt: number;
   apr: number;
   duration: number;
-  expirationInSeconds: number;
+  expirationInMilliseconds: number;
 }
 
 export const DraftOffer: React.FC<DraftOfferProps> = ({
   collectionOfferAmt,
   apr,
   duration,
-  expirationInSeconds,
+  expirationInMilliseconds,
 }) => (
   <>
     <Tr
@@ -83,7 +83,7 @@ Pretty clearly not worth spending a day or so on this
         </Text>
       </Td>
       <Td>
-        <Text>{moment(expirationInSeconds + Date.now()).format('h:mma, MMM D YYYY')}</Text>
+        <Text>{moment(expirationInMilliseconds + Date.now()).format('h:mma, MMM D YYYY')}</Text>
       </Td>
       <Td></Td>
     </Tr>

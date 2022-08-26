@@ -34,7 +34,7 @@ const OfferBook: React.FC<OfferBook> = ({
 
   const offers = useCollectionOffers({ nftContractAddress: collectionAddress });
 
-  const expirationInSeconds =
+  const expirationInMilliseconds =
     expiration === '1_DAY'
       ? 3600 * 24 * 1000
       : expiration === '7_DAYS'
@@ -87,7 +87,7 @@ const OfferBook: React.FC<OfferBook> = ({
         amount: collectionOfferAmt,
         apr,
         duration: Number(duration) * 3600 * 24,
-        expiration: expirationInSeconds,
+        expiration: expirationInMilliseconds,
       },
       (o: any) => {
         return sortOrder === 'AMOUNT_ASC'
@@ -134,7 +134,7 @@ const OfferBook: React.FC<OfferBook> = ({
     collectionOfferAmt &&
     apr &&
     duration &&
-    expirationInSeconds
+    expirationInMilliseconds
   ) {
     sortedOffers.splice(sortDraftOfferIndex, 0, 'DRAFT_OFFER');
   }
@@ -271,7 +271,7 @@ const OfferBook: React.FC<OfferBook> = ({
                 collectionOfferAmt={Number(collectionOfferAmt)}
                 apr={Number(apr)}
                 duration={Number(duration)}
-                expirationInSeconds={expirationInSeconds}
+                expirationInMilliseconds={expirationInMilliseconds}
               />
             ) : (
               <Tr
