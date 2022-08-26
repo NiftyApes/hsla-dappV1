@@ -48,6 +48,7 @@ export const useCollectionOffers = ({ nftContractAddress }: { nftContractAddress
         const offerFromChain = await getLoanOfferFromHash({
           offersContract: niftyApesContract,
           nftContractAddress,
+          // all collection offers have nftId 0
           nftId: '0',
           offerHash,
           floorTerm: processedOffers[i].offer.floorTerm,
