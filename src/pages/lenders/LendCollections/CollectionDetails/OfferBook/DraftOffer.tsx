@@ -9,12 +9,12 @@ interface DraftOfferProps {
   expirationInSeconds: number;
 }
 
-export const DraftOffer = ({
+export const DraftOffer: React.FC<DraftOfferProps> = ({
   collectionOfferAmt,
   apr,
   duration,
   expirationInSeconds,
-}: DraftOfferProps) => (
+}) => (
   <>
     <Tr
       sx={{

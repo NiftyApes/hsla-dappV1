@@ -15,11 +15,15 @@ import React from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { Link } from 'react-router-dom';
 
-interface CreateCollectionOfferProps {
-  nftContractAddress: string;
+interface SuccessfulOrderCreationModalProps {
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-export const SuccessfulOrderCreationModal: React.FC<any> = ({ isOpen, onOpen, onClose }: any) => {
+export const SuccessfulOrderCreationModal: React.FC<SuccessfulOrderCreationModalProps> = ({
+  isOpen,
+  onClose,
+}) => {
   const walletAddress = useWalletAddress();
 
   return (

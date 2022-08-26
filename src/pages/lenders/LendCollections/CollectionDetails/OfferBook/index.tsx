@@ -21,13 +21,13 @@ interface OfferBook {
   newlyAddedOfferHashes: string[];
 }
 
-const OfferBook: React.FC<any> = ({
+const OfferBook: React.FC<OfferBook> = ({
   collectionOfferAmt,
   apr,
   duration,
   expiration,
   newlyAddedOfferHashes,
-}: any) => {
+}) => {
   const { collectionAddress } = useParams();
 
   const walletAddress = useWalletAddress();
@@ -86,7 +86,7 @@ const OfferBook: React.FC<any> = ({
       {
         amount: collectionOfferAmt,
         apr,
-        duration: duration * 3600 * 24,
+        duration: Number(duration) * 3600 * 24,
         expiration: expirationInSeconds,
       },
       (o: any) => {
@@ -268,9 +268,9 @@ const OfferBook: React.FC<any> = ({
             offer === 'DRAFT_OFFER' ? (
               <DraftOffer
                 key={i}
-                collectionOfferAmt={collectionOfferAmt}
-                apr={apr}
-                duration={duration}
+                collectionOfferAmt={Number(collectionOfferAmt)}
+                apr={Number(apr)}
+                duration={Number(duration)}
                 expirationInSeconds={expirationInSeconds}
               />
             ) : (

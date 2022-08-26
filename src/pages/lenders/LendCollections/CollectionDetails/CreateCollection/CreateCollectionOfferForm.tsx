@@ -25,11 +25,21 @@ import _ from 'lodash';
 import React, { useState } from 'react';
 import { EasyBtnPopover } from './EasyBtnPopover';
 
-interface CreateCollectionOfferProps {
+interface CreateCollectionOfferFormProps {
   nftContractAddress: string;
+  collectionOfferAmt: string;
+  setCollectionOfferAmt: React.Dispatch<React.SetStateAction<string>>;
+  apr: string;
+  setApr: React.Dispatch<React.SetStateAction<string>>;
+  duration: string;
+  setDuration: React.Dispatch<React.SetStateAction<string>>;
+  expiration: string;
+  setExpiration: React.Dispatch<React.SetStateAction<string>>;
+  addNewlyAddedOfferHash: (offerHash: string) => void;
+  openSuccessfulOrderCreationModal: () => void;
 }
 
-export const CreateCollectionOfferForm: React.FC<any> = ({
+export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps> = ({
   nftContractAddress,
   collectionOfferAmt,
   setCollectionOfferAmt,
@@ -41,7 +51,7 @@ export const CreateCollectionOfferForm: React.FC<any> = ({
   setExpiration,
   addNewlyAddedOfferHash,
   openSuccessfulOrderCreationModal,
-}: any) => {
+}) => {
   const { createCollectionOffer } = useCreateCollectionOffer({ nftContractAddress });
 
   const [createCollectionOfferStatus, setCreateCollectionOfferStatus] = useState<string>('READY');
@@ -53,7 +63,7 @@ export const CreateCollectionOfferForm: React.FC<any> = ({
   const { availableEthLiquidity } = useAvailableEthLiquidity();
 
   const doesOfferAmountExceedAvailableLiquidity =
-    !_.isNil(availableEthLiquidity) && collectionOfferAmt > availableEthLiquidity;
+    !_.isNil(availableEthLiquidity) && Number(collectionOfferAmt) > availableEthLiquidity;
 
   const isDurationLessThanOneDay = duration !== '' && Number(duration) < 1;
 
@@ -233,9 +243,9 @@ export const CreateCollectionOfferForm: React.FC<any> = ({
           w="100%"
           disabled={easyOfferApr <= 0}
           onClick={() => {
-            setCollectionOfferAmt(easyOfferAmount);
-            setApr(easyOfferApr);
-            setDuration(easyOfferDuration);
+            setCollectionOfferAmt(String(easyOfferAmount));
+            setApr(String(easyOfferApr));
+            setDuration(String(easyOfferDuration));
           }}
         >
           <em>EASY BUTTON</em>

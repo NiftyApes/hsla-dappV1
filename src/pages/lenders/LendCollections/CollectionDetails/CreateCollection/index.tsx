@@ -6,9 +6,18 @@ import { SuccessfulOrderCreationModal } from './SuccessfulOrderCreationModal';
 
 interface CreateCollectionOfferProps {
   nftContractAddress: string;
+  collectionOfferAmt: string;
+  setCollectionOfferAmt: React.Dispatch<React.SetStateAction<string>>;
+  apr: string;
+  setApr: React.Dispatch<React.SetStateAction<string>>;
+  duration: string;
+  setDuration: React.Dispatch<React.SetStateAction<string>>;
+  expiration: string;
+  setExpiration: React.Dispatch<React.SetStateAction<string>>;
+  addNewlyAddedOfferHash: (offerHash: string) => void;
 }
 
-const CreateCollectionOffer: React.FC<any> = ({
+const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
   nftContractAddress,
   collectionOfferAmt,
   setCollectionOfferAmt,
@@ -19,7 +28,7 @@ const CreateCollectionOffer: React.FC<any> = ({
   expiration,
   setExpiration,
   addNewlyAddedOfferHash,
-}: any) => {
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -40,7 +49,7 @@ const CreateCollectionOffer: React.FC<any> = ({
         addNewlyAddedOfferHash={addNewlyAddedOfferHash}
         openSuccessfulOrderCreationModal={onOpen}
       />
-      <SuccessfulOrderCreationModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+      <SuccessfulOrderCreationModal isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 };
