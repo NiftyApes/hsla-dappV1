@@ -15,7 +15,6 @@ import {
 } from '@chakra-ui/react';
 
 import Icon from 'components/atoms/Icon';
-import RepayLoanModal from 'components/organisms/RepayLoanModal';
 
 const LoanTable: React.FC = () => {
   const {
@@ -141,7 +140,6 @@ const LoanTable: React.FC = () => {
           </Tr>
         </Tbody>
       </Table>
-      <RepayLoanModal isOpen={isRepayLoanModalVisible} onClose={hideRepayLoanModal} />
     </Box>
   );
 };
