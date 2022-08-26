@@ -76,7 +76,7 @@
     "contracts:build": "cd hardhat-ts && npx hardhat compile && cd .. && npx shx rm -rf './src/generated/external-contracts' && npx shx cp -r './src/scripts/eth-sdk-config.ts.bak' './src/generated/eth-sdk.config.ts' && npx eth-sdk -p ./src/generated",
     "contracts:rebuild": "cd hardhat-ts && npx hardhat clean && cd .. && yarn contracts:build",
     "export": "cd hardhat-ts && npx hardhat export",
-    "deploy": "cd hardhat-ts && npx hardhat deploy --export-all ../src/generated/hardhat_contracts.json --network localhost && cp -R ../src/generated/deployments ./generated/deployments",
+    "deploy": "cd hardhat-ts && npx hardhat deploy --export-all ../src/generated/hardhat_contracts.json --network localhost && mkdir -p ./generated/deployments && cp -R ../src/generated/deployments ./generated",
     "watch": "cd hardhat-ts && npx hardhat watch",
     "accounts": "cd hardhat-ts && npx hardhat accounts",
     "balance": "cd hardhat-ts && npx hardhat balance",

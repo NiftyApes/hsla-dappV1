@@ -1,4 +1,4 @@
-const SECONDS_IN_YEAR = 3.154e7;
+import { SECONDS_IN_YEAR } from 'constants/misc';
 
 export function getAPR({
   amount,
@@ -11,11 +11,5 @@ export function getAPR({
     return 0;
   }
 
-  const unroundedNumber = ((interestRatePerSecond * SECONDS_IN_YEAR) / amount) * 100;
-
-  if (unroundedNumber >= 0.1) {
-    return Number(unroundedNumber.toFixed(2));
-  } else {
-    return Number(unroundedNumber.toPrecision(2));
-  }
+  return ((interestRatePerSecond * SECONDS_IN_YEAR) / amount) * 100;
 }

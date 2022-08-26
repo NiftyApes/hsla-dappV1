@@ -1,12 +1,13 @@
-import React, { createContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { Box, Button, Flex, Text, useDisclosure } from '@chakra-ui/react';
 import { OnboardAPI } from '@web3-onboard/core';
 import { useConnectWallet, useWallets } from '@web3-onboard/react';
+import React, { createContext, useEffect, useLayoutEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import Step from 'components/molecules/WalletInfo/Step';
-import { initWeb3Onboard } from 'services/wallet';
 import Modal from 'components/atoms/Modal/Modal';
+import Step from 'components/molecules/WalletInfo/Step';
+import { useWalletAddress } from 'hooks/useWalletAddress';
+import { initWeb3Onboard } from 'services/wallet';
 
 interface WalletContextProps {
   showWalletConnectModal: () => void;
@@ -24,7 +25,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode | React.ReactN
   const [{ wallet }, connect] = useConnectWallet();
   const connectedWallets = useWallets();
   const web3Onboard: OnboardAPI = initWeb3Onboard;
-  const walletAddress = useMemo(() => wallet?.accounts[0].address, [wallet]);
+  const walletAddress = useWalletAddress();
 
   const {
     isOpen: isWalletConnectModalVisible,
@@ -58,7 +59,8 @@ export const WalletProvider: React.FC<{ children: React.ReactNode | React.ReactN
 
   // Navigates to wallet url
   useLayoutEffect(() => {
-    if (walletAddress && id !== walletAddress) {
+    // use toLowerCase so different casings don't trigger this
+    if (walletAddress && id?.toLowerCase() !== walletAddress.toLowerCase()) {
       navigate(walletAddress);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,15 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect } from 'react';
-import { useAppDispatch } from 'app/hooks';
-import { BigNumber, ethers } from 'ethers';
 import { formatEther } from '@ethersproject/units';
+import { useAppDispatch } from 'app/hooks';
+import { useEffect } from 'react';
 
 import NFTCard from 'components/molecules/NFTCard';
-import { Contract, NFT } from 'nft/model';
 import NFTNoOfferCard from 'components/molecules/NFTNoOfferCard';
-import { fetchLoanOffersByNFT, LoanOffer, useLoanOffersByNFT } from 'loan';
-import { NFTLoadingCard } from '../../../../components/molecules/NFTLoadingCard';
+import { fetchLoanOffersByNFT, useLoanOffersByNFT } from 'loan';
+import { Contract, NFT } from 'nft';
 import NFTActiveLoanCard from '../../../../components/molecules/NFTActiveLoanCard';
+import { NFTLoadingCard } from '../../../../components/molecules/NFTLoadingCard';
 import { useLoanAuction } from '../../../../hooks/useLoanAuction';
 
 interface Props {

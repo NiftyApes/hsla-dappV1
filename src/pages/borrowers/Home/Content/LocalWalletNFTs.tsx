@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
 import { SimpleGrid } from '@chakra-ui/react';
-import { fetchNFTsByWalletAddress, useNFTsByWalletAddress } from 'nft/state/nfts.slice';
 import { useAppDispatch } from 'app/hooks';
-import { useLocalScaffoldEthNFTContract } from 'hooks/useLocalScaffoldEthNFTContract';
-import { NFTCardContainer } from './NFTCardContainer';
 import SectionHeader from 'components/molecules/SectionHeader';
-import { useWalletAddress } from 'hooks/useWalletAddress';
 import { useChainId } from 'hooks/useChainId';
+import { useLocalScaffoldEthNFTContract } from 'hooks/useLocalScaffoldEthNFTContract';
+import { useWalletAddress } from 'hooks/useWalletAddress';
+import { fetchNFTsByWalletAddress, useNFTsByWalletAddress } from 'nft/state/nfts.slice';
+import React, { useEffect } from 'react';
+import { NFTCardContainer } from './NFTCardContainer';
 
 const i18n = {
   loadingText: 'Loading NFTs...',
