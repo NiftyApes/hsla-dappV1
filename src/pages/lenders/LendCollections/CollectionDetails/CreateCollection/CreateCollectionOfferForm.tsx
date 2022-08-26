@@ -55,8 +55,6 @@ export const CreateCollectionOfferForm: React.FC<any> = ({
   const doesOfferAmountExceedAvailableLiquidity =
     !_.isNil(availableEthLiquidity) && collectionOfferAmt > availableEthLiquidity;
 
-  console.log('duration', duration, typeof duration, !_.isNil(duration));
-
   const isDurationLessThanOneDay = duration !== '' && Number(duration) < 1;
 
   return (

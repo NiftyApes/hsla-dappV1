@@ -16,8 +16,6 @@ export const getNFTsOfAddress = async ({
     return undefined;
   }
 
-  console.log('contract.address', contract.address);
-
   const totalSupplyNumber = (await contract.totalSupply()).toNumber();
   const results = [];
 

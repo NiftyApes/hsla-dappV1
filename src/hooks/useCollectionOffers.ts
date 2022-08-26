@@ -70,5 +70,7 @@ export const useCollectionOffers = ({ nftContractAddress }: { nftContractAddress
     return undefined;
   }
 
+  // sort by createdAt, but components that use this hook, like OfferBook
+  // probably have their own sorting method
   return _.sortBy(offers, (o) => -o.offer.createdAt).map((o) => o.offer);
 };

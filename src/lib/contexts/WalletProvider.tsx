@@ -59,6 +59,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode | React.ReactN
 
   // Navigates to wallet url
   useLayoutEffect(() => {
+    // use toLowerCase so different casings don't trigger this
     if (walletAddress && id?.toLowerCase() !== walletAddress.toLowerCase()) {
       navigate(walletAddress);
     }

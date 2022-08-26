@@ -206,10 +206,6 @@ const OfferBook: React.FC<any> = ({
     sortedOffers.splice(sortDraftOfferIndex, 0, 'DRAFT_OFFER');
   }
 
-  console.log('sortOrder', sortOrder);
-
-  console.log('sortedOffers', sortedOffers);
-
   return (
     <Box ml="48px">
       <Text

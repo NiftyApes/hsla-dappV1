@@ -37,8 +37,6 @@ export const LocalhostContent: React.FC = () => {
     return <>{i18n.loadingText}</>;
   }
 
-  console.log('walletNfts ', walletNfts);
-
   return (
     <>
       <SectionHeader headerText={i18n.sectionHeaderText}></SectionHeader>

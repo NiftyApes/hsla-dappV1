@@ -3,6 +3,7 @@ import { Route } from 'react-router-dom';
 
 import LendersLayout from 'components/layout/Lenders';
 import {
+  lenders,
   ROUTE_LENDERS_DASHBOARD,
   ROUTE_LENDERS_LEND,
   ROUTE_LENDERS_LIQUIDITY,
@@ -20,7 +21,7 @@ const CollectionDetailsModal = lazy(
 );
 
 const Lenders = (
-  <Route path={'lenders'} element={<LendersLayout />}>
+  <Route path={lenders()} element={<LendersLayout />}>
     <Route path=":id" element={<LendersHome />} />
     <Route path={`:id/${ROUTE_LENDERS_DASHBOARD}`} element={<Dashboard />} />
     <Route path={`:id/${ROUTE_LENDERS_LEND}`} element={<LendCollections />} />
