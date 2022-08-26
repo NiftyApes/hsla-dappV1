@@ -1,13 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { formatEther } from '@ethersproject/units';
 import { useAppDispatch } from 'app/hooks';
-import { BigNumber, ethers } from 'ethers';
 import { useEffect } from 'react';
 
 import NFTCard from 'components/molecules/NFTCard';
 import NFTNoOfferCard from 'components/molecules/NFTNoOfferCard';
 import { fetchLoanOffersByNFT, useLoanOffersByNFT } from 'loan';
-import { Contract, NFT } from 'nft/model';
+import { Contract, NFT } from 'nft';
 import NFTActiveLoanCard from '../../../../components/molecules/NFTActiveLoanCard';
 import { NFTLoadingCard } from '../../../../components/molecules/NFTLoadingCard';
 import { useLoanAuction } from '../../../../hooks/useLoanAuction';
@@ -32,9 +31,6 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
   if (!loanOffers || fetchingOffers) {
     return <NFTLoadingCard />;
   }
-
-  // TODO: Show loan offer with best terms
-  const offer = loanOffers[loanOffers.length - 1];
 
   if (loanAuction && loanAuction.nftOwner !== '0x0000000000000000000000000000000000000000') {
     //Active loan card
@@ -73,28 +69,5 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
     );
   }
 
-  const offerAmount = BigNumber.from(String(offer.OfferTerms.Amount));
-
-  return (
-    <NFTCard
-      contract={contract}
-      id={`${item.id}`}
-      offerHash={offer.OfferHash}
-      offer={{
-        aprPercentage: offer.aprPercentage,
-        expirationDays: offer.expirationDays,
-        durationDays: offer.durationDays,
-        price: Number(ethers.utils.formatEther(offerAmount)),
-        totalInterest: offer.totalInterest,
-        symbol: 'eth',
-        type: 'top',
-      }}
-      floorTerm={offer.OfferTerms.FloorTerm}
-      numberOfOffers={loanOffers.length}
-      key={item.id}
-      collectionName=""
-      tokenName={`${item.name}`}
-      img={item.image}
-    />
-  );
+  return <NFTCard contract={contract} key={item.id} nft={item} offers={loanOffers} />;
 };

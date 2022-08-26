@@ -1,3 +1,4 @@
+import { CoinSymbol } from '../../lib/constants/coinSymbols';
 import { getAPR } from 'helpers/getAPR';
 import { roundForDisplay } from 'helpers/roundForDisplay';
 
@@ -33,6 +34,8 @@ export interface LoanOffer {
   expirationDays: number;
   totalInterest: number;
   interestRatePerSecond: number;
+  type: 'top' | 'floor';
+  symbol: CoinSymbol;
 }
 
 const loanOffer = (json: any): LoanOffer => {
@@ -59,7 +62,19 @@ const loanOffer = (json: any): LoanOffer => {
     interestRatePerSecond,
     // Actual interest over the period of a loan
     totalInterest: ((interestRatePerSecond * duration) / amount) * 100,
+    type: 'top',
+    symbol: 'eth',
   };
 };
 
 export default loanOffer;
+
+export const getBestLoanOffer = (offers: Array<LoanOffer>): LoanOffer => {
+  if (offers.length === 1) {
+    return offers[0];
+  }
+
+  return Array.from(offers).sort(
+    (a: LoanOffer, b: LoanOffer) => a.interestRatePerSecond - b.interestRatePerSecond,
+  )[0];
+};

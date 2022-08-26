@@ -1640,7 +1640,7 @@
     "@chakra-ui/theme-tools" "2.0.9"
     "@chakra-ui/utils" "2.0.8"
 
-"@chakra-ui/toast@3.0.6":
+"@chakra-ui/toast@3.0.6", "@chakra-ui/toast@^3.0.6":
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/@chakra-ui/toast/-/toast-3.0.6.tgz#c9a879bbf27876d40fd63e3d0132f4133cedfbd8"
   integrity sha512-4e3RmpUxyvb0tt1pmezh/IiKEKMqrjsfMPNCMCJzN7gY/yuZAH1OrsqbgpZZ2WSzA8bAjlrpl8J0rXNlj9qHaQ==

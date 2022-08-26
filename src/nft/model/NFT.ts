@@ -3,14 +3,14 @@ import { BigNumber } from 'ethers';
 export type NFTId = string | BigNumber;
 
 export interface NFT {
-  id: string;
-  owner: string;
+  attributes: NFTAttribute[];
   contractAddress: string;
   description: string;
-  name: string;
-  image: string;
   external_url: string;
-  attributes: NFTAttribute[];
+  id: string;
+  image: string;
+  name: string;
+  owner: string;
 }
 
 export interface NFTAttribute {
