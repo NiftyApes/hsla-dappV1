@@ -1,4 +1,4 @@
-import { Box, Flex, Image, LinkBox, LinkOverlay, Text, useDisclosure } from '@chakra-ui/react';
+import { Box, Flex, Image, LinkBox, LinkOverlay, Text } from '@chakra-ui/react';
 import React from 'react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
@@ -7,8 +7,6 @@ import { useLocalScaffoldEthNFTContract } from 'hooks/useLocalScaffoldEthNFTCont
 import { useWalletAddress } from 'hooks/useWalletAddress';
 
 const Collection: React.FC = () => {
-  const { onOpen, onClose, isOpen } = useDisclosure();
-
   const contract = useLocalScaffoldEthNFTContract();
 
   const address = useWalletAddress();
@@ -21,7 +19,6 @@ const Collection: React.FC = () => {
         boxShadow="0px 2.87612px 17.2567px rgba(73, 16, 146, 0.1)"
         w="250px"
         cursor="pointer"
-        onClick={onOpen}
       >
         <Flex textAlign="center" alignItems="center" justifyContent="center" mb="7px">
           <LinkOverlay href={`/lenders/${address}/create-collection-offer/${contract?.address}`}>
