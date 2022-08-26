@@ -1,7 +1,7 @@
 import { useAppDispatch } from 'app/hooks';
+import { SECONDS_IN_YEAR } from 'constants/misc';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
-import { SECONDS_IN_YEAR } from 'helpers/getAPR';
 import { getOffersContract } from '../helpers/getContracts';
 import { saveOfferInDb } from '../helpers/saveOfferInDb';
 import { useWalletAddress } from './useWalletAddress';

@@ -1,4 +1,4 @@
-export const SECONDS_IN_YEAR = 3.154e7;
+import { SECONDS_IN_YEAR } from 'constants/misc';
 
 export function getAPR({
   amount,
