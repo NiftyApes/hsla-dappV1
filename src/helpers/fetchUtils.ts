@@ -74,11 +74,7 @@ export async function getJson(params: FetchParams): Promise<JSON> {
     : json);
 }
 
-export type DynamoDbResponse<T> = {
-  Count: number;
-  Items: Array<T>;
-  ScannedCount: number;
-};
+export type DynamoDbResponse<T> = Array<T>;
 
 export async function getData<T>(
   params: FetchParams,
@@ -87,11 +83,8 @@ export async function getData<T>(
   const json = (await getJson(params)) as unknown;
   const response = json as DynamoDbResponse<T>;
 
-  if (instantiator && response?.Items) {
-    return {
-      ...response,
-      Items: response.Items.map(instantiator),
-    };
+  if (instantiator && response) {
+    return response.map(instantiator);
   }
 
   return response;

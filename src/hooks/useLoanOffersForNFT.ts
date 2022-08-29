@@ -1,7 +1,6 @@
+import { getOffersByNft } from 'api/getOffersByNft';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
-import { BigNumber } from 'ethers';
-import { getApiUrl } from 'helpers';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
@@ -28,50 +27,26 @@ export const useLoanOffersForNFT = ({
         return;
       }
 
-      const result = await fetch(getApiUrl(`offers?nftContractAddress=${nftContractAddress}`));
+      const offers = await getOffersByNft({ nftContractAddress, nftId });
 
-      const json = await result.json();
-
-      const processedOffers = json.Items.filter(
-        (item: any) => item.OfferTerms.NftId == nftId || item.OfferTerms.FloorTerm,
-      ).map((item: any) => {
-        return {
-          offer: {
-            amount: BigNumber.from(String(item.OfferTerms.Amount)),
-            expiration: Number(item.OfferTerms.Expiration),
-            interestRatePerSecond: item.OfferTerms.InterestRatePerSecond,
-            floorTerm: item.OfferTerms.FloorTerm,
-          },
-          offerHash: item.OfferHash,
-        };
-      });
-
-      console.log('processedOffers', processedOffers);
-
-      for (let i = 0; i < processedOffers.length; i++) {
-        const offerHash = processedOffers[i].offerHash;
-
-        console.log('INFO TO FETCH FROM CHAIN', {
-          nftId: nftId,
-          offerHash,
-        });
+      // remove any offers not found on-chain
+      for (let i = 0; i < offers.length; i++) {
+        const offerHash = offers[i].offerHash;
 
         const offerFromChain = await getLoanOfferFromHash({
           offersContract: niftyApesContract,
           nftContractAddress,
           nftId,
           offerHash,
-          floorTerm: processedOffers[i].offer.floorTerm,
+          floorTerm: offers[i].offer.floorTerm,
         });
 
-        console.log('offerFromChain', offerFromChain);
-
         if (!offerFromChain || offerFromChain[0] === '0x0000000000000000000000000000000000000000') {
-          processedOffers[i] = undefined;
+          offers[i] = undefined;
         }
       }
 
-      const filteredOffers = _.compact(processedOffers);
+      const filteredOffers = _.compact(offers);
 
       setOffers(filteredOffers);
     }

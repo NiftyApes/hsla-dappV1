@@ -40,7 +40,7 @@ export const SuccessfulOrderCreationModal: React.FC<SuccessfulOrderCreationModal
         <ModalBody fontSize="1.1rem">
           <Text mt="0.75rem">Your offer has been made!</Text>
           <Text mt="1.25rem" mb="5rem">
-            Go to the <strong>Dashboard</strong> to view and cancel your Offer.
+            Go to the <strong>Dashboard</strong> to view and manage your offers.
           </Text>
         </ModalBody>
         <ModalFooter>

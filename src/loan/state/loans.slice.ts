@@ -1,11 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { useSelector, TypedUseSelectorHook } from 'react-redux';
 import { AppDispatch, ThunkExtra } from 'app/store';
-import { LoanOffer, LoanAuction, loanOffer, loanAuction } from '../model';
-import { ContractAddress, getNFTHash, NFT } from 'nft/model';
-import { getData, getApiUrl } from 'helpers';
+import { getApiUrl, getData } from 'helpers';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
-import { getOffersContract } from '../../helpers/getContracts';
+import { ContractAddress, getNFTHash, NFT } from 'nft/model';
+import { TypedUseSelectorHook, useSelector } from 'react-redux';
+import { LoanAuction, loanAuction, LoanOffer, loanOffer } from '../model';
 
 export type LoansState = {
   loanOffersByNFT: Record<ContractAddress, FetchLoanOffersResponse>;
@@ -55,14 +54,14 @@ export const fetchLoanOffersByNFT = createAsyncThunk<FetchLoanOffersResponse, NF
       {
         url: getApiUrl('offers'),
         data: {
-          nftContractAddress,
+          collection: nftContractAddress,
         },
       },
       (json) => loanOffer(json),
     );
 
     const processedOffers = await Promise.all(
-      data.Items.map(async (offer) => {
+      data.map(async (offer) => {
         if (offer.OfferTerms.NftId === nftId || offer.OfferTerms.FloorTerm) {
           const offerFromChain = await getLoanOfferFromHash({
             offersContract,
@@ -77,7 +76,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<FetchLoanOffersResponse, NF
           }
         }
       }),
-    ).then((results) => data.Items.filter((offer, i) => results[i]));
+    ).then((results) => data.filter((offer, i) => results[i]));
 
     return {
       content: processedOffers,

@@ -1,4 +1,4 @@
-import { getOffersByCollection } from 'api/getOffersByCollection';
+import { getActiveOffersByLender } from 'api/getActiveOffersByLender';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { getOffersContract } from '../helpers/getContracts';
 import { useWalletProvider } from './useWalletProvider';
 
-export const useCollectionOffers = ({ nftContractAddress }: { nftContractAddress?: string }) => {
+export const useOffersForLender = ({ lenderAddress }: { lenderAddress: string }) => {
   const [offers, setOffers] = useState<any>();
 
   const cacheCounter = useAppSelector((state: RootState) => state.counter);
@@ -17,22 +17,23 @@ export const useCollectionOffers = ({ nftContractAddress }: { nftContractAddress
 
   useEffect(() => {
     async function fetchLoanOffersForNFT() {
-      if (!niftyApesContract || !nftContractAddress) {
+      if (!niftyApesContract || !lenderAddress) {
         return;
       }
 
-      const offers = await getOffersByCollection({ nftContractAddress });
+      const offers = await getActiveOffersByLender({ lenderAddress });
 
       for (let i = 0; i < offers.length; i++) {
-        const offerHash = offers[i].offerHash;
+        const { offerHash, offer } = offers[i];
+
+        const { nftId, nftContractAddress, floorTerm } = offer;
 
         const offerFromChain = await getLoanOfferFromHash({
           offersContract: niftyApesContract,
           nftContractAddress,
-          // all collection offers have nftId 0
-          nftId: '0',
+          nftId,
           offerHash,
-          floorTerm: offers[i].offer.floorTerm,
+          floorTerm,
         });
 
         if (!offerFromChain || offerFromChain[0] === '0x0000000000000000000000000000000000000000') {
@@ -46,13 +47,11 @@ export const useCollectionOffers = ({ nftContractAddress }: { nftContractAddress
     }
 
     fetchLoanOffersForNFT();
-  }, [nftContractAddress, niftyApesContract, cacheCounter]);
+  }, [lenderAddress, cacheCounter]);
 
   if (!offers) {
     return undefined;
   }
 
-  // sort by createdAt, but components that use this hook, like OfferBook
-  // probably have their own sorting method
-  return _.sortBy(offers, (o) => -o.offer.createdAt).map((o) => o.offer);
+  return offers;
 };
