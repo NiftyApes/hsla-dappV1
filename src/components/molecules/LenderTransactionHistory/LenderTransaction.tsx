@@ -32,7 +32,7 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
         </Flex>
       </Td>
       <Td textAlign="center">
-        <Text fontSize="small">{moment(tx.Timestamp).format('h:mma, MMM D YYYY')}</Text>
+        <Text fontSize="small">{moment(tx.Timestamp * 1000).format('h:mma, MMM D YYYY')}</Text>
       </Td>
       <Td textAlign="center">
         {tx.EventType === transactionTypes.LIQUIDITY_DEPOSITED
