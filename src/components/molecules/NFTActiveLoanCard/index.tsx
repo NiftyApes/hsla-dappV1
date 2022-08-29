@@ -1,78 +1,62 @@
 import React from 'react';
-import { Box, Button, Center, Flex, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Center,
+  Flex,
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react';
+
+import moment from 'moment';
+import { NFT } from '../../../nft';
+import { LoanAuction } from '../../../loan';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import { Contract } from 'ethers';
 
 import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
 import { NFTCardHeader } from '../NFTCard/components/NFTCardHeader';
-import { useRepayLoanByBorrower } from '../../../hooks/useRepayLoan';
-import moment from 'moment';
-
-interface Loan {
-  amount: string;
-  amountEth: number;
-  amountDrawn: string;
-  interestRatePerSecond: number;
-  lenderInterest: string;
-  loanBeginTimestamp: number;
-  loanEndTimestamp: number;
-  protocolInterest: string;
-}
+import { CollateralHeader } from '../CollateralHeader';
+import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
+import { formatEther } from 'ethers/lib/utils';
+import { getAPR } from '../../../helpers/getAPR';
+import { roundForDisplay } from '../../../helpers/roundForDisplay';
 
 interface Props {
-  collectionName: string;
-  contract?: Contract;
-  tokenId: string;
-  img: string;
-  loan: Loan;
-  tokenName: string;
+  loan: LoanAuction;
+  nft: NFT;
 }
 
 const i18n = {
   actionButtonHelperText: 'What does this mean?',
   actionButtonText: 'repay loan',
+  repayLoanHeader: 'repay loan on ',
   loanApr: (apr: number) => `${apr}% APR`,
   loanDuration: (duration: number) => `${duration} days`,
   loanStatus: 'active loan',
   loanTimeRemaining: (distance: string) => `${distance} remaining...`,
 };
 
-const NFTActiveLoanCard: React.FC<Props> = ({
-  collectionName,
-  contract,
-  img,
-  loan,
-  tokenId,
-  tokenName,
-}) => {
-  const { repayLoanByBorrower } = useRepayLoanByBorrower({
-    nftContractAddress: contract?.address,
-    nftId: tokenId,
-  });
+const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
+  const {
+    isOpen: isRepayLoanOpen,
+    onOpen: onRepayLoanOpen,
+    onClose: onRepayLoanClose,
+  } = useDisclosure();
 
-  // TODO: Extract this into the utils common method
-  const secondsInDay = 86400;
-  const secondsInYear = 3.154e7;
-  const apr = Math.round(((loan.interestRatePerSecond * secondsInYear) / loan.amountEth) * 100);
-  const duration = Math.round((loan.loanEndTimestamp - loan.loanBeginTimestamp) / secondsInDay);
-  const timeRemaining = moment(loan.loanEndTimestamp * 1000).toNow(true);
+  const { amount, interestRatePerSecond, loanBeginTimestamp, loanEndTimestamp } = loan;
 
-  // TODO: Wire me in
-  const onRepayLoan = async () => {
-    if (repayLoanByBorrower) {
-      await repayLoanByBorrower();
-    }
-  };
+  const apr = roundForDisplay(getAPR({ amount, interestRatePerSecond }));
+  const duration = Math.round((loanEndTimestamp - loanBeginTimestamp) / 86400);
+  const timeRemaining = moment(loanEndTimestamp * 1000).toNow(true);
 
   return (
     <NFTCardContainer>
-      <NFTCardHeader
-        img={img}
-        tokenId={tokenId}
-        tokenName={tokenName}
-        collectionName={collectionName}
-      >
+      <NFTCardHeader img={nft.image} tokenId={nft.id} tokenName={nft.name} collectionName={''}>
         <>
           <Flex
             flexDir="column"
@@ -101,7 +85,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({
             <Flex alignItems="center">
               <CryptoIcon symbol={'eth'} size={25} />
               <Text ml="6px" fontSize="3.5xl" fontWeight="bold">
-                {loan.amount}Ξ
+                {formatEther(loan.amount)}Ξ
               </Text>
             </Flex>
 
@@ -126,6 +110,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({
             textTransform="uppercase"
             variant="solid"
             w="100%"
+            onClick={onRepayLoanOpen}
           >
             {i18n.actionButtonText}
           </Button>
@@ -133,6 +118,17 @@ const NFTActiveLoanCard: React.FC<Props> = ({
           <Center mt="8px" mb="8px">
             {i18n.actionButtonHelperText}
           </Center>
+
+          {isRepayLoanOpen && (
+            <Modal isOpen={true} onClose={onRepayLoanClose} size="xl">
+              <ModalOverlay />
+              <ModalContent p="5px">
+                <CollateralHeader title={i18n.repayLoanHeader} nft={nft} />
+                <BorrowLoanRepayCard loan={loan} nft={nft} />
+                <ModalCloseButton />
+              </ModalContent>
+            </Modal>
+          )}
         </>
       </NFTCardHeader>
     </NFTCardContainer>

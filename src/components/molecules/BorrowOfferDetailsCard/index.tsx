@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Flex, Grid, HStack, Image, Link, Text, useToast } from '@chakra-ui/react';
+import { Box, Button, Flex, Grid, Text, useToast } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { useNiftyApesContractAddress } from '../../../hooks/useNiftyApesContractAddress';
@@ -10,7 +10,7 @@ import LoadingIndicator from '../../atoms/LoadingIndicator';
 import { humanizeContractError } from '../../../helpers/errorsMap';
 import { LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
-import Collateral from '../Collateral';
+import { roundForDisplay } from '../../../helpers/roundForDisplay';
 
 interface Props {
   contract?: Contract;
@@ -29,7 +29,8 @@ const i18n = {
     )} ${offer.symbol} for ${offer.durationDays} days`,
   dealTermsLabel: 'deal terms',
   liquidityAwaits: 'Liquidity Awaits',
-  offerTerms: (offer: LoanOffer) => `${offer.durationDays} days at ${offer.aprPercentage}% APR`,
+  offerTerms: (offer: LoanOffer) =>
+    `${offer.durationDays} days at ${roundForDisplay(offer.aprPercentage)}% APR`,
   toastApproveTransferError: 'Unable to approve NFT transfer',
   toastApproveTransferSuccess: 'NFT Transfer approved',
   toastLoanSuccess: 'Loan executed successfully',

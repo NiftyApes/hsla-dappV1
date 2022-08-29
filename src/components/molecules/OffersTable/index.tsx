@@ -3,6 +3,7 @@ import { Button, Flex, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { LoanOffer } from '../../../loan';
 import { BigNumber, ethers } from 'ethers';
+import { roundForDisplay } from '../../../helpers/roundForDisplay';
 
 interface callbackType {
   (offer: LoanOffer): void;
@@ -68,7 +69,7 @@ const OffersTable: React.FC<Props> = ({ offers, onClick }) => {
                 <Text>{offer.durationDays} days</Text>
               </Td>
               <Td>
-                <Text>{offer.aprPercentage}%</Text>
+                <Text>{roundForDisplay(offer.aprPercentage)}%</Text>
               </Td>
               <Td>
                 <Button
