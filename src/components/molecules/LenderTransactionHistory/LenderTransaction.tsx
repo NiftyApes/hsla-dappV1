@@ -28,18 +28,18 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
     >
       <Td width="1rem" textAlign="center">
         <Flex justifyContent="center">
-          {tx.Data.Asset === 'ETH' && <CryptoIcon symbol="eth" size={25} />}
+          {tx.EventData.Asset === 'ETH' && <CryptoIcon symbol="eth" size={25} />}
         </Flex>
       </Td>
       <Td textAlign="center">
         <Text fontSize="small">{moment(tx.Timestamp).format('h:mma, MMM D YYYY')}</Text>
       </Td>
       <Td textAlign="center">
-        {tx.TransactionType === transactionTypes.DEPOSIT_LIQUIDITY
+        {tx.EventType === transactionTypes.LIQUIDITY_DEPOSITED
           ? 'Deposit Liquidity'
-          : tx.TransactionType === transactionTypes.WITHDRAW_LIQUIDITY
+          : tx.EventType === transactionTypes.LIQUIDITY_WITHDRAWN
           ? 'Withdraw Liquidity'
-          : tx.TransactionType === transactionTypes.LOAN_EXECUTED_BY_BORROWER
+          : tx.EventType === transactionTypes.LOAN_CREATED
           ? 'Loan Executed By Borrower'
           : 'Other'}
       </Td>
@@ -49,37 +49,37 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
             fontSize="2md"
             ml="4px"
             color={
-              tx.TransactionType === transactionTypes.DEPOSIT_LIQUIDITY
+              tx.EventType === transactionTypes.LIQUIDITY_DEPOSITED
                 ? 'green.500'
-                : tx.TransactionType === transactionTypes.WITHDRAW_LIQUIDITY
+                : tx.EventType === transactionTypes.LIQUIDITY_WITHDRAWN
                 ? 'red.500'
-                : tx.TransactionType === transactionTypes.LOAN_EXECUTED_BY_BORROWER
+                : tx.EventType === transactionTypes.LOAN_CREATED
                 ? 'blue.500'
                 : ''
             }
           >
-            {tx.TransactionType === transactionTypes.DEPOSIT_LIQUIDITY
+            {tx.EventType === transactionTypes.LIQUIDITY_DEPOSITED
               ? '+'
-              : tx.TransactionType === transactionTypes.WITHDRAW_LIQUIDITY ||
-                tx.TransactionType === transactionTypes.LOAN_EXECUTED_BY_BORROWER
+              : tx.EventType === transactionTypes.LIQUIDITY_WITHDRAWN ||
+                tx.EventType === transactionTypes.LOAN_CREATED
               ? '-'
               : ''}
-            {ethers.utils.formatEther(tx.Data.Amount)}Ξ
+            {ethers.utils.formatEther(tx.EventData.Amount)}Ξ
           </Text>
         </Flex>
       </Td>
       <Td>
         <Flex alignItems="center" justifyContent="center">
-          {tx.TransactionType === transactionTypes.LOAN_EXECUTED_BY_BORROWER ? (
+          {tx.EventType === transactionTypes.LOAN_CREATED ? (
             <span>
-              {ethers.utils.formatEther(tx.Data.Amount)}Ξ @{' '}
+              {ethers.utils.formatEther(tx.EventData.Amount)}Ξ @{' '}
               {roundForDisplay(
                 getAPR({
-                  amount: tx.Data.Amount,
-                  interestRatePerSecond: tx.Data.InterestRatePerSecond,
+                  amount: tx.EventData.Amount,
+                  interestRatePerSecond: tx.EventData.InterestRatePerSecond,
                 }),
               )}
-              % APR on all {tx.Data.NftContractAddress}
+              % APR on all {tx.EventData.NftContractAddress}
             </span>
           ) : (
             '-'

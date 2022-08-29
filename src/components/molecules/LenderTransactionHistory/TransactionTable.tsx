@@ -5,6 +5,7 @@ import { LenderTransaction } from './LenderTransaction';
 
 export const TransactionTable: React.FC = () => {
   const transactions = useTransactionHistory();
+
   return (
     <Table mt="50px">
       <Thead>

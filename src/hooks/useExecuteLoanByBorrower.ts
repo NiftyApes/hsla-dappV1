@@ -69,7 +69,7 @@ export const useExecuteLoanByBorrower = ({
       await saveTransactionInDb({
         transactionHash: receipt.transactionHash,
         from: receipt.from,
-        transactionType: transactionTypes.LOAN_EXECUTED_BY_BORROWER,
+        transactionType: transactionTypes.LOAN_CREATED,
         timestamp,
         borrower: offer.nftOwner,
         lender: offer.creator,

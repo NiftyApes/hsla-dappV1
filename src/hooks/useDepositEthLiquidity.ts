@@ -54,9 +54,10 @@ export const useDepositEthLiquidity = () => {
 
         await saveTransactionInDb({
           from: receipt.from,
-          transactionType: transactionTypes.DEPOSIT_LIQUIDITY,
+          transactionType: transactionTypes.LIQUIDITY_DEPOSITED,
           timestamp,
           transactionHash: receipt.transactionHash,
+          lender: receipt.from,
           data: {
             amount: ethers.utils.parseEther(ethToDeposit.toString()).toString(),
             asset: 'ETH',

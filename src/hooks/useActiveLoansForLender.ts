@@ -1,7 +1,6 @@
+import { getActiveLoansByLender } from 'api/getActiveLoansByLender';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
-import { BigNumber } from 'ethers';
-import { getApiUrl } from 'helpers';
 import { getLoanForNft } from 'helpers/getLoanForNft';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
@@ -17,24 +16,15 @@ export const useActiveLoansForLender = () => {
 
   useEffect(() => {
     async function fetchLoanOffersForNFT() {
-      if (!lendingContract) {
+      if (!lendingContract || !address) {
         return;
       }
 
-      const result = await fetch(getApiUrl(`loans?lender=${address}`));
+      const loans = await getActiveLoansByLender({ lenderAddress: address });
 
-      const json = await result.json();
-
-      const processedLoans = json.Items.map((item: any) => {
-        return {
-          nftId: item['NftContractAddress#NftId'].split('#')[1],
-          nftContractAddress: item['NftContractAddress#NftId'].split('#')[0],
-          amount: BigNumber.from(String(item.LoanTerms.Amount)),
-        };
-      });
-
-      for (let i = 0; i < processedLoans.length; i++) {
-        const loan = processedLoans[i];
+      // remove any loans in DB but not on-chain
+      for (let i = 0; i < loans.length; i++) {
+        const loan = loans[i];
 
         const loanFromChain = await getLoanForNft({
           nftContractAddress: loan.nftContractAddress,
@@ -43,17 +33,19 @@ export const useActiveLoansForLender = () => {
         });
 
         if (!loanFromChain || loanFromChain[0] === '0x0000000000000000000000000000000000000000') {
-          processedLoans[i] = undefined;
+          loans[i] = undefined;
         }
       }
 
-      const filteredOffers = _.compact(processedLoans);
+      const filteredOffers = _.compact(loans);
 
       setLoans(filteredOffers);
     }
 
     fetchLoanOffersForNFT();
   }, [address, lendingContract, cacheCounter]);
+
+  console.log('loans', loans);
 
   return loans;
 };

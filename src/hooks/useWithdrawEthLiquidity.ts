@@ -54,9 +54,10 @@ export const useWithdrawEthLiquidity = () => {
 
         await saveTransactionInDb({
           from: receipt.from,
-          transactionType: transactionTypes.WITHDRAW_LIQUIDITY,
+          transactionType: transactionTypes.LIQUIDITY_WITHDRAWN,
           timestamp,
           transactionHash: receipt.transactionHash,
+          lender: receipt.from,
           data: {
             amount: ethers.utils.parseEther(ethToWithdraw.toString()).toString(),
             asset: 'ETH',
