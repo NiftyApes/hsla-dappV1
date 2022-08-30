@@ -1,5 +1,5 @@
-import React from 'react';
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import React from 'react';
 
 interface Props {
   collectionName?: string;
@@ -46,7 +46,7 @@ export const NFTCardHeader: React.FC<Props> = ({
           textShadow="0px 0px 4px #000000"
           textTransform="uppercase"
         >
-          {tokenName} #{tokenId}
+          #{tokenId}
         </Text>
       </Flex>
       <Box w="100%" p="0 8px 8px 8px">

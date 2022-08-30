@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch, ThunkExtra } from 'app/store';
-import { useSelector, TypedUseSelectorHook } from 'react-redux';
-import { NFT, Contract, LendingContract, WalletAddress } from '../model';
 import { getNFTsOfAddress } from 'helpers/getNFTsOfAddress';
+import { TypedUseSelectorHook, useSelector } from 'react-redux';
+import { Contract, LendingContract, NFT, WalletAddress } from '../model';
 
 export type RootNFTsState = {
   nfts: NFTsState;

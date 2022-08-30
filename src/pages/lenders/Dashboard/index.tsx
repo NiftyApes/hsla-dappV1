@@ -1,13 +1,16 @@
-import React from 'react';
 import { Box, Flex, Text } from '@chakra-ui/react';
+import React from 'react';
 
-import TopCard from 'components/molecules/DashboardTopCard';
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import LoanTable from './LoanTable';
+import TopCard from 'components/molecules/DashboardTopCard';
+import { useActiveLoansForLender } from 'hooks/useActiveLoansForLender';
+import LoansTable from './LoansTable';
 
 const Dashboard: React.FC = () => {
+  const activeLoans = useActiveLoansForLender();
   return (
     <Box>
+      {JSON.stringify(activeLoans, void 0, 2)}
       <Flex justifyContent="space-evenly" flexWrap="wrap" gap="24px" p="18px">
         <TopCard desc="ACTIVE LOAN">
           <Text fontSize="7xl">1</Text>
@@ -28,7 +31,7 @@ const Dashboard: React.FC = () => {
           <Text fontSize="5xl">⏰ 119 days, 23 hours, 59 minutes</Text>
         </TopCard>
       </Flex>
-      <LoanTable />
+      <LoansTable />
     </Box>
   );
 };

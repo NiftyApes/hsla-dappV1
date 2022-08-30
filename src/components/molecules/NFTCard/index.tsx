@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   Button,
   Center,
@@ -12,18 +11,19 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
+import React, { useState } from 'react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { BigNumber, Contract, ethers } from 'ethers';
+import { formatNumber } from 'lib/helpers/string';
+import { roundForDisplay } from '../../../helpers/roundForDisplay';
+import { getBestLoanOffer, LoanOffer } from '../../../loan';
+import { NFT } from '../../../nft';
+import Offers from '../../../pages/borrowers/Offers';
+import BorrowOfferDetailsCard from '../BorrowOfferDetailsCard';
+import { CollateralHeader } from '../CollateralHeader';
 import { NFTCardContainer } from './components/NFTCardContainer';
 import { NFTCardHeader } from './components/NFTCardHeader';
-import { formatNumber } from 'lib/helpers/string';
-import BorrowOfferDetailsCard from '../BorrowOfferDetailsCard';
-import Offers from '../../../pages/borrowers/Offers';
-import { NFT } from '../../../nft';
-import { getBestLoanOffer, LoanOffer } from '../../../loan';
-import { CollateralHeader } from '../CollateralHeader';
-import { roundForDisplay } from '../../../helpers/roundForDisplay';
 
 interface Props {
   contract?: Contract;
@@ -88,13 +88,15 @@ const NFTCard: React.FC<Props> = ({ contract, nft, offers }) => {
     );
   };
 
+  console.log('nft', nft);
+
   return (
     <NFTCardContainer>
       <NFTCardHeader
         img={nft.image}
         tokenId={nft.id}
         tokenName={nft.name}
-        collectionName={'collectionName'}
+        collectionName={nft.collectionName || ''}
       >
         <>
           <Flex

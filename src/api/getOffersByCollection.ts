@@ -1,12 +1,16 @@
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { getApiUrl } from 'helpers';
 
 export const getOffersByCollection = async ({
   nftContractAddress,
 }: {
-  nftContractAddress?: string;
+  nftContractAddress: string;
 }) => {
-  const result = await fetch(getApiUrl(`offers?collection=${nftContractAddress}`));
+  const result = await fetch(
+    getApiUrl(`offers?collection=${ethers.utils.getAddress(nftContractAddress)}`),
+  );
+
+  console.log('nftContractAddress', nftContractAddress);
 
   const json = await result.json();
 

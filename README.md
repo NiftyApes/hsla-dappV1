@@ -38,7 +38,7 @@ The typical env vars should be asked to Zach.
 
 ```shell
 yarn hardhat-yarn-install
-yarn chain
+yarn fork
 yarn setup-local-chain # clean, compile, build, deploy
 yarn fund-10 --to <address> # give 10 eth to address
 yarn mint --to <address> # mint 6 NFTs to address

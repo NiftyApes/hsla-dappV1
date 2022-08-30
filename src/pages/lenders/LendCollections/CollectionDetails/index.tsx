@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 
 import Icon from 'components/atoms/Icon';
 import { useParams } from 'react-router-dom';
-import YourCollectibleJSON from '../../../../generated/deployments/localhost/YourCollectible.json';
 import CreateCollectionOffer from './CreateCollection';
 import OfferBook from './OfferBook';
 
@@ -15,6 +14,10 @@ const CollectionDetailsModal: React.FC = () => {
   const [duration, setDuration] = useState<string>('');
   const [expiration, setExpiration] = useState<string>('1_DAY');
   const [newlyAddedOfferHashes, setNewlyAddedOfferHashes] = useState<string[]>([]);
+
+  if (!collectionAddress) {
+    return null;
+  }
 
   return (
     <Box minW="1120px" maxW="1600px">
@@ -52,7 +55,7 @@ const CollectionDetailsModal: React.FC = () => {
             setDuration={setDuration}
             expiration={expiration}
             setExpiration={setExpiration}
-            nftContractAddress={YourCollectibleJSON.address}
+            nftContractAddress={collectionAddress}
             addNewlyAddedOfferHash={(offerHash: string) => {
               setNewlyAddedOfferHashes([...newlyAddedOfferHashes, offerHash]);
             }}

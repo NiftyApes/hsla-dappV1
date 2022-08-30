@@ -2,10 +2,11 @@ import { SimpleGrid } from '@chakra-ui/react';
 import { useAppDispatch } from 'app/hooks';
 import SectionHeader from 'components/molecules/SectionHeader';
 import { useChainId } from 'hooks/useChainId';
+import { useLocalBaycContract } from 'hooks/useLocalBaycContract';
 import { useLocalScaffoldEthNFTContract } from 'hooks/useLocalScaffoldEthNFTContract';
 import { useWalletAddress } from 'hooks/useWalletAddress';
 import { fetchNFTsByWalletAddress, useNFTsByWalletAddress } from 'nft/state/nfts.slice';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { NFTCardContainer } from './NFTCardContainer';
 
 const i18n = {
@@ -17,19 +18,36 @@ export const LocalhostContent: React.FC = () => {
   const dispatch = useAppDispatch();
   const walletAddress = useWalletAddress();
   const chainId = useChainId();
-  const contract = useLocalScaffoldEthNFTContract();
+  const baycContract = useLocalBaycContract();
+  const localScaffoldEthNftContract = useLocalScaffoldEthNFTContract();
   const nfts = useNFTsByWalletAddress(walletAddress || '');
+  const [walletNfts2, setWalletNfts] = useState<any>();
+
+  const getMainnetWalletNFTs = async () => {
+    // make api key an env variable
+    const callWalletNfts = await fetch(
+      `https://eth-mainnet.g.alchemy.com/v2/Of3Km_--Ow1fNnMhaETmwnmWBFFHF3ZY/getNFTs?owner=${walletAddress}`,
+    );
+    setWalletNfts(await callWalletNfts.json());
+  };
 
   useEffect(() => {
-    if (walletAddress && contract && !nfts?.fetching) {
-      dispatch(fetchNFTsByWalletAddress({ walletAddress, contract }));
+    getMainnetWalletNFTs();
+  }, [walletAddress]);
+
+  useEffect(() => {
+    if (walletAddress && baycContract && !nfts?.fetching) {
+      dispatch(fetchNFTsByWalletAddress({ walletAddress, contract: baycContract }));
     }
+    // if (walletAddress && localScaffoldEthNftContract && !nfts?.fetching) {
+    //   dispatch(fetchNFTsByWalletAddress({ walletAddress, contract: localScaffoldEthNftContract }));
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletAddress, chainId]);
 
   const walletNfts = nfts?.content || [];
 
-  if (!contract) {
+  if (!baycContract) {
     return null;
   }
 
@@ -37,12 +55,44 @@ export const LocalhostContent: React.FC = () => {
     return <>{i18n.loadingText}</>;
   }
 
+  const nftContracts = [
+    '0x1cb1a5e65610aeff2551a50f76a87a7d3fb649c6',
+    '0x7fcbb823ff16110e5a14c3c897dc0af334423e4f',
+  ];
+
+  console.log('walletNfts2', walletNfts2);
+
+  console.log('walletNfts', walletNfts);
+
   return (
     <>
       <SectionHeader headerText={i18n.sectionHeaderText}></SectionHeader>
+
+      <SimpleGrid minChildWidth="240px" spacing={10} style={{ padding: '16px' }}>
+        {walletNfts2?.ownedNfts
+          .filter((nft: any) => nftContracts.includes(nft.contract.address))
+          .map((nft: any, i: number) => (
+            <NFTCardContainer
+              key={i}
+              contract={nft.contract.address}
+              item={{
+                attributes: nft.metadata.attributes,
+                contractAddress: nft.contract.address,
+                description: nft.metadata.description,
+                external_url: nft.metadata.external_url,
+                id: String(Number(nft.id.tokenId)),
+                image: nft.metadata.image,
+                name: nft.metadata.name,
+                owner: walletAddress || '0x0',
+                collectionName: nft.contractMetadata.name,
+              }}
+            />
+          ))}
+      </SimpleGrid>
+
       <SimpleGrid minChildWidth="240px" spacing={10} style={{ padding: '16px' }}>
         {walletNfts?.map((item: any) => (
-          <NFTCardContainer contract={contract} item={item} key={item.id} />
+          <NFTCardContainer contract={baycContract} item={item} key={item.id} />
         ))}
       </SimpleGrid>
     </>
