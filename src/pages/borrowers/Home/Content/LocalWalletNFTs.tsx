@@ -1,4 +1,4 @@
-import { SimpleGrid } from '@chakra-ui/react';
+import { Center, SimpleGrid } from '@chakra-ui/react';
 import { useAppDispatch } from 'app/hooks';
 import SectionHeader from 'components/molecules/SectionHeader';
 import { useChainId } from 'hooks/useChainId';
@@ -7,6 +7,7 @@ import { useWalletAddress } from 'hooks/useWalletAddress';
 import { fetchNFTsByWalletAddress, useNFTsByWalletAddress } from 'nft/state/nfts.slice';
 import React, { useEffect } from 'react';
 import { NFTCardContainer } from './NFTCardContainer';
+import LoadingIndicator from '../../../../components/atoms/LoadingIndicator';
 
 const i18n = {
   loadingText: 'Loading NFTs...',
@@ -34,7 +35,11 @@ export const LocalhostContent: React.FC = () => {
   }
 
   if (nfts?.fetching) {
-    return <>{i18n.loadingText}</>;
+    return (
+      <Center>
+        <LoadingIndicator />
+      </Center>
+    );
   }
 
   return (

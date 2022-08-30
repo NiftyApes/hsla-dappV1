@@ -133,7 +133,9 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
               <Text ml="4px" mr="14px" color="solid.gray0" fontWeight="bold">
                 ETH
               </Text>
-              <Text fontSize="3.5xl">{formatEther(totalOwed)}Ξ</Text>
+              <Text fontSize="3.5xl" noOfLines={1} width="330px">
+                {formatEther(totalOwed)}Ξ
+              </Text>
             </Flex>
             <Text fontSize="sm" color="solid.gray0" textTransform="uppercase">
               {i18n.paymentType}
