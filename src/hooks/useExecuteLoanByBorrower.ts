@@ -61,11 +61,13 @@ export const useExecuteLoanByBorrower = ({
         creator: offer.creator,
         borrower: address,
         lender: offer.creator,
-        data: {
+        loanTerms: {
           amount: offer.amount.toString(),
           asset: 'ETH',
           interestRatePerSecond: offer.interestRatePerSecond,
           duration: offer.duration,
+          loanBeginTimestamp: loan.loanBeginTimestamp,
+          loanEndTimestamp: loan.loanEndTimestamp,
         },
       });
 
