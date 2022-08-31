@@ -5,7 +5,7 @@ export async function saveLoanInDb({
   nftId,
   lastUpdatedTimestamp,
   creator,
-  amount,
+  loanTerms,
   borrower,
   lender,
 }: {
@@ -13,9 +13,16 @@ export async function saveLoanInDb({
   nftId: string;
   lastUpdatedTimestamp: number;
   creator: string;
-  amount: number;
   borrower: string;
   lender: string;
+  loanTerms: {
+    amount: number;
+    asset: 'ETH';
+    interestRatePerSecond: number;
+    duration: number;
+    loanBeginTimestamp: number;
+    loanEndTimestamp: number;
+  };
 }) {
   const result = await fetch(getApiUrl('loans'), {
     method: 'POST',
@@ -24,7 +31,7 @@ export async function saveLoanInDb({
       nftId,
       lastUpdatedTimestamp,
       creator,
-      amount,
+      loanTerms,
       borrower,
       lender,
     }),

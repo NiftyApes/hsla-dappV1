@@ -411,7 +411,7 @@ task('create-offer', 'Create offer')
     const offerObj = {
       creator: offer.creator,
       nftContractAddress: offer.nftContractAddress,
-      interestRatePerSecond: offer.interestRatePerSecond.toNumber(),
+      interestRatePerSecond: offer.interestRatePerSecond.toString(),
       fixedTerms: offer.fixedTerms,
       floorTerm: offer.floorTerm,
       lenderOffer: offer.lenderOffer,

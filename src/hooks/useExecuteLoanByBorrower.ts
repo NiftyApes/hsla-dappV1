@@ -59,9 +59,16 @@ export const useExecuteLoanByBorrower = ({
         nftId,
         lastUpdatedTimestamp: loan.lastUpdatedTimestamp,
         creator: offer.creator,
-        amount: offer.amount.toString(),
         borrower: address,
         lender: offer.creator,
+        loanTerms: {
+          amount: offer.amount.toString(),
+          asset: 'ETH',
+          interestRatePerSecond: offer.interestRatePerSecond.toString(),
+          duration: offer.duration,
+          loanBeginTimestamp: loan.loanBeginTimestamp,
+          loanEndTimestamp: loan.loanEndTimestamp,
+        },
       });
 
       const timestamp = await getTransactionTimestamp(receipt);
@@ -81,7 +88,7 @@ export const useExecuteLoanByBorrower = ({
           amount: offer.amount.toString(),
           asset: 'ETH',
           interestRatePerSecond: offer.interestRatePerSecond.toString(),
-          duration: offer.duration.toString(),
+          duration: offer.duration,
         },
       });
 

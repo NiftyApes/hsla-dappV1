@@ -52,13 +52,13 @@ const OffersTable: React.FC<Props> = ({ offers, onClick }) => {
           },
         }}
       >
-        {offers.map((offer) => {
+        {offers.map((offer, idx) => {
           const fmtOfferAmount: string = ethers.utils.formatEther(
             BigNumber.from(String(offer.OfferTerms.Amount)),
           );
 
           return (
-            <Tr sx={{ td: { border: 'none', fontSize: 'md' } }}>
+            <Tr sx={{ td: { border: 'none', fontSize: 'md' } }} key={idx}>
               <Td>
                 <Flex alignItems="center">
                   <CryptoIcon symbol={offer.symbol} size={20} />
