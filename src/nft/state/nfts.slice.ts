@@ -87,15 +87,21 @@ const slice = createSlice({
       };
     });
     builder.addCase(fetchNFTsByWalletAddress.fulfilled, (state, action) => {
+      const walletNftArr = state.nftsByWalletAddress[action.meta.arg.walletAddress];
+
       if (action.payload && action.meta.arg.walletAddress) {
-        state.nftsByWalletAddress = {
-          ...state.nftsByWalletAddress,
-          [action.meta.arg.walletAddress]: {
-            content: action.payload.content,
-            fetching: false,
-            error: undefined,
-          },
-        };
+        if (!state.nftsByWalletAddress[action.meta.arg.walletAddress].content) {
+          state.nftsByWalletAddress[action.meta.arg.walletAddress].content = [];
+        }
+
+        if (action.payload.content) {
+          (state.nftsByWalletAddress[action.meta.arg.walletAddress].content as any).push(
+            ...action.payload.content,
+          );
+        }
+
+        state.nftsByWalletAddress[action.meta.arg.walletAddress].fetching = false;
+        state.nftsByWalletAddress[action.meta.arg.walletAddress].error = undefined;
       }
     });
     builder.addCase(fetchNFTsByWalletAddress.rejected, (state, action) => {

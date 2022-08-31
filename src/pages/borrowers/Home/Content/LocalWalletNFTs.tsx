@@ -3,6 +3,7 @@ import { useAppDispatch } from 'app/hooks';
 import SectionHeader from 'components/molecules/SectionHeader';
 import { useChainId } from 'hooks/useChainId';
 import { useLocalBaycContract } from 'hooks/useLocalBaycContract';
+import { useLocalMaycContract } from 'hooks/useLocalMaycContract';
 import { useLocalScaffoldEthNFTContract } from 'hooks/useLocalScaffoldEthNFTContract';
 import { useWalletAddress } from 'hooks/useWalletAddress';
 import { fetchNFTsByWalletAddress, useNFTsByWalletAddress } from 'nft/state/nfts.slice';
@@ -19,6 +20,7 @@ export const LocalhostContent: React.FC = () => {
   const walletAddress = useWalletAddress();
   const chainId = useChainId();
   const baycContract = useLocalBaycContract();
+  const maycContract = useLocalMaycContract();
   const localScaffoldEthNftContract = useLocalScaffoldEthNFTContract();
   const nfts = useNFTsByWalletAddress(walletAddress || '');
   const [walletNfts2, setWalletNfts] = useState<any>();
@@ -35,15 +37,33 @@ export const LocalhostContent: React.FC = () => {
     getMainnetWalletNFTs();
   }, [walletAddress]);
 
+  const [hasFetchedBaycNfts, setHasFetchedBaycNfts] = useState(false);
+  const [hasFetchedMaycNfts, setHasFetchedMaycNfts] = useState(false);
+  const [hasFetchedLocalNfts, setHasFetchedLocalNfts] = useState(false);
+
   useEffect(() => {
-    if (walletAddress && baycContract && !nfts?.fetching) {
+    if (walletAddress && baycContract && !hasFetchedBaycNfts) {
       dispatch(fetchNFTsByWalletAddress({ walletAddress, contract: baycContract }));
+      setHasFetchedBaycNfts(true);
     }
-    // if (walletAddress && localScaffoldEthNftContract && !nfts?.fetching) {
-    //   dispatch(fetchNFTsByWalletAddress({ walletAddress, contract: localScaffoldEthNftContract }));
-    // }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [walletAddress, chainId]);
+
+    if (walletAddress && maycContract && !hasFetchedMaycNfts) {
+      dispatch(fetchNFTsByWalletAddress({ walletAddress, contract: maycContract }));
+      setHasFetchedMaycNfts(true);
+    }
+
+    if (walletAddress && localScaffoldEthNftContract && !hasFetchedLocalNfts) {
+      dispatch(fetchNFTsByWalletAddress({ walletAddress, contract: localScaffoldEthNftContract }));
+      setHasFetchedLocalNfts(true);
+    }
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    walletAddress,
+    chainId,
+    baycContract?.address,
+    maycContract?.address,
+    localScaffoldEthNftContract?.address,
+  ]);
 
   const walletNfts = nfts?.content || [];
 

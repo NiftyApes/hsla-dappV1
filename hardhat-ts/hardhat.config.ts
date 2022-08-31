@@ -31,6 +31,7 @@ import { THardhatDeployEthers } from './helpers/types/hardhat-type-extensions';
 import { btoa } from 'buffer';
 import { config as envConfig } from 'dotenv';
 import { baycAbi } from './abis/baycAbi';
+import { maycAbi } from './abis/maycAbi';
 import { saveOfferInDb } from './helpers/saveOfferInDb';
 
 envConfig({ path: '../vite-app-ts/.env' });
@@ -231,6 +232,17 @@ task('wallet', 'Create a wallet (pk) link', async (_, { ethers }) => {
   console.log(`🔐 WALLET Generated as ${randomWallet.address}`);
   console.log(`🔗 http://localhost:3000/pk#${privateKey}`);
 });
+
+task('fast-forward', 'Fast forward so many days')
+  .addOptionalParam('days', 'Number of days to fast forward')
+  .setAction(async (taskArgs, { network }) => {
+    const seconds = taskArgs.days ? taskArgs.days * 3600 * 24 : 1 * 3600 * 24;
+
+    await network.provider.request({
+      method: 'evm_increaseTime',
+      params: [seconds],
+    });
+  });
 
 task('fundedwallet', 'Create a wallet (pk) link and fund it with deployer?')
   .addOptionalParam('amount', 'Amount of ETH to send to wallet after generating')
@@ -632,6 +644,7 @@ task('real-nfts', 'String to search for')
   .setAction(async (taskArgs, { network, ethers }, hre) => {
     const DINGALING_ADDRESS = '0x54be3a794282c030b15e43ae2bb182e14c409c5e';
     const BAYC_CONTRACT = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d';
+    const MAYC_CONTRACT = '0x60e4d786628fea6478f785a6d7e704777c86a7c6';
 
     await network.provider.request({
       method: 'hardhat_impersonateAccount',
@@ -640,23 +653,46 @@ task('real-nfts', 'String to search for')
 
     const dingaling = await ethers.getSigner(DINGALING_ADDRESS);
 
-    const contract = new ethers.Contract(BAYC_CONTRACT, baycAbi, dingaling);
+    const baycContract = new ethers.Contract(BAYC_CONTRACT, baycAbi, dingaling);
+    const maycContract = new ethers.Contract(MAYC_CONTRACT, maycAbi, dingaling);
 
     const toAddress = taskArgs.to;
+
     try {
-      await contract.transferFrom(DINGALING_ADDRESS, toAddress, 861);
+      await baycContract.transferFrom(DINGALING_ADDRESS, toAddress, 861);
+    } catch (e) {
+      console.log(e);
+    }
+    try {
+      await baycContract.transferFrom(DINGALING_ADDRESS, toAddress, 862);
     } catch (e) {}
     try {
-      await contract.transferFrom(DINGALING_ADDRESS, toAddress, 862);
+      await baycContract.transferFrom(DINGALING_ADDRESS, toAddress, 863);
     } catch (e) {}
     try {
-      await contract.transferFrom(DINGALING_ADDRESS, toAddress, 863);
+      await baycContract.transferFrom(DINGALING_ADDRESS, toAddress, 864);
     } catch (e) {}
     try {
-      await contract.transferFrom(DINGALING_ADDRESS, toAddress, 864);
+      await baycContract.transferFrom(DINGALING_ADDRESS, toAddress, 865);
+    } catch (e) {}
+
+    try {
+      await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11862);
     } catch (e) {}
     try {
-      await contract.transferFrom(DINGALING_ADDRESS, toAddress, 865);
+      await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11863);
+    } catch (e) {}
+    try {
+      await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11864);
+    } catch (e) {}
+    try {
+      await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11866);
+    } catch (e) {}
+    try {
+      await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11868);
+    } catch (e) {}
+    try {
+      await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11870);
     } catch (e) {}
   });
 
