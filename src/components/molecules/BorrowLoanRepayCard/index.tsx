@@ -26,7 +26,8 @@ const i18n = {
   loanBorrowed: (val: string) => `Total borrowed ${val}Ξ`,
   loanInterest: (val: string) => `Total interest ${val}Ξ`,
   loanOwed: (val: string) => `Total owed ${val}Ξ`,
-  loanTimeRemaining: (distance: string) => `Time remaining ${distance}`,
+  loanTimeRemaining: (distance: string, defaulted: boolean) =>
+    defaulted ? 'Loan Defaulted' : `Time remaining ${distance}`,
   paymentType: 'max payment',
   terms: 'deal terms',
   toastSuccess: 'Loan repaid successfully',
@@ -54,7 +55,9 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
   const totalOwed: BigNumber = loanAmount.add(totalAccruedInterest).add(padding);
   const apr = getAPR({ amount, interestRatePerSecond });
 
-  const timeRemaining = moment(loanEndTimestamp * 1000).toNow(true);
+  const endMoment = moment(loanEndTimestamp * 1000);
+  const timeRemaining = endMoment.toNow(true);
+  const isDefaulted = moment().isAfter(endMoment);
 
   const { repayLoanByBorrower } = useRepayLoanByBorrower({
     nftContractAddress: nft.contractAddress,
@@ -110,7 +113,7 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
             </Text>
           </Box>
           <Box p="10px">
-            <Text>{i18n.loanTimeRemaining(timeRemaining)}</Text>
+            <Text>{i18n.loanTimeRemaining(timeRemaining, isDefaulted)}</Text>
             <Text>{i18n.loanApr(apr)}</Text>
             <Text>{i18n.loanBorrowed(formatEther(amount))}</Text>
             <Text>{i18n.loanInterest(formatEther(totalAccruedInterest))}</Text>
@@ -145,12 +148,12 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
           <Divider mt="20px" mb="15px" color="accents.100" />
           <Button
             borderRadius="8px"
-            colorScheme="orange"
+            colorScheme={isDefaulted ? 'red' : 'purple'}
             onClick={onRepayLoan}
             py="6px"
             size="lg"
             textTransform="uppercase"
-            variant="neutralReverse"
+            variant="solid"
             w="100%"
           >
             {isExecuting ? <LoadingIndicator size="xs" /> : i18n.actionButton}
