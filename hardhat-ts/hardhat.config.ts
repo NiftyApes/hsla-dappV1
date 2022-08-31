@@ -231,6 +231,17 @@ task('wallet', 'Create a wallet (pk) link', async (_, { ethers }) => {
   console.log(`🔗 http://localhost:3000/pk#${privateKey}`);
 });
 
+task('fast-forward', 'Fast forward so many days')
+  .addOptionalParam('days', 'Number of days to fast forward')
+  .setAction(async (taskArgs, { network }) => {
+    const seconds = taskArgs.days ? taskArgs.days * 3600 * 24 : 1 * 3600 * 24;
+
+    await network.provider.request({
+      method: 'evm_increaseTime',
+      params: [seconds],
+    });
+  });
+
 task('fundedwallet', 'Create a wallet (pk) link and fund it with deployer?')
   .addOptionalParam('amount', 'Amount of ETH to send to wallet after generating')
   .addOptionalParam('url', 'URL to add pk to')
