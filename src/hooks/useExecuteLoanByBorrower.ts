@@ -64,7 +64,7 @@ export const useExecuteLoanByBorrower = ({
         loanTerms: {
           amount: offer.amount.toString(),
           asset: 'ETH',
-          interestRatePerSecond: offer.interestRatePerSecond.toNumber(),
+          interestRatePerSecond: offer.interestRatePerSecond.toString(),
           duration: offer.duration,
           loanBeginTimestamp: loan.loanBeginTimestamp,
           loanEndTimestamp: loan.loanEndTimestamp,
@@ -87,7 +87,7 @@ export const useExecuteLoanByBorrower = ({
           floorTerm,
           amount: offer.amount.toString(),
           asset: 'ETH',
-          interestRatePerSecond: offer.interestRatePerSecond.toNumber(),
+          interestRatePerSecond: offer.interestRatePerSecond.toString(),
           duration: offer.duration,
         },
       });
