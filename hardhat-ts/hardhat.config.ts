@@ -91,6 +91,14 @@ const config: HardhatUserConfig = {
         url: `https://eth-mainnet.alchemyapi.io/v2/Of3Km_--Ow1fNnMhaETmwnmWBFFHF3ZY`,
         //blockNumber: 14724006,
       },
+
+      // When doing mainnet forking, we got
+      // `Error: setBlockContext called when checkpointed`
+      // And there are reports of this being caused
+      // by mainnet forking w/ automine turned off.
+      // So we turned it back on by comment out the below field.
+      // https://github.com/NomicFoundation/hardhat/issues/2516
+
       // mining: {
       //   auto: false,
       //   interval: 5000,
