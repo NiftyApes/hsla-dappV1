@@ -733,6 +733,11 @@ task('real-nfts', 'String to search for')
     try {
       await doodlesContract.transferFrom(A24_ADDRESS, toAddress, 5703);
     } catch (e) {}
+
+    await network.provider.request({
+      method: 'hardhat_stopImpersonatingAccount',
+      params: [A24_ADDRESS],
+    });
   });
 
 task('account', 'Get balance informations for the deployment account.', async (_, { ethers }) => {
