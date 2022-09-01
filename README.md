@@ -41,7 +41,8 @@ yarn hardhat-yarn-install
 yarn fork
 yarn setup-local-chain # clean, compile, build, deploy
 yarn fund-10 --to <address> # give 10 eth to address
-yarn mint --to <address> # mint 6 NFTs to address
+yarn mint --to <address> # mint 6 Scaffold NFTs to address
+yarn transfer-real-nfts --to <address> # transfer mainnet NFTs (BAYC, MAYC, Doodles) to address
 yarn setup-offer # deposit eth liquidity & create offer
 ```
 

@@ -97,7 +97,7 @@
     "setup-local-chain": "yarn clean && yarn contracts:rebuild && yarn deploy",
     "setup-offer": "yarn deposit-eth && yarn create-offer",
     "fast-forward": "cd hardhat-ts && npx hardhat fast-forward --network localhost",
-    "mint-real-nfts": "cd hardhat-ts && npx hardhat real-nfts --network localhost"
+    "transfer-real-nfts": "cd hardhat-ts && npx hardhat real-nfts --network localhost"
   },
   "eslintConfig": {
     "extends": "react-app",
