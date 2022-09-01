@@ -1,4 +1,5 @@
 import { EIP1193Provider } from '@web3-onboard/core';
+import { MAYC_CONTRACT_ADDRESS } from 'constants/contractAddresses';
 import { getEthersContractWithEIP1193Provider } from './getEthersContractWithEIP1193Provider';
 
 const maycAbi = [
@@ -467,7 +468,7 @@ const maycAbi = [
 export function getForkedMaycContract({ provider }: { provider: EIP1193Provider }) {
   return getEthersContractWithEIP1193Provider({
     abi: maycAbi,
-    address: '0x60e4d786628fea6478f785a6d7e704777c86a7c6',
+    address: MAYC_CONTRACT_ADDRESS,
     provider,
   });
 }

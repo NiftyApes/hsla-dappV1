@@ -1,4 +1,5 @@
 import { EIP1193Provider } from '@web3-onboard/core';
+import { DOODLES_CONTRACT_ADDRESS } from 'constants/contractAddresses';
 import { getEthersContractWithEIP1193Provider } from './getEthersContractWithEIP1193Provider';
 
 const doodlesAbi = [
@@ -314,7 +315,7 @@ const doodlesAbi = [
 export function getForkedDoodlesContract({ provider }: { provider: EIP1193Provider }) {
   return getEthersContractWithEIP1193Provider({
     abi: doodlesAbi,
-    address: '0x8a90cab2b38dba80c64b7734e58ee1db38b8992e',
+    address: DOODLES_CONTRACT_ADDRESS,
     provider,
   });
 }

@@ -1,4 +1,5 @@
 import { EIP1193Provider } from '@web3-onboard/core';
+import { BAYC_CONTRACT_ADDRESS } from 'constants/contractAddresses';
 import { getEthersContractWithEIP1193Provider } from './getEthersContractWithEIP1193Provider';
 
 const baycAbi = [
@@ -328,7 +329,7 @@ const baycAbi = [
 export function getForkedBaycContract({ provider }: { provider: EIP1193Provider }) {
   return getEthersContractWithEIP1193Provider({
     abi: baycAbi,
-    address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
+    address: BAYC_CONTRACT_ADDRESS,
     provider,
   });
 }

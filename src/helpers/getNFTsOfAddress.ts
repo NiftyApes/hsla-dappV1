@@ -1,11 +1,7 @@
-import {
-  BAYC_CONTRACT_ADDRESS,
-  DOODLES_CONTRACT_ADDRESS,
-  MAYC_CONTRACT_ADDRESS,
-} from 'constants/contractAddresses';
 import { BigNumber } from 'ethers';
 import { getJson } from 'helpers';
 import _ from 'lodash';
+import YourCollectibleDeploymentJSON from '../generated/deployments/localhost/YourCollectible.json';
 import { Contract, LendingContract, NFT, nft } from '../nft/model';
 import { getNFTMetadataUsingAlchemy } from './getNFTMetadataUsingAlchemy';
 import { getTokenIdRangeForLocalForksOfNftContracts } from './getTokenIdRangeForLocalForksOfNftContracts';
@@ -21,7 +17,7 @@ export const getNFTsOfAddress = async ({
   contract,
   lendingContract,
 }: Props): Promise<NFT[] | undefined> => {
-  if (!walletAddress || !contract || !contract.address) {
+  if (!walletAddress || !contract || !contract.address || !lendingContract) {
     return undefined;
   }
 
@@ -38,6 +34,8 @@ export const getNFTsOfAddress = async ({
     const tokenId = BigNumber.from(i);
 
     // Some collections (e.g., MAYC) skip tokenIds, presumably if not minted
+    // So we do this check early and continue if token doesn't exist
+    // Otherwise, things like the ownerOf call below throw an error
     let tokenURI;
     try {
       tokenURI = await contract.tokenURI(tokenId);
@@ -48,68 +46,44 @@ export const getNFTsOfAddress = async ({
 
     const owner = await contract.ownerOf(tokenId);
 
+    const isOwnedDirectlyByWallet = owner.toUpperCase() === walletAddress.toUpperCase();
+
+    const niftyApesOwner = await lendingContract.ownerOf(contract.address, tokenId);
+
+    const isOwnedByWalletButInNiftyApesEscrow =
+      niftyApesOwner.toUpperCase() === walletAddress.toUpperCase();
+
+    if (!isOwnedDirectlyByWallet && !isOwnedByWalletButInNiftyApesEscrow) {
+      continue;
+    }
+
+    // If not Scaffold ETH NFT contract
+    // Use Alchemy to get metadata
     let nftMetadata;
-    if (contract.address.toUpperCase() === BAYC_CONTRACT_ADDRESS.toUpperCase()) {
+    if (contract.address.toUpperCase() !== YourCollectibleDeploymentJSON.address.toUpperCase()) {
       nftMetadata = await getNFTMetadataUsingAlchemy({
-        nftContractAddress: BAYC_CONTRACT_ADDRESS,
-        nftTokenId: tokenId.toNumber(),
-      });
-    } else if (contract.address.toUpperCase() === MAYC_CONTRACT_ADDRESS.toUpperCase()) {
-      nftMetadata = await getNFTMetadataUsingAlchemy({
-        nftContractAddress: MAYC_CONTRACT_ADDRESS,
-        nftTokenId: tokenId.toNumber(),
-      });
-    } else if (contract.address.toUpperCase() === DOODLES_CONTRACT_ADDRESS.toUpperCase()) {
-      nftMetadata = await getNFTMetadataUsingAlchemy({
-        nftContractAddress: DOODLES_CONTRACT_ADDRESS,
+        nftContractAddress: contract.address,
         nftTokenId: tokenId.toNumber(),
       });
     }
 
-    // Add NFT if directly owned by address
-    // or in NiftyApes but indirectly owned by address
-    if (owner.toUpperCase() === walletAddress.toUpperCase()) {
-      const haveAlchemyMetadata = !_.isNil(nftMetadata);
+    // If no metadata, fetch JSON using token URI
+    const haveAlchemyMetadata = !_.isNil(nftMetadata);
+    const jsonFromContractTokenUri = !haveAlchemyMetadata ? await getJson({ url: tokenURI }) : {};
 
-      // Scaffold ETH contract won't have Alchemy metadata
-      const json = haveAlchemyMetadata ? nftMetadata : await getJson({ url: tokenURI });
+    const json = {
+      ...jsonFromContractTokenUri,
+      ...(haveAlchemyMetadata
+        ? {
+            id: nftMetadata.id.tokenId,
+            name: '',
+            collectionName: nftMetadata.contractMetadata.symbol,
+            image: nftMetadata.media[0].gateway,
+          }
+        : {}),
+    };
 
-      // If
-      results.push(
-        nft(tokenId, contract.address, owner, {
-          ...json,
-          ...(haveAlchemyMetadata
-            ? {
-                id: nftMetadata.id.tokenId,
-                name: '',
-                collectionName: nftMetadata.contractMetadata.symbol,
-                image: nftMetadata.media[0].gateway,
-              }
-            : {}),
-        }),
-      );
-    } else if (lendingContract) {
-      const niftyApesOwner = await lendingContract.ownerOf(contract.address, tokenId);
-
-      if (niftyApesOwner.toUpperCase() === walletAddress.toUpperCase()) {
-        const haveAlchemyMetadata = !_.isNil(nftMetadata);
-
-        const json = nftMetadata ? nftMetadata : await getJson({ url: tokenURI });
-        results.push(
-          nft(tokenId, contract.address, owner, {
-            ...json,
-            ...(haveAlchemyMetadata
-              ? {
-                  id: nftMetadata.id.tokenId,
-                  name: '',
-                  collectionName: nftMetadata.contractMetadata.symbol,
-                  image: nftMetadata.media[0].gateway,
-                }
-              : {}),
-          }),
-        );
-      }
-    }
+    results.push(nft(tokenId, contract.address, owner, json));
   }
 
   return results;

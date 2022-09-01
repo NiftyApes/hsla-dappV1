@@ -88,8 +88,6 @@ const NFTCard: React.FC<Props> = ({ contract, nft, offers }) => {
     );
   };
 
-  console.log('nft', nft);
-
   return (
     <NFTCardContainer>
       <NFTCardHeader
