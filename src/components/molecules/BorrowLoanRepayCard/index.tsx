@@ -35,25 +35,25 @@ const i18n = {
 
 const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
   const toast = useToast();
-
   const [isExecuting, setExecuting] = useState<boolean>(false);
-
   const accruedInterest: Array<BigNumber> = useCalculateInterestAccrued({
     nftContractAddress: nft.contractAddress,
     nftId: nft.id,
   });
 
-  const { amount, interestRatePerSecond, loanEndTimestamp } = loan;
+  const { amount, interestRatePerSecond: irps, loanEndTimestamp } = loan;
 
-  const loanAmount: BigNumber = BigNumber.from(amount);
   const totalAccruedInterest: BigNumber = accruedInterest
     ? accruedInterest[0].add(accruedInterest[1])
     : BigNumber.from(0);
 
   // Additional 20 minutes worth of interest
-  const padding: BigNumber = BigNumber.from(interestRatePerSecond * 1200);
-  const totalOwed: BigNumber = loanAmount.add(totalAccruedInterest).add(padding);
-  const apr = getAPR({ amount, interestRatePerSecond });
+  const padding: BigNumber = irps.mul(1200);
+  const totalOwed: BigNumber = amount.add(totalAccruedInterest).add(padding);
+  const apr = getAPR({
+    amount: Number(amount.toString()),
+    interestRatePerSecond: irps.toNumber(),
+  });
 
   const endMoment = moment(loanEndTimestamp * 1000);
   const timeRemaining = endMoment.toNow(true);

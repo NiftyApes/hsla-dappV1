@@ -14,6 +14,5 @@ export async function getLoanForNft({
   }
 
   const result = await lendingContract.getLoanAuction(nftContractAddress, nftId);
-
   return result;
 }

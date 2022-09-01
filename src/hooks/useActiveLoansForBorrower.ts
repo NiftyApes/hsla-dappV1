@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import _ from 'lodash';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { getLoanForNft } from 'helpers/getLoanForNft';
 import { useLendingContract } from './useContracts';
 import { useWalletAddress } from './useWalletAddress';
 import { getActiveLoansByBorrower } from '../api/getActiveLoansByBorrower';
+import { loanAuction, LoanAuction } from '../loan';
 
 export const useActiveLoansForBorrower = () => {
   const [loans, setLoans] = useState<any>();
@@ -15,34 +15,36 @@ export const useActiveLoansForBorrower = () => {
   const lendingContract = useLendingContract();
 
   useEffect(() => {
-    async function fetchLoanOffersForNFT() {
+    const fetchLoans = async () => {
       if (!lendingContract || !address) {
         return;
       }
+      const dbLoans = await getActiveLoansByBorrower({ address });
+      const chainLoans: Array<LoanAuction> = [];
 
-      const loans = await getActiveLoansByBorrower({ address });
+      for (let i = 0; i < dbLoans.length; i++) {
+        const loan: any = dbLoans[i];
 
-      // remove any loans in DB but not on-chain
-      for (let i = 0; i < loans.length; i++) {
-        const loan = loans[i];
-
-        const loanFromChain = await getLoanForNft({
+        const chainLoan = await getLoanForNft({
           nftContractAddress: loan.nftContractAddress,
           nftId: loan.nftId,
           lendingContract,
         });
 
-        if (!loanFromChain || loanFromChain[0] === '0x0000000000000000000000000000000000000000') {
-          loans[i] = undefined;
+        if (chainLoan && chainLoan[0] !== '0x0000000000000000000000000000000000000000') {
+          const la: LoanAuction = loanAuction(chainLoan);
+
+          // Amend loan auction with NFT props that are not included in the LoanAuctionStructOutput struct
+          la.nftId = loan.nftId;
+          la.nftContractAddress = loan.nftContractAddress;
+
+          chainLoans.push(la);
         }
       }
+      setLoans(chainLoans);
+    };
 
-      const filteredOffers = _.compact(loans);
-
-      setLoans(filteredOffers);
-    }
-
-    fetchLoanOffersForNFT();
+    fetchLoans();
   }, [address, lendingContract, cacheCounter]);
 
   return loans;

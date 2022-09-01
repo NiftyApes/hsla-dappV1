@@ -16,15 +16,15 @@ import moment from 'moment';
 import { NFT } from '../../../nft';
 import { LoanAuction } from '../../../loan';
 
-import CryptoIcon from 'components/atoms/CryptoIcon';
-
 import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
 import { NFTCardHeader } from '../NFTCard/components/NFTCardHeader';
 import { CollateralHeader } from '../CollateralHeader';
-import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
 import { formatEther } from 'ethers/lib/utils';
 import { getAPR } from '../../../helpers/getAPR';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
+
+import CryptoIcon from 'components/atoms/CryptoIcon';
+import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
 
 interface Props {
   loan: LoanAuction;
@@ -50,9 +50,14 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
     onClose: onRepayLoanClose,
   } = useDisclosure();
 
-  const { amount, interestRatePerSecond, loanBeginTimestamp, loanEndTimestamp } = loan;
+  const { amount, interestRatePerSecond: irps, loanBeginTimestamp, loanEndTimestamp } = loan;
 
-  const apr = roundForDisplay(getAPR({ amount, interestRatePerSecond }));
+  const apr = roundForDisplay(
+    getAPR({
+      amount: Number(amount.toString()),
+      interestRatePerSecond: irps.toNumber(),
+    }),
+  );
   const endMoment = moment(loanEndTimestamp * 1000);
   const duration = Math.round((loanEndTimestamp - loanBeginTimestamp) / 86400);
   const timeRemaining = endMoment.toNow(true);

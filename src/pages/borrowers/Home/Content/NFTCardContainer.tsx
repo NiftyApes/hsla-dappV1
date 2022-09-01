@@ -2,13 +2,15 @@
 import { useEffect } from 'react';
 import { useAppDispatch } from 'app/hooks';
 
-import { NFTLoadingCard } from '../../../../components/molecules/NFTLoadingCard';
 import { Contract, NFT } from 'nft';
+
+import { fetchLoanOffersByNFT, useLoanOffersByNFT } from 'loan';
+import { useLoanAuction } from '../../../../hooks/useLoanAuction';
+
+import { NFTLoadingCard } from '../../../../components/molecules/NFTLoadingCard';
 import NFTCard from 'components/molecules/NFTCard';
 import NFTNoOfferCard from 'components/molecules/NFTNoOfferCard';
-import { fetchLoanOffersByNFT, useLoanOffersByNFT } from 'loan';
 import NFTActiveLoanCard from '../../../../components/molecules/NFTActiveLoanCard';
-import { useLoanAuction } from '../../../../hooks/useLoanAuction';
 
 interface Props {
   contract: Contract;
