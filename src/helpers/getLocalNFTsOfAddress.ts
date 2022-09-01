@@ -12,7 +12,7 @@ interface Props {
   lendingContract: LendingContract;
 }
 
-export const getNFTsOfAddress = async ({
+export const getLocalNFTsOfAddress = async ({
   walletAddress,
   contract,
   lendingContract,

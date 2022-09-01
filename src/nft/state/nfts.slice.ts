@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch, ThunkExtra } from 'app/store';
-import { getNFTsOfAddress } from 'helpers/getNFTsOfAddress';
+import { getLocalNFTsOfAddress } from 'helpers/getLocalNFTsOfAddress';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import { Contract, LendingContract, NFT, WalletAddress } from '../model';
 
@@ -34,18 +34,18 @@ export type FetchNFTsResponse = {
   fetching: boolean;
 };
 
-export const fetchNFTsByWalletAddress = createAsyncThunk<
+export const fetchLocalNFTsByWalletAddress = createAsyncThunk<
   FetchNFTsResponse | undefined,
   {
     walletAddress: WalletAddress;
     contract: Contract;
   },
   NFTsThunkApi
->('nfts/fetchNFTsByWalletAddress', async ({ walletAddress, contract }, thunkApi) => {
+>('nfts/fetchLocalNFTsByWalletAddress', async ({ walletAddress, contract }, thunkApi) => {
   const { lendingContract } = thunkApi.extra();
 
   if (lendingContract) {
-    const nfts = await getNFTsOfAddress({
+    const nfts = await getLocalNFTsOfAddress({
       walletAddress,
       contract,
       lendingContract,
@@ -76,7 +76,7 @@ const slice = createSlice({
   initialState: NFTsInitialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchNFTsByWalletAddress.pending, (state, action) => {
+    builder.addCase(fetchLocalNFTsByWalletAddress.pending, (state, action) => {
       state.nftsByWalletAddress = {
         ...state.nftsByWalletAddress,
         [action.meta.arg.walletAddress]: {
@@ -86,7 +86,7 @@ const slice = createSlice({
         },
       };
     });
-    builder.addCase(fetchNFTsByWalletAddress.fulfilled, (state, action) => {
+    builder.addCase(fetchLocalNFTsByWalletAddress.fulfilled, (state, action) => {
       const walletNftArr = state.nftsByWalletAddress[action.meta.arg.walletAddress];
 
       if (action.payload && action.meta.arg.walletAddress) {
@@ -104,7 +104,7 @@ const slice = createSlice({
         state.nftsByWalletAddress[action.meta.arg.walletAddress].error = undefined;
       }
     });
-    builder.addCase(fetchNFTsByWalletAddress.rejected, (state, action) => {
+    builder.addCase(fetchLocalNFTsByWalletAddress.rejected, (state, action) => {
       state.nftsByWalletAddress = {
         ...state.nftsByWalletAddress,
         [action.meta.arg.walletAddress]: {

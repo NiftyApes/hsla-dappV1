@@ -12,7 +12,7 @@ import { useLocalDoodlesContract } from 'hooks/useLocalDoodleContract';
 import { useLocalMaycContract } from 'hooks/useLocalMaycContract';
 import { useLocalScaffoldEthNFTContract } from 'hooks/useLocalScaffoldEthNFTContract';
 import { useWalletAddress } from 'hooks/useWalletAddress';
-import { fetchNFTsByWalletAddress, useNFTsByWalletAddress } from 'nft/state/nfts.slice';
+import { fetchLocalNFTsByWalletAddress, useNFTsByWalletAddress } from 'nft/state/nfts.slice';
 import React, { useEffect, useState } from 'react';
 import LoadingIndicator from '../../../../components/atoms/LoadingIndicator';
 import { NFTCardContainer } from './NFTCardContainer';
@@ -39,22 +39,24 @@ export const LocalhostContent: React.FC = () => {
 
   useEffect(() => {
     if (walletAddress && baycContract && !hasFetchedBaycNfts) {
-      dispatch(fetchNFTsByWalletAddress({ walletAddress, contract: baycContract }));
+      dispatch(fetchLocalNFTsByWalletAddress({ walletAddress, contract: baycContract }));
       setHasFetchedBaycNfts(true);
     }
 
     if (walletAddress && maycContract && !hasFetchedMaycNfts) {
-      dispatch(fetchNFTsByWalletAddress({ walletAddress, contract: maycContract }));
+      dispatch(fetchLocalNFTsByWalletAddress({ walletAddress, contract: maycContract }));
       setHasFetchedMaycNfts(true);
     }
 
     if (walletAddress && doodlesContract && !hasFetchedDoodleNfts) {
-      dispatch(fetchNFTsByWalletAddress({ walletAddress, contract: doodlesContract }));
+      dispatch(fetchLocalNFTsByWalletAddress({ walletAddress, contract: doodlesContract }));
       setHasFetchedMaycNfts(true);
     }
 
     if (walletAddress && localScaffoldEthNftContract && !hasFetchedLocalNfts) {
-      dispatch(fetchNFTsByWalletAddress({ walletAddress, contract: localScaffoldEthNftContract }));
+      dispatch(
+        fetchLocalNFTsByWalletAddress({ walletAddress, contract: localScaffoldEthNftContract }),
+      );
       setHasFetchedLocalNfts(true);
     }
     //eslint-disable-next-line react-hooks/exhaustive-deps
