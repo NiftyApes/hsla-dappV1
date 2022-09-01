@@ -1,4 +1,8 @@
-import { BAYC_CONTRACT_ADDRESS, MAYC_CONTRACT_ADDRESS } from 'constants/contractAddresses';
+import {
+  BAYC_CONTRACT_ADDRESS,
+  DOODLES_CONTRACT_ADDRESS,
+  MAYC_CONTRACT_ADDRESS,
+} from 'constants/contractAddresses';
 import { BigNumber } from 'ethers';
 import { getJson } from 'helpers';
 import _ from 'lodash';
@@ -30,7 +34,7 @@ export const getNFTsOfAddress = async ({
   });
 
   const results = [];
-  for (let i = startI; i < endI; i++) {
+  for (let i = startI; i <= endI; i++) {
     const tokenId = BigNumber.from(i);
 
     // Some collections (e.g., MAYC) skip tokenIds, presumably if not minted
@@ -53,6 +57,11 @@ export const getNFTsOfAddress = async ({
     } else if (contract.address.toUpperCase() === MAYC_CONTRACT_ADDRESS.toUpperCase()) {
       nftMetadata = await getNFTMetadataUsingAlchemy({
         nftContractAddress: MAYC_CONTRACT_ADDRESS,
+        nftTokenId: tokenId.toNumber(),
+      });
+    } else if (contract.address.toUpperCase() === DOODLES_CONTRACT_ADDRESS.toUpperCase()) {
+      nftMetadata = await getNFTMetadataUsingAlchemy({
+        nftContractAddress: DOODLES_CONTRACT_ADDRESS,
         nftTokenId: tokenId.toNumber(),
       });
     }

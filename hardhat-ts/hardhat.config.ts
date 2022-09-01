@@ -31,6 +31,7 @@ import { THardhatDeployEthers } from './helpers/types/hardhat-type-extensions';
 import { btoa } from 'buffer';
 import { config as envConfig } from 'dotenv';
 import { baycAbi } from './abis/baycAbi';
+import { doodlesAbi } from './abis/doodlesAbi';
 import { maycAbi } from './abis/maycAbi';
 import { saveOfferInDb } from './helpers/saveOfferInDb';
 
@@ -677,9 +678,6 @@ task('real-nfts', 'String to search for')
     } catch (e) {}
 
     try {
-      await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11862);
-    } catch (e) {}
-    try {
       await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11863);
     } catch (e) {}
     try {
@@ -693,6 +691,39 @@ task('real-nfts', 'String to search for')
     } catch (e) {}
     try {
       await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11870);
+    } catch (e) {}
+
+    await network.provider.request({
+      method: 'hardhat_stopImpersonatingAccount',
+      params: [DINGALING_ADDRESS],
+    });
+
+    const A24_ADDRESS = '0xad097fdcd58535250c59807d6683e0a6b688d6cc';
+    const DOODLES_CONTRACT = '0x8a90cab2b38dba80c64b7734e58ee1db38b8992e';
+
+    await network.provider.request({
+      method: 'hardhat_impersonateAccount',
+      params: [A24_ADDRESS],
+    });
+
+    const a24 = await ethers.getSigner(A24_ADDRESS);
+
+    const doodlesContract = new ethers.Contract(DOODLES_CONTRACT, doodlesAbi, a24);
+
+    try {
+      await doodlesContract.transferFrom(A24_ADDRESS, toAddress, 5698);
+    } catch (e) {}
+    try {
+      await doodlesContract.transferFrom(A24_ADDRESS, toAddress, 5699);
+    } catch (e) {}
+    try {
+      await doodlesContract.transferFrom(A24_ADDRESS, toAddress, 5701);
+    } catch (e) {}
+    try {
+      await doodlesContract.transferFrom(A24_ADDRESS, toAddress, 5702);
+    } catch (e) {}
+    try {
+      await doodlesContract.transferFrom(A24_ADDRESS, toAddress, 5703);
     } catch (e) {}
   });
 
