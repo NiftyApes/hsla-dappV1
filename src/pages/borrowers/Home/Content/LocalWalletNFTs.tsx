@@ -8,8 +8,8 @@ import { useLocalScaffoldEthNFTContract } from 'hooks/useLocalScaffoldEthNFTCont
 import { useWalletAddress } from 'hooks/useWalletAddress';
 import { fetchNFTsByWalletAddress, useNFTsByWalletAddress } from 'nft/state/nfts.slice';
 import React, { useEffect, useState } from 'react';
-import { NFTCardContainer } from './NFTCardContainer';
 import LoadingIndicator from '../../../../components/atoms/LoadingIndicator';
+import { NFTCardContainer } from './NFTCardContainer';
 
 const i18n = {
   loadingText: 'Loading NFTs...',
@@ -68,10 +68,6 @@ export const LocalhostContent: React.FC = () => {
 
   const walletNfts = nfts?.content || [];
 
-  if (!baycContract) {
-    return null;
-  }
-
   if (nfts?.fetching) {
     return (
       <Center>
@@ -116,9 +112,20 @@ export const LocalhostContent: React.FC = () => {
       </SimpleGrid>
 
       <SimpleGrid minChildWidth="240px" spacing={10} style={{ padding: '16px' }}>
-        {walletNfts?.map((item: any) => (
-          <NFTCardContainer contract={baycContract} item={item} key={item.id} />
-        ))}
+        {walletNfts?.map((item: any) => {
+          const contract =
+            item.contractAddress === '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d'
+              ? baycContract
+              : item.contractAddress === '0x60e4d786628fea6478f785a6d7e704777c86a7c6'
+              ? maycContract
+              : localScaffoldEthNftContract;
+
+          if (!contract) {
+            return null;
+          }
+
+          return <NFTCardContainer contract={contract} item={item} key={item.id} />;
+        })}
       </SimpleGrid>
     </>
   );
