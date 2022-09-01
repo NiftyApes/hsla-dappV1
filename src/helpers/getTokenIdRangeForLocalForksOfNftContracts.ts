@@ -4,6 +4,9 @@ import {
   MAYC_CONTRACT_ADDRESS,
 } from 'constants/contractAddresses';
 
+// This function just limits what we iterate over
+// to a small range containing the specific NFTs we use locally
+
 export const getTokenIdRangeForLocalForksOfNftContracts = ({
   nftContractAddress,
   totalSupply,
