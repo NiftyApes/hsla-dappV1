@@ -29,7 +29,7 @@ export async function saveLoanInDb({
     body: JSON.stringify({
       nftContractAddress,
       nftId,
-      lastUpdatedTimestamp,
+      lastUpdatedTimestamp: loanTerms.loanBeginTimestamp,
       creator,
       loanTerms,
       borrower,
