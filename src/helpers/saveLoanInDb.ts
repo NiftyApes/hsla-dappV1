@@ -3,7 +3,6 @@ import { getApiUrl } from './getApiUrl';
 export async function saveLoanInDb({
   nftContractAddress,
   nftId,
-  lastUpdatedTimestamp,
   creator,
   loanTerms,
   borrower,
@@ -11,14 +10,13 @@ export async function saveLoanInDb({
 }: {
   nftContractAddress: string;
   nftId: string;
-  lastUpdatedTimestamp: number;
   creator: string;
   borrower: string;
   lender: string;
   loanTerms: {
-    amount: number;
+    amount: string;
     asset: 'ETH';
-    interestRatePerSecond: number;
+    interestRatePerSecond: string;
     duration: number;
     loanBeginTimestamp: number;
     loanEndTimestamp: number;

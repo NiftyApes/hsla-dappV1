@@ -57,7 +57,6 @@ export const useExecuteLoanByBorrower = ({
       await saveLoanInDb({
         nftContractAddress,
         nftId,
-        lastUpdatedTimestamp: loan.lastUpdatedTimestamp,
         creator: offer.creator,
         borrower: address,
         lender: offer.creator,
