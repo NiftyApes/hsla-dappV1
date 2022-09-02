@@ -1,5 +1,5 @@
+import { Box, Button, Flex, Image, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import React from 'react';
-import { Table, Thead, Tr, Th, Tbody, Td, Flex, Box, Image, Text, Button } from '@chakra-ui/react';
 
 import Icon from 'components/atoms/Icon';
 
