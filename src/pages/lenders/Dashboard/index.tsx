@@ -1,8 +1,8 @@
-import React from 'react';
 import { Box, Flex, Text } from '@chakra-ui/react';
+import React from 'react';
 
-import TopCard from 'components/molecules/DashboardTopCard';
 import CryptoIcon from 'components/atoms/CryptoIcon';
+import TopCard from 'components/molecules/DashboardTopCard';
 import LoanTable from './LoanTable';
 
 const Dashboard: React.FC = () => {
