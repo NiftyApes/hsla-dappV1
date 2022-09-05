@@ -145,7 +145,7 @@ const OfferBook: React.FC<OfferBook> = ({
         fontWeight="bold"
         color="solid.gray0"
         mb="13px"
-        sx={{ position: 'relative', top: '-16px' }}
+        sx={{ position: 'relative', top: '-16px', left: '4px' }}
       >
         OFFER BOOK DATA
       </Text>
