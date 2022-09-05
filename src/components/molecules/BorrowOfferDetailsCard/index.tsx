@@ -11,6 +11,7 @@ import { humanizeContractError } from '../../../helpers/errorsMap';
 import { LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
+import { formatEther } from 'ethers/lib/utils';
 
 interface Props {
   contract?: Contract;
@@ -29,27 +30,26 @@ const i18n = {
     )} ${offer.symbol} for ${offer.durationDays} days`,
   dealTermsLabel: 'deal terms',
   liquidityAwaits: 'Liquidity Awaits',
-  offerTerms: (offer: LoanOffer) =>
-    `${offer.durationDays} days at ${roundForDisplay(offer.aprPercentage)}% APR`,
   toastApproveTransferError: 'Unable to approve NFT transfer',
   toastApproveTransferSuccess: 'NFT Transfer approved',
   toastLoanSuccess: 'Loan executed successfully',
   totalInterest: 'total interest',
-  totalInterestDescription: 'The most you could owe at the end of your loan.',
-  transferDetails: (amount: string, symbol: string) =>
-    `${amount} ${symbol} will be sent to your wallet address once your loan is executed.`,
+  totalBorrowed: 'is the most you could owe at the end of your loan',
 };
 
 const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
   const toast = useToast();
   const operator = useNiftyApesContractAddress();
 
-  const fmtOfferAmount: string = ethers.utils.formatEther(
-    BigNumber.from(String(offer.OfferTerms.Amount)),
+  const totalAmount: BigNumber = BigNumber.from(String(offer.amount));
+  const totalInterest: BigNumber = BigNumber.from(
+    String(offer.OfferTerms.InterestRatePerSecond),
+  ).mul(BigNumber.from(String(offer.OfferTerms.Duration)));
+  const totalBorrowed: BigNumber = BigNumber.from(String(offer.OfferTerms.Amount)).add(
+    totalInterest,
   );
-  const fmtTotalInterest: string = Number(
-    (offer.totalInterest / 100) * Number(fmtOfferAmount),
-  ).toFixed(2);
+
+  const fmtOfferAmount: string = formatEther(totalAmount);
 
   const { hasApprovalForAll, hasCheckedApproval, grantApprovalForAll } = useERC721ApprovalForAll({
     contract,
@@ -138,6 +138,82 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
     }
   };
 
+  const renderDealTerms = () => {
+    return (
+      <Flex
+        width="100%"
+        flexDir="column"
+        border="1px solid rgba(101, 101, 101, 0.2)"
+        borderRadius="15px"
+      >
+        <Box
+          borderBottom="1px solid"
+          borderColor="rgba(101, 101, 101, 0.2)"
+          bg="white"
+          borderRadius="15px 15px 0 0"
+          textAlign="center"
+          w="100%"
+        >
+          <Text color="solid.gray0" textTransform="uppercase">
+            {i18n.dealTermsLabel}
+          </Text>
+        </Box>
+        <Grid
+          gridTemplateColumns="repeat(2, minmax(0, 1fr))"
+          gridColumnGap="20px"
+          w="100%"
+          borderColor="solid.lightPurple"
+          textAlign="center"
+          bgColor="solid.white"
+        >
+          <Flex flexDir="column" alignItems="center">
+            <Text fontSize="sm" color="solid.gray0" mr="3px" mt="30px" textTransform="uppercase">
+              {i18n.dealTermsLabel}
+            </Text>
+            <Flex alignItems="center">
+              <CryptoIcon symbol={offer.symbol} size={32} />
+              <Text ml="6px" fontSize="3.5xl">
+                {fmtOfferAmount} {offer.symbol}
+              </Text>
+            </Flex>
+            <Text fontSize="sm" color="solid.black" mt="5px">
+              for{' '}
+              <Text as="span" fontWeight="bold">
+                {offer.durationDays}
+              </Text>{' '}
+              days at{' '}
+              <Text as="span" fontWeight="bold">
+                {offer.aprPercentage}% APR
+              </Text>
+            </Text>
+          </Flex>
+
+          <Flex flexDir="column" alignItems="center">
+            <Flex alignItems="center" mt="30px">
+              <Text fontSize="sm" color="solid.gray0" mr="3px" textTransform="uppercase">
+                {i18n.totalInterest}
+              </Text>
+              <Icon name="help-circle" color="solid.gray0" />
+            </Flex>
+
+            <Flex alignItems="center">
+              <CryptoIcon symbol={offer.symbol} size={32} />
+              <Text ml="6px" fontSize="3.5xl">
+                {formatEther(totalInterest).substring(0, 4)} {offer.symbol}
+              </Text>
+            </Flex>
+            <Text fontSize="sm" color="solid.black" mb="20px">
+              <Text as="span" fontWeight="bold">
+                {Number(formatEther(totalBorrowed)).toFixed(7)}Ξ{' '}
+              </Text>
+              {i18n.totalBorrowed}
+            </Text>
+          </Flex>
+        </Grid>
+      </Flex>
+    );
+  };
+
   const renderLoanButton = () => {
     return (
       <Button
@@ -158,51 +234,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
 
   return (
     <Box p="5px" mb="5px">
-      <Grid
-        gridTemplateColumns="repeat(2, minmax(0, 1fr))"
-        gridColumnGap="20px"
-        w="100%"
-        borderColor="solid.lightPurple"
-        textAlign="center"
-        bgColor="solid.white"
-      >
-        <Flex flexDir="column" alignItems="center">
-          <Flex alignItems="center" mt="50px">
-            <Text fontSize="sm" color="solid.gray0" mr="3px" textTransform="uppercase">
-              {i18n.dealTermsLabel}
-            </Text>
-          </Flex>
-          <Flex alignItems="center">
-            <CryptoIcon symbol={offer.symbol} size={32} />
-            <Text ml="6px" fontSize="3.5xl">
-              {fmtOfferAmount} {offer.symbol}
-            </Text>
-          </Flex>
-          <Text fontSize="lg" color="solid.black" mt="5px">
-            {i18n.offerTerms(offer)}
-          </Text>
-          <Text mt="12px">{i18n.transferDetails(fmtOfferAmount, offer.symbol)}</Text>
-        </Flex>
-
-        <Flex flexDir="column" alignItems="center">
-          <Flex alignItems="center" mt="50px">
-            <Text fontSize="sm" color="solid.gray0" mr="3px" textTransform="uppercase">
-              {i18n.totalInterest}
-            </Text>
-            <Icon name="help-circle" color="solid.gray0" />
-          </Flex>
-
-          <Flex alignItems="center">
-            <CryptoIcon symbol={offer.symbol} size={32} />
-            <Text ml="6px" fontSize="3.5xl">
-              {fmtTotalInterest} {offer.symbol}
-            </Text>
-          </Flex>
-          <Text fontSize="sm" color="solid.black" mb="20px">
-            {i18n.totalInterestDescription}
-          </Text>
-        </Flex>
-      </Grid>
+      {renderDealTerms()}
 
       <Flex flexDir="column" alignItems="center">
         <Flex mt="30px">
