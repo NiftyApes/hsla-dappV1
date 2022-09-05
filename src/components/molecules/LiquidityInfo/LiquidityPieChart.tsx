@@ -34,7 +34,7 @@ export const LiquidityPieChart: React.FC = () => {
 
   return (
     <Box>
-      <Center sx={{ fontWeight: 'bold', color: 'solid.gray0' }} mt="2rem">
+      <Center sx={{ fontWeight: 'bold', color: 'solid.gray0' }} mt="1rem">
         LIQUIDITY BREAKDOWN
       </Center>
       <Box minW="max(25vw, 240px)" minH="max(25vh, 240px)" mt="1rem">
