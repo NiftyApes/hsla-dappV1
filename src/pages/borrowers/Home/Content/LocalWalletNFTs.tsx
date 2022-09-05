@@ -5,11 +5,13 @@ import {
   BAYC_CONTRACT_ADDRESS,
   DOODLES_CONTRACT_ADDRESS,
   MAYC_CONTRACT_ADDRESS,
+  NOUNS_CONTRACT_ADDRESS,
 } from 'constants/contractAddresses';
 import { useChainId } from 'hooks/useChainId';
 import { useLocalBaycContract } from 'hooks/useLocalBaycContract';
 import { useLocalDoodlesContract } from 'hooks/useLocalDoodleContract';
 import { useLocalMaycContract } from 'hooks/useLocalMaycContract';
+import { useLocalNounsContract } from 'hooks/useLocalNounsContract';
 import { useLocalScaffoldEthNFTContract } from 'hooks/useLocalScaffoldEthNFTContract';
 import { useWalletAddress } from 'hooks/useWalletAddress';
 import { fetchLocalNFTsByWalletAddress, useNFTsByWalletAddress } from 'nft/state/nfts.slice';
@@ -29,12 +31,14 @@ export const LocalhostContent: React.FC = () => {
   const baycContract = useLocalBaycContract();
   const maycContract = useLocalMaycContract();
   const doodlesContract = useLocalDoodlesContract();
+  const nounsContract = useLocalNounsContract();
   const localScaffoldEthNftContract = useLocalScaffoldEthNFTContract();
   const nfts = useNFTsByWalletAddress(walletAddress || '');
 
   const [hasFetchedBaycNfts, setHasFetchedBaycNfts] = useState(false);
   const [hasFetchedMaycNfts, setHasFetchedMaycNfts] = useState(false);
   const [hasFetchedDoodleNfts, setHasFetchedDoodleNfts] = useState(false);
+  const [hasFetchedNounsNfts, setHasFetchedNounsNfts] = useState(false);
   const [hasFetchedLocalNfts, setHasFetchedLocalNfts] = useState(false);
 
   useEffect(() => {
@@ -53,12 +57,18 @@ export const LocalhostContent: React.FC = () => {
       setHasFetchedMaycNfts(true);
     }
 
+    if (walletAddress && nounsContract && !hasFetchedNounsNfts) {
+      dispatch(fetchLocalNFTsByWalletAddress({ walletAddress, contract: nounsContract }));
+      setHasFetchedLocalNfts(true);
+    }
+
     if (walletAddress && localScaffoldEthNftContract && !hasFetchedLocalNfts) {
       dispatch(
         fetchLocalNFTsByWalletAddress({ walletAddress, contract: localScaffoldEthNftContract }),
       );
       setHasFetchedLocalNfts(true);
     }
+
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     walletAddress,
@@ -66,6 +76,7 @@ export const LocalhostContent: React.FC = () => {
     baycContract?.address,
     maycContract?.address,
     doodlesContract?.address,
+    nounsContract?.address,
     localScaffoldEthNftContract?.address,
   ]);
 
@@ -92,6 +103,8 @@ export const LocalhostContent: React.FC = () => {
               ? maycContract
               : item.contractAddress === DOODLES_CONTRACT_ADDRESS
               ? doodlesContract
+              : item.contractAddress === NOUNS_CONTRACT_ADDRESS
+              ? nounsContract
               : localScaffoldEthNftContract;
 
           if (!contract) {

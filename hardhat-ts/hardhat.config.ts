@@ -33,6 +33,7 @@ import { config as envConfig } from 'dotenv';
 import { baycAbi } from './abis/baycAbi';
 import { doodlesAbi } from './abis/doodlesAbi';
 import { maycAbi } from './abis/maycAbi';
+import { nounsAbi } from './abis/nounsAbi';
 import { saveOfferInDb } from './helpers/saveOfferInDb';
 
 envConfig({ path: '../vite-app-ts/.env' });
@@ -678,12 +679,12 @@ task('real-nfts', 'String to search for')
     try {
       await baycContract.transferFrom(DINGALING_ADDRESS, toAddress, 863);
     } catch (e) {}
-    try {
-      await baycContract.transferFrom(DINGALING_ADDRESS, toAddress, 864);
-    } catch (e) {}
-    try {
-      await baycContract.transferFrom(DINGALING_ADDRESS, toAddress, 865);
-    } catch (e) {}
+    // try {
+    //   await baycContract.transferFrom(DINGALING_ADDRESS, toAddress, 864);
+    // } catch (e) {}
+    // try {
+    //   await baycContract.transferFrom(DINGALING_ADDRESS, toAddress, 865);
+    // } catch (e) {}
 
     try {
       await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11863);
@@ -694,12 +695,12 @@ task('real-nfts', 'String to search for')
     try {
       await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11866);
     } catch (e) {}
-    try {
-      await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11868);
-    } catch (e) {}
-    try {
-      await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11870);
-    } catch (e) {}
+    // try {
+    //   await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11868);
+    // } catch (e) {}
+    // try {
+    //   await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11870);
+    // } catch (e) {}
 
     await network.provider.request({
       method: 'hardhat_stopImpersonatingAccount',
@@ -727,16 +728,43 @@ task('real-nfts', 'String to search for')
     try {
       await doodlesContract.transferFrom(A24_ADDRESS, toAddress, 5701);
     } catch (e) {}
-    try {
-      await doodlesContract.transferFrom(A24_ADDRESS, toAddress, 5702);
-    } catch (e) {}
-    try {
-      await doodlesContract.transferFrom(A24_ADDRESS, toAddress, 5703);
-    } catch (e) {}
+    // try {
+    //   await doodlesContract.transferFrom(A24_ADDRESS, toAddress, 5702);
+    // } catch (e) {}
+    // try {
+    //   await doodlesContract.transferFrom(A24_ADDRESS, toAddress, 5703);
+    // } catch (e) {}
 
     await network.provider.request({
       method: 'hardhat_stopImpersonatingAccount',
       params: [A24_ADDRESS],
+    });
+
+    const $4156_ADDRESS = '0xf476cd75be8fdd197ae0b466a2ec2ae44da41897';
+    const NOUNS_CONTRACT = '0x9c8ff314c9bc7f6e59a9d9225fb22946427edc03';
+
+    await network.provider.request({
+      method: 'hardhat_impersonateAccount',
+      params: [$4156_ADDRESS],
+    });
+
+    const $4156 = await ethers.getSigner($4156_ADDRESS);
+
+    const nounsContract = new ethers.Contract(NOUNS_CONTRACT, nounsAbi, $4156);
+
+    try {
+      await nounsContract.transferFrom($4156_ADDRESS, toAddress, 190);
+    } catch (e) {}
+    try {
+      await nounsContract.transferFrom($4156_ADDRESS, toAddress, 213);
+    } catch (e) {}
+    try {
+      await nounsContract.transferFrom($4156_ADDRESS, toAddress, 260);
+    } catch (e) {}
+
+    await network.provider.request({
+      method: 'hardhat_stopImpersonatingAccount',
+      params: [$4156_ADDRESS],
     });
   });
 
