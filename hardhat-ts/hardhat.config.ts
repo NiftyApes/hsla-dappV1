@@ -30,6 +30,9 @@ import { THardhatDeployEthers } from './helpers/types/hardhat-type-extensions';
 
 import { btoa } from 'buffer';
 import { config as envConfig } from 'dotenv';
+import { baycAbi } from './abis/baycAbi';
+import { doodlesAbi } from './abis/doodlesAbi';
+import { maycAbi } from './abis/maycAbi';
 import { saveOfferInDb } from './helpers/saveOfferInDb';
 
 envConfig({ path: '../vite-app-ts/.env' });
@@ -88,10 +91,18 @@ const config: HardhatUserConfig = {
         url: `https://eth-mainnet.alchemyapi.io/v2/Of3Km_--Ow1fNnMhaETmwnmWBFFHF3ZY`,
         //blockNumber: 14724006,
       },
-      mining: {
-        auto: false,
-        interval: 5000,
-      },
+
+      // When doing mainnet forking, we got
+      // `Error: setBlockContext called when checkpointed`
+      // And there are reports of this being caused
+      // by mainnet forking w/ automine turned off.
+      // So we turned it back on by comment out the below field.
+      // https://github.com/NomicFoundation/hardhat/issues/2516
+
+      // mining: {
+      //   auto: false,
+      //   interval: 5000,
+      // },
       gas: 12000000,
       blockGasLimit: 0x1fffffffffffff,
       allowUnlimitedContractSize: true,
@@ -634,6 +645,98 @@ task('mint', 'String to search for')
     console.log('Minting godzilla with IPFS hash (' + uploadedgodzilla.path + ')');
     await yourCollectible.mintItem(toAddress, uploadedgodzilla.path, {
       gasLimit: 400000,
+    });
+  });
+
+task('real-nfts', 'String to search for')
+  .addOptionalParam('to', 'address to mint to')
+  .setAction(async (taskArgs, { network, ethers }, hre) => {
+    const DINGALING_ADDRESS = '0x54be3a794282c030b15e43ae2bb182e14c409c5e';
+    const BAYC_CONTRACT = '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d';
+    const MAYC_CONTRACT = '0x60e4d786628fea6478f785a6d7e704777c86a7c6';
+
+    await network.provider.request({
+      method: 'hardhat_impersonateAccount',
+      params: [DINGALING_ADDRESS],
+    });
+
+    const dingaling = await ethers.getSigner(DINGALING_ADDRESS);
+
+    const baycContract = new ethers.Contract(BAYC_CONTRACT, baycAbi, dingaling);
+    const maycContract = new ethers.Contract(MAYC_CONTRACT, maycAbi, dingaling);
+
+    const toAddress = taskArgs.to;
+
+    try {
+      await baycContract.transferFrom(DINGALING_ADDRESS, toAddress, 861);
+    } catch (e) {
+      console.log(e);
+    }
+    try {
+      await baycContract.transferFrom(DINGALING_ADDRESS, toAddress, 862);
+    } catch (e) {}
+    try {
+      await baycContract.transferFrom(DINGALING_ADDRESS, toAddress, 863);
+    } catch (e) {}
+    try {
+      await baycContract.transferFrom(DINGALING_ADDRESS, toAddress, 864);
+    } catch (e) {}
+    try {
+      await baycContract.transferFrom(DINGALING_ADDRESS, toAddress, 865);
+    } catch (e) {}
+
+    try {
+      await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11863);
+    } catch (e) {}
+    try {
+      await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11864);
+    } catch (e) {}
+    try {
+      await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11866);
+    } catch (e) {}
+    try {
+      await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11868);
+    } catch (e) {}
+    try {
+      await maycContract.transferFrom(DINGALING_ADDRESS, toAddress, 11870);
+    } catch (e) {}
+
+    await network.provider.request({
+      method: 'hardhat_stopImpersonatingAccount',
+      params: [DINGALING_ADDRESS],
+    });
+
+    const A24_ADDRESS = '0xad097fdcd58535250c59807d6683e0a6b688d6cc';
+    const DOODLES_CONTRACT = '0x8a90cab2b38dba80c64b7734e58ee1db38b8992e';
+
+    await network.provider.request({
+      method: 'hardhat_impersonateAccount',
+      params: [A24_ADDRESS],
+    });
+
+    const a24 = await ethers.getSigner(A24_ADDRESS);
+
+    const doodlesContract = new ethers.Contract(DOODLES_CONTRACT, doodlesAbi, a24);
+
+    try {
+      await doodlesContract.transferFrom(A24_ADDRESS, toAddress, 5698);
+    } catch (e) {}
+    try {
+      await doodlesContract.transferFrom(A24_ADDRESS, toAddress, 5699);
+    } catch (e) {}
+    try {
+      await doodlesContract.transferFrom(A24_ADDRESS, toAddress, 5701);
+    } catch (e) {}
+    try {
+      await doodlesContract.transferFrom(A24_ADDRESS, toAddress, 5702);
+    } catch (e) {}
+    try {
+      await doodlesContract.transferFrom(A24_ADDRESS, toAddress, 5703);
+    } catch (e) {}
+
+    await network.provider.request({
+      method: 'hardhat_stopImpersonatingAccount',
+      params: [A24_ADDRESS],
     });
   });
 

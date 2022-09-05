@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Box,
   Button,
@@ -11,20 +10,21 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
+import React from 'react';
 
 import moment from 'moment';
-import { NFT } from '../../../nft';
 import { LoanAuction } from '../../../loan';
+import { NFT } from '../../../nft';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
 
-import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
-import { NFTCardHeader } from '../NFTCard/components/NFTCardHeader';
-import { CollateralHeader } from '../CollateralHeader';
-import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
 import { formatEther } from 'ethers/lib/utils';
 import { getAPR } from '../../../helpers/getAPR';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
+import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
+import { CollateralHeader } from '../CollateralHeader';
+import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
+import { NFTCardHeader } from '../NFTCard/components/NFTCardHeader';
 
 interface Props {
   loan: LoanAuction;
@@ -187,7 +187,12 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
 
   return (
     <NFTCardContainer>
-      <NFTCardHeader img={nft.image} tokenId={nft.id} tokenName={nft.name} collectionName={''}>
+      <NFTCardHeader
+        img={nft.image}
+        tokenId={nft.id}
+        tokenName={nft.name}
+        collectionName={nft.collectionName}
+      >
         <>
           {isDefaulted ? renderDefaultedLoan() : renderActiveLoan()}
 
