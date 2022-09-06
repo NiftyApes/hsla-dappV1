@@ -10,8 +10,8 @@ import LoadingIndicator from '../../atoms/LoadingIndicator';
 import { humanizeContractError } from '../../../helpers/errorsMap';
 import { LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
-import { roundForDisplay } from '../../../helpers/roundForDisplay';
 import { formatEther } from 'ethers/lib/utils';
+import { concatForDisplay } from '../../../helpers/roundForDisplay';
 
 interface Props {
   contract?: Contract;
@@ -158,58 +158,60 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
             {i18n.dealTermsLabel}
           </Text>
         </Box>
-        <Grid
-          gridTemplateColumns="repeat(2, minmax(0, 1fr))"
-          gridColumnGap="20px"
-          w="100%"
-          borderColor="solid.lightPurple"
-          textAlign="center"
-          bgColor="solid.white"
-        >
-          <Flex flexDir="column" alignItems="center">
-            <Text fontSize="sm" color="solid.gray0" mr="3px" mt="30px" textTransform="uppercase">
-              {i18n.dealTermsLabel}
-            </Text>
-            <Flex alignItems="center">
-              <CryptoIcon symbol={offer.symbol} size={32} />
-              <Text ml="6px" fontSize="3.5xl">
-                {fmtOfferAmount} {offer.symbol}
+        <Box p="10px">
+          <Grid
+            gridTemplateColumns="repeat(2, minmax(0, 1fr))"
+            gridColumnGap="20px"
+            w="100%"
+            borderColor="solid.lightPurple"
+            textAlign="center"
+            bgColor="solid.white"
+          >
+            <Flex flexDir="column" alignItems="center">
+              <Text fontSize="sm" color="solid.gray0" mr="3px" mt="30px" textTransform="uppercase">
+                {i18n.dealTermsLabel}
               </Text>
-            </Flex>
-            <Text fontSize="sm" color="solid.black" mt="5px">
-              for{' '}
-              <Text as="span" fontWeight="bold">
-                {offer.durationDays}
-              </Text>{' '}
-              days at{' '}
-              <Text as="span" fontWeight="bold">
-                {offer.aprPercentage}% APR
+              <Flex alignItems="center">
+                <CryptoIcon symbol={offer.symbol} size={32} />
+                <Text ml="6px" fontSize="3.5xl">
+                  {fmtOfferAmount} {offer.symbol}
+                </Text>
+              </Flex>
+              <Text fontSize="sm" color="solid.black" mt="5px">
+                for{' '}
+                <Text as="span" fontWeight="bold">
+                  {offer.durationDays}
+                </Text>{' '}
+                days at{' '}
+                <Text as="span" fontWeight="bold">
+                  {offer.aprPercentage}% APR
+                </Text>
               </Text>
-            </Text>
-          </Flex>
-
-          <Flex flexDir="column" alignItems="center">
-            <Flex alignItems="center" mt="30px">
-              <Text fontSize="sm" color="solid.gray0" mr="3px" textTransform="uppercase">
-                {i18n.totalInterest}
-              </Text>
-              <Icon name="help-circle" color="solid.gray0" />
             </Flex>
 
-            <Flex alignItems="center">
-              <CryptoIcon symbol={offer.symbol} size={32} />
-              <Text ml="6px" fontSize="3.5xl">
-                {formatEther(totalInterest).substring(0, 4)} {offer.symbol}
+            <Flex flexDir="column" alignItems="center">
+              <Flex alignItems="center" mt="30px">
+                <Text fontSize="sm" color="solid.gray0" mr="3px" textTransform="uppercase">
+                  {i18n.totalInterest}
+                </Text>
+                <Icon name="help-circle" color="solid.gray0" />
+              </Flex>
+
+              <Flex alignItems="center">
+                <CryptoIcon symbol={offer.symbol} size={32} />
+                <Text ml="6px" fontSize="3.5xl">
+                  {formatEther(totalInterest).substring(0, 4)} {offer.symbol}
+                </Text>
+              </Flex>
+              <Text fontSize="sm" color="solid.black" mb="20px">
+                <Text as="span" fontWeight="bold">
+                  {concatForDisplay(formatEther(totalBorrowed))}Ξ{' '}
+                </Text>
+                {i18n.totalBorrowed}
               </Text>
             </Flex>
-            <Text fontSize="sm" color="solid.black" mb="20px">
-              <Text as="span" fontWeight="bold">
-                {Number(formatEther(totalBorrowed)).toFixed(7)}Ξ{' '}
-              </Text>
-              {i18n.totalBorrowed}
-            </Text>
-          </Flex>
-        </Grid>
+          </Grid>
+        </Box>
       </Flex>
     );
   };
