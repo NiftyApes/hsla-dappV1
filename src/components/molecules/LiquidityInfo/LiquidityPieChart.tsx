@@ -16,6 +16,35 @@ export const LiquidityPieChart: React.FC = () => {
 
   const data = [];
 
+  // Placeholder chart when no liquidity
+  if (totalEthLoanedOut === 0) {
+    data.push({
+      title: 'No Liquidity Yet',
+      value: 1, // needs to be non-zero to fill up chart
+      color: '#eee',
+    });
+
+    return (
+      <Box>
+        <Center sx={{ fontWeight: 'bold', color: 'solid.gray0' }} mt="1rem">
+          LIQUIDITY BREAKDOWN
+        </Center>
+        <Box minW="max(25vw, 240px)" minH="max(25vh, 240px)" mt="1rem">
+          <PieChart
+            lineWidth={25}
+            labelPosition={116}
+            labelStyle={() => ({ fontSize: '20px' })}
+            radius={100}
+            data={data}
+            label={({ dataEntry }) => '0Ξ'}
+            viewBoxSize={[400, 300]}
+            center={[200, 130]}
+          />
+        </Box>
+      </Box>
+    );
+  }
+
   if (totalEthLoanedOut) {
     data.push({
       title: 'In Use',
