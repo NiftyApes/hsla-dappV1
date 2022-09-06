@@ -21,12 +21,9 @@ export const getLocalNFTsOfAddress = async ({
     return undefined;
   }
 
-  const totalSupply = (await contract.totalSupply()).toNumber();
-
   // Which tokenIds to iterate over depends on which collection we're using
   const tokenIdRange = getTokenIdRangeForLocalForksOfNftContracts({
     nftContractAddress: contract.address,
-    totalSupply,
   });
 
   const results = [];
