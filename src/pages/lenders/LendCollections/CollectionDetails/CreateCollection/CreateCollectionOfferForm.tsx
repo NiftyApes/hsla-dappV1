@@ -1,8 +1,6 @@
 import {
   Box,
   Button,
-  CircularProgress,
-  CircularProgressLabel,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -89,7 +87,7 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
           HOW MUCH?
         </Text>
         <Grid gridTemplateColumns="repeat(3, minmax(0, 1fr))" my="18px" alignItems="center">
-          <GridItem colSpan={2}>
+          <GridItem colSpan={3}>
             <FormControl isInvalid={doesOfferAmountExceedAvailableLiquidity}>
               <InputGroup>
                 <InputLeftElement sx={{ top: '17px', left: '16px' }}>
@@ -121,24 +119,6 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
                 )}
               </Box>
             </FormControl>
-          </GridItem>
-          <GridItem colSpan={1} textAlign="center" opacity={0.5}>
-            <Text fontSize="md" fontWeight="bold" mb="6px">
-              LTV
-            </Text>
-            <CircularProgress
-              value={40}
-              color="notification.notify"
-              trackColor="notification.info"
-              size="66px"
-            >
-              <CircularProgressLabel fontSize="sm" fontWeight="bold">
-                21.0%
-              </CircularProgressLabel>
-            </CircularProgress>
-            <Text fontSize="sm" fontWeight="bold" color="solid.gray0" mt="6px">
-              100Ξ Floor
-            </Text>
           </GridItem>
         </Grid>
         <Text
