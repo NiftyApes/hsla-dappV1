@@ -20,5 +20,5 @@ export const getTokenIdRangeForLocalForksOfNftContracts = ({
     ? [5698, 5699, 5701]
     : nftContractAddress.toUpperCase() === NOUNS_CONTRACT_ADDRESS.toUpperCase()
     ? [190, 213, 260]
-    : [];
+    : [1, 2, 3, 4, 5, 6];
 };

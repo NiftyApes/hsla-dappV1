@@ -62,12 +62,12 @@ export const LocalhostContent: React.FC = () => {
       setHasFetchedLocalNfts(true);
     }
 
-    // if (walletAddress && localScaffoldEthNftContract && !hasFetchedLocalNfts) {
-    //   dispatch(
-    //     fetchLocalNFTsByWalletAddress({ walletAddress, contract: localScaffoldEthNftContract }),
-    //   );
-    //   setHasFetchedLocalNfts(true);
-    // }
+    if (walletAddress && localScaffoldEthNftContract && !hasFetchedLocalNfts) {
+      dispatch(
+        fetchLocalNFTsByWalletAddress({ walletAddress, contract: localScaffoldEthNftContract }),
+      );
+      setHasFetchedLocalNfts(true);
+    }
 
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [

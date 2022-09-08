@@ -30,17 +30,6 @@ export const getLocalNFTsOfAddress = async ({
   for (const i of tokenIdRange) {
     const tokenId = BigNumber.from(i);
 
-    // Some collections (e.g., MAYC) skip tokenIds, presumably if not minted
-    // So we do this check early and continue if token doesn't exist
-    // Otherwise, things like the ownerOf call below throw an error
-    let tokenURI;
-    try {
-      tokenURI = await contract.tokenURI(tokenId);
-    } catch (e) {
-      // if not associated token, skip to next
-      continue;
-    }
-
     const owner = await contract.ownerOf(tokenId);
 
     const isOwnedDirectlyByWallet = owner.toUpperCase() === walletAddress.toUpperCase();
@@ -66,7 +55,9 @@ export const getLocalNFTsOfAddress = async ({
 
     // If no metadata, fetch JSON using token URI
     const haveAlchemyMetadata = !_.isNil(nftMetadata);
-    const jsonFromContractTokenUri = !haveAlchemyMetadata ? await getJson({ url: tokenURI }) : {};
+    const jsonFromContractTokenUri = !haveAlchemyMetadata
+      ? await getJson({ url: await contract.tokenURI(tokenId) })
+      : {};
 
     const json = {
       ...jsonFromContractTokenUri,
