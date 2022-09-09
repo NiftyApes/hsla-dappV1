@@ -81,7 +81,7 @@ const CollectionHeader: React.FC = () => {
       </Flex>
 
       <Flex alignItems="center" flexDirection="column">
-        <Text color="green.500" fontSize="xl" fontWeight="bold" mr="8px">
+        <Text color="green.gray0" fontSize="xl" fontWeight="bold" mr="8px">
           {volume}Ξ
         </Text>
         <Text color="solid.gray0" fontSize="sm" fontWeight="bold" mr="8px">

@@ -22,15 +22,15 @@ export const useCollectionMetadata = ({ nftContractAddress }: { nftContractAddre
           setMeta({
             name,
             symbol,
-            image: meta.content[0] ? meta.content[0].url : '',
+            image: meta.content[0] ? meta.content[0].url : '/assets/images/img-missing.png',
           });
         })
         .catch((error) => {
+          // This might need a bit more error handling
           setMeta({
-            name: 'NIFTY APES',
-            symbol: 'NOTHING',
-            image:
-              'https://images.immediate.co.uk/production/volatile/sites/30/2017/01/Bananas-218094b-scaled.jpg',
+            name: 'NOT FOUND',
+            symbol: 'NOTFOUND',
+            image: '/assets/images/NA-BLACK.png',
           });
         });
     };
