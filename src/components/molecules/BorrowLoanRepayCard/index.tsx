@@ -1,5 +1,15 @@
 import React, { useState } from 'react';
-import { Box, Button, Divider, Flex, Text, useToast } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Center,
+  Divider,
+  Flex,
+  Grid,
+  GridItem,
+  Text,
+  useToast,
+} from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { useRepayLoanByBorrower } from '../../../hooks/useRepayLoan';
 
@@ -12,7 +22,7 @@ import { useCalculateInterestAccrued } from '../../../hooks/useCalculateInterest
 import { BigNumber } from 'ethers';
 import moment from 'moment';
 import { getAPR } from '../../../helpers/getAPR';
-import { roundForDisplay } from '../../../helpers/roundForDisplay';
+import { concatForDisplay, roundForDisplay } from '../../../helpers/roundForDisplay';
 
 interface Props {
   loan: LoanAuction;
@@ -21,14 +31,16 @@ interface Props {
 
 const i18n = {
   actionButton: 'repay loan',
-  footerText: 'Paying this will close the loan out and unlock your asset from escrow.',
+  footerText:
+    'Paying this will close your loan. You will receive your NFT collateral in the same transaction!',
   loanApr: (val: number) => `Loan APR ${roundForDisplay(val)}%`,
-  loanBorrowed: (val: string) => `Total borrowed ${val}Ξ`,
-  loanInterest: (val: string) => `Total interest ${val}Ξ`,
-  loanOwed: (val: string) => `Total owed ${val}Ξ`,
-  loanTimeRemaining: (distance: string) => `Time remaining ${distance}`,
+  loanBorrowed: 'Total borrowed',
+  loanInterest: 'Total interest',
+  loanOwed: 'Total owed',
+  loanTimeRemaining: (distance: string, defaulted: boolean) =>
+    defaulted ? 'Loan Defaulted' : `Time remaining ${distance}`,
   paymentType: 'max payment',
-  terms: 'deal terms',
+  loanInformation: 'loan information',
   toastSuccess: 'Loan repaid successfully',
 };
 
@@ -51,15 +63,17 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
 
   // Additional 20 minutes worth of interest
   const padding: BigNumber = BigNumber.from(interestRatePerSecond * 1200);
-  const totalOwed: BigNumber = loanAmount.add(totalAccruedInterest).add(padding);
+  const totalOwed: BigNumber = loanAmount.add(totalAccruedInterest);
   const apr = getAPR({ amount, interestRatePerSecond });
 
-  const timeRemaining = moment(loanEndTimestamp * 1000).toNow(true);
+  const endMoment = moment(loanEndTimestamp * 1000);
+  const timeRemaining = endMoment.toNow(true);
+  const isDefaulted = moment().isAfter(endMoment);
 
   const { repayLoanByBorrower } = useRepayLoanByBorrower({
     nftContractAddress: nft.contractAddress,
     nftId: nft.id,
-    amount: totalOwed,
+    amount: totalOwed.add(padding),
   });
 
   const onRepayLoan = async () => {
@@ -106,15 +120,44 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
             w="100%"
           >
             <Text color="solid.gray0" textTransform="uppercase">
-              {i18n.terms}
+              {i18n.loanInformation}
             </Text>
           </Box>
           <Box p="10px">
-            <Text>{i18n.loanTimeRemaining(timeRemaining)}</Text>
-            <Text>{i18n.loanApr(apr)}</Text>
-            <Text>{i18n.loanBorrowed(formatEther(amount))}</Text>
-            <Text>{i18n.loanInterest(formatEther(totalAccruedInterest))}</Text>
-            <Text fontWeight="bold">{i18n.loanOwed(formatEther(totalOwed))}</Text>
+            <Center mb="10px" mt="10px">
+              <Text fontWeight="bold" fontSize="2.5xl">
+                {i18n.loanOwed} {formatEther(totalOwed)}Ξ
+              </Text>
+            </Center>
+
+            <Grid
+              gridTemplateColumns="repeat(2, minmax(0, 1fr))"
+              gridColumnGap="20px"
+              w="100%"
+              borderColor="solid.lightPurple"
+              textAlign="left"
+              bgColor="solid.white"
+            >
+              <GridItem>
+                <Text>{i18n.loanTimeRemaining(timeRemaining, isDefaulted)}</Text>
+                <Text>{i18n.loanApr(apr)}</Text>
+              </GridItem>
+
+              <GridItem>
+                <Text>
+                  {i18n.loanBorrowed}{' '}
+                  <Text as="span" fontWeight="bold">
+                    {concatForDisplay(formatEther(loanAmount))}Ξ
+                  </Text>
+                </Text>
+                <Text>
+                  {i18n.loanInterest}{' '}
+                  <Text as="span" fontWeight="bold">
+                    {concatForDisplay(formatEther(totalAccruedInterest))}Ξ
+                  </Text>
+                </Text>
+              </GridItem>
+            </Grid>
           </Box>
         </Flex>
 
@@ -145,19 +188,19 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
           <Divider mt="20px" mb="15px" color="accents.100" />
           <Button
             borderRadius="8px"
-            colorScheme="orange"
+            colorScheme={isDefaulted ? 'red' : 'purple'}
             onClick={onRepayLoan}
             py="6px"
             size="lg"
             textTransform="uppercase"
-            variant="neutralReverse"
+            variant="solid"
             w="100%"
           >
             {isExecuting ? <LoadingIndicator size="xs" /> : i18n.actionButton}
           </Button>
         </Flex>
 
-        <Text mt="20px" fontSize="lg" color="solid.gray0" w="100%" textAlign="center">
+        <Text mt="20px" fontSize="md" w="100%" textAlign="center">
           {i18n.footerText}
         </Text>
       </Flex>

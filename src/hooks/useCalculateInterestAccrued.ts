@@ -23,7 +23,6 @@ export const useCalculateInterestAccrued = ({
       }
 
       const result = await niftyApesContract.calculateInterestAccrued(nftContractAddress, nftId);
-
       setAccruedInterest(result);
     }
   }, [nftContractAddress, nftId]);
