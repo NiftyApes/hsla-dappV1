@@ -46,7 +46,7 @@ const CollectionHeader: React.FC = () => {
             src={image}
           />
           <Text maxWidth="20ch" noOfLines={1} fontSize="xl" fontWeight="bold">
-            {name} and this a test for a longer name
+            {name}
           </Text>
         </Flex>
         <Flex flexDirection="column">
