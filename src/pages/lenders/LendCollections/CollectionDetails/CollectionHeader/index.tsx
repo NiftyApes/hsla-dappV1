@@ -22,34 +22,42 @@ const CollectionHeader: React.FC = () => {
   return (
     <Flex
       boxShadow="0px 4px 24px 0px #4910921A"
-      p="48px"
+      p="1.5rem"
       borderRadius="48px"
       alignItems="center"
       justifyContent="space-between"
-      mt="15px"
-      mb="40px"
+      mt="0rem"
+      mb="2.5rem"
     >
       <Flex alignItems="center">
-        <Image
-          borderRadius="full"
-          style={{ height: '100px', width: '100px' }}
-          mr="20px"
-          alt={name}
-          src={image}
-        />
-        <Text fontSize="xl" fontWeight="bold">
-          {name}
-        </Text>
-      </Flex>
-
-      <Flex flexDirection="column">
-        <Flex>
-          <Icon name="etherscan" mr="5px" ml="3px" />
-          <span style={{ textDecoration: 'underline' }}>Etherscan</span>
+        <Flex
+          alignItems="center"
+          background="#FAF5FF"
+          padding=".45rem .85rem"
+          borderRadius={'48px'}
+          mr="1rem"
+          _after={{ content: '"↓"', ml: '.75rem' }}
+        >
+          <Image
+            borderRadius="full"
+            style={{ height: '3.5rem', width: '3.5rem' }}
+            mr=".75rem"
+            alt={name}
+            src={image}
+          />
+          <Text maxWidth="20ch" noOfLines={1} fontSize="xl" fontWeight="bold">
+            {name}
+          </Text>
         </Flex>
-        <Flex>
-          <Icon name="os" size={23} mr="3px" />
-          <span style={{ textDecoration: 'underline' }}>Opensea</span>
+        <Flex flexDirection="column">
+          <Flex>
+            <Icon name="etherscan" mr="5px" ml="3px" />
+            <span style={{ textDecoration: 'underline' }}>Etherscan</span>
+          </Flex>
+          <Flex>
+            <Icon name="os" size={23} mr="3px" />
+            <span style={{ textDecoration: 'underline' }}>Opensea</span>
+          </Flex>
         </Flex>
       </Flex>
 
