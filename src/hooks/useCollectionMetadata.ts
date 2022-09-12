@@ -19,14 +19,14 @@ export const useCollectionMetadata = ({ nftContractAddress }: { nftContractAddre
         .then((data) => {
           const { name, symbol, meta } = data;
 
-          setMeta({
-            name,
-            symbol,
-            image: meta.content[0] ? meta.content[0].url : '/assets/images/img-missing.png',
-          });
+          let image = '/assets/images/img-missing.png';
+
+          if (meta.content && meta.content.length > 0) {
+            image = meta.content.find((item: any) => item['@type'] === 'IMAGE').url;
+          }
+          setMeta({ name, symbol, image });
         })
         .catch((error) => {
-          // This might need a bit more error handling
           setMeta({
             name: 'NOT FOUND',
             symbol: 'NOTFOUND',

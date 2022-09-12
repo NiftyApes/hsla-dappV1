@@ -4,7 +4,6 @@ import { NFT } from '../../../nft';
 
 export const CollateralHeader: React.FC<{ title: string; nft: NFT }> = (props) => {
   const { title, nft } = props;
-
   return (
     <Flex>
       <Image

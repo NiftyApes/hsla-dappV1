@@ -23,6 +23,7 @@ import { BigNumber } from 'ethers';
 import moment from 'moment';
 import { getAPR } from '../../../helpers/getAPR';
 import { concatForDisplay, roundForDisplay } from '../../../helpers/roundForDisplay';
+import { useRaribleTokenMeta } from '../../../hooks/useRaribleTokenMeta';
 
 interface Props {
   loan: LoanAuction;
@@ -47,6 +48,7 @@ const i18n = {
 const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
   const toast = useToast();
   const [isExecuting, setExecuting] = useState<boolean>(false);
+
   const accruedInterest: Array<BigNumber> = useCalculateInterestAccrued({
     nftContractAddress: nft.contractAddress,
     nftId: nft.id,
@@ -147,7 +149,7 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
                 <Text>
                   {i18n.loanBorrowed}{' '}
                   <Text as="span" fontWeight="bold">
-                    {concatForDisplay(formatEther(loanAmount))}Ξ
+                    {concatForDisplay(formatEther(amount))}Ξ
                   </Text>
                 </Text>
                 <Text>

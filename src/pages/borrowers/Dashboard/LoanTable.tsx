@@ -8,6 +8,7 @@ import { getAPR } from '../../../helpers/getAPR';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
 import moment from 'moment';
 import { BigNumber } from 'ethers';
+import { useRaribleTokenMeta } from '../../../hooks/useRaribleTokenMeta';
 
 interface callbackType {
   (loan: LoanAuction): void;
@@ -28,6 +29,15 @@ const i18n = {
 };
 
 const LoanTable: React.FC<Props> = ({ loans, onClick }) => {
+  const meta = useRaribleTokenMeta({
+    nftContractAddress: '0x9c8ff314c9bc7f6e59a9d9225fb22946427edc03',
+    tokenId: '1',
+  });
+
+  if (!meta.image) {
+    return <>Loading...</>;
+  }
+
   return (
     <Box px="120px">
       <Table>
@@ -93,12 +103,7 @@ const LoanTable: React.FC<Props> = ({ loans, onClick }) => {
               <Tr key={idx}>
                 <Td>
                   <Flex alignItems="center" justifyContent="center">
-                    <Image
-                      src="/assets/mocks/bored_ape_square.png"
-                      w="55px"
-                      h="55px"
-                      objectFit="cover"
-                    />
+                    <Image src={meta.image} w="55px" h="55px" objectFit="cover" />
                     <Box marginLeft="-10px" mt="-10px">
                       <Box
                         border="2px solid"
@@ -113,9 +118,8 @@ const LoanTable: React.FC<Props> = ({ loans, onClick }) => {
                   </Flex>
                   <Text mt="8px" fontWeight="bold" fontSize="2xs">
                     <Text as="span" color="gray">
-                      {loan.nftContractAddress}
+                      {meta.name}
                     </Text>
-                    #{loan.nftId}
                   </Text>
                 </Td>
                 <Td>{startMoment.format('MMMM Do YYYY, h:mm:ss')}</Td>
