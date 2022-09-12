@@ -26,6 +26,7 @@ export const useCreateCollectionOffer = ({
       amount,
       aprInPercent,
       durationInDays,
+      expirationInDays,
       asset = 'ETH',
       onPending,
       onSuccess,
@@ -36,6 +37,7 @@ export const useCreateCollectionOffer = ({
       amount: number;
       aprInPercent: number;
       durationInDays: number;
+      expirationInDays: number;
       asset?: string;
       onPending?: any;
       onSuccess?: any;
@@ -68,7 +70,7 @@ export const useCreateCollectionOffer = ({
           asset: ETH_ADDRESS,
           amount: ethers.utils.parseUnits(String(amount), 'ether'),
           duration: Math.floor(durationInDays * 60 * 60 * 24), // 1 day
-          expiration: Math.floor(Date.now() / 1000 + 60 * 60 * 24 * 30), // 5 days from now
+          expiration: Math.floor(Date.now() / 1000 + expirationInDays * 60 * 60 * 24),
         });
 
         onTxSubmitted && onTxSubmitted(tx);

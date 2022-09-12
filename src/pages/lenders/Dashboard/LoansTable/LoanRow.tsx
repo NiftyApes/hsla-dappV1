@@ -1,10 +1,12 @@
-import { Box, Flex, Image, Td, Text, Tr } from '@chakra-ui/react';
+import { Box, Button, Flex, Td, Text, Tr } from '@chakra-ui/react';
 
 import Icon from 'components/atoms/Icon';
 import { ethers } from 'ethers';
 import { getAPR } from 'helpers/getAPR';
 import { roundForDisplay } from 'helpers/roundForDisplay';
+import { useCalculateInterestAccrued } from 'hooks/useCalculateInterestAccrued';
 import { useLoanAuction } from 'hooks/useLoanAuction';
+import { useSeizeAsset } from 'hooks/useSeizeAsset';
 import moment from 'moment';
 
 export const LoanRow = ({ loanFromDb }: any) => {
@@ -13,78 +15,147 @@ export const LoanRow = ({ loanFromDb }: any) => {
     nftId: loanFromDb.nftId,
   });
 
+  const accruedInterest = useCalculateInterestAccrued({
+    nftContractAddress: loanFromDb.nftContractAddress,
+    nftId: loanFromDb.nftId,
+  });
+
+  const [lenderInterestAsBigNumber] = accruedInterest || [];
+
+  const { seizeAsset } = useSeizeAsset({
+    nftContractAddress: loanFromDb.nftContractAddress,
+    nftId: loanFromDb.nftId,
+  });
+
   if (!loanFromChain) {
     return null;
   }
 
-  console.log('loanFromChain', loanFromChain);
+  const endMoment = moment(loanFromChain.loanEndTimestamp * 1000);
+  console.log(loanFromDb.nftId, 'endMoment', endMoment);
+  const isDefaulted = moment().isAfter(endMoment);
 
   return (
-    <Tr
-      border="1px solid red"
-      sx={{
-        td: {
-          border: 'none',
-          fontSize: 'md',
-          textAlign: 'center',
-        },
-      }}
-    >
-      <Td>
-        <Flex flexDir="column" alignItems="center" justifyContent="center">
-          <Text fontWeight="bold" fontSize="xs" color="solid.gray0" mt="4px">
-            {loanFromDb.nftContractAddress}
-          </Text>
-          <Image src="/assets/mocks/bored_ape_square.png" w="55px" h="55px" objectFit="cover" />
-          <Flex mt="-10px">
-            <Icon name="os" size={25} />
-            <Box border="2px solid" borderRadius="50%" borderColor="solid.white" bgColor="white">
-              <Icon name="etherscan" size={20} />
-            </Box>
+    <>
+      <Tr
+        borderTop="1px solid #eee"
+        borderRight="1px solid #eee"
+        borderLeft="1px solid #eee"
+        borderBottom={!isDefaulted ? '1px solid #eee' : undefined}
+        sx={{
+          td: {
+            border: 'none',
+            fontSize: 'md',
+            textAlign: 'center',
+          },
+        }}
+      >
+        <Td rowSpan={isDefaulted ? 2 : 1}>
+          <Flex flexDir="column" alignItems="center">
+            <Text fontWeight="bold" fontSize="xs" color="solid.gray0" mt="4px">
+              <span
+                style={{
+                  display: 'inline-block',
+                  textOverflow: 'ellipsis',
+                  overflow: 'hidden',
+                  whiteSpace: 'nowrap',
+                  width: '80px',
+                }}
+              >
+                {loanFromDb.nftContractAddress}
+              </span>
+            </Text>
+            <Flex>
+              <Icon name="os" size={25} />
+              <Box border="2px solid" borderRadius="50%" borderColor="solid.white" bgColor="white">
+                <Icon name="etherscan" size={20} />
+              </Box>
+            </Flex>
+            <Text fontWeight="bold" fontSize="sm">
+              #{loanFromDb.nftId}
+            </Text>
           </Flex>
-          <Text fontWeight="bold" fontSize="sm">
-            {loanFromDb.nftId}
+        </Td>
+        <Td>
+          <Flex>
+            <Box flex="1" />
+            <Flex flexDirection="column" alignItems="flex-start" justifyContent="flex-start">
+              <Text fontSize="sm" mb="10px">
+                Initiated {moment(loanFromChain.loanBeginTimestamp * 1000).format('MMM D, YYYY')}
+              </Text>
+              <Box mb="2px">
+                <Text as="span" fontSize="xl" fontWeight="bold">
+                  {ethers.utils.formatEther(loanFromChain.amount)}Ξ
+                </Text>{' '}
+                <Text as="span" color="#555">
+                  {moment
+                    .duration(
+                      loanFromChain.loanEndTimestamp - loanFromChain.loanBeginTimestamp,
+                      'seconds',
+                    )
+                    .asDays()}{' '}
+                  days,
+                </Text>
+              </Box>
+              <Box>
+                <Text as="span" fontWeight="bold">
+                  {roundForDisplay(
+                    getAPR({
+                      amount: loanFromChain.amount,
+                      interestRatePerSecond: loanFromChain.interestRatePerSecond,
+                    }),
+                  )}
+                  %
+                </Text>{' '}
+                <Text as="span" color="#555">
+                  APR
+                </Text>
+              </Box>
+            </Flex>
+            <Box flex="1" />
+          </Flex>
+        </Td>
+        <Td>
+          <Text
+            fontSize="md"
+            color={isDefaulted ? 'notification.alert' : 'notification.info'}
+            fontWeight="bold"
+          >
+            {isDefaulted ? 'Defaulted' : 'Active Loan'}
           </Text>
-        </Flex>
-      </Td>
-      <Td>
-        <Box textAlign="left">
-          <Text fontSize="xl" fontWeight="bold">
-            {ethers.utils.formatEther(loanFromChain.amount)}Ξ at{' '}
-            {roundForDisplay(
-              getAPR({
-                amount: loanFromChain.amount,
-                interestRatePerSecond: loanFromChain.interestRatePerSecond,
-              }),
+          <Text fontSize="sm" fontStyle="italic">
+            {moment(loanFromChain.loanEndTimestamp * 1000).toNow(true)} remaining
+          </Text>
+        </Td>
+        <Td>
+          <Text fontSize="sm">
+            {lenderInterestAsBigNumber &&
+              `${roundForDisplay(Number(ethers.utils.formatEther(lenderInterestAsBigNumber)))}Ξ`}
+          </Text>
+        </Td>
+      </Tr>
+      {isDefaulted && (
+        <Tr
+          borderBottom="1px solid #eee"
+          borderRight="1px solid #eee"
+          borderLeft="1px solid #eee"
+          sx={{
+            td: {
+              border: 'none',
+              fontSize: 'md',
+              textAlign: 'center',
+            },
+          }}
+        >
+          <Td colSpan={3}>
+            {isDefaulted && (
+              <Button colorScheme="red" w="100%" onClick={() => seizeAsset && seizeAsset()}>
+                Seize
+              </Button>
             )}
-            % for{' '}
-            {moment
-              .duration(
-                loanFromChain.loanEndTimestamp - loanFromChain.loanBeginTimestamp,
-                'seconds',
-              )
-              .asDays()}{' '}
-            days
-          </Text>
-        </Box>
-      </Td>
-      <Td>
-        <Text fontSize="md" color="notification.info" fontWeight="bold">
-          {moment(loanFromChain.loanEndTimestamp * 1000).toNow(true)}
-        </Text>
-      </Td>
-      <Td>
-        <Flex flexDir="column" alignItems="center">
-          <Box>
-            <Text color="notification.alert" fontSize="xl" fontWeight="bold">
-              0.0000Ξ
-            </Text>
-            <Text color="solid.gray0" fontSize="2xs" textAlign="left">
-              Defaulted
-            </Text>
-          </Box>
-        </Flex>
-      </Td>
-    </Tr>
+          </Td>
+        </Tr>
+      )}
+    </>
   );
 };

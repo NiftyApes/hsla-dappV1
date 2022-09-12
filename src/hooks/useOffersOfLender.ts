@@ -1,4 +1,5 @@
 import { getActiveOffersByLender } from 'api/getActiveOffersByLender';
+import { getAllOffersByLender } from 'api/getAllOffersByLender';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
@@ -7,7 +8,13 @@ import { useEffect, useState } from 'react';
 import { getOffersContract } from '../helpers/getContracts';
 import { useWalletProvider } from './useWalletProvider';
 
-export const useOffersForLender = ({ lenderAddress }: { lenderAddress: string }) => {
+export const useOffersForLender = ({
+  lenderAddress,
+  onlyActive,
+}: {
+  lenderAddress?: string;
+  onlyActive?: boolean;
+}) => {
   const [offers, setOffers] = useState<any>();
 
   const cacheCounter = useAppSelector((state: RootState) => state.counter);
@@ -21,7 +28,9 @@ export const useOffersForLender = ({ lenderAddress }: { lenderAddress: string })
         return;
       }
 
-      const offers = await getActiveOffersByLender({ lenderAddress });
+      const offers = onlyActive
+        ? await getActiveOffersByLender({ lenderAddress })
+        : await getAllOffersByLender({ lenderAddress });
 
       for (let i = 0; i < offers.length; i++) {
         const { offerHash, offer } = offers[i];

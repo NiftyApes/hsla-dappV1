@@ -1,11 +1,15 @@
 import { Box, Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
+import _ from 'lodash';
 import React from 'react';
+import { OfferRow } from './OfferRow';
 
-import { LoanRow } from './LoanRow';
+const OffersTable: React.FC<any> = ({ offers }) => {
+  const sortedOffers = _.sortBy(offers, (offer: any) =>
+    offer.offer.expiration < Date.now() / 1000 ? Infinity : offer.offer.expiration,
+  );
 
-const LoansTable: React.FC<any> = ({ activeLoans }) => {
   return (
-    <Box>
+    <Box minW="800px">
       <Table>
         <Thead>
           <Tr
@@ -21,9 +25,9 @@ const LoansTable: React.FC<any> = ({ activeLoans }) => {
             }}
           >
             <Th>collateral</Th>
-            <Th>loan details</Th>
-            <Th>time remaining</Th>
-            <Th>interest accrued</Th>
+            <Th>terms</Th>
+            <Th>status</Th>
+            <Th></Th>
           </Tr>
         </Thead>
         <Tbody
@@ -42,8 +46,8 @@ const LoansTable: React.FC<any> = ({ activeLoans }) => {
             },
           }}
         >
-          {activeLoans?.map((loan: any, i: number) => (
-            <LoanRow loanFromDb={loan} key={i} />
+          {sortedOffers?.map((offer: any, i: number) => (
+            <OfferRow offer={offer.offer} offerHash={offer.offerHash} key={i} />
           ))}
         </Tbody>
       </Table>
@@ -51,4 +55,4 @@ const LoansTable: React.FC<any> = ({ activeLoans }) => {
   );
 };
 
-export default LoansTable;
+export default OffersTable;
