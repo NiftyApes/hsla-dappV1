@@ -4,12 +4,7 @@ import { Link } from 'react-router-dom';
 import { AiOutlineCaretDown } from 'react-icons/ai';
 import { useConnectWallet } from '@web3-onboard/react';
 
-import {
-  lendersIdDashboard,
-  lendersIdLend,
-  lendersIdLiquidity,
-  lendersIdOffers,
-} from 'routes/router';
+import { lendersIdDashboard, lendersIdLend, lendersIdLiquidity } from 'routes/router';
 import WalletInfo from 'components/molecules/WalletInfo';
 
 const Header: React.FC = () => {
@@ -43,9 +38,12 @@ const Header: React.FC = () => {
           fontWeight="bold"
         >
           <Link to={walletAddress ? lendersIdDashboard(walletAddress) : ''}>📊 DASH</Link>
-          <Link to={walletAddress ? lendersIdLiquidity(walletAddress) : ''}>💧 LIQUIDITY</Link>
-          <Link to={walletAddress ? lendersIdOffers(walletAddress) : ''}>📃 OFFERS</Link>
-          <Link to={walletAddress ? lendersIdLend(walletAddress) : ''}>🚀 LEND</Link>
+          <Link to={walletAddress ? lendersIdLiquidity(walletAddress) : ''}>
+            {' '}
+            💧 MANAGE LIQUIDITY{' '}
+          </Link>
+          <Link to={walletAddress ? lendersIdLend(walletAddress) : ''}>📃 CREATE OFFERS</Link>
+          {/*<Link to={walletAddress ? lendersIdOffers(walletAddress) : ''}>📃 CREATE OFFERS</Link>*/}
         </Flex>
         <Menu>
           <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} bg="transparent">

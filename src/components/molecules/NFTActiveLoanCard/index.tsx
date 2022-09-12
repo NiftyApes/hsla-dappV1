@@ -13,15 +13,16 @@ import {
 } from '@chakra-ui/react';
 
 import moment from 'moment';
-import { NFT } from '../../../nft';
 import { LoanAuction } from '../../../loan';
+import { NFT } from '../../../nft';
 
 import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
-import { NFTCardHeader } from '../NFTCard/components/NFTCardHeader';
 import { CollateralHeader } from '../CollateralHeader';
+
 import { formatEther } from 'ethers/lib/utils';
 import { getAPR } from '../../../helpers/getAPR';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
+import { NFTCardHeader } from '../NFTCard/components/NFTCardHeader';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
@@ -192,7 +193,12 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
 
   return (
     <NFTCardContainer>
-      <NFTCardHeader img={nft.image} tokenId={nft.id} tokenName={nft.name} collectionName={''}>
+      <NFTCardHeader
+        img={nft.image}
+        tokenId={nft.id}
+        tokenName={nft.name}
+        collectionName={nft.collectionName}
+      >
         <>
           {isDefaulted ? renderDefaultedLoan() : renderActiveLoan()}
 

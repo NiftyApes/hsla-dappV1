@@ -11,6 +11,7 @@ export interface NFT {
   image: string;
   name: string;
   owner: string;
+  collectionName?: string;
 }
 
 export interface NFTAttribute {

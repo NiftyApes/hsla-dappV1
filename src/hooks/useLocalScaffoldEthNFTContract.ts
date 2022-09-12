@@ -1,5 +1,5 @@
-import { useWalletProvider } from './useWalletProvider';
 import { getLocalScaffoldEthMintingContract } from 'helpers/getLocalScaffoldEthMintingContract';
+import { useWalletProvider } from './useWalletProvider';
 
 export const useLocalScaffoldEthNFTContract = () => {
   const provider = useWalletProvider();

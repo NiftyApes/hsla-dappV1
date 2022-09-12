@@ -1,5 +1,5 @@
-import React from 'react';
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import React from 'react';
 
 interface Props {
   collectionName?: string;
@@ -16,14 +16,22 @@ export const NFTCardHeader: React.FC<Props> = ({
   tokenId,
   tokenName,
 }) => {
-  const tokenPadding = collectionName ? '-5px' : '16px';
+  const tokenPadding = collectionName ? -5 : 16;
 
   return (
     <>
       <Image borderRadius="8px 8px 0 0" h="260px" objectFit="cover" src={img} w="260px" />
 
-      <Flex align="center" flexDir="column" mt="200px" position="absolute">
-        {collectionName && (
+      <Flex
+        align="center"
+        px="8px"
+        borderRadius="8px"
+        flexDir="column"
+        mt={`${200 + tokenPadding}px`}
+        position="absolute"
+        backgroundColor="#0009"
+      >
+        {collectionName && collectionName !== '' && (
           <Text
             color="white"
             fontSize="sm"
@@ -42,7 +50,6 @@ export const NFTCardHeader: React.FC<Props> = ({
           fontWeight="semibold"
           noOfLines={1}
           maxW="100%"
-          mt={tokenPadding}
           textShadow="0px 0px 4px #000000"
           textTransform="uppercase"
         >

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch, ThunkExtra } from 'app/store';
+import { ethers } from 'ethers';
 import { getApiUrl, getData } from 'helpers';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
 import { ContractAddress, getNFTHash, NFT } from 'nft/model';
@@ -54,7 +55,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<FetchLoanOffersResponse, NF
       {
         url: getApiUrl('offers'),
         data: {
-          collection: nftContractAddress,
+          collection: ethers.utils.getAddress(nftContractAddress),
         },
       },
       (json) => loanOffer(json),
