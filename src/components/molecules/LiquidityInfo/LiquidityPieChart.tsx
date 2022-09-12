@@ -17,7 +17,7 @@ export const LiquidityPieChart: React.FC = () => {
   const data = [];
 
   // Placeholder chart when no liquidity
-  if (totalEthLoanedOut === 0) {
+  if (totalEthLoanedOut === 0 && availableEthLiquidity === 0) {
     data.push({
       title: 'No Liquidity Yet',
       value: 1, // needs to be non-zero to fill up chart
