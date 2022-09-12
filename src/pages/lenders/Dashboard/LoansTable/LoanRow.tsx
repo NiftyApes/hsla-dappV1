@@ -124,7 +124,8 @@ export const LoanRow = ({ loanFromDb }: any) => {
             {isDefaulted ? 'Defaulted' : 'Active Loan'}
           </Text>
           <Text fontSize="sm" fontStyle="italic">
-            {moment(loanFromChain.loanEndTimestamp * 1000).toNow(true)} remaining
+            {moment(loanFromChain.loanEndTimestamp * 1000).toNow(true)}{' '}
+            {isDefaulted ? 'ago' : 'remaining'}
           </Text>
         </Td>
         <Td>
