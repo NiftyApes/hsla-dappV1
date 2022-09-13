@@ -69,8 +69,8 @@ export const useCreateCollectionOffer = ({
           lenderOffer: true,
           asset: ETH_ADDRESS,
           amount: ethers.utils.parseUnits(String(amount), 'ether'),
-          duration: Math.floor(durationInDays * 60 * 60 * 24), // 1 day
-          expiration: Math.floor(Date.now() / 1000 + expirationInDays * 60 * 60 * 24),
+          duration: Math.floor(durationInDays * 86400),
+          expiration: Math.floor(Date.now() / 1000 + expirationInDays * 86400),
         });
 
         onTxSubmitted && onTxSubmitted(tx);

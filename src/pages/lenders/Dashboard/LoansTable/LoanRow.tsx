@@ -32,7 +32,6 @@ export const LoanRow = ({ loanFromDb }: any) => {
   }
 
   const endMoment = moment(loanFromChain.loanEndTimestamp * 1000);
-  console.log(loanFromDb.nftId, 'endMoment', endMoment);
   const isDefaulted = moment().isAfter(endMoment);
 
   return (
