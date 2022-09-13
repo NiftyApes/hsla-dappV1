@@ -39,6 +39,8 @@ export async function saveOfferInDb({
       floorTerm,
       nftContractAddress,
       offerHash,
+      // Will complicate this when we introduce borrower offers
+      lenderOffer: true,
     }),
   });
 }

@@ -92,7 +92,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
             </Text>
           </Flex>
 
-          <Text fontSize="md" color="red.600" fontWeight="bold" mt="5px">
+          <Text fontSize="md" color="red.600" fontWeight="bold">
             {i18n.defaultedLoanStatus}
           </Text>
         </Flex>

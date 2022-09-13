@@ -12,21 +12,15 @@ export const LiquidityInfo: React.FC = () => {
   const { availableEthLiquidity } = useAvailableEthLiquidity();
 
   return (
-    <Box
-      boxShadow="0px 0px 21px 0px #3A00831A"
-      border="1px solid"
-      borderColor="accents.100"
-      bg="solid.white"
-      borderRadius="1rem"
-      p="1rem"
-      minWidth="700px"
-    >
+    <Box>
       {_.isNil(availableEthLiquidity) || _.isNil(totalEthLoanedOut) ? (
         <LiquidityInfoLoading />
       ) : (
         <Flex>
           <LiquidityPieChart />
-          <EthLiquidityInfo />
+          <Box ml="40px" mt="40px">
+            <EthLiquidityInfo />
+          </Box>
         </Flex>
       )}
     </Box>

@@ -5,3 +5,7 @@ export function roundForDisplay(unroundedNumber: number) {
     return Number(unroundedNumber.toPrecision(2));
   }
 }
+
+export const concatForDisplay = (val: string = '') => {
+  return val.length > 10 ? `${val.substring(0, 10)}...` : val;
+};
