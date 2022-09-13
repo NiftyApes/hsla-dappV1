@@ -1,3 +1,4 @@
+import { useToast } from '@chakra-ui/toast';
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
@@ -25,6 +26,8 @@ export const useCancelOffer = ({
 
   const [txReceipt, setTxReceipt] = useState<ethers.ContractReceipt | null>(null);
 
+  const toast = useToast();
+
   if (!niftyApesContract) {
     return {
       seizeAsset: undefined,
@@ -47,7 +50,16 @@ export const useCancelOffer = ({
         const receipt: any = await tx.wait();
 
         setTxReceipt(receipt);
+
         setCancelStatus('SUCCESS');
+
+        toast({
+          title: 'Offer canceled successfully',
+          status: 'success',
+          position: 'top-right',
+          isClosable: true,
+        });
+
         setTimeout(() => {
           setCancelStatus('READY');
           setTxObject(null);
@@ -55,11 +67,13 @@ export const useCancelOffer = ({
         }, 3000);
       } catch (e) {
         setCancelStatus('ERROR');
+
         setTimeout(() => {
           setCancelStatus('READY');
           setTxObject(null);
           setTxReceipt(null);
         }, 3000);
+
         console.error(e);
       }
 

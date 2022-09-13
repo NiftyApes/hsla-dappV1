@@ -1,3 +1,4 @@
+import { useToast } from '@chakra-ui/toast';
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
@@ -23,6 +24,8 @@ export const useSeizeAsset = ({
 
   const [txReceipt, setTxReceipt] = useState<ethers.ContractReceipt | null>(null);
 
+  const toast = useToast();
+
   if (!niftyApesContract) {
     return {
       seizeAsset: undefined,
@@ -43,7 +46,16 @@ export const useSeizeAsset = ({
         const receipt = await tx.wait();
 
         setTxReceipt(receipt);
+
         setSeizeStatus('SUCCESS');
+
+        toast({
+          title: 'Asset seized successfully',
+          status: 'success',
+          position: 'top-right',
+          isClosable: true,
+        });
+
         setTimeout(() => {
           setSeizeStatus('READY');
           setTxObject(null);
@@ -51,11 +63,13 @@ export const useSeizeAsset = ({
         }, 3000);
       } catch (e) {
         setSeizeStatus('ERROR');
+
         setTimeout(() => {
           setSeizeStatus('READY');
           setTxObject(null);
           setTxReceipt(null);
         }, 3000);
+
         console.error(e);
       }
 
