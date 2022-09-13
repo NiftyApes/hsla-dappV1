@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { NFT } from '../nft';
 
 const RARIBLE_API_PATH = 'https://api.rarible.org/v0.1';
 
@@ -9,10 +10,24 @@ export const useRaribleTokenMeta = ({
   nftContractAddress?: string;
   tokenId?: string;
 }) => {
-  const [meta, setMeta] = useState<{ name: string; description: string; image: string }>();
+  const [meta, setMeta] = useState<NFT>();
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!nftContractAddress || !tokenId) {
+        return;
+      }
+
+      const container = {
+        attributes: [],
+        contractAddress: nftContractAddress,
+        external_url: `https://etherscan.io/token/${nftContractAddress}?a=${tokenId}`,
+        id: tokenId,
+        image: '/assets/images/img-missing.png',
+        owner: '',
+        collectionName: '',
+      };
+
       const response = await fetch(
         `${RARIBLE_API_PATH}/items/ETHEREUM:${nftContractAddress}:${tokenId}`,
         {
@@ -24,19 +39,21 @@ export const useRaribleTokenMeta = ({
         .json()
         .then((data) => {
           const { name, description, content } = data.meta;
-          let image = '/assets/images/img-missing.png';
 
-          if (content && content.length > 0) {
-            image = content.find((item: any) => item['@type'] === 'IMAGE').url;
-          }
-
-          setMeta({ name, description, image });
+          setMeta({
+            ...container,
+            name,
+            description,
+            image:
+              content.length > 0 ? content.find((item: any) => item['@type'] === 'IMAGE').url : '',
+          });
         })
         .catch((error) => {
           setMeta({
-            name: 'NOT FOUND',
-            description: 'NOTFOUND',
+            ...container,
             image: '/assets/images/NA-BLACK.png',
+            name: `TOKEN ${tokenId}`,
+            description: 'NOTFOUND',
           });
         });
     };

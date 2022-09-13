@@ -21,6 +21,7 @@ import { BigNumber } from 'ethers';
 import { LoanAuction } from '../../../loan';
 import { CollateralHeader } from '../../../components/molecules/CollateralHeader';
 import BorrowLoanRepayCard from '../../../components/molecules/BorrowLoanRepayCard';
+import { NFT } from '../../../nft';
 
 const i18n = {
   repayLoanHeader: 'repay loan on ',
@@ -56,18 +57,10 @@ const Dashboard: React.FC = () => {
     0,
   );
 
-  const onRepayLoan = (loan: LoanAuction) => {
+  const onRepayLoan = (loan: LoanAuction, nft: NFT) => {
     setLoan(loan);
-    setNft({
-      attributes: [],
-      contractAddress: loan.nftContractAddress,
-      description: 'Meh',
-      external_url: 'site.com',
-      id: loan.nftId,
-      image: 'https://austingriffith.com/images/paintings/rhino.jpg',
-      name: 'PLaceholder ',
-      owner: 'World',
-    });
+    setNft(nft);
+
     onRepayLoanOpen();
   };
 
@@ -95,7 +88,7 @@ const Dashboard: React.FC = () => {
           <ModalOverlay />
           <ModalContent p="5px">
             <CollateralHeader title={i18n.repayLoanHeader} nft={nft} />
-            <BorrowLoanRepayCard loan={loan} nft={nft} />
+            <BorrowLoanRepayCard loan={loan} nft={nft} onRepay={onRepayLoanClose} />
             <ModalCloseButton />
           </ModalContent>
         </Modal>

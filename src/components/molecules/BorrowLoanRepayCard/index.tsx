@@ -23,11 +23,15 @@ import { BigNumber } from 'ethers';
 import moment from 'moment';
 import { getAPR } from '../../../helpers/getAPR';
 import { concatForDisplay, roundForDisplay } from '../../../helpers/roundForDisplay';
-import { useRaribleTokenMeta } from '../../../hooks/useRaribleTokenMeta';
+
+interface callbackType {
+  (): void;
+}
 
 interface Props {
   loan: LoanAuction;
   nft: NFT;
+  onRepay: callbackType;
 }
 
 const i18n = {
@@ -45,8 +49,9 @@ const i18n = {
   toastSuccess: 'Loan repaid successfully',
 };
 
-const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
+const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan, onRepay }) => {
   const toast = useToast();
+
   const [isExecuting, setExecuting] = useState<boolean>(false);
 
   const accruedInterest: Array<BigNumber> = useCalculateInterestAccrued({
@@ -61,7 +66,7 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
     : BigNumber.from(0);
 
   // Additional 20 minutes worth of interest
-  const padding: BigNumber = irps.mul(1200);
+  const padding: BigNumber = irps.mul(3600);
   const totalOwed: BigNumber = amount.add(totalAccruedInterest).add(padding);
   const apr = getAPR({
     amount: Number(amount.toString()),
@@ -91,6 +96,7 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
             isClosable: true,
           });
           setExecuting(false);
+          onRepay();
         })
         .catch((error) => {
           toast({

@@ -207,7 +207,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
               <ModalOverlay />
               <ModalContent p="5px">
                 <CollateralHeader title={i18n.repayLoanHeader} nft={nft} />
-                <BorrowLoanRepayCard loan={loan} nft={nft} />
+                <BorrowLoanRepayCard loan={loan} nft={nft} onRepay={onRepayLoanClose} />
                 <ModalCloseButton />
               </ModalContent>
             </Modal>

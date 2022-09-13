@@ -1,17 +1,12 @@
 import React from 'react';
-import { Box, Button, Flex, Image, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import { Box, Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 
-import Icon from 'components/atoms/Icon';
 import { LoanAuction } from '../../../loan';
-import { formatEther } from 'ethers/lib/utils';
-import { getAPR } from '../../../helpers/getAPR';
-import { roundForDisplay } from '../../../helpers/roundForDisplay';
-import moment from 'moment';
-import { BigNumber } from 'ethers';
-import { useRaribleTokenMeta } from '../../../hooks/useRaribleTokenMeta';
+import LoanTableRow from './LoanTableRow';
+import { NFT } from '../../../nft';
 
 interface callbackType {
-  (loan: LoanAuction): void;
+  (loan: LoanAuction, nft: NFT): void;
 }
 
 interface Props {
@@ -19,25 +14,7 @@ interface Props {
   onClick: callbackType;
 }
 
-const i18n = {
-  loanTimeRemaining: (distance: string, defaulted: boolean) =>
-    defaulted ? 'Loan Defaulted' : `${distance} remaining...`,
-  loanDuration: (duration: number) => `${duration} days`,
-  loanApr: (apr: number) => `${roundForDisplay(apr)}% APR`,
-  loanTotalWithInterest: (amount: string, interest: BigNumber) =>
-    `${amount}Ξ + ${Number(formatEther(interest)).toFixed(4)}Ξ Interest`,
-};
-
 const LoanTable: React.FC<Props> = ({ loans, onClick }) => {
-  const meta = useRaribleTokenMeta({
-    nftContractAddress: '0x9c8ff314c9bc7f6e59a9d9225fb22946427edc03',
-    tokenId: '1',
-  });
-
-  if (!meta.image) {
-    return <>Loading...</>;
-  }
-
   return (
     <Box px="120px">
       <Table>
@@ -79,78 +56,7 @@ const LoanTable: React.FC<Props> = ({ loans, onClick }) => {
           }}
         >
           {loans.map((loan, idx) => {
-            const amount = Number(loan.amount.toString());
-            const irps = loan.interestRatePerSecond.toNumber();
-            const apr = getAPR({
-              amount,
-              interestRatePerSecond: irps,
-            });
-
-            const endMoment = moment(loan.loanEndTimestamp * 1000);
-            const startMoment = moment(loan.loanBeginTimestamp * 1000);
-            const timeRemaining = endMoment.toNow(true);
-            const duration = endMoment.diff(startMoment, 'days');
-            const isDefaulted = moment().isAfter(endMoment);
-
-            const totalInterest: BigNumber = loan.interestRatePerSecond.mul(
-              loan.loanEndTimestamp - loan.loanBeginTimestamp,
-            );
-            const totalAmount: BigNumber = loan.amount.add(
-              loan.interestRatePerSecond.mul(loan.loanEndTimestamp - loan.loanBeginTimestamp),
-            );
-
-            return (
-              <Tr key={idx}>
-                <Td>
-                  <Flex alignItems="center" justifyContent="center">
-                    <Image src={meta.image} w="55px" h="55px" objectFit="cover" />
-                    <Box marginLeft="-10px" mt="-10px">
-                      <Box
-                        border="2px solid"
-                        borderRadius="50%"
-                        borderColor="solid.white"
-                        bgColor="white"
-                      >
-                        <Icon name="etherscan" size={20} />
-                      </Box>
-                      <Icon name="os" size={25} />
-                    </Box>
-                  </Flex>
-                  <Text mt="8px" fontWeight="bold" fontSize="2xs">
-                    <Text as="span" color="gray">
-                      {meta.name}
-                    </Text>
-                  </Text>
-                </Td>
-                <Td>{startMoment.format('MMMM Do YYYY, h:mm:ss')}</Td>
-                <Td>
-                  <Text fontSize="xl" fontWeight="bold">
-                    {formatEther(loan.amount)}Ξ
-                  </Text>
-
-                  <Text fontSize="sm">
-                    <Text color="gray" as="span" mr="10px">
-                      {i18n.loanDuration(duration)}
-                    </Text>
-                    <Text as="span">{i18n.loanApr(apr)}</Text>
-                  </Text>
-                </Td>
-                <Td>
-                  <Text fontSize="xl" fontWeight="bold">
-                    {Number(formatEther(totalAmount)).toFixed(4)}Ξ
-                  </Text>
-                  <Text fontSize="sm" color="gray">
-                    {i18n.loanTotalWithInterest(formatEther(loan.amount), totalInterest)}
-                  </Text>
-                </Td>
-                <Td>{i18n.loanTimeRemaining(timeRemaining, isDefaulted)}</Td>
-                <Td>
-                  <Button variant="neutral" onClick={() => onClick(loan)}>
-                    REPAY
-                  </Button>
-                </Td>
-              </Tr>
-            );
+            return <LoanTableRow key={idx} loan={loan} onClick={onClick} />;
           })}
         </Tbody>
       </Table>

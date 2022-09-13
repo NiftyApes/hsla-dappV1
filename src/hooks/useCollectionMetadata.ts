@@ -4,6 +4,7 @@ const RARIBLE_API_PATH = 'https://api.rarible.org/v0.1';
 
 export const useCollectionMetadata = ({ nftContractAddress }: { nftContractAddress?: string }) => {
   const [meta, setMeta] = useState<{ name: string; symbol: string; image: string }>();
+  let image = '/assets/images/img-missing.png';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,8 +19,6 @@ export const useCollectionMetadata = ({ nftContractAddress }: { nftContractAddre
         .json()
         .then((data) => {
           const { name, symbol, meta } = data;
-
-          let image = '/assets/images/img-missing.png';
 
           if (meta.content && meta.content.length > 0) {
             image = meta.content.find((item: any) => item['@type'] === 'IMAGE').url;
