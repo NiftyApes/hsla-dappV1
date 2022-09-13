@@ -753,7 +753,7 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
   }
 
   function _requireMinDurationForOffer(Offer memory offer) internal pure {
-    require(offer.duration >= 1 days, "00011");
+    require(offer.duration >= 1, "00011");
   }
 
   function _requireLenderOffer(Offer memory offer) internal pure {

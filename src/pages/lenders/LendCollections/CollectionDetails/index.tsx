@@ -12,7 +12,7 @@ const CollectionDetailsModal: React.FC = () => {
   const [collectionOfferAmt, setCollectionOfferAmt] = useState<string>('');
   const [apr, setApr] = useState<string>('');
   const [duration, setDuration] = useState<string>('');
-  const [expiration, setExpiration] = useState<string>('1_DAY');
+  const [expiration, setExpiration] = useState<string>('1');
   const [newlyAddedOfferHashes, setNewlyAddedOfferHashes] = useState<string[]>([]);
 
   if (!collectionAddress) {

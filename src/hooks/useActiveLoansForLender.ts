@@ -1,6 +1,7 @@
 import { getActiveLoansByLender } from 'api/getActiveLoansByLender';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
+import { ethers } from 'ethers';
 import { getLoanForNft } from 'helpers/getLoanForNft';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
@@ -34,6 +35,16 @@ export const useActiveLoansForLender = () => {
 
         if (!loanFromChain || loanFromChain[0] === '0x0000000000000000000000000000000000000000') {
           loans[i] = undefined;
+        } else {
+          const [accruedInterest] = await lendingContract.calculateInterestAccrued(
+            loan.nftContractAddress,
+            loan.nftId,
+          );
+          loans[i] = {
+            ...loans[i],
+            accruedInterest: Number(ethers.utils.formatEther(accruedInterest)),
+            loanEndTimestamp: loanFromChain.loanEndTimestamp,
+          };
         }
       }
 

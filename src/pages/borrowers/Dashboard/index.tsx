@@ -1,16 +1,18 @@
-import React from 'react';
 import { Box, Center, Flex, Text } from '@chakra-ui/react';
+import React from 'react';
 
-import TopCard from 'components/molecules/DashboardTopCard';
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import LoanTable from './LoanTable';
-import { useActiveLoansForBorrower } from '../../../hooks/useActiveLoansForBorrower';
+import TopCard from 'components/molecules/DashboardTopCard';
 import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
+import { useActiveLoansForBorrower } from '../../../hooks/useActiveLoansForBorrower';
+import LoanTable from './LoanTable';
 
 const Dashboard: React.FC = () => {
   const activeLoans = useActiveLoansForBorrower();
-  const loanCount = activeLoans.length;
-  const loanTotal = activeLoans.sum((loan: any) => loan.amount);
+  const loanCount = activeLoans?.length;
+  const loanTotal = activeLoans?.reduce((acc: any, loan: any) => {
+    return acc + loan.amount;
+  }, 0);
 
   if (activeLoans === 'undefined') {
     return (
