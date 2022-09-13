@@ -1,6 +1,7 @@
 import { Box, Button, Flex, Td, Text, Tr } from '@chakra-ui/react';
 
 import Icon from 'components/atoms/Icon';
+import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { ethers } from 'ethers';
 import { getAPR } from 'helpers/getAPR';
 import { roundForDisplay } from 'helpers/roundForDisplay';
@@ -22,7 +23,7 @@ export const LoanRow = ({ loanFromDb }: any) => {
 
   const [lenderInterestAsBigNumber] = accruedInterest || [];
 
-  const { seizeAsset } = useSeizeAsset({
+  const { seizeAsset, seizeStatus } = useSeizeAsset({
     nftContractAddress: loanFromDb.nftContractAddress,
     nftId: loanFromDb.nftId,
   });
@@ -148,11 +149,19 @@ export const LoanRow = ({ loanFromDb }: any) => {
           }}
         >
           <Td colSpan={3}>
-            {isDefaulted && (
-              <Button colorScheme="red" w="100%" onClick={() => seizeAsset && seizeAsset()}>
-                Seize
-              </Button>
-            )}
+            <Button
+              disabled={seizeStatus !== 'READY'}
+              colorScheme="red"
+              w="100%"
+              onClick={() => seizeAsset && seizeAsset()}
+            >
+              Seize
+              {seizeStatus !== 'READY' ? (
+                <Flex as="span" alignItems="center" ml="8px">
+                  <LoadingIndicator size="sm" />
+                </Flex>
+              ) : null}
+            </Button>
           </Td>
         </Tr>
       )}

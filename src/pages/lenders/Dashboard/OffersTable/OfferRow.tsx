@@ -1,6 +1,7 @@
 import { Box, Button, Flex, Td, Text, Tr } from '@chakra-ui/react';
 
 import Icon from 'components/atoms/Icon';
+import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { ethers } from 'ethers';
 import { getAPR } from 'helpers/getAPR';
 import { roundForDisplay } from 'helpers/roundForDisplay';
@@ -8,7 +9,7 @@ import { useCancelOffer } from 'hooks/useCancelOffer';
 import moment from 'moment';
 
 export const OfferRow = ({ offer, offerHash }: any) => {
-  const { cancelOffer } = useCancelOffer({
+  const { cancelOffer, cancelStatus } = useCancelOffer({
     nftContractAddress: offer.nftContractAddress,
     nftId: offer.nftId,
     offerHash,
@@ -101,8 +102,13 @@ export const OfferRow = ({ offer, offerHash }: any) => {
       <Td>
         {!hasExpired && (
           <Flex flexDir="column" alignItems="center">
-            <Button variant="neutral" onClick={cancelOffer}>
+            <Button disabled={cancelStatus !== 'READY'} variant="neutral" onClick={cancelOffer}>
               Cancel
+              {cancelStatus !== 'READY' ? (
+                <Flex as="span" alignItems="center" ml="8px">
+                  <LoadingIndicator size="sm" />
+                </Flex>
+              ) : null}
             </Button>
           </Flex>
         )}
