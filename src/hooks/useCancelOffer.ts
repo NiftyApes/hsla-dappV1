@@ -1,9 +1,11 @@
 import { useToast } from '@chakra-ui/toast';
+import { updateOfferStatus } from 'api/updateOfferStatus';
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
 import { useState } from 'react';
 import { useOffersContract } from './useContracts';
+import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
 
 export const useCancelOffer = ({
   nftContractAddress,
@@ -17,6 +19,8 @@ export const useCancelOffer = ({
   const niftyApesContract = useOffersContract();
 
   const dispatch = useAppDispatch();
+
+  const { getTransactionTimestamp } = useGetTransactionTimestamp();
 
   const [cancelStatus, setCancelStatus] = useState<'PENDING' | 'SUCCESS' | 'ERROR' | 'READY'>(
     'READY',
@@ -43,11 +47,17 @@ export const useCancelOffer = ({
       setCancelStatus('PENDING');
 
       try {
+        const offer = await niftyApesContract.getOffer(nftContractAddress, nftId, offerHash, true);
+
+        const offerExpiration = offer.expiration;
+
         const tx = await niftyApesContract.removeOffer(nftContractAddress, nftId, offerHash, true);
 
         setTxObject(tx);
 
         const receipt: any = await tx.wait();
+
+        const transactionTimestamp = await getTransactionTimestamp(receipt);
 
         setTxReceipt(receipt);
 
@@ -58,6 +68,16 @@ export const useCancelOffer = ({
           status: 'success',
           position: 'top-right',
           isClosable: true,
+        });
+
+        await updateOfferStatus({
+          nftContractAddress,
+          nftId,
+          offerExpiration,
+          offerHash,
+          status: 'CANCELED',
+          transactionTimestamp,
+          transactionHash: receipt.transactionHash,
         });
 
         setTimeout(() => {

@@ -1,4 +1,4 @@
-import { setLoanStatus } from 'api/setLoanStatus';
+import { updateLoanStatus } from 'api/updateLoanStatus';
 import { useAppDispatch } from 'app/hooks';
 import { transactionTypes } from 'constants/transactionTypes';
 
@@ -43,14 +43,14 @@ export const useRepayLoanByBorrower = ({
 
       const receipt = await tx.wait();
 
-      const timestamp = await getTransactionTimestamp(receipt);
+      const transactionTimestamp = await getTransactionTimestamp(receipt);
 
       const totalPayment = (receipt as any).events[6].args.totalPayment.toString();
 
       await saveTransactionInDb({
         from: receipt.from,
         transactionType: transactionTypes.LOAN_FULLY_REPAID_BY_BORROWER,
-        timestamp,
+        timestamp: transactionTimestamp,
         transactionHash: receipt.transactionHash,
         lender: (receipt as any).events[6].args.lender,
         borrower: (receipt as any).events[6].args.borrower,
@@ -62,11 +62,13 @@ export const useRepayLoanByBorrower = ({
         },
       });
 
-      await setLoanStatus({
+      await updateLoanStatus({
         nftContractAddress,
         nftId,
         loanBeginTimestamp: loan.loanBeginTimestamp,
         status: 'FULLY_REPAID',
+        transactionTimestamp,
+        transactionHash: receipt.transactionHash,
       });
 
       dispatch(increment());
