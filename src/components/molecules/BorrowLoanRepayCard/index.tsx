@@ -10,9 +10,9 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
+
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { useRepayLoanByBorrower } from '../../../hooks/useRepayLoan';
-
 import { LoanAuction } from '../../../loan';
 import { NFT } from '../../../nft';
 import { formatEther } from 'ethers/lib/utils';
@@ -24,9 +24,14 @@ import moment from 'moment';
 import { getAPR } from '../../../helpers/getAPR';
 import { concatForDisplay, roundForDisplay } from '../../../helpers/roundForDisplay';
 
+interface callbackType {
+  (): void;
+}
+
 interface Props {
   loan: LoanAuction;
   nft: NFT;
+  onRepay: callbackType;
 }
 
 const i18n = {
@@ -35,16 +40,16 @@ const i18n = {
     'Paying this will close your loan. You will receive your NFT collateral in the same transaction!',
   loanApr: (val: number) => `Loan APR ${roundForDisplay(val)}%`,
   loanBorrowed: 'Total borrowed',
+  loanInformation: 'loan information',
   loanInterest: 'Total interest',
   loanOwed: 'Total owed',
   loanTimeRemaining: (distance: string, defaulted: boolean) =>
     defaulted ? 'Loan Defaulted' : `Time remaining ${distance}`,
   paymentType: 'max payment',
-  loanInformation: 'loan information',
   toastSuccess: 'Loan repaid successfully',
 };
 
-const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
+const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan, onRepay }) => {
   const toast = useToast();
 
   const [isExecuting, setExecuting] = useState<boolean>(false);
@@ -54,17 +59,19 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
     nftId: nft.id,
   });
 
-  const { amount, interestRatePerSecond, loanEndTimestamp } = loan;
+  const { amount, interestRatePerSecond: irps, loanEndTimestamp } = loan;
 
-  const loanAmount: BigNumber = BigNumber.from(amount);
   const totalAccruedInterest: BigNumber = accruedInterest
     ? accruedInterest[0].add(accruedInterest[1])
     : BigNumber.from(0);
 
   // Additional 20 minutes worth of interest
-  const padding: BigNumber = BigNumber.from(interestRatePerSecond * 1200);
-  const totalOwed: BigNumber = loanAmount.add(totalAccruedInterest);
-  const apr = getAPR({ amount, interestRatePerSecond });
+  const padding: BigNumber = irps.mul(3600);
+  const totalOwed: BigNumber = amount.add(totalAccruedInterest).add(padding);
+  const apr = getAPR({
+    amount: Number(amount.toString()),
+    interestRatePerSecond: irps.toNumber(),
+  });
 
   const endMoment = moment(loanEndTimestamp * 1000);
   const timeRemaining = endMoment.toNow(true);
@@ -89,6 +96,7 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
             isClosable: true,
           });
           setExecuting(false);
+          onRepay();
         })
         .catch((error) => {
           toast({
@@ -147,7 +155,7 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan }) => {
                 <Text>
                   {i18n.loanBorrowed}{' '}
                   <Text as="span" fontWeight="bold">
-                    {concatForDisplay(formatEther(loanAmount))}Ξ
+                    {concatForDisplay(formatEther(amount))}Ξ
                   </Text>
                 </Text>
                 <Text>

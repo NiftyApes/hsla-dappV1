@@ -4,11 +4,13 @@ import { useEffect } from 'react';
 
 import NFTCard from 'components/molecules/NFTCard';
 import NFTNoOfferCard from 'components/molecules/NFTNoOfferCard';
-import { fetchLoanOffersByNFT, useLoanOffersByNFT } from 'loan';
-import { Contract, NFT } from 'nft';
 import NFTActiveLoanCard from '../../../../components/molecules/NFTActiveLoanCard';
-import { NFTLoadingCard } from '../../../../components/molecules/NFTLoadingCard';
+
+import { fetchLoanOffersByNFT, useLoanOffersByNFT } from 'loan';
 import { useLoanAuction } from '../../../../hooks/useLoanAuction';
+import { NFTLoadingCard } from '../../../../components/molecules/NFTLoadingCard';
+
+import { Contract, NFT } from 'nft';
 
 interface Props {
   contract: Contract;

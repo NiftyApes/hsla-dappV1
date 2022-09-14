@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Box,
   Button,
@@ -10,21 +11,21 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import React from 'react';
 
 import moment from 'moment';
 import { LoanAuction } from '../../../loan';
 import { NFT } from '../../../nft';
 
-import CryptoIcon from 'components/atoms/CryptoIcon';
+import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
+import { CollateralHeader } from '../CollateralHeader';
 
 import { formatEther } from 'ethers/lib/utils';
 import { getAPR } from '../../../helpers/getAPR';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
-import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
-import { CollateralHeader } from '../CollateralHeader';
-import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
 import { NFTCardHeader } from '../NFTCard/components/NFTCardHeader';
+
+import CryptoIcon from 'components/atoms/CryptoIcon';
+import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
 
 interface Props {
   loan: LoanAuction;
@@ -50,9 +51,14 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
     onClose: onRepayLoanClose,
   } = useDisclosure();
 
-  const { amount, interestRatePerSecond, loanBeginTimestamp, loanEndTimestamp } = loan;
+  const { amount, interestRatePerSecond: irps, loanBeginTimestamp, loanEndTimestamp } = loan;
 
-  const apr = roundForDisplay(getAPR({ amount, interestRatePerSecond }));
+  const apr = roundForDisplay(
+    getAPR({
+      amount: Number(amount.toString()),
+      interestRatePerSecond: irps.toNumber(),
+    }),
+  );
   const endMoment = moment(loanEndTimestamp * 1000);
   const duration = Math.round((loanEndTimestamp - loanBeginTimestamp) / 86400);
   const timeRemaining = endMoment.toNow(true);
@@ -201,7 +207,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
               <ModalOverlay />
               <ModalContent p="5px">
                 <CollateralHeader title={i18n.repayLoanHeader} nft={nft} />
-                <BorrowLoanRepayCard loan={loan} nft={nft} />
+                <BorrowLoanRepayCard loan={loan} nft={nft} onRepay={onRepayLoanClose} />
                 <ModalCloseButton />
               </ModalContent>
             </Modal>
