@@ -222,7 +222,7 @@ contract NiftyApesOffers is OwnableUpgradeable, PausableUpgradeable, EIP712Upgra
 
   /// @inheritdoc IOffers
   function requireMinimumDuration(Offer memory offer) public pure {
-    require(offer.duration >= 1 days, "00011");
+    require(offer.duration >= 1, "00011");
   }
 
   /// @inheritdoc IOffers

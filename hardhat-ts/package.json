@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "chain": "hardhat node --network hardhat --no-deploy",
-    "fork": "hardhat node --fork https://eth-mainnet.alchemyapi.io/v2/Of3Km_--Ow1fNnMhaETmwnmWBFFHF3ZY --no-deploy",
+    "fork": "hardhat node --fork https://eth-mainnet.g.alchemy.com/v2/jxUUn2DsYODlc68SEU_7eNGCn2hQ7b63 --no-deploy",
     "test": "hardhat test --network hardhat",
     "compile": "hardhat compile",
     "deploy": "hardhat deploy",

@@ -209,9 +209,9 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
           Offer Expires in{' '}
           <Box w="120px" ml="8px">
             <Select size="sm" onChange={(e) => setExpiration(e.target.value)} value={expiration}>
-              <option value="1_DAY">1 day</option>
-              <option value="7_DAYS">7 days</option>
-              <option value="30_DAYS">30 days</option>
+              <option value="1">1 day</option>
+              <option value="7">7 days</option>
+              <option value="30">30 days</option>
             </Select>
           </Box>
         </Flex>
@@ -249,6 +249,7 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
             amount: Number(collectionOfferAmt),
             aprInPercent: Number(apr),
             durationInDays: Number(duration),
+            expirationInDays: Number(expiration),
             onPending: () => setCreateCollectionOfferStatus('PENDING'),
             onSuccess: (offerHash: string) => {
               setCollectionOfferAmt('');
