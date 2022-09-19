@@ -10,7 +10,7 @@ export const getActiveLoansByLender = async ({ lenderAddress }: { lenderAddress:
 
   const processedLoans = json.map((item: any) => {
     return {
-      amount: ethers.utils.formatEther(String(item.LoanTerms.Amount)),
+      amount: Number(ethers.utils.formatEther(item.LoanTerms.Amount)),
       nftId: item.NftId,
       nftContractAddress: item.Collection,
     };

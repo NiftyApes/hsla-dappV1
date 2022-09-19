@@ -41,6 +41,10 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
           ? 'Withdraw Liquidity'
           : tx.EventType === transactionTypes.LOAN_CREATED
           ? 'Loan Executed By Borrower'
+          : tx.EventType === transactionTypes.LOAN_FULLY_REPAID_BY_BORROWER
+          ? 'Loan Fully Repaid By Borrower'
+          : tx.EventType === transactionTypes.ASSET_SEIZED
+          ? 'Asset Seized & Principal Lost'
           : 'Other'}
       </Td>
       <Td>
@@ -55,13 +59,19 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
                 ? 'red.500'
                 : tx.EventType === transactionTypes.LOAN_CREATED
                 ? 'blue.500'
+                : tx.EventType === transactionTypes.LOAN_FULLY_REPAID_BY_BORROWER
+                ? 'green.500'
+                : tx.EventType === transactionTypes.ASSET_SEIZED
+                ? 'red.500'
                 : ''
             }
           >
-            {tx.EventType === transactionTypes.LIQUIDITY_DEPOSITED
+            {tx.EventType === transactionTypes.LIQUIDITY_DEPOSITED ||
+            tx.EventType === transactionTypes.LOAN_FULLY_REPAID_BY_BORROWER
               ? '+'
               : tx.EventType === transactionTypes.LIQUIDITY_WITHDRAWN ||
-                tx.EventType === transactionTypes.LOAN_CREATED
+                tx.EventType === transactionTypes.LOAN_CREATED ||
+                tx.EventType === transactionTypes.ASSET_SEIZED
               ? '-'
               : ''}
             {ethers.utils.formatEther(tx.EventData.Amount)}Ξ
