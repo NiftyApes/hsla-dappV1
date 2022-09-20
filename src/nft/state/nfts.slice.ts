@@ -74,7 +74,11 @@ export const fetchLocalNFTsByWalletAddress = createAsyncThunk<
 const slice = createSlice({
   name: 'nfts',
   initialState: NFTsInitialState,
-  reducers: {},
+  reducers: {
+    resetLocalNFTsByWalletAddress(state) {
+      state.nftsByWalletAddress = {};
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchLocalNFTsByWalletAddress.pending, (state, action) => {
       state.nftsByWalletAddress = {
@@ -126,5 +130,7 @@ export const selectors = {
 export const useNFTsByWalletAddress = (walletAddress: WalletAddress) => {
   return useNFTsSelector(selectors.nftsByWalletAddress)[walletAddress];
 };
+
+export const { resetLocalNFTsByWalletAddress } = slice.actions
 
 export default slice.reducer;
