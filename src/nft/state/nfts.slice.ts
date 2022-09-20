@@ -1,4 +1,4 @@
-import { createAsyncThunk, createAction, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch, ThunkExtra } from 'app/store';
 import { getLocalNFTsOfAddress } from 'helpers/getLocalNFTsOfAddress';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
