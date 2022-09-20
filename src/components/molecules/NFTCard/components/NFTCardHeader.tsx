@@ -55,9 +55,11 @@ export const NFTCardHeader: React.FC<Props> = ({
             color="white"
             fontSize="sm"
             fontWeight="bold"
-            maxW="100%"
+            maxW="240px"
             textShadow="0px 0px 4px #000000"
             textTransform="uppercase"
+            textAlign={"center"}
+            noOfLines={1}
           >
             {collectionName}
           </Text>
@@ -68,9 +70,10 @@ export const NFTCardHeader: React.FC<Props> = ({
           fontSize="xl"
           fontWeight="semibold"
           noOfLines={1}
-          maxW="100%"
+          maxW="240px"
           textShadow="0px 0px 4px #000000"
           textTransform="uppercase"
+          textAlign={"center"}
         >
           {tokenName} #{tokenId}
         </Text>
