@@ -9,7 +9,6 @@ import WalletInfo from 'components/molecules/WalletInfo';
 
 const Header: React.FC = () => {
   const [{ wallet }] = useConnectWallet();
-
   const walletAddress = wallet?.accounts[0].address;
 
   return (
