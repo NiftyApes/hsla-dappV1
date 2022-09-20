@@ -25,7 +25,7 @@ export const TransactionTable: React.FC = () => {
             Asset
           </Th>
           <Th textAlign="center" width="16rem">
-            Timestamp
+            Transaction
           </Th>
           <Th textAlign="center" minW="16rem">
             Type
@@ -35,9 +35,6 @@ export const TransactionTable: React.FC = () => {
           </Th>
           <Th textAlign="center" minW="20rem">
             Loan (if applicable)
-          </Th>
-          <Th textAlign="center" width="1rem">
-            Etherscan
           </Th>
         </Tr>
       </Thead>

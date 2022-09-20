@@ -20,10 +20,14 @@ const variants: { [variant: string]: StyleObjectOrFn } = {
   primary: {
     color: 'gray0',
     bgColor: 'solid.white',
+    textTransform: 'uppercase',
+    fontSize: '.85em',
   },
   secondary: {
     color: 'primary.purple',
     bgColor: 'accents.100',
+    textTransform: 'uppercase',
+    fontSize: '.85em',
   },
   neutral: {
     color: 'primary.purple',
@@ -31,15 +35,23 @@ const variants: { [variant: string]: StyleObjectOrFn } = {
     borderColor: 'primary.purple',
     border: '2px solid',
     borderRadius: '10px',
+    textTransform: 'uppercase',
+    fontSize: '.85em',
+    _hover: { bg: 'primary.purple', color: 'solid.white' },
+
   },
   neutralReverse: {
     bgColor: 'primary.purple',
     color: 'solid.white',
     borderRadius: '10px',
+    textTransform: 'uppercase',
+    fontSize: '.85em',
   },
   notify: {
     bg: 'notification.notify',
     color: 'solid.white',
+    textTransform: 'uppercase',
+    fontSize: '.85em',
   },
   circle: {
     borderRadius: '50%',

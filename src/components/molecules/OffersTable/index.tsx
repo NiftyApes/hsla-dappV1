@@ -73,10 +73,15 @@ const OffersTable: React.FC<Props> = ({ offers, onClick }) => {
               </Td>
               <Td>
                 <Button
-                  variant="link"
                   color="notification.notify"
+                  variant="neutral"
                   fontSize="2xs"
                   onClick={() => onClick(offer)}
+                  _hover={{
+                    bg: "notification.notify",
+                    color: "solid.white",
+
+                  }}
                 >
                   {i18n.action}
                 </Button>
