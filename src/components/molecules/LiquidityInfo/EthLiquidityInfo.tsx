@@ -39,7 +39,7 @@ export const EthLiquidityInfo: React.FC = () => {
         </Flex>
         <Flex alignItems="center">
           <CryptoIcon symbol="eth" size={25} />
-          <Text ml="8px">{Number((availableEthLiquidity + totalEthLoanedOut).toFixed(2))}</Text>
+          <Text ml="8px">{Number(availableEthLiquidity.toFixed(2))}</Text>
         </Flex>
       </Box>
 
