@@ -32,11 +32,9 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
         </Flex>
       </Td>
       <Td textAlign="center">
-        {/* <Flex direction={"row"} alignItems="center"> */}
             <Link textDecoration={"underline"} href={`https://etherscan.io/tx/${tx.TransactionHash}`}> 
               <Icon display="inline-block" name="etherscan" /> {moment(tx.Timestamp * 1000).format('h:mma, MMM D YYYY')}
             </Link>
-        {/* </Flex> */}
       </Td>
       <Td textAlign="center">
         {tx.EventType === transactionTypes.LIQUIDITY_DEPOSITED
