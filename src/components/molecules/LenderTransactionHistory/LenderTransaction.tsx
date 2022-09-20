@@ -1,4 +1,4 @@
-import { Flex, Td, Text, Tr } from '@chakra-ui/react';
+import { Flex, Td, Text, Tr, Link } from '@chakra-ui/react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import Icon from 'components/atoms/Icon';
@@ -32,7 +32,11 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
         </Flex>
       </Td>
       <Td textAlign="center">
-        <Text fontSize="small">{moment(tx.Timestamp * 1000).format('h:mma, MMM D YYYY')}</Text>
+        {/* <Flex direction={"row"} alignItems="center"> */}
+            <Link textDecoration={"underline"} href={`https://etherscan.io/tx/${tx.TransactionHash}`}> 
+              <Icon display="inline-block" name="etherscan" /> {moment(tx.Timestamp * 1000).format('h:mma, MMM D YYYY')}
+            </Link>
+        {/* </Flex> */}
       </Td>
       <Td textAlign="center">
         {tx.EventType === transactionTypes.LIQUIDITY_DEPOSITED
@@ -70,9 +74,9 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
             tx.EventType === transactionTypes.LOAN_FULLY_REPAID_BY_BORROWER
               ? '+'
               : tx.EventType === transactionTypes.LIQUIDITY_WITHDRAWN ||
-                tx.EventType === transactionTypes.LOAN_CREATED ||
                 tx.EventType === transactionTypes.ASSET_SEIZED
-              ? '-'
+              ? '-' :
+              tx.EventType === transactionTypes.LOAN_CREATED ? '🔒 '
               : ''}
             {ethers.utils.formatEther(tx.EventData.Amount)}Ξ
           </Text>
@@ -89,18 +93,11 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
                   interestRatePerSecond: tx.EventData.InterestRatePerSecond,
                 }),
               )}
-              % APR on all {tx.EventData.NftContractAddress}
+              % APR on all <Link textDecoration={"underline"} href={`https://etherscan.io/address/${tx.EventData.NftContractAddress}`} maxWidth="20ch" noOfLines={1}> {tx.EventData.NftContractAddress}</Link>
             </span>
           ) : (
             '-'
           )}
-        </Flex>
-      </Td>
-      <Td>
-        <Flex alignItems="center" justifyContent="center">
-          <a href={`https://etherscan.io/tx/${tx.TransactionHash}`}>
-            <Icon name="etherscan" />
-          </a>
         </Flex>
       </Td>
     </Tr>
