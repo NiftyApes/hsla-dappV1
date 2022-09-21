@@ -13,6 +13,7 @@ export interface LoanAuction {
     lender: string;
     loanBeginTimestamp: number;
     loanEndTimestamp: number;
+    loanTxnHash?: string;
     nftContractAddress?: string;
     nftId?: string;
     nftOwner: string;
@@ -33,7 +34,7 @@ const loanAuction = ({
                          loanEndTimestamp,
                          nftOwner,
                          protocolInterestRatePerSecond,
-                     }: ILendingStructs.LoanAuctionStructOutput): LoanAuction => {
+                     }: ILendingStructs.LoanAuctionStructOutput, txnHash?: string | undefined): LoanAuction => {
     return {
         accumulatedLenderInterest: accumulatedLenderInterest,
         accumulatedProtocolInterest: accumulatedProtocolInterest,
@@ -46,6 +47,7 @@ const loanAuction = ({
         lender,
         loanBeginTimestamp,
         loanEndTimestamp,
+        loanTxnHash: txnHash,
         nftOwner,
         protocolInterestRatePerSecond: protocolInterestRatePerSecond,
     };

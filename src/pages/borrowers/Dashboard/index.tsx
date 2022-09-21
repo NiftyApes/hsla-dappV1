@@ -1,19 +1,19 @@
 import React, {useState} from 'react';
 import {
+    Alert,
+    AlertDescription,
+    AlertIcon,
+    AlertTitle,
     Box,
     Center,
     Flex,
+    Link,
     Modal,
     ModalCloseButton,
     ModalContent,
     ModalOverlay,
     Text,
-    Alert,
-    AlertIcon,
-    AlertTitle,
-    AlertDescription,
     useDisclosure,
-    Link,
 } from '@chakra-ui/react';
 
 import TopCard from 'components/molecules/DashboardTopCard';
@@ -57,6 +57,7 @@ const Dashboard: React.FC = () => {
             </Center>
         );
     }
+
     const loanCount = activeLoans.length;
     const loanTotal = activeLoans.reduce(
         (acc: BigNumber, loan: LoanAuction) => loan.amount.add(acc),

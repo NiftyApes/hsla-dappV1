@@ -24,7 +24,6 @@ export const useActiveLoansForBorrower = () => {
 
             for (let i = 0; i < dbLoans.length; i++) {
 
-
                 const loan: any = dbLoans[i];
 
                 const chainLoan = await getLoanForNft({
@@ -35,7 +34,8 @@ export const useActiveLoansForBorrower = () => {
 
 
                 if (chainLoan && chainLoan[0] !== '0x0000000000000000000000000000000000000000') {
-                    const la: LoanAuction = loanAuction(chainLoan);
+
+                    const la: LoanAuction = loanAuction(chainLoan, loan.transactionHash);
 
                     // Amend loan auction with NFT props that are not included in the LoanAuctionStructOutput struct
                     la.nftId = loan.nftId;
