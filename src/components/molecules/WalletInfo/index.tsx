@@ -4,7 +4,6 @@ import {
   Button,
   Image,
   Text,
-  useDisclosure,
   Menu,
   MenuButton,
   MenuItem,
@@ -16,14 +15,11 @@ import Icon from 'components/atoms/Icon';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { WalletContext } from 'lib/contexts/WalletProvider';
 import { useWalletBalance } from 'hooks/useWalletBalance';
-import Notification from './Notification';
 
 const WalletInfo: React.FC = () => {
   const [{ wallet, connecting }] = useConnectWallet();
   const { showWalletConnectModal } = useContext(WalletContext);
   const balance = useWalletBalance();
-
-  const { isOpen, onToggle } = useDisclosure();
 
   return (
     <>
@@ -86,18 +82,6 @@ const WalletInfo: React.FC = () => {
             <MenuItem>⚖ Legal & Privacy</MenuItem>
           </MenuList>
         </Menu>
-        <Button variant="primary" borderRadius="50%" p="11px" ml="9px" onClick={onToggle}>
-          <Icon name={isOpen ? 'close' : 'notification'} color="primary.purple" />
-        </Button>
-        {isOpen && (
-          <Notification
-            position="absolute"
-            bottom="0px"
-            right="0px"
-            transform="translateY(100%)"
-            onClose={onToggle}
-          />
-        )}
       </Flex>
     </>
   );
