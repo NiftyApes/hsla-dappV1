@@ -4,15 +4,17 @@ export async function saveLoanInDb({
   nftContractAddress,
   nftId,
   creator,
-  loanTerms,
   borrower,
   lender,
+  transactionHash,
+  loanTerms,
 }: {
   nftContractAddress: string;
   nftId: string;
   creator: string;
   borrower: string;
   lender: string;
+  transactionHash: string;
   loanTerms: {
     amount: string;
     asset: 'ETH';
@@ -32,6 +34,7 @@ export async function saveLoanInDb({
       loanTerms,
       borrower,
       lender,
+      transactionHash,
     }),
   });
 }
