@@ -60,6 +60,7 @@ export const useExecuteLoanByBorrower = ({
         creator: offer.creator,
         borrower: address,
         lender: offer.creator,
+        transactionHash: receipt.transactionHash,
         loanTerms: {
           amount: offer.amount.toString(),
           asset: 'ETH',
