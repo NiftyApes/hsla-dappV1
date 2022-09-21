@@ -41,7 +41,7 @@ const WalletInfo: React.FC = () => {
             <Text color="solid.gray0" m="11px 14px 11px 18px">
               {balance}
             </Text>
-            <Button variant="primary" borderRadius="40px">
+            <Button cursor="initial" variant="primary" borderRadius="40px">
               <Text mr="12px" p="6px 0px 6px 18px">
                 {`${wallet.accounts[0].address.slice(0, 6)}\u2026${wallet.accounts[0].address.slice(
                   -4,
