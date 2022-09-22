@@ -1,61 +1,61 @@
-import React, {createContext, useEffect} from 'react';
-import {useNavigate, useParams} from 'react-router-dom';
-import {OnboardAPI} from '@web3-onboard/core';
-import {useConnectWallet, useWallets} from '@web3-onboard/react';
-import {useWalletAddress} from 'hooks/useWalletAddress';
-import {initWeb3Onboard} from 'services/wallet';
+import React, { createContext, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { OnboardAPI } from '@web3-onboard/core';
+import { useConnectWallet, useWallets } from '@web3-onboard/react';
+import { useWalletAddress } from 'hooks/useWalletAddress';
+import { initWeb3Onboard } from 'services/wallet';
 
 interface WalletContextProps {
-    connectWallet: () => void;
+  connectWallet: () => void;
 }
 
 export const WalletContext = createContext<WalletContextProps>({
-    connectWallet: () => null,
+  connectWallet: () => null,
 });
 
 export const WalletProvider: React.FC<{ children: React.ReactNode | React.ReactNode[] }> = ({
-                                                                                                children,
-                                                                                            }) => {
-    const navigate = useNavigate();
-    const {id} = useParams<{ id: string }>();
-    const [{wallet}, connect] = useConnectWallet();
-    const connectedWallets = useWallets();
-    const web3Onboard: OnboardAPI = initWeb3Onboard;
-    const walletAddress = useWalletAddress();
+  children,
+}) => {
+  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const [{ wallet }, connect] = useConnectWallet();
+  const connectedWallets = useWallets();
+  const web3Onboard: OnboardAPI = initWeb3Onboard;
+  const walletAddress = useWalletAddress();
 
-    const saveWalletsToLocalStorage = () => {
-        const connectedWalletsLabelArray = connectedWallets.map(({label}) => label);
-        window.localStorage.setItem('connectedWallets', JSON.stringify(connectedWalletsLabelArray));
-    };
+  const saveWalletsToLocalStorage = () => {
+    const connectedWalletsLabelArray = connectedWallets.map(({ label }) => label);
+    window.localStorage.setItem('connectedWallets', JSON.stringify(connectedWalletsLabelArray));
+  };
 
-    const getWalletFromLocalStorage = () => {
-        const localWallets = JSON.parse(window.localStorage.getItem('connectedWallets')!);
-        return Array.isArray(localWallets) && localWallets.length > 0 ? localWallets[0] : null;
-    };
+  const getWalletFromLocalStorage = () => {
+    const localWallets = JSON.parse(window.localStorage.getItem('connectedWallets')!);
+    return Array.isArray(localWallets) && localWallets.length > 0 ? localWallets[0] : null;
+  };
 
-    useEffect(() => {
-        if (!wallet) {
-            const localWallet = getWalletFromLocalStorage();
+  useEffect(() => {
+    if (!wallet) {
+      const localWallet = getWalletFromLocalStorage();
 
-            if (localWallet) {
-                initWeb3Onboard.connectWallet({
-                    autoSelect: {label: localWallet, disableModals: true},
-                });
-            }
-        } else {
-            saveWalletsToLocalStorage();
+      if (localWallet) {
+        initWeb3Onboard.connectWallet({
+          autoSelect: { label: localWallet, disableModals: true },
+        });
+      }
+    } else {
+      saveWalletsToLocalStorage();
 
-            if (walletAddress && id?.toLowerCase() !== walletAddress.toLowerCase()) {
-                navigate(walletAddress);
-            }
-        }
-    }, [wallet]);
+      if (walletAddress && id?.toLowerCase() !== walletAddress.toLowerCase()) {
+        navigate(walletAddress);
+      }
+    }
+  }, [wallet]);
 
-    const connectWallet = async () => {
-        connect({});
-    };
+  const connectWallet = async () => {
+    connect({});
+  };
 
-    if (!web3Onboard) return <></>;
+  if (!web3Onboard) return <></>;
 
-    return <WalletContext.Provider value={{connectWallet}}>{children}</WalletContext.Provider>;
+  return <WalletContext.Provider value={{ connectWallet }}>{children}</WalletContext.Provider>;
 };
