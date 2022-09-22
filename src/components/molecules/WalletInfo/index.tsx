@@ -20,7 +20,9 @@ import { useWalletBalance } from 'hooks/useWalletBalance';
 
 const WalletInfo: React.FC = () => {
   const [{ wallet, connecting }] = useConnectWallet();
-  const { showWalletConnectModal } = useContext(WalletContext);
+
+  const { connectWallet } = useContext(WalletContext);
+
   const balance = useWalletBalance();
   const [{ chains, connectedChain }] = useSetChain();
 
@@ -74,7 +76,7 @@ const WalletInfo: React.FC = () => {
             padding="0 .3rem"
           >
             <Text color="solid.gray0" m="11px 14px 11px 18px">
-              {balance}
+              {balance}Ξ
             </Text>
             <Button _active={{ backgroundColor: 'white' }} cursor="initial" variant="primary" borderRadius="40px">
               <Text mr="12px" p="6px 0px 6px 18px">
@@ -90,7 +92,7 @@ const WalletInfo: React.FC = () => {
             </Button>
           </Flex>
         ) : (
-          <Button variant="primary" color="primary.purple" onClick={showWalletConnectModal}>
+          <Button variant="primary" color="primary.purple" onClick={connectWallet}>
             Connect Wallet
           </Button>
         )}

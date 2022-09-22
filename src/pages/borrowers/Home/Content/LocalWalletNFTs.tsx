@@ -14,7 +14,11 @@ import { useLocalMaycContract } from 'hooks/useLocalMaycContract';
 import { useLocalNounsContract } from 'hooks/useLocalNounsContract';
 import { useLocalScaffoldEthNFTContract } from 'hooks/useLocalScaffoldEthNFTContract';
 import { useWalletAddress } from 'hooks/useWalletAddress';
-import { fetchLocalNFTsByWalletAddress, useNFTsByWalletAddress, resetLocalNFTsByWalletAddress } from 'nft/state/nfts.slice';
+import {
+  fetchLocalNFTsByWalletAddress,
+  useNFTsByWalletAddress,
+  resetLocalNFTsByWalletAddress,
+} from 'nft/state/nfts.slice';
 import React, { useEffect, useState } from 'react';
 import LoadingIndicator from '../../../../components/atoms/LoadingIndicator';
 import { NFTCardContainer } from './NFTCardContainer';
@@ -71,7 +75,7 @@ export const LocalhostContent: React.FC = () => {
 
     return () => {
       dispatch(resetLocalNFTsByWalletAddress());
-    }
+    };
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     walletAddress,

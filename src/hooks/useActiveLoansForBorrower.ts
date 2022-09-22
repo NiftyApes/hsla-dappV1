@@ -32,7 +32,7 @@ export const useActiveLoansForBorrower = () => {
         });
 
         if (chainLoan && chainLoan[0] !== '0x0000000000000000000000000000000000000000') {
-          const la: LoanAuction = loanAuction(chainLoan);
+          const la: LoanAuction = loanAuction(chainLoan, loan.transactionHash);
 
           // Amend loan auction with NFT props that are not included in the LoanAuctionStructOutput struct
           la.nftId = loan.nftId;

@@ -8,11 +8,12 @@ export const getActiveLoansByBorrower = async ({ address }: { address: string })
     return {
       amount: item.LoanTerms.Amount,
       duration: item.LoanTerms.Duration,
+      interestRatePerSecond: item.LoanTerms.InterestRatePerSecond,
       loanBeginTimestamp: item.LoanTerms.LoanBeginTimestamp,
       loanEndTimestamp: item.LoanTerms.LoanEndTimestamp,
-      interestRatePerSecond: item.LoanTerms.InterestRatePerSecond,
-      nftId: item.NftId,
       nftContractAddress: item.Collection,
+      nftId: item.NftId,
+      transactionHash: item.TransactionHash,
     };
   });
 };
