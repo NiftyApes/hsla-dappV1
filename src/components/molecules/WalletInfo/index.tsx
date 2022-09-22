@@ -46,6 +46,25 @@ const WalletInfo: React.FC = () => {
     return 'gray';
   }, [currentChainLabel]);
 
+  const menuItems = useMemo(() => [
+    {
+      label: '🍌 About NiftyApes',
+      onClick: () => window.open('https://niftyapes.money'),
+    },
+    {
+      label: '📓 Documentation',
+      onClick: () => window.open('https://docs.niftyapes.money'),
+    },
+    {
+      label: '📬 Discord',
+      onClick: () => window.open('https://discord.gg/Ge8Zwy6syQ'),
+    },
+    {
+      label: '⚖ Legal & Privacy',
+      onClick: () => window.open('https://blog.niftyapes.money/legal-privacy-tos'),
+    }
+  ], [])
+
   return (
     <>
       <Flex alignItems="center" position="relative">
@@ -117,10 +136,9 @@ const WalletInfo: React.FC = () => {
               },
             }}
           >
-            <MenuItem onClick={() => window.open('https://niftyapes.money')}>🍌 About NiftyApes</MenuItem>
-            <MenuItem onClick={() => window.open('https://docs.niftyapes.money')}>📓 Documentation</MenuItem>
-            <MenuItem onClick={() => window.open('https://discord.gg/Ge8Zwy6syQ')}>📬 Discord</MenuItem>
-            <MenuItem onClick={() => window.open('https://blog.niftyapes.money/legal-privacy-tos/')}>⚖ Legal & Privacy</MenuItem>
+            {menuItems.map((item) => (
+              <MenuItem onClick={item.onClick}>{item.label}</MenuItem>
+            ))}
           </MenuList>
         </Menu>
       </Flex>
