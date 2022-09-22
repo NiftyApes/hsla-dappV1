@@ -1,5 +1,4 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
-import { NONAME } from 'dns';
 import React from 'react';
 
 interface Props {
