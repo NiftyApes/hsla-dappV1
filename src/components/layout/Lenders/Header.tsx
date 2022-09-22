@@ -1,16 +1,33 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Button, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate } from 'react-router-dom';
 import { AiOutlineCaretDown } from 'react-icons/ai';
 import { useConnectWallet } from '@web3-onboard/react';
 
-import { lendersIdDashboard, lendersIdLend, lendersIdLiquidity } from 'routes/router';
+import { borrowers, borrowersId, borrowersIdDashboard, lendersIdDashboard, lendersIdLend, lendersIdLiquidity } from 'routes/router';
 import WalletInfo from 'components/molecules/WalletInfo';
 
 const Header: React.FC = () => {
   const [{ wallet }] = useConnectWallet();
+  const navigate = useNavigate();
 
-  const walletAddress = wallet?.accounts[0].address;
+  const walletAddress = useMemo(() => wallet?.accounts[0].address, [wallet?.accounts[0].address]);
+
+  const navigateToBorrowersDashboard = useCallback(() => {
+    if (!walletAddress) {
+      return;
+    }
+
+    navigate(borrowersIdDashboard(walletAddress));
+  }, [navigate, walletAddress]);
+
+  const navigateToBorrowersId = useCallback(() => {
+    if (!walletAddress) {
+      return;
+    }
+  
+    navigate(borrowersId(walletAddress))
+  }, [navigate, walletAddress]);
 
   return (
     <Flex
@@ -49,8 +66,19 @@ const Header: React.FC = () => {
           <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} bg="transparent">
             BORROWERS
           </MenuButton>
-          <MenuList>
-            <MenuItem>Sample</MenuItem>
+          <MenuList borderRadius="15px" 
+            boxShadow="0px 0px 21px rgba(58, 0, 131, 0.1)"
+            p="9px 7px"
+            fontSize="md"
+            sx={{
+              button: {
+                fontWeight: 'bold',
+                borderRadius: '10px',
+                p: '15px',
+              },
+            }}>
+            <MenuItem onClick={navigateToBorrowersDashboard}>📊 Dashboard</MenuItem>
+            <MenuItem onClick={navigateToBorrowersId}>🍌 Borrow</MenuItem>
           </MenuList>
         </Menu>
       </Flex>

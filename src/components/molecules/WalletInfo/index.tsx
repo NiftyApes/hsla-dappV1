@@ -96,7 +96,7 @@ const WalletInfo: React.FC = () => {
         )}
         <Menu>
           <MenuButton as={Button} variant="primary" borderRadius="50%" p="11px" ml="6px">
-            <Icon name="menu" />
+            <Icon name="more-vertical" />
           </MenuButton>
           <MenuList
             color="solid.gray0"
@@ -115,10 +115,10 @@ const WalletInfo: React.FC = () => {
               },
             }}
           >
-            <MenuItem>🍌 About NiftyApes</MenuItem>
-            <MenuItem>📓 Documentation</MenuItem>
-            <MenuItem>📬 Request Features</MenuItem>
-            <MenuItem>⚖ Legal & Privacy</MenuItem>
+            <MenuItem onClick={() => window.open('https://niftyapes.money')}>🍌 About NiftyApes</MenuItem>
+            <MenuItem onClick={() => window.open('https://docs.niftyapes.money')}>📓 Documentation</MenuItem>
+            <MenuItem onClick={() => window.open('https://discord.gg/Ge8Zwy6syQ')}>📬 Discord</MenuItem>
+            <MenuItem onClick={() => window.open('https://blog.niftyapes.money/legal-privacy-tos/')}>⚖ Legal & Privacy</MenuItem>
           </MenuList>
         </Menu>
       </Flex>
