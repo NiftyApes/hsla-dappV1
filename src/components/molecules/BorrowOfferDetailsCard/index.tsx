@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Flex, Grid, Text, useToast } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
-import CryptoIcon from 'components/atoms/CryptoIcon';
 import { useNiftyApesContractAddress } from '../../../hooks/useNiftyApesContractAddress';
-import { useERC721ApprovalForAll } from '../../../hooks/useERC721ApprovalForAll';
 import { BigNumber, Contract, ethers } from 'ethers';
 import { useExecuteLoanByBorrower } from '../../../hooks/useExecuteLoanByBorrower';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
@@ -12,6 +10,7 @@ import { LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
 import { formatEther } from 'ethers/lib/utils';
 import { concatForDisplay } from '../../../helpers/roundForDisplay';
+import { useERC721Approval } from '../../../hooks/useERC721Approval';
 
 interface Props {
   contract?: Contract;
@@ -27,7 +26,7 @@ const i18n = {
       nft.id
     } to the NiftyApes smart contract to borrow ${ethers.utils.formatEther(
       BigNumber.from(String(offer.OfferTerms.Amount)),
-    )} ${offer.symbol} for ${offer.durationDays} days`,
+    )}Ξ for ${offer.durationDays} days`,
   dealTermsLabel: 'deal terms',
   liquidityAwaits: 'Liquidity Awaits',
   toastApproveTransferError: 'Unable to approve NFT transfer',
@@ -45,15 +44,16 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
   const totalInterest: BigNumber = BigNumber.from(
     String(offer.OfferTerms.InterestRatePerSecond),
   ).mul(BigNumber.from(String(offer.OfferTerms.Duration)));
+
   const totalBorrowed: BigNumber = BigNumber.from(String(offer.OfferTerms.Amount)).add(
     totalInterest,
   );
 
   const fmtOfferAmount: string = formatEther(totalAmount);
-
-  const { hasApprovalForAll, hasCheckedApproval, grantApprovalForAll } = useERC721ApprovalForAll({
+  const { hasApproval, hasCheckedApproval, grantApproval } = useERC721Approval({
     contract,
     operator,
+    tokenId: nft.id,
   });
 
   const { executeLoanByBorrower } = useExecuteLoanByBorrower({
@@ -93,7 +93,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
 
   const [transferApprovalStatus, setTransferApprovalStatus] = useState<string>('READY');
   const onApproveTransfer = async () => {
-    await grantApprovalForAll({
+    await grantApproval({
       onPending: () => setTransferApprovalStatus('PENDING'),
       onSuccess: () => {
         setTransferApprovalStatus('SUCCESS');
@@ -120,7 +120,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
   };
 
   const renderTransferButton = () => {
-    if (!hasApprovalForAll && hasCheckedApproval) {
+    if (!hasApproval && hasCheckedApproval) {
       return (
         <Button
           onClick={onApproveTransfer}
@@ -172,9 +172,8 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
                 {i18n.dealTermsLabel}
               </Text>
               <Flex alignItems="center">
-                <CryptoIcon symbol={offer.symbol} size={32} />
                 <Text ml="6px" fontSize="3.5xl">
-                  {fmtOfferAmount} {offer.symbol}
+                  {fmtOfferAmount}Ξ
                 </Text>
               </Flex>
               <Text fontSize="sm" color="solid.black" mt="5px">
@@ -198,9 +197,8 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
               </Flex>
 
               <Flex alignItems="center">
-                <CryptoIcon symbol={offer.symbol} size={32} />
                 <Text ml="6px" fontSize="3.5xl">
-                  {formatEther(totalInterest).substring(0, 4)} {offer.symbol}
+                  {formatEther(totalInterest).substring(0, 4)}Ξ
                 </Text>
               </Flex>
               <Text fontSize="sm" color="solid.black" mb="20px">
@@ -219,7 +217,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
   const renderLoanButton = () => {
     return (
       <Button
-        isDisabled={!hasApprovalForAll && hasCheckedApproval}
+        isDisabled={!hasApproval && hasCheckedApproval}
         onClick={onExecuteLoan}
         colorScheme="purple"
         mt="20px"

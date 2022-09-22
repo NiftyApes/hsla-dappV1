@@ -38,7 +38,6 @@ const variants: { [variant: string]: StyleObjectOrFn } = {
     textTransform: 'uppercase',
     fontSize: '.85em',
     _hover: { bg: 'primary.purple', color: 'solid.white' },
-
   },
   neutralReverse: {
     bgColor: 'primary.purple',

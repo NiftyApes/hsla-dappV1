@@ -32,9 +32,10 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
         </Flex>
       </Td>
       <Td textAlign="center">
-            <Link textDecoration={"underline"} href={`https://etherscan.io/tx/${tx.TransactionHash}`}> 
-              <Icon display="inline-block" name="etherscan" /> {moment(tx.Timestamp * 1000).format('h:mma, MMM D YYYY')}
-            </Link>
+        <Link textDecoration={'underline'} href={`https://etherscan.io/tx/${tx.TransactionHash}`}>
+          <Icon display="inline-block" name="etherscan" />{' '}
+          {moment(tx.Timestamp * 1000).format('h:mma, MMM D YYYY')}
+        </Link>
       </Td>
       <Td textAlign="center">
         {tx.EventType === transactionTypes.LIQUIDITY_DEPOSITED
@@ -73,8 +74,9 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
               ? '+'
               : tx.EventType === transactionTypes.LIQUIDITY_WITHDRAWN ||
                 tx.EventType === transactionTypes.ASSET_SEIZED
-              ? '-' :
-              tx.EventType === transactionTypes.LOAN_CREATED ? '🔒 '
+              ? '-'
+              : tx.EventType === transactionTypes.LOAN_CREATED
+              ? '🔒 '
               : ''}
             {ethers.utils.formatEther(tx.EventData.Amount)}Ξ
           </Text>
@@ -91,7 +93,16 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
                   interestRatePerSecond: tx.EventData.InterestRatePerSecond,
                 }),
               )}
-              % APR on all <Link textDecoration={"underline"} href={`https://etherscan.io/address/${tx.EventData.NftContractAddress}`} maxWidth="20ch" noOfLines={1}> {tx.EventData.NftContractAddress}</Link>
+              % APR on all{' '}
+              <Link
+                textDecoration={'underline'}
+                href={`https://etherscan.io/address/${tx.EventData.NftContractAddress}`}
+                maxWidth="20ch"
+                noOfLines={1}
+              >
+                {' '}
+                {tx.EventData.NftContractAddress}
+              </Link>
             </span>
           ) : (
             '-'
