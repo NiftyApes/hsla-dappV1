@@ -76,29 +76,25 @@ export const LoanRow = ({ loanFromDb }: any) => {
             </Text>
           </Flex>
         </Td>
-        <Td>
-          <Flex>
-            <Box flex="1" />
-            <Flex flexDirection="column" alignItems="flex-start" justifyContent="flex-start">
-              <Text fontSize="sm" mb="10px">
-                Initiated {moment(loanFromChain.loanBeginTimestamp * 1000).format('MMM D, YYYY')}
-              </Text>
-              <Box mb="2px">
-                <Text as="span" fontSize="xl" fontWeight="bold">
-                  {ethers.utils.formatEther(loanFromChain.amount)}Ξ
-                </Text>{' '}
-                <Text as="span" color="#555">
+        <Td align='left'>
+          {/* <Flex> */}
+            {/* <Box flex="1" /> */}
+            {/* <Flex flexDirection="column" alignItems="flex-start" justifyContent="flex-start"> */}
+                  <Text pb=".5rem"> 
+                      <Text as="span" fontSize="xl" fontWeight={"bold"}>{ethers.utils.formatEther(loanFromChain.amount)}Ξ </Text><Text as="span" fontSize="md">Principal</Text>
+                  </Text>
+
+
+                <Text as="span" color="#000" fontWeight="bold">
                   {moment
                     .duration(
                       loanFromChain.loanEndTimestamp - loanFromChain.loanBeginTimestamp,
                       'seconds',
-                    )
-                    .asDays()}{' '}
-                  days,
+                      )
+                      .asDays()}
+                  <Text as="span" color="#555"> days,</Text>
                 </Text>
-              </Box>
-              <Box>
-                <Text as="span" fontWeight="bold">
+                <Text as="span" fontWeight="bold"> {' '}
                   {roundForDisplay(
                     getAPR({
                       amount: loanFromChain.amount,
@@ -106,29 +102,29 @@ export const LoanRow = ({ loanFromDb }: any) => {
                     }),
                   )}
                   %
-                </Text>{' '}
-                <Text as="span" color="#555">
-                  APR
+                  <Text as="span" color="#555"> APR </Text>
                 </Text>
-              </Box>
-            </Flex>
-            <Box flex="1" />
-          </Flex>
+              {/* </Box> */}
+            {/* </Flex> */}
+            {/* <Box flex="1" /> */}
+          {/* </Flex> */}
         </Td>
         <Td>
-          <Text
+          <Text fontSize="sm" mb="10px">
+                Initiated {moment(loanFromChain.loanBeginTimestamp * 1000).format('MMM D, YYYY')}
+          </Text>
+          {/* <Text
             fontSize="md"
             color={isDefaulted ? 'notification.alert' : 'notification.info'}
             fontWeight="bold"
           >
             {isDefaulted ? 'Defaulted' : 'Active Loan'}
-          </Text>
+          </Text> */}
           <Text fontSize="sm" fontStyle="italic">
             {moment(loanFromChain.loanEndTimestamp * 1000).toNow(true)}{' '}
             {isDefaulted ? 'ago' : 'remaining'}
           </Text>
-        </Td>
-        <Td>
+
           <Text fontSize="sm">
             {lenderInterestAsBigNumber &&
               `${roundForDisplay(Number(ethers.utils.formatEther(lenderInterestAsBigNumber)))}Ξ`}

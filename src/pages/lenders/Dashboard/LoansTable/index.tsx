@@ -6,7 +6,7 @@ import { LoanRow } from './LoanRow';
 const LoansTable: React.FC<any> = ({ activeLoans }) => {
   return (
     <Box>
-      <Table>
+      <Table size="sm">
         <Thead>
           <Tr
             background="#eee"
@@ -21,9 +21,8 @@ const LoansTable: React.FC<any> = ({ activeLoans }) => {
             }}
           >
             <Th>collateral</Th>
-            <Th>loan details</Th>
-            <Th>time remaining</Th>
-            <Th>interest accrued</Th>
+            <Th>offer</Th>
+            <Th>progress</Th>
           </Tr>
         </Thead>
         <Tbody
