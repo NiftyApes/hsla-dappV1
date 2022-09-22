@@ -101,6 +101,15 @@ export const fetchLoanAuctionByNFT = createAsyncThunk<FetchLoanAuctionResponse, 
 
     const result = await lendingContract.getLoanAuction(nftContractAddress, nftId);
 
+    (window as any).lc = lendingContract;
+
+    if (result.nftOwner === '0x0000000000000000000000000000000000000000') {
+      return thunkApi.rejectWithValue({
+        type: 'global',
+        message: 'NFT has no loan auction',
+      });
+    }
+
     return {
       content: loanAuction(result),
       fetching: false,

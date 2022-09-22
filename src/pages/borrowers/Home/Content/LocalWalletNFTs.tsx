@@ -1,5 +1,6 @@
-import { Center, SimpleGrid } from '@chakra-ui/react';
-import { useAppDispatch } from 'app/hooks';
+import { Box, Center, SimpleGrid } from '@chakra-ui/react';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { RootState } from 'app/store';
 import SectionHeader from 'components/molecules/SectionHeader';
 import {
   BAYC_CONTRACT_ADDRESS,
@@ -14,7 +15,13 @@ import { useLocalMaycContract } from 'hooks/useLocalMaycContract';
 import { useLocalNounsContract } from 'hooks/useLocalNounsContract';
 import { useLocalScaffoldEthNFTContract } from 'hooks/useLocalScaffoldEthNFTContract';
 import { useWalletAddress } from 'hooks/useWalletAddress';
-import { fetchLocalNFTsByWalletAddress, useNFTsByWalletAddress, resetLocalNFTsByWalletAddress } from 'nft/state/nfts.slice';
+import _ from 'lodash';
+import { NFT } from 'nft';
+import {
+  fetchLocalNFTsByWalletAddress,
+  resetLocalNFTsByWalletAddress,
+  useNFTsByWalletAddress,
+} from 'nft/state/nfts.slice';
 import React, { useEffect, useState } from 'react';
 import LoadingIndicator from '../../../../components/atoms/LoadingIndicator';
 import { NFTCardContainer } from './NFTCardContainer';
@@ -33,7 +40,27 @@ export const LocalhostContent: React.FC = () => {
   const doodlesContract = useLocalDoodlesContract();
   const nounsContract = useLocalNounsContract();
   const localScaffoldEthNftContract = useLocalScaffoldEthNFTContract();
+
   const nfts = useNFTsByWalletAddress(walletAddress || '');
+  const offers = useAppSelector((state: RootState) => state.loans.loanOffersByNFT);
+  const loans = useAppSelector((state: RootState) => state.loans.loanAuctionByNFT);
+
+  const nftsWithLoans = nfts?.content?.filter((nft: NFT) => {
+    return (
+      (loans as any) &&
+      (loans as any)[`${nft.contractAddress}_${nft.id}`] &&
+      (loans as any)[`${nft.contractAddress}_${nft.id}`].content
+    );
+  });
+
+  const nftsWithOffers = nfts?.content?.filter((nft: NFT) => {
+    return (
+      (offers as any) &&
+      (offers as any)[`${nft.contractAddress}_${nft.id}`] &&
+      (offers as any)[`${nft.contractAddress}_${nft.id}`].content &&
+      (offers as any)[`${nft.contractAddress}_${nft.id}`].content.length > 0
+    );
+  });
 
   const [hasFetchedBaycNfts, setHasFetchedBaycNfts] = useState(false);
   const [hasFetchedMaycNfts, setHasFetchedMaycNfts] = useState(false);
@@ -71,7 +98,7 @@ export const LocalhostContent: React.FC = () => {
 
     return () => {
       dispatch(resetLocalNFTsByWalletAddress());
-    }
+    };
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     walletAddress,
@@ -95,10 +122,12 @@ export const LocalhostContent: React.FC = () => {
 
   return (
     <>
-      <SectionHeader headerText={i18n.sectionHeaderText}></SectionHeader>
+      <Box my="16px">
+        <SectionHeader headerText={'NFTs With Active Loans'}></SectionHeader>
+      </Box>
 
       <SimpleGrid minChildWidth="240px" spacing={10} style={{ padding: '16px' }}>
-        {walletNfts?.map((item: any) => {
+        {nftsWithLoans?.map((item: any) => {
           const contract =
             item.contractAddress === BAYC_CONTRACT_ADDRESS
               ? baycContract
@@ -116,6 +145,59 @@ export const LocalhostContent: React.FC = () => {
 
           return <NFTCardContainer contract={contract} item={item} key={item.id} />;
         })}
+      </SimpleGrid>
+
+      <Box my="16px">
+        <SectionHeader headerText={'NFTs With Offers'}></SectionHeader>
+      </Box>
+      <SimpleGrid minChildWidth="240px" spacing={10} style={{ padding: '16px' }}>
+        {nftsWithLoans &&
+          nftsWithOffers &&
+          _.difference(nftsWithOffers, nftsWithLoans)?.map((item: any) => {
+            const contract =
+              item.contractAddress === BAYC_CONTRACT_ADDRESS
+                ? baycContract
+                : item.contractAddress === MAYC_CONTRACT_ADDRESS
+                ? maycContract
+                : item.contractAddress === DOODLES_CONTRACT_ADDRESS
+                ? doodlesContract
+                : item.contractAddress === NOUNS_CONTRACT_ADDRESS
+                ? nounsContract
+                : localScaffoldEthNftContract;
+
+            if (!contract) {
+              return null;
+            }
+
+            return <NFTCardContainer contract={contract} item={item} key={item.id} />;
+          })}
+      </SimpleGrid>
+
+      <Box my="16px">
+        <SectionHeader headerText={'NFTs With No Offers'}></SectionHeader>
+      </Box>
+      <SimpleGrid minChildWidth="240px" spacing={10} style={{ padding: '16px' }}>
+        {nftsWithLoans &&
+          nftsWithOffers &&
+          walletNfts &&
+          _.difference(walletNfts, [...nftsWithLoans, ...nftsWithOffers])?.map((item: any) => {
+            const contract =
+              item.contractAddress === BAYC_CONTRACT_ADDRESS
+                ? baycContract
+                : item.contractAddress === MAYC_CONTRACT_ADDRESS
+                ? maycContract
+                : item.contractAddress === DOODLES_CONTRACT_ADDRESS
+                ? doodlesContract
+                : item.contractAddress === NOUNS_CONTRACT_ADDRESS
+                ? nounsContract
+                : localScaffoldEthNftContract;
+
+            if (!contract) {
+              return null;
+            }
+
+            return <NFTCardContainer contract={contract} item={item} key={item.id} />;
+          })}
       </SimpleGrid>
     </>
   );

@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch, ThunkExtra } from 'app/store';
 import { getLocalNFTsOfAddress } from 'helpers/getLocalNFTsOfAddress';
+import { fetchLoanAuctionByNFT, fetchLoanOffersByNFT } from 'loan';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import { Contract, LendingContract, NFT, WalletAddress } from '../model';
 
@@ -52,6 +53,9 @@ export const fetchLocalNFTsByWalletAddress = createAsyncThunk<
     });
 
     if (nfts) {
+      nfts.forEach((nft: NFT) => thunkApi.dispatch(fetchLoanOffersByNFT(nft)));
+      nfts.forEach((nft: NFT) => thunkApi.dispatch(fetchLoanAuctionByNFT(nft)));
+
       return {
         content: nfts,
         fetching: false,
@@ -77,7 +81,7 @@ const slice = createSlice({
   reducers: {
     resetLocalNFTsByWalletAddress(state) {
       state.nftsByWalletAddress = {};
-    }
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchLocalNFTsByWalletAddress.pending, (state, action) => {
@@ -131,6 +135,6 @@ export const useNFTsByWalletAddress = (walletAddress: WalletAddress) => {
   return useNFTsSelector(selectors.nftsByWalletAddress)[walletAddress];
 };
 
-export const { resetLocalNFTsByWalletAddress } = slice.actions
+export const { resetLocalNFTsByWalletAddress } = slice.actions;
 
 export default slice.reducer;
