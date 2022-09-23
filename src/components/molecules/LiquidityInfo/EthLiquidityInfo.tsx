@@ -1,4 +1,4 @@
-import { Box, Flex, Text, Link } from '@chakra-ui/react';
+import { Box, Flex, Link, Text } from '@chakra-ui/react';
 import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
 import { useTotalEthLoanedOut } from 'hooks/useTotalEthLoanedOut';
 import _ from 'lodash';
@@ -29,7 +29,7 @@ export const EthLiquidityInfo: React.FC = () => {
       <Box>
         <Flex direction={'row'} alignItems="center" mb="8px">
           <Text fontSize={'1.5rem'} mr="8px">
-            {Number((availableEthLiquidity + totalEthLoanedOut).toFixed(2))}Ξ
+            {Number(availableEthLiquidity.toFixed(2))}Ξ
           </Text>
           <Text color="solid.gray0">Available to Use</Text>
         </Flex>
