@@ -8,8 +8,6 @@ const injected = injectedModule();
 
 const walletConnect = walletConnectModule();
 
-console.log(INFURA_ID);
-
 export const initWeb3Onboard = init({
   wallets: [injected, walletConnect],
   chains: [

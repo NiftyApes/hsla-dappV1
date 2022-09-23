@@ -69,29 +69,34 @@ const LoanTableRow: React.FC<Props> = ({ loan, onClick }) => {
   return (
     <Tr>
       <Td>
-        <Flex alignItems="center" justifyContent="center">
-          <Image src={nft.image} w="55px" h="55px" objectFit="cover" />
-          <Box marginLeft="-10px" mt="-10px">
+        <Flex>
+          <Image src={nft.image} w="55px" h="55px" objectFit="cover" borderRadius="10" />
+          <Box marginLeft="-10px" mt="10px">
             <Box border="2px solid" borderRadius="50%" borderColor="solid.white" bgColor="white">
               <a href={nft.external_url} target="_blank">
-                <Icon name="etherscan" size={20} />
+                <Icon name="etherscan" size={15} />
               </a>
             </Box>
             <a
-              href={`https://opensea.io/assets/ethereum/${nft.contractAddress}/${nft.tokenId}`}
+              href={`https://opensea.io/assets/ethereum/${nft.contractAddress}/${nft.id}`}
               target="_blank"
             >
-              <Icon name="os" size={25} />
+              <Icon name="os" size={20} />
             </a>
           </Box>
         </Flex>
+
         <Text mt="8px" fontWeight="bold" fontSize="2xs">
           <Text as="span" color="gray">
             {nft.name}
           </Text>
         </Text>
       </Td>
-      <Td>{startMoment.format('MMMM Do YYYY, h:mm:ss')}</Td>
+      <Td>
+        <a href={`https://etherscan.io/tx/${loan.loanTxnHash}`} target="_blank">
+          {startMoment.format('MMMM Do YYYY, h:mm:ss')}
+        </a>
+      </Td>
       <Td>
         <Text fontSize="xl" fontWeight="bold">
           {formatEther(loan.amount)}Ξ

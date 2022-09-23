@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Box,
   Center,
   Flex,
+  Link,
   Modal,
   ModalCloseButton,
   ModalContent,
@@ -23,12 +28,17 @@ import { CollateralHeader } from '../../../components/molecules/CollateralHeader
 import BorrowLoanRepayCard from '../../../components/molecules/BorrowLoanRepayCard';
 import { NFT } from '../../../nft';
 
+import { useWalletAddress } from '../../../hooks/useWalletAddress';
+import { useNavigate } from 'react-router-dom';
+
 const i18n = {
   repayLoanHeader: 'repay loan on ',
 };
 
 const Dashboard: React.FC = () => {
+  const walletAddress = useWalletAddress();
   const activeLoans = useActiveLoansForBorrower();
+  const navigate = useNavigate();
 
   const {
     isOpen: isRepayLoanOpen,
@@ -46,6 +56,7 @@ const Dashboard: React.FC = () => {
       </Center>
     );
   }
+
   const loanCount = activeLoans.length;
   const loanTotal = activeLoans.reduce(
     (acc: BigNumber, loan: LoanAuction) => loan.amount.add(acc),
@@ -60,9 +71,35 @@ const Dashboard: React.FC = () => {
   const onRepayLoan = (loan: LoanAuction, nft: NFT) => {
     setLoan(loan);
     setNft(nft);
-
     onRepayLoanOpen();
   };
+
+  // No active loans
+  if (loanCount === 0) {
+    return (
+      <Alert
+        status="info"
+        variant="subtle"
+        flexDirection="column"
+        alignItems="center"
+        justifyContent="center"
+        textAlign="center"
+        height="200px"
+      >
+        <AlertIcon boxSize="40px" mr={0} />
+        <AlertTitle mt={4} mb={1} fontSize="lg">
+          No Active Loans
+        </AlertTitle>
+        <AlertDescription maxWidth="sm">
+          Go ahead and{' '}
+          <Text as="u">
+            <Link onClick={() => navigate(`/borrowers/${walletAddress}`)}>borrow</Link>
+          </Text>{' '}
+          some ETH against your NFTs
+        </AlertDescription>
+      </Alert>
+    );
+  }
 
   return (
     <Box>
