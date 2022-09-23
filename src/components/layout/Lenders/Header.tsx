@@ -60,7 +60,6 @@ const Header: React.FC = () => {
             💧 MANAGE LIQUIDITY{' '}
           </Link>
           <Link to={walletAddress ? lendersIdLend(walletAddress) : ''}>📃 CREATE OFFERS</Link>
-          {/*<Link to={walletAddress ? lendersIdOffers(walletAddress) : ''}>📃 CREATE OFFERS</Link>*/}
         </Flex>
         <Menu key={window.location.pathname}>
           <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} bg="transparent">
