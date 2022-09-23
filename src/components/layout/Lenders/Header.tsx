@@ -62,7 +62,7 @@ const Header: React.FC = () => {
           <Link to={walletAddress ? lendersIdLend(walletAddress) : ''}>📃 CREATE OFFERS</Link>
           {/*<Link to={walletAddress ? lendersIdOffers(walletAddress) : ''}>📃 CREATE OFFERS</Link>*/}
         </Flex>
-        <Menu>
+        <Menu key={window.location.pathname}>
           <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} bg="transparent">
             BORROWERS
           </MenuButton>
