@@ -47,19 +47,16 @@ export const LocalhostContent: React.FC = () => {
 
   const nftsWithLoans = nfts?.content?.filter((nft: NFT) => {
     return (
-      (loans as any) &&
-      (loans as any)[`${nft.contractAddress}_${nft.id}`] &&
-      (loans as any)[`${nft.contractAddress}_${nft.id}`].content
+      loans[`${nft.contractAddress}_${nft.id}`] && loans[`${nft.contractAddress}_${nft.id}`].content
     );
   });
 
   const nftsWithOffers = nfts?.content?.filter((nft: NFT) => {
-    return (
-      (offers as any) &&
-      (offers as any)[`${nft.contractAddress}_${nft.id}`] &&
-      (offers as any)[`${nft.contractAddress}_${nft.id}`].content &&
-      (offers as any)[`${nft.contractAddress}_${nft.id}`].content.length > 0
-    );
+    const offersContent =
+      offers[`${nft.contractAddress}_${nft.id}`] &&
+      offers[`${nft.contractAddress}_${nft.id}`].content;
+
+    return offersContent && offersContent.length > 0;
   });
 
   const [hasFetchedBaycNfts, setHasFetchedBaycNfts] = useState(false);
