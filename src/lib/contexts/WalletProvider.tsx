@@ -1,8 +1,8 @@
-import React, { createContext, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import { OnboardAPI } from '@web3-onboard/core';
 import { useConnectWallet, useWallets } from '@web3-onboard/react';
 import { useWalletAddress } from 'hooks/useWalletAddress';
+import React, { createContext, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { initWeb3Onboard } from 'services/wallet';
 
 interface WalletContextProps {
@@ -44,10 +44,6 @@ export const WalletProvider: React.FC<{ children: React.ReactNode | React.ReactN
       }
     } else {
       saveWalletsToLocalStorage();
-
-      if (walletAddress && id?.toLowerCase() !== walletAddress.toLowerCase()) {
-        navigate(walletAddress);
-      }
     }
   }, [wallet]);
 

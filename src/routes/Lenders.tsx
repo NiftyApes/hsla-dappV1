@@ -24,12 +24,11 @@ const Lenders = (
   <Route path={lenders()} element={<LendersLayout />}>
     <Route path=":id" element={<LendersHome />} />
     <Route path={`:id/${ROUTE_LENDERS_DASHBOARD}`} element={<Dashboard />} />
-    <Route path={`:id/${ROUTE_LENDERS_LEND}`} element={<LendCollections />} />
+    <Route path={`${ROUTE_LENDERS_LEND}`} element={<LendCollections />} />
     <Route path={`:id/${ROUTE_LENDERS_LIQUIDITY}`} element={<Liquidity />} />
     <Route path={`:id/${ROUTE_LENDERS_OFFERS}`} element={<Offers />} />
-    <Route path={`:id/${ROUTE_LENDERS_OFFERS}`} element={<Offers />} />
     <Route
-      path={`:id/create-collection-offer/:collectionAddress`}
+      path={`create-collection-offer/:collectionAddress`}
       element={<CollectionDetailsModal />}
     />
   </Route>

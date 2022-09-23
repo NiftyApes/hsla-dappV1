@@ -1,5 +1,5 @@
-import { useChainId } from './useChainId';
 import { getContracts, getLiquidityContract, getOffersContract } from 'helpers/getContracts';
+import { useChainId } from './useChainId';
 import { useWalletProvider } from './useWalletProvider';
 
 const i18n = {

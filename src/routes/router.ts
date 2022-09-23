@@ -50,5 +50,5 @@ export const lendersIdOffers = (id: string) => {
 };
 
 export const lendersIdLend = (id: string) => {
-  return path([ROUTE_LENDERS, id, ROUTE_LENDERS_LEND]);
+  return path([ROUTE_LENDERS, ROUTE_LENDERS_LEND]);
 };
