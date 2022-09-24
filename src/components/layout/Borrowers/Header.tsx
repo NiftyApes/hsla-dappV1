@@ -1,15 +1,41 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Button, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineCaretDown } from 'react-icons/ai';
 import { useConnectWallet } from '@web3-onboard/react';
 
-import { borrowersId, borrowersIdDashboard } from 'routes/router';
+import { borrowersId, borrowersIdDashboard, lendersIdDashboard, lendersIdLend, lendersIdLiquidity, lendersIdOffers } from 'routes/router';
 import WalletInfo from 'components/molecules/WalletInfo';
 
 const Header: React.FC = () => {
   const [{ wallet }] = useConnectWallet();
-  const walletAddress = wallet?.accounts[0].address;
+  const navigate = useNavigate();
+
+  const walletAddress = useMemo(() => wallet?.accounts[0].address, [wallet?.accounts[0].address]);
+
+  const navigateToLendersIdDashboard = useCallback(() => {
+    if (!walletAddress) {
+      return;
+    }
+
+    navigate(lendersIdDashboard(walletAddress));
+  }, [navigate, walletAddress]);
+
+  const navigateToLendersIdLiquidity = useCallback(() => {
+    if (!walletAddress) {
+      return;
+    }
+
+    navigate(lendersIdLiquidity(walletAddress));
+  }, [navigate, walletAddress]);
+
+  const navigateToLendersIdLend = useCallback(() => {
+    if (!walletAddress) {
+      return;
+    }
+
+    navigate(lendersIdLend(walletAddress));
+  }, [navigate, walletAddress]);
 
   return (
     <Flex
@@ -46,8 +72,20 @@ const Header: React.FC = () => {
           <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} bg="transparent">
             LENDERS
           </MenuButton>
-          <MenuList>
-            <MenuItem>Sample</MenuItem>
+          <MenuList borderRadius="15px" 
+            boxShadow="0px 0px 21px rgba(58, 0, 131, 0.1)"
+            p="9px 7px"
+            fontSize="md"
+            sx={{
+              button: {
+                fontWeight: 'bold',
+                borderRadius: '10px',
+                p: '15px',
+              },
+            }}>
+            <MenuItem onClick={navigateToLendersIdDashboard}>📊 Dashboard</MenuItem>
+            <MenuItem onClick={navigateToLendersIdLiquidity}>💧 Manage Liquidity</MenuItem>
+            <MenuItem onClick={navigateToLendersIdLend}>📜 Create Offers</MenuItem>
           </MenuList>
         </Menu>
       </Flex>
