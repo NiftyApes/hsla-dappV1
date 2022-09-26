@@ -1,8 +1,6 @@
 import { OnboardAPI } from '@web3-onboard/core';
 import { useConnectWallet, useWallets } from '@web3-onboard/react';
-import { useWalletAddress } from 'hooks/useWalletAddress';
 import React, { createContext, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import { initWeb3Onboard } from 'services/wallet';
 
 interface WalletContextProps {
@@ -16,12 +14,9 @@ export const WalletContext = createContext<WalletContextProps>({
 export const WalletProvider: React.FC<{ children: React.ReactNode | React.ReactNode[] }> = ({
   children,
 }) => {
-  const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
   const [{ wallet }, connect] = useConnectWallet();
   const connectedWallets = useWallets();
   const web3Onboard: OnboardAPI = initWeb3Onboard;
-  const walletAddress = useWalletAddress();
 
   const saveWalletsToLocalStorage = () => {
     const connectedWalletsLabelArray = connectedWallets.map(({ label }) => label);
