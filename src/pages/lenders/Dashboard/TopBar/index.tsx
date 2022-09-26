@@ -45,7 +45,7 @@ const TopBar: React.FC = () => {
                                 activeLoans.reduce((acc: number, val: { accruedInterest: number }) => {
                                     return acc + val.accruedInterest;
                                 }, 0),
-                            )}
+                            )}Ξ
                     </Text>
                 </Flex>
                 <Text fontSize="2xs" color="solid.darkGray">TOTAL INTEREST ACCRUED</Text>
