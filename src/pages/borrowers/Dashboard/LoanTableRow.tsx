@@ -1,15 +1,12 @@
 import React from 'react';
 import {LoanAuction} from '../../../loan';
 import {NFT} from '../../../nft';
-import {Box, Button, Flex, Image, Td, Text, Tr} from '@chakra-ui/react';
-import Icon from '../../../components/atoms/Icon';
+import {Button, Td, Text, Tr} from '@chakra-ui/react';
 import {formatEther} from 'ethers/lib/utils';
 import {getAPR} from '../../../helpers/getAPR';
 import moment from 'moment';
 import {BigNumber} from 'ethers';
 import {roundForDisplay} from '../../../helpers/roundForDisplay';
-import {useRaribleTokenMeta} from '../../../hooks/useRaribleTokenMeta';
-import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
 import NFTCardSmall from "../../../components/cards/NFTCardSmall";
 
 interface callbackType {

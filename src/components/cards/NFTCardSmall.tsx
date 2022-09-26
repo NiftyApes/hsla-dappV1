@@ -39,11 +39,12 @@ const NFTCardSmall: React.FC<Props> = ({
                         </a>
                     </Box>
                 </Flex>
+
+                <Text mt="5px" fontWeight="bold" fontSize="2xs" width="55px" color="gray" noOfLines={1}>
+                    {nft.name}
+                </Text>
             </Flex>
 
-            <Text mt="15px" ml="10px" fontWeight="bold" fontSize="2xs" color="gray">
-                {nft.name}
-            </Text>
         </Flex>
     );
 

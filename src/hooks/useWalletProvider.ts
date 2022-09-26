@@ -1,7 +1,17 @@
 import { useConnectWallet } from '@web3-onboard/react';
+import Provider from 'eip1193-provider';
+import { useChainId } from './useChainId';
 
 export const useWalletProvider = () => {
   const [{ wallet }] = useConnectWallet();
 
-  return wallet?.provider;
+  const chainId = useChainId();
+
+  if (wallet?.provider) {
+    return wallet?.provider;
+  }
+
+  return chainId === '0x7a69'
+    ? new Provider('http://localhost:8545')
+    : new Provider('https://eth-mainnet.g.alchemy.com/v2/jxUUn2DsYODlc68SEU_7eNGCn2hQ7b63');
 };

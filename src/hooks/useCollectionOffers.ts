@@ -4,16 +4,14 @@ import { RootState } from 'app/store';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
-import { getOffersContract } from '../helpers/getContracts';
-import { useWalletProvider } from './useWalletProvider';
+import { useOffersContract } from './useContracts';
 
 export const useCollectionOffers = ({ nftContractAddress }: { nftContractAddress?: string }) => {
   const [offers, setOffers] = useState<any>();
 
   const cacheCounter = useAppSelector((state: RootState) => state.counter);
 
-  const provider = useWalletProvider();
-  const niftyApesContract = provider ? getOffersContract({ provider }) : null;
+  const niftyApesContract = useOffersContract();
 
   useEffect(() => {
     async function fetchLoanOffersForNFT() {
@@ -54,5 +52,5 @@ export const useCollectionOffers = ({ nftContractAddress }: { nftContractAddress
 
   // sort by createdAt, but components that use this hook, like OfferBook
   // probably have their own sorting method
-  return _.sortBy(offers, (o) => -o.offer.createdAt).map((o) => o.offer);
+  return _.sortBy(offers, (o) => -o.offer.expiration).map((o) => o.offer);
 };
