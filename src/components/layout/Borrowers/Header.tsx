@@ -1,11 +1,17 @@
-import React, { useCallback, useMemo } from 'react';
 import { Button, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
-import { Link, useNavigate } from 'react-router-dom';
-import { AiOutlineCaretDown } from 'react-icons/ai';
 import { useConnectWallet } from '@web3-onboard/react';
+import React, { useCallback, useMemo } from 'react';
+import { AiOutlineCaretDown } from 'react-icons/ai';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { borrowersId, borrowersIdDashboard, lendersIdDashboard, lendersIdLend, lendersIdLiquidity, lendersIdOffers } from 'routes/router';
 import WalletInfo from 'components/molecules/WalletInfo';
+import {
+  borrowersId,
+  borrowersIdDashboard,
+  lendersIdDashboard,
+  lendersIdLend,
+  lendersIdLiquidity,
+} from 'routes/router';
 
 const Header: React.FC = () => {
   const [{ wallet }] = useConnectWallet();
@@ -14,28 +20,16 @@ const Header: React.FC = () => {
   const walletAddress = useMemo(() => wallet?.accounts[0].address, [wallet?.accounts[0].address]);
 
   const navigateToLendersIdDashboard = useCallback(() => {
-    if (!walletAddress) {
-      return;
-    }
-
-    navigate(lendersIdDashboard(walletAddress));
-  }, [navigate, walletAddress]);
+    navigate(lendersIdDashboard());
+  }, [navigate]);
 
   const navigateToLendersIdLiquidity = useCallback(() => {
-    if (!walletAddress) {
-      return;
-    }
-
-    navigate(lendersIdLiquidity(walletAddress));
-  }, [navigate, walletAddress]);
+    navigate(lendersIdLiquidity());
+  }, [navigate]);
 
   const navigateToLendersIdLend = useCallback(() => {
-    if (!walletAddress) {
-      return;
-    }
-
-    navigate(lendersIdLend(walletAddress));
-  }, [navigate, walletAddress]);
+    navigate(lendersIdLend());
+  }, [navigate]);
 
   return (
     <Flex
@@ -43,8 +37,7 @@ const Header: React.FC = () => {
       alignItems="center"
       justifyContent="space-between"
       top="0px"
-      zIndex={9}
-    >
+      zIndex={9}>
       <Flex alignItems="center">
         <Link to="/">
           <Image src="/assets/images/header_logo.png" alt="Logo" mr="15px" cursor="pointer" />
@@ -59,20 +52,20 @@ const Header: React.FC = () => {
           columnGap="46px"
           fontSize="2.5xs"
           p="17px 26px"
-          fontWeight="bold"
-        >
+          fontWeight="bold">
           <Text>
-            <Link to={borrowersId(walletAddress || '')}>🍌 Borrow</Link>
+            <Link to={borrowersId()}>🍌 Borrow</Link>
           </Text>
           <Text color="solid.gray0">
-            <Link to={walletAddress ? borrowersIdDashboard(walletAddress) : ''}>📊 DASH</Link>
+            <Link to={borrowersIdDashboard()}>📊 DASH</Link>
           </Text>
         </Flex>
         <Menu>
           <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} bg="transparent">
             LENDERS
           </MenuButton>
-          <MenuList borderRadius="15px" 
+          <MenuList
+            borderRadius="15px"
             boxShadow="0px 0px 21px rgba(58, 0, 131, 0.1)"
             p="9px 7px"
             fontSize="md"

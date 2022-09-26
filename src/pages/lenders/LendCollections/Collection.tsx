@@ -18,10 +18,9 @@ const Collection: React.FC = () => {
         p="7px"
         boxShadow="0px 2.87612px 17.2567px rgba(73, 16, 146, 0.1)"
         w="250px"
-        cursor="pointer"
-      >
+        cursor="pointer">
         <Flex textAlign="center" alignItems="center" justifyContent="center" mb="7px">
-          <LinkOverlay href={`/lenders/${address}/create-collection-offer/${contract?.address}`}>
+          <LinkOverlay href={`/lenders/create-collection-offer/${contract?.address}`}>
             <Text fontSize="sm" fontWeight="bold" noOfLines={1}>
               BORED APE YACHT CLUB.
             </Text>
@@ -38,8 +37,7 @@ const Collection: React.FC = () => {
               fontSize: 'xs',
               color: 'primary.purple',
             },
-          }}
-        >
+          }}>
           <Text>10k in Collection</Text>|<Text>34 Requests</Text>
         </Flex>
 
@@ -69,8 +67,7 @@ const Collection: React.FC = () => {
                   color: 'solid.gray0',
                 },
               },
-            }}
-          >
+            }}>
             <Flex flexDir="column" alignItems="center">
               <Text>5,4305</Text>
               <Text>Active</Text>

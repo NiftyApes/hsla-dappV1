@@ -1,11 +1,17 @@
-import React, { useCallback, useMemo } from 'react';
 import { Button, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
-import { Link , useNavigate } from 'react-router-dom';
-import { AiOutlineCaretDown } from 'react-icons/ai';
 import { useConnectWallet } from '@web3-onboard/react';
+import React, { useCallback, useMemo } from 'react';
+import { AiOutlineCaretDown } from 'react-icons/ai';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { borrowers, borrowersId, borrowersIdDashboard, lendersIdDashboard, lendersIdLend, lendersIdLiquidity } from 'routes/router';
 import WalletInfo from 'components/molecules/WalletInfo';
+import {
+  borrowersId,
+  borrowersIdDashboard,
+  lendersIdDashboard,
+  lendersIdLend,
+  lendersIdLiquidity,
+} from 'routes/router';
 
 const Header: React.FC = () => {
   const [{ wallet }] = useConnectWallet();
@@ -14,20 +20,12 @@ const Header: React.FC = () => {
   const walletAddress = useMemo(() => wallet?.accounts[0].address, [wallet?.accounts[0].address]);
 
   const navigateToBorrowersDashboard = useCallback(() => {
-    if (!walletAddress) {
-      return;
-    }
-
-    navigate(borrowersIdDashboard(walletAddress));
-  }, [navigate, walletAddress]);
+    navigate(borrowersIdDashboard());
+  }, [navigate]);
 
   const navigateToBorrowersId = useCallback(() => {
-    if (!walletAddress) {
-      return;
-    }
-  
-    navigate(borrowersId(walletAddress))
-  }, [navigate, walletAddress]);
+    navigate(borrowersId());
+  }, [navigate]);
 
   return (
     <Flex
@@ -35,8 +33,7 @@ const Header: React.FC = () => {
       alignItems="center"
       justifyContent="space-between"
       top="0px"
-      zIndex={9}
-    >
+      zIndex={9}>
       <Flex alignItems="center">
         <Link to="/">
           <Image src="/assets/images/header_logo.png" alt="Logo" mr="15px" cursor="pointer" />
@@ -52,20 +49,17 @@ const Header: React.FC = () => {
           fontSize="2.5xs"
           p="17px 26px"
           color="solid.gray0"
-          fontWeight="bold"
-        >
-          <Link to={walletAddress ? lendersIdDashboard(walletAddress) : ''}>📊 DASH</Link>
-          <Link to={walletAddress ? lendersIdLiquidity(walletAddress) : ''}>
-            {' '}
-            💧 MANAGE LIQUIDITY{' '}
-          </Link>
-          <Link to={walletAddress ? lendersIdLend(walletAddress) : ''}>📃 CREATE OFFERS</Link>
+          fontWeight="bold">
+          <Link to={lendersIdDashboard()}>📊 DASH</Link>
+          <Link to={lendersIdLiquidity()}> 💧 MANAGE LIQUIDITY </Link>
+          <Link to={lendersIdLend()}>📃 CREATE OFFERS</Link>
         </Flex>
         <Menu key={window.location.pathname}>
           <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} bg="transparent">
             BORROWERS
           </MenuButton>
-          <MenuList borderRadius="15px" 
+          <MenuList
+            borderRadius="15px"
             boxShadow="0px 0px 21px rgba(58, 0, 131, 0.1)"
             p="9px 7px"
             fontSize="md"
