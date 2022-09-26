@@ -1,11 +1,11 @@
-import React, { useCallback, useMemo } from 'react';
 import { Button, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
-import { Link , useNavigate } from 'react-router-dom';
-import { AiOutlineCaretDown } from 'react-icons/ai';
 import { useConnectWallet } from '@web3-onboard/react';
+import React, { useCallback, useMemo } from 'react';
+import { AiOutlineCaretDown } from 'react-icons/ai';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { borrowers, borrowersId, borrowersIdDashboard, lendersIdDashboard, lendersIdLend, lendersIdLiquidity } from 'routes/router';
 import WalletInfo from 'components/molecules/WalletInfo';
+import { borrowersId, borrowersIdDashboard, lendersIdDashboard, lendersIdLend, lendersIdLiquidity } from 'routes/router';
 
 const Header: React.FC = () => {
   const [{ wallet }] = useConnectWallet();
@@ -49,17 +49,18 @@ const Header: React.FC = () => {
           borderRadius="45px"
           alignItems="center"
           columnGap="46px"
-          fontSize="2.5xs"
           p="17px 26px"
           color="solid.gray0"
           fontWeight="bold"
+          fontSize="md"
+          textTransform={"capitalize"}
         >
-          <Link to={walletAddress ? lendersIdDashboard(walletAddress) : ''}>📊 DASH</Link>
+          <Link to={walletAddress ? lendersIdDashboard(walletAddress) : ''}>📊 Dashboard</Link>
           <Link to={walletAddress ? lendersIdLiquidity(walletAddress) : ''}>
             {' '}
-            💧 MANAGE LIQUIDITY{' '}
+            💧 Manage Liquidity{' '}
           </Link>
-          <Link to={walletAddress ? lendersIdLend(walletAddress) : ''}>📃 CREATE OFFERS</Link>
+          <Link to={walletAddress ? lendersIdLend(walletAddress) : ''}>📃 Create Offers</Link>
         </Flex>
         <Menu key={window.location.pathname}>
           <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} bg="transparent">
