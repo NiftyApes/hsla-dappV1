@@ -146,7 +146,7 @@ const OfferBook: React.FC<OfferBook> = ({
         color="solid.gray0"
         mb="13px"
         sx={{ position: 'relative', top: '-16px', left: '4px' }}>
-        OFFER BOOK DATA asdf
+        OFFER BOOK DATA
       </Text>
       <Table>
         <Thead
