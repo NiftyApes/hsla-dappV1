@@ -1,7 +1,6 @@
 import {Flex, Text} from '@chakra-ui/react';
 import React from 'react';
 
-import CryptoIcon from 'components/atoms/CryptoIcon';
 import {roundForDisplay} from 'helpers/roundForDisplay';
 import {useActiveLoansForLender} from 'hooks/useActiveLoansForLender';
 import {useAvailableEthLiquidity} from 'hooks/useEthLiquidity';
@@ -32,7 +31,6 @@ const TopBar: React.FC = () => {
             </Flex>
             <Flex flexDir="column" alignItems="center">
                 <Flex alignItems="center" justifyContent="center">
-                    <CryptoIcon symbol="eth" size={40}/>
                     <Text fontSize="7xl" ml="8px">
                         {totalEthLoanedOut}Ξ
                     </Text>
@@ -41,7 +39,6 @@ const TopBar: React.FC = () => {
             </Flex>
             <Flex flexDir="column" alignItems="center">
                 <Flex alignItems="center" justifyContent="center">
-                    <CryptoIcon symbol="eth" size={40}/>
                     <Text fontSize="7xl" ml="8px">
                         {activeLoans &&
                             roundForDisplay(
