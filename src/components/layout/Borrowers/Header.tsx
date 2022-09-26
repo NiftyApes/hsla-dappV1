@@ -20,28 +20,16 @@ const Header: React.FC = () => {
   const walletAddress = useMemo(() => wallet?.accounts[0].address, [wallet?.accounts[0].address]);
 
   const navigateToLendersIdDashboard = useCallback(() => {
-    if (!walletAddress) {
-      return;
-    }
-
     navigate(lendersIdDashboard());
-  }, [navigate, walletAddress]);
+  }, [navigate]);
 
   const navigateToLendersIdLiquidity = useCallback(() => {
-    if (!walletAddress) {
-      return;
-    }
-
     navigate(lendersIdLiquidity());
-  }, [navigate, walletAddress]);
+  }, [navigate]);
 
   const navigateToLendersIdLend = useCallback(() => {
-    if (!walletAddress) {
-      return;
-    }
-
     navigate(lendersIdLend());
-  }, [navigate, walletAddress]);
+  }, [navigate]);
 
   return (
     <Flex
@@ -69,7 +57,7 @@ const Header: React.FC = () => {
             <Link to={borrowersId()}>🍌 Borrow</Link>
           </Text>
           <Text color="solid.gray0">
-            <Link to={walletAddress ? borrowersIdDashboard() : ''}>📊 DASH</Link>
+            <Link to={borrowersIdDashboard()}>📊 DASH</Link>
           </Text>
         </Flex>
         <Menu>
