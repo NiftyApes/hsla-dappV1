@@ -1,14 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useAppDispatch } from 'app/hooks';
-import { useEffect } from 'react';
 
 import NFTCard from 'components/molecules/NFTCard';
 import NFTNoOfferCard from 'components/molecules/NFTNoOfferCard';
 import NFTActiveLoanCard from '../../../../components/molecules/NFTActiveLoanCard';
 
-import { fetchLoanOffersByNFT, useLoanOffersByNFT } from 'loan';
-import { useLoanAuction } from '../../../../hooks/useLoanAuction';
+import { useLoanOffersByNFT } from 'loan';
 import { NFTLoadingCard } from '../../../../components/molecules/NFTLoadingCard';
+import { useLoanAuction } from '../../../../hooks/useLoanAuction';
 
 import { Contract, NFT } from 'nft';
 
@@ -22,12 +21,6 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
 
   const { content: loanOffers, fetching: fetchingOffers } = useLoanOffersByNFT(item);
   const loanAuction = useLoanAuction({ nftContractAddress: contract.address, nftId: item.id });
-
-  useEffect(() => {
-    if (!loanOffers && !fetchingOffers) {
-      dispatch(fetchLoanOffersByNFT(item));
-    }
-  }, [item, fetchingOffers]);
 
   if (!loanOffers || fetchingOffers) {
     return <NFTLoadingCard />;
