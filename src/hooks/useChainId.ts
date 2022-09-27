@@ -4,7 +4,7 @@ export const useChainId = () => {
   const [{ wallet }] = useConnectWallet();
 
   if (!wallet) {
-    return undefined;
+    return window?.ethereum?.chainId;
   }
 
   return wallet.chains[0] && wallet.chains[0].id;
