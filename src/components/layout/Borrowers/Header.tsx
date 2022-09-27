@@ -65,7 +65,7 @@ const Header: React.FC = () => {
           <Text color="solid.gray0">
             <Link to={walletAddress ? borrowersIdDashboard(walletAddress) : ''}>📊 Dashboard</Link>
           </Text>
-          <Text>
+          <Text color="solid.gray0">
             <Link to={borrowersId(walletAddress || '')}>🍌 Borrow</Link>
           </Text>
 
