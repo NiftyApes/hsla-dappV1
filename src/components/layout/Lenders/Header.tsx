@@ -10,7 +10,7 @@ import {
   borrowersIdDashboard,
   lendersIdDashboard,
   lendersIdLend,
-  lendersIdLiquidity,
+  lendersIdLiquidity
 } from 'routes/router';
 
 const Header: React.FC = () => {
@@ -46,13 +46,15 @@ const Header: React.FC = () => {
           borderRadius="45px"
           alignItems="center"
           columnGap="46px"
-          fontSize="2.5xs"
           p="17px 26px"
           color="solid.gray0"
-          fontWeight="bold">
-          <Link to={lendersIdDashboard()}>📊 DASH</Link>
-          <Link to={lendersIdLiquidity()}> 💧 MANAGE LIQUIDITY </Link>
-          <Link to={lendersIdLend()}>📃 CREATE OFFERS</Link>
+          fontWeight="bold"
+          fontSize="md"
+          textTransform={"capitalize"}
+        >
+          <Link to={lendersIdDashboard()}>📊 Dashboard</Link>
+          <Link to={lendersIdLiquidity()}>💧 Manage Liquidity </Link>
+          <Link to={lendersIdLend()}>📃 Create Offers</Link>
         </Flex>
         <Menu key={window.location.pathname}>
           <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} bg="transparent">
