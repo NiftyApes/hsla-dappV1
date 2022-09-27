@@ -56,10 +56,10 @@ const Header: React.FC = () => {
           fontWeight="bold"
         >
           <Text color="solid.gray0">
-            <Link to={walletAddress ? borrowersIdDashboard(walletAddress) : ''}>📊 Dashboard</Link>
+            <Link to={borrowersIdDashboard()}>📊 Dashboard</Link>
           </Text>
           <Text color="solid.gray0">
-            <Link to={borrowersId(walletAddress || '')}>🍌 Borrow</Link>
+            <Link to={borrowersId()}>🍌 Borrow</Link>
           </Text>
 
         </Flex>

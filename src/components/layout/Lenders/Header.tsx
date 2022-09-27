@@ -52,12 +52,9 @@ const Header: React.FC = () => {
           fontSize="md"
           textTransform={"capitalize"}
         >
-          <Link to={walletAddress ? lendersIdDashboard(walletAddress) : ''}>📊 Dashboard</Link>
-          <Link to={walletAddress ? lendersIdLiquidity(walletAddress) : ''}>
-            {' '}
-            💧 Manage Liquidity{' '}
-          </Link>
-          <Link to={walletAddress ? lendersIdLend(walletAddress) : ''}>📃 Create Offers</Link>
+          <Link to={lendersIdDashboard()}>📊 Dashboard</Link>
+          <Link to={lendersIdLiquidity()}>💧 Manage Liquidity </Link>
+          <Link to={lendersIdLend()}>📃 Create Offers</Link>
         </Flex>
         <Menu key={window.location.pathname}>
           <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} bg="transparent">
