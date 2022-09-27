@@ -1,5 +1,5 @@
-import { Contract } from 'ethers';
 import { useEffect, useState } from 'react';
+import { Contract } from 'ethers';
 import { useWalletAddress } from './useWalletAddress';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { increment } from '../counter/counterSlice';
@@ -68,6 +68,7 @@ export const useERC721ApprovalForAll = ({
       }
       dispatch(increment());
     },
+
     revokeApprovalForAll: async ({
       onTxSubmitted,
       onTxMined,

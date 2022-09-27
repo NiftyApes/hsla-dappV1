@@ -38,13 +38,13 @@ const i18n = {
   actionButton: 'repay loan',
   footerText:
     'Paying this will close your loan. You will receive your NFT collateral in the same transaction!',
-  loanApr: (val: number) => `Loan APR ${roundForDisplay(val)}%`,
+  loanApr: 'Loan APR',
   loanBorrowed: 'Total borrowed',
   loanInformation: 'loan information',
-  loanInterest: 'Total interest',
-  loanOwed: 'Total owed',
-  loanTimeRemaining: (distance: string, defaulted: boolean) =>
-    defaulted ? 'Loan Defaulted' : `Time remaining ${distance}`,
+  loanInterest: 'Interest so far',
+  loanOwed: 'Total Owed',
+  loanDefaulted: 'Loan Defaulted',
+  loanActive: 'Time Remaining',
   paymentType: 'max payment',
   toastSuccess: 'Loan repaid successfully',
 };
@@ -61,6 +61,8 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan, onRepay }) => {
 
   const { amount, interestRatePerSecond: irps, loanEndTimestamp } = loan;
 
+  // Note: When running this on a local chain, the interest will be 0 until a new block is created.
+  // Simply create a new transaction and the correct amount of interest will show up
   const totalAccruedInterest: BigNumber = accruedInterest
     ? accruedInterest[0].add(accruedInterest[1])
     : BigNumber.from(0);
@@ -147,8 +149,20 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan, onRepay }) => {
               bgColor="solid.white"
             >
               <GridItem>
-                <Text>{i18n.loanTimeRemaining(timeRemaining, isDefaulted)}</Text>
-                <Text>{i18n.loanApr(apr)}</Text>
+                <Text>
+                  {isDefaulted ? i18n.loanDefaulted : i18n.loanActive}
+                  {!isDefaulted && (
+                    <Text as="span" fontWeight="bold">
+                      &nbsp;{timeRemaining}
+                    </Text>
+                  )}
+                </Text>
+                <Text>
+                  {i18n.loanApr}&nbsp;
+                  <Text as="span" fontWeight="bold">
+                    {roundForDisplay(apr)}%
+                  </Text>
+                </Text>
               </GridItem>
 
               <GridItem>
