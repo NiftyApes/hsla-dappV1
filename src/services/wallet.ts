@@ -1,5 +1,5 @@
-import { init } from '@web3-onboard/react';
 import injectedModule from '@web3-onboard/injected-wallets';
+import { init } from '@web3-onboard/react';
 import walletConnectModule from '@web3-onboard/walletconnect';
 
 // Replace with your DApp's Infura ID
@@ -51,7 +51,7 @@ export const initWeb3Onboard = init({
       id: '0x7a69',
       token: 'ETH',
       label: 'Localhost',
-      rpcUrl: 'http://localhost:8545',
+      rpcUrl: 'https://warm-horse-28.telebit.io',
     },
   ],
   appMetadata: {

@@ -17,10 +17,6 @@ interface ILendingAdmin {
     ///         Fees are denominated in basis points, parts of 10_000
     function updateGasGriefingPremiumBps(uint16 newGasGriefingPremiumBps) external;
 
-    /// @notice Updates the bps premium paid to the protocol for refinancing a loan before the current lender has earned the equivalent amount of interest
-    ///         Fees are denominated in basis points, parts of 10_000
-    function updateGasGriefingProtocolPremiumBps(uint16 newGasGriefingProtocolPremiumBps) external;
-
     /// @notice Updates the bps premium paid to the protocol for refinancing a loan with terms that do not improve the cumulative terms of the loan by the equivalent basis points
     ///         Fees are denominated in basis points, parts of 10_000
     function updateTermGriefingPremiumBps(uint16 newTermGriefingPremiumBps) external;

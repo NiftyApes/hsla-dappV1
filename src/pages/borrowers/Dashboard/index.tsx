@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   Alert,
   AlertDescription,
@@ -15,21 +14,22 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
+import React, { useState } from 'react';
 
 import TopCard from 'components/molecules/DashboardTopCard';
-import LoanTable from './LoanTable';
-import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
-import { useActiveLoansForBorrower } from '../../../hooks/useActiveLoansForBorrower';
-import _ from 'lodash';
-import { formatEther } from 'ethers/lib/utils';
 import { BigNumber } from 'ethers';
-import { LoanAuction } from '../../../loan';
-import { CollateralHeader } from '../../../components/molecules/CollateralHeader';
+import { formatEther } from 'ethers/lib/utils';
+import _ from 'lodash';
+import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
 import BorrowLoanRepayCard from '../../../components/molecules/BorrowLoanRepayCard';
+import { CollateralHeader } from '../../../components/molecules/CollateralHeader';
+import { useActiveLoansForBorrower } from '../../../hooks/useActiveLoansForBorrower';
+import { LoanAuction } from '../../../loan';
 import { NFT } from '../../../nft';
+import LoanTable from './LoanTable';
 
-import { useWalletAddress } from '../../../hooks/useWalletAddress';
 import { useNavigate } from 'react-router-dom';
+import { useWalletAddress } from '../../../hooks/useWalletAddress';
 
 const i18n = {
   repayLoanHeader: 'repay loan on ',
@@ -64,7 +64,7 @@ const Dashboard: React.FC = () => {
   );
   const interestTotal = activeLoans.reduce(
     (acc: BigNumber, loan: LoanAuction) =>
-      loan.accumulatedLenderInterest.add(loan.accumulatedProtocolInterest).add(acc),
+      loan.accumulatedLenderInterest.add(loan.accumulatedPaidProtocolInterest).add(acc),
     0,
   );
 
@@ -84,8 +84,7 @@ const Dashboard: React.FC = () => {
         alignItems="center"
         justifyContent="center"
         textAlign="center"
-        height="200px"
-      >
+        height="200px">
         <AlertIcon boxSize="40px" mr={0} />
         <AlertTitle mt={4} mb={1} fontSize="lg">
           No Active Loans

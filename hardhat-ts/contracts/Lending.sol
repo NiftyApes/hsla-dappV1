@@ -54,9 +54,6 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
   uint16 public gasGriefingPremiumBps;
 
   /// @inheritdoc ILending
-  uint16 public gasGriefingProtocolPremiumBps;
-
-  /// @inheritdoc ILending
   uint16 public termGriefingPremiumBps;
 
   /// @inheritdoc ILending
@@ -80,7 +77,6 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
     protocolInterestBps = 0;
     originationPremiumBps = 50;
     gasGriefingPremiumBps = 25;
-    gasGriefingProtocolPremiumBps = 0;
     termGriefingPremiumBps = 25;
     defaultRefinancePremiumBps = 25;
 
@@ -112,13 +108,6 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
     _requireMaxFee(newGasGriefingPremiumBps);
     emit GasGriefingPremiumBpsUpdated(gasGriefingPremiumBps, newGasGriefingPremiumBps);
     gasGriefingPremiumBps = newGasGriefingPremiumBps;
-  }
-
-  /// @inheritdoc ILendingAdmin
-  function updateGasGriefingProtocolPremiumBps(uint16 newGasGriefingProtocolPremiumBps) external onlyOwner {
-    require(newGasGriefingProtocolPremiumBps <= MAX_BPS, "00002");
-    emit GasGriefingProtocolPremiumBpsUpdated(gasGriefingProtocolPremiumBps, newGasGriefingProtocolPremiumBps);
-    gasGriefingProtocolPremiumBps = newGasGriefingProtocolPremiumBps;
   }
 
   /// @inheritdoc ILendingAdmin
@@ -245,7 +234,7 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
 
     ILiquidity(liquidityContractAddress).sendValue(offer.asset, offer.amount, borrower);
 
-    emit LoanExecuted(offer.nftContractAddress, nftId, offer);
+    emit LoanExecuted(offer.nftContractAddress, nftId, loanAuction);
   }
 
   function refinanceByBorrower(
@@ -310,9 +299,12 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
 
     _updateInterest(loanAuction);
 
-    uint256 toLenderUnderlying = loanAuction.amountDrawn + loanAuction.accumulatedLenderInterest;
+    uint256 toLenderUnderlying = loanAuction.amountDrawn +
+      loanAuction.accumulatedLenderInterest +
+      loanAuction.slashableLenderInterest +
+      loanAuction.accumulatedPaidProtocolInterest;
 
-    uint256 toProtocolUnderlying = loanAuction.accumulatedProtocolInterest + loanAuction.slashableLenderInterest;
+    uint256 toProtocolUnderlying = loanAuction.unpaidProtocolInterest;
 
     require(offer.amount >= toLenderUnderlying + toProtocolUnderlying, "00005");
 
@@ -336,7 +328,8 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
     loanAuction.loanEndTimestamp = loanAuction.loanBeginTimestamp + offer.duration;
     loanAuction.amountDrawn = SafeCastUpgradeable.toUint128(toLenderUnderlying + toProtocolUnderlying);
     loanAuction.accumulatedLenderInterest = 0;
-    loanAuction.accumulatedProtocolInterest = 0;
+    loanAuction.accumulatedPaidProtocolInterest = 0;
+    loanAuction.unpaidProtocolInterest = 0;
     if (offer.fixedTerms) {
       loanAuction.fixedTerms = offer.fixedTerms;
     }
@@ -344,9 +337,9 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
       loanAuction.slashableLenderInterest = 0;
     }
 
-    emit Refinance(offer.nftContractAddress, nftId, offer);
+    emit Refinance(offer.nftContractAddress, nftId, loanAuction);
 
-    emit AmountDrawn(offer.nftContractAddress, nftId, loanAuction.amountDrawn - currentAmountDrawn, loanAuction.amountDrawn);
+    emit AmountDrawn(offer.nftContractAddress, nftId, loanAuction.amountDrawn - currentAmountDrawn, loanAuction);
   }
 
   /// @inheritdoc ILending
@@ -372,24 +365,22 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
 
     address cAsset = ILiquidity(liquidityContractAddress).getCAsset(offer.asset);
 
+    // check how much, if any, gasGriefing premium should be applied
     uint256 interestThresholdDelta = _checkSufficientInterestAccumulated(loanAuction);
 
+    // check whether a termGriefing premium should apply
     bool sufficientTerms = _checkSufficientTerms(loanAuction, offer.amount, offer.interestRatePerSecond, offer.duration);
 
+    _updateInterest(loanAuction);
+
+    // set lenderRefi to true to signify the last action to occur in the loan was a lenderRefinance
     loanAuction.lenderRefi = true;
-
-    if (loanAuction.slashableLenderInterest > 0 && loanAuction.lender != offer.creator) {
-      loanAuction.accumulatedLenderInterest += loanAuction.slashableLenderInterest;
-      loanAuction.slashableLenderInterest = 0;
-    }
-
-    (uint256 lenderInterest, uint256 protocolInterest) = _updateInterest(loanAuction);
 
     uint256 protocolInterestAndPremium;
     uint256 protocolPremiumInCtokens;
 
     if (!sufficientTerms) {
-      protocolInterestAndPremium += (loanAuction.amountDrawn * termGriefingPremiumBps) / MAX_BPS;
+      protocolInterestAndPremium += (uint256(loanAuction.amountDrawn) * termGriefingPremiumBps) / MAX_BPS;
     }
 
     // update LoanAuction struct
@@ -402,6 +393,7 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
       // require prospective lender has sufficient available balance to refinance loan
       uint256 additionalTokens = ILiquidity(liquidityContractAddress).assetAmountToCAssetAmount(offer.asset, offer.amount - loanAuction.amountDrawn);
 
+      // This value is only a termGriefing if applicable
       protocolPremiumInCtokens = ILiquidity(liquidityContractAddress).assetAmountToCAssetAmount(offer.asset, protocolInterestAndPremium);
 
       _requireSufficientBalance(offer.creator, cAsset, additionalTokens + protocolPremiumInCtokens);
@@ -409,30 +401,43 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
       ILiquidity(liquidityContractAddress).withdrawCBalance(offer.creator, cAsset, protocolPremiumInCtokens);
       ILiquidity(liquidityContractAddress).addToCAssetBalance(owner(), cAsset, protocolPremiumInCtokens);
     } else {
-      // calculate interest earned
-      uint256 interestAndPremiumOwedToCurrentLender = loanAuction.accumulatedLenderInterest +
-        loanAuction.accumulatedProtocolInterest +
-        ((loanAuction.amountDrawn * originationPremiumBps) / MAX_BPS);
+      // If refinance is done by a new lender and refinacneByLender was the last action to occur, add slashableInterest to accumulated interest
+      if (loanAuction.slashableLenderInterest > 0) {
+        loanAuction.accumulatedLenderInterest += loanAuction.slashableLenderInterest;
+        loanAuction.slashableLenderInterest = 0;
+      }
+      // calculate the value to pay out to the current lender, this includes the protocolInterest, which is paid out each refinance,
+      // and reimbursed by the borrower at the end of the loan.
+      // this value may double count the currentProtocolInterest, it is paid to the current lender here and paid out to the protocol  on ln 548
+      uint256 interestAndPremiumOwedToCurrentLender = uint256(loanAuction.accumulatedLenderInterest) +
+        loanAuction.accumulatedPaidProtocolInterest +
+        ((uint256(loanAuction.amountDrawn) * originationPremiumBps) / MAX_BPS);
 
-      protocolInterestAndPremium += protocolInterest;
+      // add protocolInterest
+      protocolInterestAndPremium += loanAuction.unpaidProtocolInterest;
 
+      // add gasGriefing premium
       if (interestThresholdDelta > 0) {
         interestAndPremiumOwedToCurrentLender += interestThresholdDelta;
-        protocolInterestAndPremium += (lenderInterest * gasGriefingProtocolPremiumBps) / MAX_BPS;
       }
 
+      // add default premium
       if (_currentTimestamp32() > loanAuction.loanEndTimestamp - 1 hours) {
-        protocolInterestAndPremium += (loanAuction.amountDrawn * defaultRefinancePremiumBps) / MAX_BPS;
+        protocolInterestAndPremium += (uint256(loanAuction.amountDrawn) * defaultRefinancePremiumBps) / MAX_BPS;
       }
 
-      // calculate fullRefinanceAmount
-      uint256 fullAmount = interestAndPremiumOwedToCurrentLender + protocolInterestAndPremium + loanAuction.amountDrawn;
+      uint256 fullCTokenAmountRequired = ILiquidity(liquidityContractAddress).assetAmountToCAssetAmount(
+        offer.asset,
+        interestAndPremiumOwedToCurrentLender + protocolInterestAndPremium + loanAuction.amount
+      );
 
-      // If refinancing is done by another lender they must buy out the loan and pay fees
-      uint256 fullCTokenAmount = ILiquidity(liquidityContractAddress).assetAmountToCAssetAmount(offer.asset, fullAmount);
+      uint256 fullCTokenAmountToWithdraw = ILiquidity(liquidityContractAddress).assetAmountToCAssetAmount(
+        offer.asset,
+        interestAndPremiumOwedToCurrentLender + protocolInterestAndPremium + loanAuction.amountDrawn
+      );
 
       // require prospective lender has sufficient available balance to refinance loan
-      _requireSufficientBalance(offer.creator, cAsset, fullCTokenAmount);
+      _requireSufficientBalance(offer.creator, cAsset, fullCTokenAmountRequired);
 
       protocolPremiumInCtokens = ILiquidity(liquidityContractAddress).assetAmountToCAssetAmount(offer.asset, protocolInterestAndPremium);
 
@@ -441,12 +446,17 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
       // update LoanAuction lender
       loanAuction.lender = offer.creator;
 
-      ILiquidity(liquidityContractAddress).withdrawCBalance(offer.creator, cAsset, fullCTokenAmount);
-      ILiquidity(liquidityContractAddress).addToCAssetBalance(currentlender, cAsset, (fullCTokenAmount - protocolPremiumInCtokens));
+      ILiquidity(liquidityContractAddress).withdrawCBalance(offer.creator, cAsset, fullCTokenAmountToWithdraw);
+
+      ILiquidity(liquidityContractAddress).addToCAssetBalance(currentlender, cAsset, (fullCTokenAmountToWithdraw - protocolPremiumInCtokens));
+
       ILiquidity(liquidityContractAddress).addToCAssetBalance(owner(), cAsset, protocolPremiumInCtokens);
+
+      loanAuction.accumulatedPaidProtocolInterest += loanAuction.unpaidProtocolInterest;
+      loanAuction.unpaidProtocolInterest = 0;
     }
 
-    emit Refinance(offer.nftContractAddress, offer.nftId, offer);
+    emit Refinance(offer.nftContractAddress, offer.nftId, loanAuction);
   }
 
   /// @inheritdoc ILending
@@ -474,14 +484,15 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
       uint256 currentAmountDrawn = loanAuction.amountDrawn;
       loanAuction.amountDrawn += SafeCastUpgradeable.toUint128(slashedDrawAmount);
 
+      uint32 duration = (loanAuction.loanEndTimestamp - loanAuction.loanBeginTimestamp);
+
       if (loanAuction.interestRatePerSecond != 0) {
-        uint256 interestRatePerSecond256 = (loanAuction.interestRatePerSecond * loanAuction.amountDrawn) / currentAmountDrawn;
-        loanAuction.interestRatePerSecond = SafeCastUpgradeable.toUint96(interestRatePerSecond256);
+        uint256 interestBps = _calculateInterestBps(currentAmountDrawn, loanAuction.interestRatePerSecond, duration);
+        loanAuction.interestRatePerSecond = calculateInterestPerSecond(loanAuction.amountDrawn, interestBps, duration);
       }
 
       if (loanAuction.protocolInterestRatePerSecond != 0) {
-        uint256 protocolInterestPerSecond256 = (loanAuction.protocolInterestRatePerSecond * loanAuction.amountDrawn) / currentAmountDrawn;
-        loanAuction.protocolInterestRatePerSecond = SafeCastUpgradeable.toUint96(protocolInterestPerSecond256);
+        loanAuction.protocolInterestRatePerSecond = calculateInterestPerSecond(loanAuction.amountDrawn, protocolInterestBps, duration);
       }
 
       uint256 cTokensBurnt = ILiquidity(liquidityContractAddress).burnCErc20(loanAuction.asset, slashedDrawAmount);
@@ -491,7 +502,7 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
       ILiquidity(liquidityContractAddress).sendValue(loanAuction.asset, slashedDrawAmount, loanAuction.nftOwner);
     }
 
-    emit AmountDrawn(nftContractAddress, nftId, slashedDrawAmount, loanAuction.amountDrawn);
+    emit AmountDrawn(nftContractAddress, nftId, slashedDrawAmount, loanAuction);
   }
 
   /// @inheritdoc ILending
@@ -541,8 +552,9 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
 
     if (repayFull) {
       paymentAmount =
-        loanAuction.accumulatedLenderInterest +
-        loanAuction.accumulatedProtocolInterest +
+        uint256(loanAuction.accumulatedLenderInterest) +
+        loanAuction.accumulatedPaidProtocolInterest +
+        loanAuction.unpaidProtocolInterest +
         loanAuction.slashableLenderInterest +
         loanAuction.amountDrawn;
     } else {
@@ -568,7 +580,7 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
     if (repayFull) {
       _transferNft(nftContractAddress, nftId, address(this), loanAuction.nftOwner);
 
-      emit LoanRepaid(loanAuction.lender, loanAuction.nftOwner, nftContractAddress, nftId, loanAuction.asset, paymentAmount);
+      emit LoanRepaid(nftContractAddress, nftId, paymentAmount, loanAuction);
 
       delete _loanAuctions[nftContractAddress][nftId];
     } else {
@@ -582,17 +594,18 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
       uint256 currentAmountDrawn = loanAuction.amountDrawn;
       loanAuction.amountDrawn -= SafeCastUpgradeable.toUint128(paymentAmount);
 
+      uint32 duration = (loanAuction.loanEndTimestamp - loanAuction.loanBeginTimestamp);
+
       if (loanAuction.interestRatePerSecond != 0) {
-        uint256 interestRatePerSecond256 = (loanAuction.interestRatePerSecond * loanAuction.amountDrawn) / currentAmountDrawn;
-        loanAuction.interestRatePerSecond = SafeCastUpgradeable.toUint96(interestRatePerSecond256);
+        uint256 interestBps = _calculateInterestBps(currentAmountDrawn, loanAuction.interestRatePerSecond, duration);
+        loanAuction.interestRatePerSecond = calculateInterestPerSecond(loanAuction.amountDrawn, interestBps, duration);
       }
 
       if (loanAuction.protocolInterestRatePerSecond != 0) {
-        uint256 protocolInterestPerSecond256 = (loanAuction.protocolInterestRatePerSecond * loanAuction.amountDrawn) / currentAmountDrawn;
-        loanAuction.protocolInterestRatePerSecond = SafeCastUpgradeable.toUint96(protocolInterestPerSecond256);
+        loanAuction.protocolInterestRatePerSecond = calculateInterestPerSecond(loanAuction.amountDrawn, protocolInterestBps, duration);
       }
 
-      emit PartialRepayment(loanAuction.lender, loanAuction.nftOwner, nftContractAddress, nftId, loanAuction.asset, paymentAmount);
+      emit PartialRepayment(nftContractAddress, nftId, paymentAmount, loanAuction);
     }
   }
 
@@ -606,13 +619,12 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
     require(_currentTimestamp32() >= loanAuction.loanEndTimestamp, "00008");
 
     address currentLender = loanAuction.lender;
-    address currentBorrower = loanAuction.nftOwner;
 
     delete _loanAuctions[nftContractAddress][nftId];
 
     _transferNft(nftContractAddress, nftId, address(this), currentLender);
 
-    emit AssetSeized(currentLender, currentBorrower, nftContractAddress, nftId);
+    emit AssetSeized(nftContractAddress, nftId, loanAuction);
   }
 
   function _slashUnsupportedAmount(
@@ -633,7 +645,7 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
         // This eliminates all accumulated interest for this lender on the loan
         loanAuction.slashableLenderInterest = 0;
 
-        loanAuction.amount = loanAuction.amountDrawn + SafeCastUpgradeable.toUint128(drawAmount);
+        loanAuction.amount = SafeCastUpgradeable.toUint128(loanAuction.amountDrawn + drawAmount);
       } else {
         if (loanAuction.slashableLenderInterest > 0) {
           loanAuction.accumulatedLenderInterest += loanAuction.slashableLenderInterest;
@@ -659,7 +671,7 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
       loanAuction.accumulatedLenderInterest += SafeCastUpgradeable.toUint128(lenderInterest);
     }
 
-    loanAuction.accumulatedProtocolInterest += SafeCastUpgradeable.toUint128(protocolInterest);
+    loanAuction.unpaidProtocolInterest += SafeCastUpgradeable.toUint128(protocolInterest);
     loanAuction.lastUpdatedTimestamp = _currentTimestamp32();
   }
 
@@ -676,8 +688,28 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
   }
 
   /// @inheritdoc ILending
-  function calculateProtocolInterestPerSecond(uint256 amount, uint256 duration) public view returns (uint96) {
-    return SafeCastUpgradeable.toUint96((amount * protocolInterestBps) / MAX_BPS / duration);
+  function calculateInterestPerSecond(
+    uint256 amount,
+    uint256 interestBps,
+    uint256 duration
+  ) public pure returns (uint96) {
+    // account for 0 protocolInterestBps
+    if (interestBps == 0) {
+      return 0;
+    }
+
+    uint96 result = SafeCastUpgradeable.toUint96((amount * interestBps) / MAX_BPS / duration);
+
+    // return 1 for cases where (amount * interestBps) / MAX_BPS < duration;
+    return result == 0 ? 1 : result;
+  }
+
+  function _calculateInterestBps(
+    uint256 amount,
+    uint96 interestRatePerSecond,
+    uint256 duration
+  ) private pure returns (uint256) {
+    return (((uint256(interestRatePerSecond) * duration) * MAX_BPS) / amount) + 1;
   }
 
   /// @inheritdoc ILending
@@ -688,7 +720,7 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
   function _checkSufficientInterestAccumulated(LoanAuction storage loanAuction) internal view returns (uint256 interestThresholdDelta) {
     (uint256 lenderInterest, ) = _calculateInterestAccrued(loanAuction);
 
-    uint256 interestThreshold = (loanAuction.amountDrawn * gasGriefingPremiumBps) / MAX_BPS;
+    uint256 interestThreshold = (uint256(loanAuction.amountDrawn) * gasGriefingPremiumBps) / MAX_BPS;
 
     if (interestThreshold > lenderInterest) {
       return interestThreshold - lenderInterest;
@@ -717,9 +749,9 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
     uint256 loanDuration = loanAuction.loanEndTimestamp - loanAuction.loanBeginTimestamp;
 
     // calculate the Bps improvement of each offer term
-    uint256 amountImprovement = ((amount - loanAuction.amount) * MAX_BPS) / loanAuction.amount;
-    uint256 interestImprovement = ((loanAuction.interestRatePerSecond - interestRatePerSecond) * MAX_BPS) / loanAuction.interestRatePerSecond;
-    uint256 durationImprovement = ((duration - loanDuration) * MAX_BPS) / loanDuration;
+    uint256 amountImprovement = ((uint256(amount) - loanAuction.amount) * MAX_BPS) / loanAuction.amount;
+    uint256 interestImprovement = ((uint256(loanAuction.interestRatePerSecond) - interestRatePerSecond) * MAX_BPS) / loanAuction.interestRatePerSecond;
+    uint256 durationImprovement = ((uint256(duration) - loanDuration) * MAX_BPS) / loanDuration;
 
     // sum improvements
     uint256 improvementSum = amountImprovement + interestImprovement + durationImprovement;
@@ -753,7 +785,7 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
   }
 
   function _requireMinDurationForOffer(Offer memory offer) internal pure {
-    require(offer.duration >= 1, "00011");
+    require(offer.duration >= 1 days, "00011");
   }
 
   function _requireLenderOffer(Offer memory offer) internal pure {
@@ -842,9 +874,9 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
     loanAuction.fixedTerms = offer.fixedTerms;
     loanAuction.lenderRefi = false;
     loanAuction.accumulatedLenderInterest = 0;
-    loanAuction.accumulatedProtocolInterest = 0;
+    loanAuction.accumulatedPaidProtocolInterest = 0;
     loanAuction.interestRatePerSecond = offer.interestRatePerSecond;
-    loanAuction.protocolInterestRatePerSecond = calculateProtocolInterestPerSecond(offer.amount, offer.duration);
+    loanAuction.protocolInterestRatePerSecond = calculateInterestPerSecond(offer.amount, protocolInterestBps, offer.duration);
     loanAuction.slashableLenderInterest = 0;
   }
 
@@ -866,8 +898,8 @@ contract NiftyApesLending is OwnableUpgradeable, PausableUpgradeable, Reentrancy
   ) internal {
     uint256 cTokensToLender = totalCTokens;
 
-    if (repayFull && (loanAuction.accumulatedProtocolInterest > 0)) {
-      uint256 cTokensToProtocol = (totalCTokens * loanAuction.accumulatedProtocolInterest) / totalPayment;
+    if (repayFull) {
+      uint256 cTokensToProtocol = (totalCTokens * loanAuction.unpaidProtocolInterest) / totalPayment;
       cTokensToLender -= cTokensToProtocol;
 
       ILiquidity(liquidityContractAddress).addToCAssetBalance(owner(), cAsset, cTokensToProtocol);
