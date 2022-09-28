@@ -1,8 +1,10 @@
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
+import { GOERLI, LOCAL } from 'constants/contractAddresses';
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useCEthContract } from './useCEthContract';
+import { useChainId } from './useChainId';
 import { useLiquidityContract } from './useContracts';
 import { useWalletAddress } from './useWalletAddress';
 
@@ -17,6 +19,8 @@ export const useAvailableEthLiquidity = () => {
 
   const [availableEthLiquidity, setAvailableEthLiquidity] = useState<number>();
 
+  const chainId = useChainId();
+
   useEffect(() => {
     async function getETHLiquidity() {
       if (!address || !liquidityContract || !cETHContract) {
@@ -26,7 +30,7 @@ export const useAvailableEthLiquidity = () => {
       // This is address's balance in cEth
       const result = await liquidityContract.getCAssetBalance(
         address,
-        '0x20572e4c090f15667cf7378e16fad2ea0e2f3eff',
+        chainId === '0x7a69' ? LOCAL.CETH.ADDRESS : chainId === '0x5' ? GOERLI.CETH.ADDRESS : '',
       );
 
       const exchangeRate = await cETHContract.exchangeRateStored();

@@ -10,9 +10,9 @@ export function getCEthContract({
   provider: EIP1193Provider;
 }) {
   return getEthersContractWithEIP1193Provider({
-    abi: chainId === '0x7a68' ? LOCAL.CETH.ABI : chainId === '0x5' ? GOERLI.CETH.ABI : '',
+    abi: chainId === '0x7a69' ? LOCAL.CETH.ABI : chainId === '0x5' ? GOERLI.CETH.ABI : '',
     address:
-      chainId === '0x7a68' ? LOCAL.CETH.ADDRESS : chainId === '0x5' ? GOERLI.CETH.ADDRESS : '',
+      chainId === '0x7a69' ? LOCAL.CETH.ADDRESS : chainId === '0x5' ? GOERLI.CETH.ADDRESS : '',
     provider,
   });
 }
