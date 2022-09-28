@@ -14,12 +14,13 @@ const NFTCardSmall: React.FC<Props> = ({
                                            tokenId
                                        }) => {
 
-    const nft: any = useRaribleTokenMeta({
+
+    const fetchedNFT: any = useRaribleTokenMeta({
         contractAddress,
         tokenId
     });
 
-    if (!nft.image) {
+    if (!fetchedNFT.image) {
         return <LoadingIndicator size={'md'}/>;
     }
 
@@ -27,21 +28,22 @@ const NFTCardSmall: React.FC<Props> = ({
 
         <Flex flexDir="row">
             <Flex flexDir="column">
-                <Image src={nft.image} w="55px" h="55px" objectFit="cover" borderRadius="10"/>
+                <Image src={fetchedNFT.image} w="55px" h="55px" objectFit="cover" borderRadius="10"/>
 
                 <Flex flexDir="row" ml="8px" mt="-10px" alignItems="center">
-                    <a href={`https://opensea.io/assets/ethereum/${nft.contractAddress}/${nft.id}`} target="_blank">
+                    <a href={`https://opensea.io/assets/ethereum/${fetchedNFT.contractAddress}/${fetchedNFT.id}`}
+                       target="_blank">
                         <Icon name="os" size={20}/>
                     </a>
                     <Box border="1.5px solid" borderRadius="50%" borderColor="solid.white" bgColor="white">
-                        <a href={nft.external_url} target="_blank">
+                        <a href={fetchedNFT.external_url} target="_blank">
                             <Icon name="etherscan" size={15}/>
                         </a>
                     </Box>
                 </Flex>
 
                 <Text mt="5px" fontWeight="bold" fontSize="2xs" width="55px" color="gray" noOfLines={1}>
-                    {nft.name}
+                    {fetchedNFT.name}
                 </Text>
             </Flex>
 

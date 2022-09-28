@@ -1,6 +1,5 @@
 import React from 'react';
 import {LoanAuction} from '../../../loan';
-import {NFT} from '../../../nft';
 import {Button, Td, Text, Tr} from '@chakra-ui/react';
 import {formatEther} from 'ethers/lib/utils';
 import {getAPR} from '../../../helpers/getAPR';
@@ -8,9 +7,11 @@ import moment from 'moment';
 import {BigNumber} from 'ethers';
 import {roundForDisplay} from '../../../helpers/roundForDisplay';
 import NFTCardSmall from "../../../components/cards/NFTCardSmall";
+import {getLoanDurationDays, getLoanTimeRemaining, isLoanDefaulted} from "../../../helpers/getDuration";
+import _ from 'lodash';
 
 interface callbackType {
-    (loan: LoanAuction, nft: NFT): void;
+    (loan: LoanAuction): void;
 }
 
 interface Props {
@@ -20,9 +21,7 @@ interface Props {
 
 const i18n = {
     repay: 'repay',
-    loanTimeRemaining: (distance: string, defaulted: boolean) =>
-        defaulted ? 'Loan Defaulted' : `${distance} remaining...`,
-    loanDuration: (duration: number) => `${duration} days`,
+    loanDefaulted: 'Loan Defaulted',
     loanApr: (apr: number) => `${roundForDisplay(apr)}% APR`,
     loanTotalWithInterest: (amount: string, interest: BigNumber) =>
         `${amount}Ξ + ${Number(formatEther(interest)).toFixed(4)}Ξ Interest`,
@@ -36,11 +35,7 @@ const LoanTableRow: React.FC<Props> = ({loan, onClick}) => {
         interestRatePerSecond: irps,
     });
 
-    const endMoment = moment(loan.loanEndTimestamp * 1000);
     const startMoment = moment(loan.loanBeginTimestamp * 1000);
-    const timeRemaining = endMoment.toNow(true);
-    const duration = endMoment.diff(startMoment, 'days');
-    const isDefaulted = moment().isAfter(endMoment);
 
     const totalInterest: BigNumber = loan.interestRatePerSecond.mul(
         loan.loanEndTimestamp - loan.loanBeginTimestamp,
@@ -49,6 +44,10 @@ const LoanTableRow: React.FC<Props> = ({loan, onClick}) => {
         loan.interestRatePerSecond.mul(loan.loanEndTimestamp - loan.loanBeginTimestamp),
     );
 
+
+    if (_.isUndefined(loan.nftContractAddress)) {
+        return <>No Content</>
+    }
 
     return (
         <Tr>
@@ -67,7 +66,7 @@ const LoanTableRow: React.FC<Props> = ({loan, onClick}) => {
 
                 <Text fontSize="sm">
                     <Text color="gray" as="span" mr="10px">
-                        {i18n.loanDuration(duration)}
+                        {getLoanDurationDays(loan)}
                     </Text>
                     <Text as="span">{i18n.loanApr(apr)}</Text>
                 </Text>
@@ -80,13 +79,11 @@ const LoanTableRow: React.FC<Props> = ({loan, onClick}) => {
                     {i18n.loanTotalWithInterest(formatEther(loan.amount), totalInterest)}
                 </Text>
             </Td>
-            <Td>{i18n.loanTimeRemaining(timeRemaining, isDefaulted)}</Td>
             <Td>
-                <Button variant="neutral" onClick={() => {
-                    console.log("click");
-                }
-                    // onClick(loan, nft)
-                }>
+                {isLoanDefaulted(loan) ? i18n.loanDefaulted : `${getLoanTimeRemaining(loan)} remaining...`}
+            </Td>
+            <Td>
+                <Button variant="neutral" onClick={() => onClick(loan)}>
                     {i18n.repay}
                 </Button>
             </Td>

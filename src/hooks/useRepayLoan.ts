@@ -14,7 +14,7 @@ export const useRepayLoanByBorrower = ({
   amount,
 }: {
   nftContractAddress?: string;
-  nftId: string;
+  nftId?: string;
   amount: BigNumber;
 }) => {
   const niftyApesContract = useLendingContract();
@@ -23,7 +23,7 @@ export const useRepayLoanByBorrower = ({
 
   const { getTransactionTimestamp } = useGetTransactionTimestamp();
 
-  if (!niftyApesContract) {
+  if (!niftyApesContract || !nftId) {
     return {
       executeLoanByBorrower: undefined,
     };

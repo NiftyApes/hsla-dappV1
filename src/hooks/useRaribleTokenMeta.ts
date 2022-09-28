@@ -1,64 +1,70 @@
-import { useState, useEffect } from 'react';
-import { NFT } from '../nft';
+import {useState, useEffect} from 'react';
+import {NFT} from '../nft';
 
 const RARIBLE_API_PATH = 'https://api.rarible.org/v0.1';
 
 export const useRaribleTokenMeta = ({
-  contractAddress,
-  tokenId,
-}: {
-  contractAddress?: string;
-  tokenId?: string;
+                                        contractAddress,
+                                        tokenId,
+                                        enabled = true,
+                                    }: {
+    contractAddress?: string;
+    tokenId?: string;
+    enabled?: boolean;
 }) => {
-  const [meta, setMeta] = useState<NFT>();
+    const [meta, setMeta] = useState<NFT>();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (!contractAddress || !tokenId) {
-        return;
-      }
+    useEffect(() => {
+        const fetchData = async () => {
 
-      const container = {
-        attributes: [],
-        contractAddress: contractAddress,
-        external_url: `https://etherscan.io/token/${contractAddress}?a=${tokenId}`,
-        id: tokenId,
-        image: '/assets/images/img-missing.png',
-        owner: '',
-        collectionName: '',
-      };
+            if (!contractAddress || !tokenId) {
+                return;
+            }
 
-      const response = await fetch(
-        `${RARIBLE_API_PATH}/items/ETHEREUM:${contractAddress}:${tokenId}`,
-        {
-          method: 'GET',
-        },
-      );
+            const container = {
+                attributes: [],
+                contractAddress: contractAddress,
+                external_url: `https://etherscan.io/token/${contractAddress}?a=${tokenId}`,
+                id: tokenId,
+                image: '/assets/images/img-missing.png',
+                owner: '',
+                collectionName: '',
+            };
 
-      response
-        .json()
-        .then((data) => {
-          const { name, description, content } = data.meta;
+            const response = await fetch(
+                `${RARIBLE_API_PATH}/items/ETHEREUM:${contractAddress}:${tokenId}`,
+                {
+                    method: 'GET',
+                },
+            );
 
-          setMeta({
-            ...container,
-            name,
-            description,
-            image:
-              content.length > 0 ? content.find((item: any) => item['@type'] === 'IMAGE').url : '',
-          });
-        })
-        .catch((error) => {
-          setMeta({
-            ...container,
-            image: '/assets/images/NA-BLACK.png',
-            name: `TOKEN ${tokenId}`,
-            description: 'NOTFOUND',
-          });
-        });
-    };
-    fetchData();
-  }, [contractAddress, tokenId]);
+            response
+                .json()
+                .then((data) => {
+                    const {name, description, content} = data.meta;
 
-  return { ...meta };
+                    setMeta({
+                        ...container,
+                        name,
+                        description,
+                        image:
+                            content.length > 0 ? content.find((item: any) => item['@type'] === 'IMAGE').url : '',
+                    });
+                })
+                .catch((error) => {
+                    setMeta({
+                        ...container,
+                        image: '/assets/images/NA-BLACK.png',
+                        name: `TOKEN ${tokenId}`,
+                        description: 'NOTFOUND',
+                    });
+                });
+        };
+        if (enabled) {
+            fetchData();
+        }
+
+    }, [contractAddress, tokenId]);
+
+    return {...meta};
 };

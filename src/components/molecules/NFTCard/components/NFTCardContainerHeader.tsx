@@ -9,7 +9,7 @@ interface Props {
   children: JSX.Element;
 }
 
-export const NFTCardHeader: React.FC<Props> = ({
+export const NFTCardContainerHeader: React.FC<Props> = ({
   children,
   collectionName,
   img,
