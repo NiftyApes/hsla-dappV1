@@ -22,10 +22,10 @@ const NotificationTable: React.FC = () => {
       </Thead>
       <Tbody
         sx={{
-          'tr:nth-child(2n)': {
+          'tr:nth-of-type(2n)': {
             backgroundColor: 'rgba(242,242,242,0.5)',
           },
-          'tr:nth-child(2n+1)': {
+          'tr:nth-of-type(2n+1)': {
             backgroundColor: 'solid.white',
           },
         }}
