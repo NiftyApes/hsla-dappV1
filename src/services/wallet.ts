@@ -51,7 +51,7 @@ export const initWeb3Onboard = init({
       id: '0x7a69',
       token: 'ETH',
       label: 'Localhost',
-      rpcUrl: 'https://warm-horse-28.telebit.io',
+      rpcUrl: 'http://localhost:8545',
     },
   ],
   appMetadata: {

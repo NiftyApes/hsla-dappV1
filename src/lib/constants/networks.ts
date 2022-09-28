@@ -24,7 +24,7 @@ export const NETWORKS: Record<TNetworkNames, TNetworkInfo> = {
     chainId: 31337,
     color: '#666666',
     name: 'localhost',
-    url: 'https://warm-horse-28.telebit.io',
+    url: 'http://' + hostname + ':8545',
   },
   mainnet: {
     blockExplorer: 'https://etherscan.io/',
