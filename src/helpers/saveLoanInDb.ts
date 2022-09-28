@@ -1,6 +1,7 @@
 import { getApiUrl } from './getApiUrl';
 
 export async function saveLoanInDb({
+  chainId,
   nftContractAddress,
   nftId,
   creator,
@@ -9,6 +10,7 @@ export async function saveLoanInDb({
   transactionHash,
   loanTerms,
 }: {
+  chainId: string;
   nftContractAddress: string;
   nftId: string;
   creator: string;
@@ -24,7 +26,7 @@ export async function saveLoanInDb({
     loanEndTimestamp: number;
   };
 }) {
-  const result = await fetch(getApiUrl('loans'), {
+  const result = await fetch(getApiUrl(chainId, 'loans'), {
     method: 'POST',
     body: JSON.stringify({
       nftContractAddress,

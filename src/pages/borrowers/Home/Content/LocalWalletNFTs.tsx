@@ -78,12 +78,12 @@ export const LocalhostContent: React.FC = () => {
 
     if (walletAddress && doodlesContract && !hasFetchedDoodleNfts) {
       dispatch(fetchLocalNFTsByWalletAddress({ walletAddress, contract: doodlesContract }));
-      setHasFetchedMaycNfts(true);
+      setHasFetchedDoodleNfts(true);
     }
 
     if (walletAddress && nounsContract && !hasFetchedNounsNfts) {
       dispatch(fetchLocalNFTsByWalletAddress({ walletAddress, contract: nounsContract }));
-      setHasFetchedLocalNfts(true);
+      setHasFetchedNounsNfts(true);
     }
 
     if (walletAddress && localScaffoldEthNftContract && !hasFetchedLocalNfts) {

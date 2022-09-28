@@ -2,19 +2,16 @@ import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
-import cEthJSON from '../external/cEth/cEth.json';
-import { getLiquidityContract } from '../helpers/getContracts';
 import { useCEthContract } from './useCEthContract';
+import { useLiquidityContract } from './useContracts';
 import { useWalletAddress } from './useWalletAddress';
-import { useWalletProvider } from './useWalletProvider';
 
 export const useAvailableEthLiquidity = () => {
   const cacheCounter = useAppSelector((state: RootState) => state.counter);
 
   const address = useWalletAddress();
 
-  const provider = useWalletProvider();
-  const niftyApesContract = provider ? getLiquidityContract({ provider }) : null;
+  const liquidityContract = useLiquidityContract();
 
   const cETHContract = useCEthContract();
 
@@ -22,12 +19,15 @@ export const useAvailableEthLiquidity = () => {
 
   useEffect(() => {
     async function getETHLiquidity() {
-      if (!address || !niftyApesContract || !cETHContract) {
+      if (!address || !liquidityContract || !cETHContract) {
         return;
       }
 
       // This is address's balance in cEth
-      const result = await niftyApesContract.getCAssetBalance(address, cEthJSON.address);
+      const result = await liquidityContract.getCAssetBalance(
+        address,
+        '0x20572e4c090f15667cf7378e16fad2ea0e2f3eff',
+      );
 
       const exchangeRate = await cETHContract.exchangeRateStored();
 
@@ -39,7 +39,7 @@ export const useAvailableEthLiquidity = () => {
     }
 
     getETHLiquidity();
-  }, [address, niftyApesContract, cETHContract, cacheCounter]);
+  }, [address, liquidityContract, cETHContract, cacheCounter]);
 
   return {
     availableEthLiquidity,

@@ -1,9 +1,15 @@
 import { BigNumber, ethers } from 'ethers';
 import { getApiUrl } from 'helpers';
 
-export const getActiveOffersByLender = async ({ lenderAddress }: { lenderAddress: string }) => {
+export const getActiveOffersByLender = async ({
+  chainId,
+  lenderAddress,
+}: {
+  chainId: string;
+  lenderAddress: string;
+}) => {
   const result = await fetch(
-    getApiUrl(`offers?lender=${ethers.utils.getAddress(lenderAddress)}&status=active`),
+    getApiUrl(chainId, `offers?lender=${ethers.utils.getAddress(lenderAddress)}&status=active`),
   );
 
   const json = await result.json();

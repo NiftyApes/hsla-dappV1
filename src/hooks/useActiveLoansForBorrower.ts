@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { getLoanForNft } from 'helpers/getLoanForNft';
-import { useLendingContract } from './useContracts';
-import { useWalletAddress } from './useWalletAddress';
+import { useEffect, useState } from 'react';
 import { getActiveLoansByBorrower } from '../api/getActiveLoansByBorrower';
 import { loanAuction, LoanAuction } from '../loan';
+import { useChainId } from './useChainId';
+import { useLendingContract } from './useContracts';
+import { useWalletAddress } from './useWalletAddress';
 
 export const useActiveLoansForBorrower = () => {
   const [loans, setLoans] = useState<any>();
@@ -14,12 +15,16 @@ export const useActiveLoansForBorrower = () => {
 
   const lendingContract = useLendingContract();
 
+  const chainId = useChainId();
+
   useEffect(() => {
     const fetchLoans = async () => {
-      if (!lendingContract || !address) {
+      if (!lendingContract || !address || !chainId) {
         return;
       }
-      const dbLoans = await getActiveLoansByBorrower({ address });
+
+      const dbLoans = await getActiveLoansByBorrower({ chainId, address });
+
       const chainLoans: Array<LoanAuction> = [];
 
       for (let i = 0; i < dbLoans.length; i++) {
@@ -45,7 +50,7 @@ export const useActiveLoansForBorrower = () => {
     };
 
     fetchLoans();
-  }, [address, lendingContract, cacheCounter]);
+  }, [address, lendingContract, chainId, cacheCounter]);
 
   return loans;
 };

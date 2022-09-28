@@ -3,6 +3,7 @@ import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
 import { saveLoanInDb } from 'helpers/saveLoanInDb';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
+import { useChainId } from './useChainId';
 import { useLendingContract } from './useContracts';
 import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
 import { useWalletAddress } from './useWalletAddress';
@@ -24,6 +25,8 @@ export const useExecuteLoanByBorrower = ({
   const dispatch = useAppDispatch();
 
   const { getTransactionTimestamp } = useGetTransactionTimestamp();
+
+  const chainId = useChainId();
 
   if (!niftyApesContract) {
     return {
@@ -55,6 +58,7 @@ export const useExecuteLoanByBorrower = ({
       const loan = await niftyApesContract.getLoanAuction(nftContractAddress, nftId);
 
       await saveLoanInDb({
+        chainId,
         nftContractAddress,
         nftId,
         creator: offer.creator,
@@ -74,6 +78,7 @@ export const useExecuteLoanByBorrower = ({
       const timestamp = await getTransactionTimestamp(receipt);
 
       await saveTransactionInDb({
+        chainId,
         transactionHash: receipt.transactionHash,
         from: receipt.from,
         transactionType: transactionTypes.LOAN_CREATED,

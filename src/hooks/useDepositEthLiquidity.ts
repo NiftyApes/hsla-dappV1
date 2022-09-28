@@ -3,19 +3,18 @@ import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
 import { useState } from 'react';
-import { getLiquidityContract } from '../helpers/getContracts';
 import { saveTransactionInDb } from '../helpers/saveTransactionInDb';
+import { useChainId } from './useChainId';
+import { useLiquidityContract } from './useContracts';
 import { useAvailableEthLiquidity } from './useEthLiquidity';
 import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
-import { useWalletProvider } from './useWalletProvider';
 
 export const useDepositEthLiquidity = () => {
   const dispatch = useAppDispatch();
 
   const { availableEthLiquidity } = useAvailableEthLiquidity();
 
-  const provider = useWalletProvider();
-  const niftyApesContract = provider ? getLiquidityContract({ provider }) : null;
+  const liquidityContract = useLiquidityContract();
 
   const [depositStatus, setDepositStatus] = useState<'PENDING' | 'SUCCESS' | 'ERROR' | 'READY'>(
     'READY',
@@ -27,6 +26,8 @@ export const useDepositEthLiquidity = () => {
 
   const { getTransactionTimestamp } = useGetTransactionTimestamp();
 
+  const chainId = useChainId();
+
   return {
     depositETHLiquidity: async ({
       ethToDeposit,
@@ -35,14 +36,14 @@ export const useDepositEthLiquidity = () => {
       ethToDeposit: number;
       cleanup: () => void;
     }) => {
-      if (!niftyApesContract) {
+      if (!liquidityContract) {
         throw new Error('Contract is not defined');
       }
 
       setDepositStatus('PENDING');
 
       try {
-        const tx = await niftyApesContract.supplyEth({
+        const tx = await liquidityContract.supplyEth({
           value: ethers.utils.parseEther(ethToDeposit.toString()),
         });
 
@@ -53,6 +54,7 @@ export const useDepositEthLiquidity = () => {
         const timestamp = await getTransactionTimestamp(receipt);
 
         await saveTransactionInDb({
+          chainId,
           from: receipt.from,
           transactionType: transactionTypes.LIQUIDITY_DEPOSITED,
           timestamp,

@@ -5,6 +5,7 @@ import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
 import { BigNumber } from 'ethers';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
+import { useChainId } from './useChainId';
 import { useLendingContract } from './useContracts';
 import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
 
@@ -22,6 +23,8 @@ export const useRepayLoanByBorrower = ({
   const dispatch = useAppDispatch();
 
   const { getTransactionTimestamp } = useGetTransactionTimestamp();
+
+  const chainId = useChainId();
 
   if (!niftyApesContract) {
     return {
@@ -48,6 +51,7 @@ export const useRepayLoanByBorrower = ({
       const totalPayment = (receipt as any).events[6].args.totalPayment.toString();
 
       await saveTransactionInDb({
+        chainId,
         from: receipt.from,
         transactionType: transactionTypes.LOAN_FULLY_REPAID_BY_BORROWER,
         timestamp: transactionTimestamp,
@@ -63,6 +67,7 @@ export const useRepayLoanByBorrower = ({
       });
 
       await updateLoanStatus({
+        chainId,
         nftContractAddress,
         nftId,
         loanBeginTimestamp: loan.loanBeginTimestamp,

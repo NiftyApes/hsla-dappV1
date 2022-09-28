@@ -2,6 +2,7 @@ import { TransactionType } from 'constants/transactionTypes';
 import { getApiUrl } from './getApiUrl';
 
 export async function saveTransactionInDb({
+  chainId,
   from,
   transactionType,
   timestamp,
@@ -11,6 +12,7 @@ export async function saveTransactionInDb({
   refinancedLender,
   data,
 }: {
+  chainId: string;
   from: string;
   transactionType: TransactionType;
   timestamp: number;
@@ -20,7 +22,7 @@ export async function saveTransactionInDb({
   refinancedLender?: string;
   data: any;
 }) {
-  const result = await fetch(getApiUrl('events'), {
+  const result = await fetch(getApiUrl(chainId, 'events'), {
     method: 'POST',
     body: JSON.stringify({
       eventType: transactionType,

@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
 import { Box, Button, Flex, Grid, Text, useToast } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
-import { useNiftyApesContractAddress } from '../../../hooks/useNiftyApesContractAddress';
+import { GOERLI, LOCAL } from 'constants/contractAddresses';
 import { BigNumber, Contract, ethers } from 'ethers';
-import { useExecuteLoanByBorrower } from '../../../hooks/useExecuteLoanByBorrower';
-import LoadingIndicator from '../../atoms/LoadingIndicator';
-import { humanizeContractError } from '../../../helpers/errorsMap';
-import { LoanOffer } from '../../../loan';
-import { NFT } from '../../../nft';
 import { formatEther } from 'ethers/lib/utils';
+import { useChainId } from 'hooks/useChainId';
+import React, { useState } from 'react';
+import { humanizeContractError } from '../../../helpers/errorsMap';
 import { concatForDisplay } from '../../../helpers/roundForDisplay';
 import { useERC721Approval } from '../../../hooks/useERC721Approval';
+import { useExecuteLoanByBorrower } from '../../../hooks/useExecuteLoanByBorrower';
+import { LoanOffer } from '../../../loan';
+import { NFT } from '../../../nft';
+import LoadingIndicator from '../../atoms/LoadingIndicator';
 
 interface Props {
   contract?: Contract;
@@ -38,7 +39,15 @@ const i18n = {
 
 const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
   const toast = useToast();
-  const operator = useNiftyApesContractAddress();
+
+  const chainId = useChainId();
+
+  const operator =
+    chainId === '0x7a69'
+      ? LOCAL.LENDING.ADDRESS
+      : chainId === '0x5'
+      ? GOERLI.LENDING.ADDRESS
+      : '0x0';
 
   const totalAmount: BigNumber = BigNumber.from(String(offer.amount));
   const totalInterest: BigNumber = BigNumber.from(
@@ -130,8 +139,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
           size="lg"
           textTransform="uppercase"
           variant="outline"
-          width="100%"
-        >
+          width="100%">
           {transferApprovalStatus === 'PENDING' ? <LoadingIndicator size="xs" /> : i18n.allowButton}
         </Button>
       );
@@ -144,16 +152,14 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
         width="100%"
         flexDir="column"
         border="1px solid rgba(101, 101, 101, 0.2)"
-        borderRadius="15px"
-      >
+        borderRadius="15px">
         <Box
           borderBottom="1px solid"
           borderColor="rgba(101, 101, 101, 0.2)"
           bg="white"
           borderRadius="15px 15px 0 0"
           textAlign="center"
-          w="100%"
-        >
+          w="100%">
           <Text color="solid.gray0" textTransform="uppercase">
             {i18n.dealTermsLabel}
           </Text>
@@ -165,8 +171,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
             w="100%"
             borderColor="solid.lightPurple"
             textAlign="center"
-            bgColor="solid.white"
-          >
+            bgColor="solid.white">
             <Flex flexDir="column" alignItems="center">
               <Text fontSize="sm" color="solid.gray0" mr="3px" mt="30px" textTransform="uppercase">
                 {i18n.dealTermsLabel}
@@ -225,8 +230,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
         size="lg"
         textTransform="uppercase"
         variant="outline"
-        width="100%"
-      >
+        width="100%">
         {isExecuting ? <LoadingIndicator size="xs" /> : i18n.approveButton}
       </Button>
     );

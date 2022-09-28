@@ -2,10 +2,10 @@ import { useAppDispatch } from 'app/hooks';
 import { SECONDS_IN_YEAR } from 'constants/misc';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
-import { getOffersContract } from '../helpers/getContracts';
 import { saveOfferInDb } from '../helpers/saveOfferInDb';
+import { useChainId } from './useChainId';
+import { useOffersContract } from './useContracts';
 import { useWalletAddress } from './useWalletAddress';
-import { useWalletProvider } from './useWalletProvider';
 
 const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
@@ -14,12 +14,13 @@ export const useCreateCollectionOffer = ({
 }: {
   nftContractAddress: string;
 }) => {
-  const provider = useWalletProvider();
-  const niftyApesContract = provider ? getOffersContract({ provider }) : null;
+  const offersContract = useOffersContract();
 
   const address = useWalletAddress();
 
   const dispatch = useAppDispatch();
+
+  const chainId = useChainId();
 
   return {
     createCollectionOffer: async ({
@@ -52,11 +53,11 @@ export const useCreateCollectionOffer = ({
           throw new Error('Address is not defined');
         }
 
-        if (!niftyApesContract) {
+        if (!offersContract) {
           throw new Error('Contract is not defined');
         }
 
-        const tx = await niftyApesContract.createOffer({
+        const tx = await offersContract.createOffer({
           creator: address,
           nftContractAddress,
           // TODO make sure this is right
@@ -96,6 +97,7 @@ export const useCreateCollectionOffer = ({
         };
 
         await saveOfferInDb({
+          chainId,
           offerObj,
           offerHash: receipt.events[1].args.offerHash,
         });
