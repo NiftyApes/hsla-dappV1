@@ -13,7 +13,7 @@ import {
 import React from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { Link } from 'react-router-dom';
-import { lendersIdDashboard } from 'routes/router';
+import { lendersDashboard } from 'routes/router';
 
 interface SuccessfulOrderCreationModalProps {
   isOpen: boolean;
@@ -43,7 +43,7 @@ export const SuccessfulOrderCreationModal: React.FC<SuccessfulOrderCreationModal
         </ModalBody>
         <ModalFooter>
           <Box mr="1.25rem">
-            <Link to={lendersIdDashboard()}>
+            <Link to={lendersDashboard()}>
               <Button variant="neutralReverse">Dashboard</Button>
             </Link>
           </Box>
