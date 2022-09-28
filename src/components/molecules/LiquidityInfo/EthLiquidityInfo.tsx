@@ -31,7 +31,7 @@ export const EthLiquidityInfo: React.FC = () => {
           <Text fontSize={'1.5rem'} mr="8px">
             {Number(availableEthLiquidity.toFixed(2))}Ξ
           </Text>
-          <Text color="solid.gray0">Available to Use</Text>
+          <Text color="solid.gray0">Available</Text>
         </Flex>
         <Text fontSize=".8rem" color="solid.gray0" maxWidth="300px">
           Liquidity earning interest in{' '}
