@@ -50,11 +50,11 @@ export const useSeizeAsset = ({
       setSeizeStatus('PENDING');
 
       try {
-        const loan = await niftyApesContract.getLoanAuction(nftContractAddress, nftId);
-
         const tx = await niftyApesContract.seizeAsset(nftContractAddress, nftId);
 
         const receipt = await tx.wait();
+
+        const loan = (receipt as any).events[2].args.loanAuction;
 
         const transactionTimestamp = await getTransactionTimestamp(receipt);
 
@@ -68,8 +68,8 @@ export const useSeizeAsset = ({
           transactionType: transactionTypes.ASSET_SEIZED,
           timestamp: transactionTimestamp,
           transactionHash: receipt.transactionHash,
-          lender: (receipt as any).events[2].args.lender,
-          borrower: (receipt as any).events[2].args.borrower,
+          lender: loan.lender,
+          borrower: loan.borrower,
           data: {
             nftContractAddress,
             nftId,

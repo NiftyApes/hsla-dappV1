@@ -4,7 +4,7 @@ import { increment } from 'counter/counterSlice';
 import { saveLoanInDb } from 'helpers/saveLoanInDb';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
 import { useChainId } from './useChainId';
-import { useLendingContract } from './useContracts';
+import { useLendingContract, useOffersContract } from './useContracts';
 import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
 import { useWalletAddress } from './useWalletAddress';
 
@@ -20,7 +20,10 @@ export const useExecuteLoanByBorrower = ({
   floorTerm?: boolean;
 }) => {
   const address = useWalletAddress();
-  const niftyApesContract = useLendingContract();
+
+  const lendingContract = useLendingContract();
+
+  const offersContract = useOffersContract();
 
   const dispatch = useAppDispatch();
 
@@ -28,7 +31,7 @@ export const useExecuteLoanByBorrower = ({
 
   const chainId = useChainId();
 
-  if (!niftyApesContract) {
+  if (!lendingContract || !offersContract) {
     return {
       executeLoanByBorrower: undefined,
     };
@@ -44,7 +47,7 @@ export const useExecuteLoanByBorrower = ({
         throw new Error('NFT Contract Address not specified');
       }
 
-      const tx = await niftyApesContract.executeLoanByBorrower(
+      const tx = await lendingContract.executeLoanByBorrower(
         nftContractAddress,
         nftId,
         offerHash,
@@ -53,9 +56,9 @@ export const useExecuteLoanByBorrower = ({
 
       const receipt: any = await tx.wait();
 
-      const offer = receipt.events[6].args[2];
+      const offer = await offersContract.getOffer(nftContractAddress, nftId, offerHash, true);
 
-      const loan = await niftyApesContract.getLoanAuction(nftContractAddress, nftId);
+      const loan = receipt.events[6].args[2];
 
       await saveLoanInDb({
         chainId,
