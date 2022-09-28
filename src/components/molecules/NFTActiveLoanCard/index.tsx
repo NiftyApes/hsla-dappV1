@@ -203,7 +203,8 @@ const NFTActiveLoanCard: React.FC<Props> = ({loan, nft}) => {
                         <Modal isOpen={true} onClose={onRepayLoanClose} size="xl">
                             <ModalOverlay/>
                             <ModalContent p="5px">
-                                <NFTCardHeader contractAddress={nft.contractAddress}
+                                <NFTCardHeader nft={nft}
+                                               contractAddress={nft.contractAddress}
                                                tokenId={nft.id}
                                                title={i18n.repayLoanHeader}
                                 />

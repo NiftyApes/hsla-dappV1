@@ -1,9 +1,9 @@
 import React from 'react';
-import {useRaribleTokenMeta} from "../../hooks/useRaribleTokenMeta";
 import LoadingIndicator from "../atoms/LoadingIndicator";
+import _ from "lodash";
 import {Flex, Image, Text} from "@chakra-ui/react";
 import {NFT} from "../../nft";
-import _ from "lodash";
+import {useRaribleTokenMeta} from "../../hooks/useRaribleTokenMeta";
 
 interface Props {
     contractAddress?: string;
@@ -19,17 +19,19 @@ const NFTCardHeader: React.FC<Props> = ({
                                             tokenId,
                                         }) => {
 
-    let fetchedNFT: any = useRaribleTokenMeta({
+    let localNFT: any = useRaribleTokenMeta({
         contractAddress,
         enabled: _.isUndefined(nft),
         tokenId,
     });
 
+    // Fallback to provided NFT data
     if (!_.isUndefined(nft)) {
-        fetchedNFT = nft;
+        localNFT = nft;
     }
 
-    if (!fetchedNFT.image) {
+    // Display a loading indicator
+    if (!localNFT.image) {
         return <Flex m="5px" p="11px">
             <LoadingIndicator size='md'/>
         </Flex>
@@ -38,14 +40,14 @@ const NFTCardHeader: React.FC<Props> = ({
     return (
         <Flex>
             <Image
-                alt={fetchedNFT.name}
+                alt={localNFT.name}
                 border="2px solid"
                 borderColor="solid.white"
                 borderRadius="6px"
                 h="46px"
                 m="5px"
                 objectFit="cover"
-                src={fetchedNFT.image}
+                src={localNFT.image}
                 w="46px"
             />
 
@@ -54,7 +56,7 @@ const NFTCardHeader: React.FC<Props> = ({
                     {title}
                 </Text>
                 <Text color="solid.black">
-                    {fetchedNFT.name}
+                    {localNFT.name}
                 </Text>
             </Flex>
         </Flex>
