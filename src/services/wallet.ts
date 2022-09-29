@@ -30,6 +30,12 @@ export const initWeb3Onboard = init({
       rpcUrl: `https://rinkeby.infura.io/v3/${INFURA_ID}`,
     },
     {
+      id: '0x5',
+      token: 'GoerliETH',
+      label: 'Ethereum Goerli Testnet',
+      rpcUrl: `https://goerli.infura.io/v3/${INFURA_ID}`,
+    },
+    {
       id: '0x38',
       token: 'BNB',
       label: 'Binance Smart Chain',
