@@ -62,7 +62,7 @@ const Collection: React.FC = () => {
                 'p:first-of-type': {
                   fontSize: 'xl',
                 },
-                'p:nth-child(2)': {
+                'p:nth-of-type(2)': {
                   fontSize: '2xs',
                   color: 'solid.gray0',
                 },

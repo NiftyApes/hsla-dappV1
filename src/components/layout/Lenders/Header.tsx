@@ -1,30 +1,26 @@
 import { Button, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
-import { useConnectWallet } from '@web3-onboard/react';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { AiOutlineCaretDown } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
 
 import WalletInfo from 'components/molecules/WalletInfo';
 import {
-  borrowersId,
-  borrowersIdDashboard,
-  lendersIdDashboard,
-  lendersIdLend,
-  lendersIdLiquidity
+  borrowers,
+  borrowersDashboard,
+  lendersDashboard,
+  lendersLend,
+  lendersLiquidity
 } from 'routes/router';
 
 const Header: React.FC = () => {
-  const [{ wallet }] = useConnectWallet();
   const navigate = useNavigate();
 
-  const walletAddress = useMemo(() => wallet?.accounts[0].address, [wallet?.accounts[0].address]);
-
   const navigateToBorrowersDashboard = useCallback(() => {
-    navigate(borrowersIdDashboard());
+    navigate(borrowersDashboard());
   }, [navigate]);
 
-  const navigateToBorrowersId = useCallback(() => {
-    navigate(borrowersId());
+  const navigateToBorrowers = useCallback(() => {
+    navigate(borrowers());
   }, [navigate]);
 
   return (
@@ -52,9 +48,9 @@ const Header: React.FC = () => {
           fontSize="md"
           textTransform={"capitalize"}
         >
-          <Link to={lendersIdDashboard()}>📊 Dashboard</Link>
-          <Link to={lendersIdLiquidity()}>💧 Manage Liquidity </Link>
-          <Link to={lendersIdLend()}>📃 Create Offers</Link>
+          <Link to={lendersDashboard()}>📊 Dashboard</Link>
+          <Link to={lendersLiquidity()}>💧 Manage Liquidity </Link>
+          <Link to={lendersLend()}>📃 Create Offers</Link>
         </Flex>
         <Menu key={window.location.pathname}>
           <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} bg="transparent">
@@ -73,7 +69,7 @@ const Header: React.FC = () => {
               },
             }}>
             <MenuItem onClick={navigateToBorrowersDashboard}>📊 Dashboard</MenuItem>
-            <MenuItem onClick={navigateToBorrowersId}>🍌 Borrow</MenuItem>
+            <MenuItem onClick={navigateToBorrowers}>🍌 Borrow</MenuItem>
           </MenuList>
         </Menu>
       </Flex>

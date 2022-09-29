@@ -47,7 +47,7 @@ const OffersTable: React.FC<Props> = ({ offers, onClick }) => {
       </Thead>
       <Tbody
         sx={{
-          'tr:nth-child(2n)': {
+          'tr:nth-of-type(2n)': {
             backgroundColor: 'gray.200',
           },
         }}

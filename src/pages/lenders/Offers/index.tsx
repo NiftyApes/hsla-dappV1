@@ -37,7 +37,7 @@ const Offers: React.FC = () => {
               td: {
                 border: 'none',
               },
-              'tr:nth-child(2n+1)': {
+              'tr:nth-of-type(2n+1)': {
                 backgroundColor: 'solid.white',
               },
             }}
