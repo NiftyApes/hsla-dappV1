@@ -9,6 +9,7 @@ import { useCancelOffer } from 'hooks/useCancelOffer';
 import moment from 'moment';
 
 export const OfferRow = ({ offer, offerHash }: any) => {
+
   const { cancelOffer, cancelStatus } = useCancelOffer({
     nftContractAddress: offer.nftContractAddress,
     nftId: offer.nftId,

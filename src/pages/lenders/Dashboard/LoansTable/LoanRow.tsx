@@ -7,8 +7,8 @@ import {roundForDisplay} from 'helpers/roundForDisplay';
 import {useCalculateInterestAccrued} from 'hooks/useCalculateInterestAccrued';
 import {useLoanAuction} from 'hooks/useLoanAuction';
 import {useSeizeAsset} from 'hooks/useSeizeAsset';
-import moment from 'moment';
 import NFTCardSmall from "../../../../components/cards/NFTCardSmall";
+import {getLoanDurationDays,getLoanTimeRemaining, getLoanBeginDate, isLoanDefaulted} from "../../../../helpers/getDuration";
 
 export const LoanRow = ({loanFromDb}: any) => {
     const loanFromChain = useLoanAuction({
@@ -32,8 +32,7 @@ export const LoanRow = ({loanFromDb}: any) => {
         return null;
     }
 
-    const endMoment = moment(loanFromChain.loanEndTimestamp * 1000);
-    const isDefaulted = moment().isAfter(endMoment);
+    const isDefaulted = isLoanDefaulted(loanFromChain);
 
     return (
         <>
@@ -58,20 +57,14 @@ export const LoanRow = ({loanFromDb}: any) => {
                         <Box flex="1"/>
                         <Flex flexDirection="column" alignItems="flex-start" justifyContent="flex-start">
                             <Text fontSize="sm" mb="10px">
-                                Initiated {moment(loanFromChain.loanBeginTimestamp * 1000).format('MMM D, YYYY')}
+                                Initiated {getLoanBeginDate(loanFromChain)}
                             </Text>
                             <Box mb="2px">
                                 <Text as="span" fontSize="xl" fontWeight="bold">
                                     {ethers.utils.formatEther(loanFromChain.amount)}Ξ
                                 </Text>{' '}
                                 <Text as="span" color="#555">
-                                    {moment
-                                        .duration(
-                                            loanFromChain.loanEndTimestamp - loanFromChain.loanBeginTimestamp,
-                                            'seconds',
-                                        )
-                                        .asDays()}{' '}
-                                    days,
+                                    {getLoanDurationDays(loanFromChain)}
                                 </Text>
                             </Box>
                             <Box>
@@ -101,7 +94,7 @@ export const LoanRow = ({loanFromDb}: any) => {
                         {isDefaulted ? 'Defaulted' : 'Active Loan'}
                     </Text>
                     <Text fontSize="sm" fontStyle="italic">
-                        {moment(loanFromChain.loanEndTimestamp * 1000).toNow(true)}{' '}
+                        {getLoanTimeRemaining(loanFromChain)}{' '}
                         {isDefaulted ? 'ago' : 'remaining'}
                     </Text>
                 </Td>
