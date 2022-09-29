@@ -247,10 +247,10 @@ const OfferBook: React.FC<OfferBook> = ({
           sx={
             !sortedOffers?.includes('DRAFT_OFFER')
               ? {
-                  'tr:nth-child(2n)': {
+                  'tr:nth-of-type(2n)': {
                     backgroundColor: 'solid.white',
                   },
-                  'tr:nth-child(2n+1)': {
+                  'tr:nth-of-type(2n+1)': {
                     backgroundColor: 'transparent',
                   },
                 }

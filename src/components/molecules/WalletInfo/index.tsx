@@ -131,13 +131,10 @@ const WalletInfo: React.FC = () => {
                 borderRadius: '10px',
                 p: '15px',
               },
-              'button:nth-child(2n)': {
-                backgroundColor: 'rgba(101, 101, 101, 0.05)',
-              },
             }}
           >
             {menuItems.map((item) => (
-              <MenuItem onClick={item.onClick}>{item.label}</MenuItem>
+              <MenuItem key={item.label} onClick={item.onClick}>{item.label}</MenuItem>
             ))}
           </MenuList>
         </Menu>

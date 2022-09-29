@@ -23,7 +23,7 @@ const LockedLiquidity: React.FC = () => {
                 fontSize: '6xl',
                 color: 'solid.gray0',
               },
-              'div > p:nth-child(2)': {
+              'div > p:nth-of-type(2)': {
                 fontSize: '2xs',
                 color: 'solid.gray0',
                 opacity: 0.6,
@@ -71,7 +71,7 @@ const LockedLiquidity: React.FC = () => {
             </Thead>
             <Tbody
               sx={{
-                'tr:nth-child(2n)': {
+                'tr:nth-of-type(2n)': {
                   backgroundColor: 'gray.300',
                 },
               }}
