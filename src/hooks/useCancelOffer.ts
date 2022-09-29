@@ -63,8 +63,6 @@ export const useCancelOffer = ({
 
                 setCancelStatus('SUCCESS');
 
-                console.log(txObject)
-
                 toast({
                     title: 'Offer canceled successfully',
                     status: 'success',
