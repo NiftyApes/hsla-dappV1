@@ -1,5 +1,5 @@
-import { init } from '@web3-onboard/react';
 import injectedModule from '@web3-onboard/injected-wallets';
+import { init } from '@web3-onboard/react';
 import walletConnectModule from '@web3-onboard/walletconnect';
 
 // Replace with your DApp's Infura ID

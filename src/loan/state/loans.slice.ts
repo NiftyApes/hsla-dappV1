@@ -53,7 +53,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<FetchLoanOffersResponse, NF
 
     const data = await getData<LoanOffer>(
       {
-        url: getApiUrl('offers'),
+        url: getApiUrl('0x7a69', 'offers'),
         data: {
           collection: ethers.utils.getAddress(nftContractAddress),
         },

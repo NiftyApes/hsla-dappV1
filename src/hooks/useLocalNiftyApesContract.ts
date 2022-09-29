@@ -1,5 +1,5 @@
+import { getLocalLendingContract } from 'helpers/getContracts';
 import { useWalletProvider } from './useWalletProvider';
-import { getContracts } from 'helpers/getContracts';
 
 export const useLocalNiftyApesContract = () => {
   const provider = useWalletProvider();
@@ -8,5 +8,5 @@ export const useLocalNiftyApesContract = () => {
     return undefined;
   }
 
-  return getContracts({ provider });
+  return getLocalLendingContract({ provider });
 };

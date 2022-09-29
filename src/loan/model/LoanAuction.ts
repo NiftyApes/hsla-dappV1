@@ -1,9 +1,9 @@
-import { ILendingStructs } from '../../generated/contract-types/ILending';
 import { BigNumber } from 'ethers';
+import { ILendingStructs } from '../../generated/contract-types/ILending';
 
 export interface LoanAuction {
   accumulatedLenderInterest: BigNumber;
-  accumulatedProtocolInterest: BigNumber;
+  accumulatedPaidProtocolInterest: BigNumber;
   amount: BigNumber;
   amountDrawn: BigNumber;
   asset: string;
@@ -23,7 +23,7 @@ export interface LoanAuction {
 const loanAuction = (
   {
     accumulatedLenderInterest,
-    accumulatedProtocolInterest,
+    accumulatedPaidProtocolInterest,
     amount,
     amountDrawn,
     asset,
@@ -40,7 +40,7 @@ const loanAuction = (
 ): LoanAuction => {
   return {
     accumulatedLenderInterest: accumulatedLenderInterest,
-    accumulatedProtocolInterest: accumulatedProtocolInterest,
+    accumulatedPaidProtocolInterest: accumulatedPaidProtocolInterest,
     amount: amount,
     amountDrawn: amountDrawn,
     asset,

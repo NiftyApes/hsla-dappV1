@@ -5,6 +5,7 @@ import { ethers } from 'ethers';
 import { getLoanForNft } from 'helpers/getLoanForNft';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
+import { useChainId } from './useChainId';
 import { useLendingContract } from './useContracts';
 import { useWalletAddress } from './useWalletAddress';
 
@@ -15,13 +16,15 @@ export const useActiveLoansForLender = () => {
 
   const lendingContract = useLendingContract();
 
+  const chainId = useChainId();
+
   useEffect(() => {
     async function fetchLoanOffersForNFT() {
-      if (!lendingContract || !address) {
+      if (!lendingContract || !address || !chainId) {
         return;
       }
 
-      const loans = await getActiveLoansByLender({ lenderAddress: address });
+      const loans = await getActiveLoansByLender({ chainId, lenderAddress: address });
 
       // remove any loans in DB but not on-chain
       for (let i = 0; i < loans.length; i++) {
@@ -54,7 +57,7 @@ export const useActiveLoansForLender = () => {
     }
 
     fetchLoanOffersForNFT();
-  }, [address, lendingContract, cacheCounter]);
+  }, [address, lendingContract, chainId, cacheCounter]);
 
   console.log('loans', loans);
 

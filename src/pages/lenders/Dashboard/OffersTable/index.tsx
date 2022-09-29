@@ -22,8 +22,7 @@ const OffersTable: React.FC<any> = ({ offers }) => {
                 border: 'none',
                 textAlign: 'center',
               },
-            }}
-          >
+            }}>
             <Th>collateral</Th>
             <Th>terms</Th>
             <Th>status</Th>
@@ -44,10 +43,9 @@ const OffersTable: React.FC<any> = ({ offers }) => {
             'tr:last-child > td:last-child': {
               borderBottomRightRadius: '10px',
             },
-          }}
-        >
+          }}>
           {sortedOffers?.map((offer: any, i: number) => (
-            <OfferRow offer={offer.offer} offerHash={offer.offerHash} key={i} />
+            <OfferRow key={offer.offerHash} offer={offer.offer} offerHash={offer.offerHash} />
           ))}
         </Tbody>
       </Table>

@@ -4,6 +4,7 @@ import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
 import { useState } from 'react';
+import { useChainId } from './useChainId';
 import { useOffersContract } from './useContracts';
 import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
 
@@ -32,7 +33,9 @@ export const useCancelOffer = ({
 
   const toast = useToast();
 
-  if (!niftyApesContract) {
+  const chainId = useChainId();
+
+  if (!niftyApesContract || !chainId) {
     return {
       seizeAsset: undefined,
     };
@@ -71,6 +74,7 @@ export const useCancelOffer = ({
         });
 
         await updateOfferStatus({
+          chainId,
           nftContractAddress,
           nftId,
           offerExpiration,

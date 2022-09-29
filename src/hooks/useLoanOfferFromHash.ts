@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useWalletProvider } from './useWalletProvider';
-import { getOffersContract } from '../helpers/getContracts';
+import { useOffersContract } from './useContracts';
 
 export const useLoanOfferFromHash = ({
   nftContractAddress,
@@ -13,18 +12,17 @@ export const useLoanOfferFromHash = ({
   offerHash: string;
   floorTerm?: boolean;
 }) => {
-  const provider = useWalletProvider();
-  const niftyApesContract = provider ? getOffersContract({ provider }) : null;
+  const offersContract = useOffersContract();
 
   const [loanOffer, setLoanOffer] = useState<any>();
 
   useEffect(() => {
-    if (niftyApesContract && nftContractAddress) {
+    if (offersContract && nftContractAddress) {
       getLoanOffer();
     }
 
     async function getLoanOffer() {
-      if (!niftyApesContract) {
+      if (!offersContract) {
         return;
       }
 
@@ -32,16 +30,11 @@ export const useLoanOfferFromHash = ({
         throw new Error('NFT Contract Address not specified');
       }
 
-      const result = await niftyApesContract.getOffer(
-        nftContractAddress,
-        nftId,
-        offerHash,
-        floorTerm,
-      );
+      const result = await offersContract.getOffer(nftContractAddress, nftId, offerHash, floorTerm);
 
       setLoanOffer(result);
     }
-  }, [niftyApesContract, nftContractAddress]);
+  }, [offersContract, nftContractAddress]);
 
   return loanOffer;
 };

@@ -25,10 +25,92 @@
           "type": "uint256"
         },
         {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "nftOwner",
+              "type": "address"
+            },
+            {
+              "internalType": "uint32",
+              "name": "loanEndTimestamp",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "lastUpdatedTimestamp",
+              "type": "uint32"
+            },
+            {
+              "internalType": "bool",
+              "name": "fixedTerms",
+              "type": "bool"
+            },
+            {
+              "internalType": "address",
+              "name": "lender",
+              "type": "address"
+            },
+            {
+              "internalType": "uint96",
+              "name": "interestRatePerSecond",
+              "type": "uint96"
+            },
+            {
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint32",
+              "name": "loanBeginTimestamp",
+              "type": "uint32"
+            },
+            {
+              "internalType": "bool",
+              "name": "lenderRefi",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint128",
+              "name": "accumulatedLenderInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "accumulatedPaidProtocolInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "amount",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "amountDrawn",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint96",
+              "name": "protocolInterestRatePerSecond",
+              "type": "uint96"
+            },
+            {
+              "internalType": "uint128",
+              "name": "slashableLenderInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "unpaidProtocolInterest",
+              "type": "uint128"
+            }
+          ],
           "indexed": false,
-          "internalType": "uint256",
-          "name": "totalDrawn",
-          "type": "uint256"
+          "internalType": "struct ILendingStructs.LoanAuction",
+          "name": "loanAuction",
+          "type": "tuple"
         }
       ],
       "name": "AmountDrawn",
@@ -40,18 +122,6 @@
         {
           "indexed": true,
           "internalType": "address",
-          "name": "lender",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "borrower",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
           "name": "nftContractAddress",
           "type": "address"
         },
@@ -60,6 +130,94 @@
           "internalType": "uint256",
           "name": "nftId",
           "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "nftOwner",
+              "type": "address"
+            },
+            {
+              "internalType": "uint32",
+              "name": "loanEndTimestamp",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "lastUpdatedTimestamp",
+              "type": "uint32"
+            },
+            {
+              "internalType": "bool",
+              "name": "fixedTerms",
+              "type": "bool"
+            },
+            {
+              "internalType": "address",
+              "name": "lender",
+              "type": "address"
+            },
+            {
+              "internalType": "uint96",
+              "name": "interestRatePerSecond",
+              "type": "uint96"
+            },
+            {
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint32",
+              "name": "loanBeginTimestamp",
+              "type": "uint32"
+            },
+            {
+              "internalType": "bool",
+              "name": "lenderRefi",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint128",
+              "name": "accumulatedLenderInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "accumulatedPaidProtocolInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "amount",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "amountDrawn",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint96",
+              "name": "protocolInterestRatePerSecond",
+              "type": "uint96"
+            },
+            {
+              "internalType": "uint128",
+              "name": "slashableLenderInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "unpaidProtocolInterest",
+              "type": "uint128"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct ILendingStructs.LoanAuction",
+          "name": "loanAuction",
+          "type": "tuple"
         }
       ],
       "name": "AssetSeized",
@@ -153,17 +311,17 @@
           "components": [
             {
               "internalType": "address",
-              "name": "creator",
+              "name": "nftOwner",
               "type": "address"
             },
             {
               "internalType": "uint32",
-              "name": "duration",
+              "name": "loanEndTimestamp",
               "type": "uint32"
             },
             {
               "internalType": "uint32",
-              "name": "expiration",
+              "name": "lastUpdatedTimestamp",
               "type": "uint32"
             },
             {
@@ -172,24 +330,14 @@
               "type": "bool"
             },
             {
-              "internalType": "bool",
-              "name": "floorTerm",
-              "type": "bool"
-            },
-            {
-              "internalType": "bool",
-              "name": "lenderOffer",
-              "type": "bool"
-            },
-            {
               "internalType": "address",
-              "name": "nftContractAddress",
+              "name": "lender",
               "type": "address"
             },
             {
-              "internalType": "uint256",
-              "name": "nftId",
-              "type": "uint256"
+              "internalType": "uint96",
+              "name": "interestRatePerSecond",
+              "type": "uint96"
             },
             {
               "internalType": "address",
@@ -197,19 +345,54 @@
               "type": "address"
             },
             {
+              "internalType": "uint32",
+              "name": "loanBeginTimestamp",
+              "type": "uint32"
+            },
+            {
+              "internalType": "bool",
+              "name": "lenderRefi",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint128",
+              "name": "accumulatedLenderInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "accumulatedPaidProtocolInterest",
+              "type": "uint128"
+            },
+            {
               "internalType": "uint128",
               "name": "amount",
               "type": "uint128"
             },
             {
+              "internalType": "uint128",
+              "name": "amountDrawn",
+              "type": "uint128"
+            },
+            {
               "internalType": "uint96",
-              "name": "interestRatePerSecond",
+              "name": "protocolInterestRatePerSecond",
               "type": "uint96"
+            },
+            {
+              "internalType": "uint128",
+              "name": "slashableLenderInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "unpaidProtocolInterest",
+              "type": "uint128"
             }
           ],
           "indexed": false,
-          "internalType": "struct IOffersStructs.Offer",
-          "name": "offer",
+          "internalType": "struct ILendingStructs.LoanAuction",
+          "name": "loanAuction",
           "type": "tuple"
         }
       ],
@@ -219,18 +402,6 @@
     {
       "anonymous": false,
       "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "lender",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "borrower",
-          "type": "address"
-        },
         {
           "indexed": true,
           "internalType": "address",
@@ -245,15 +416,97 @@
         },
         {
           "indexed": false,
-          "internalType": "address",
-          "name": "asset",
-          "type": "address"
-        },
-        {
-          "indexed": false,
           "internalType": "uint256",
           "name": "totalPayment",
           "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "nftOwner",
+              "type": "address"
+            },
+            {
+              "internalType": "uint32",
+              "name": "loanEndTimestamp",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "lastUpdatedTimestamp",
+              "type": "uint32"
+            },
+            {
+              "internalType": "bool",
+              "name": "fixedTerms",
+              "type": "bool"
+            },
+            {
+              "internalType": "address",
+              "name": "lender",
+              "type": "address"
+            },
+            {
+              "internalType": "uint96",
+              "name": "interestRatePerSecond",
+              "type": "uint96"
+            },
+            {
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint32",
+              "name": "loanBeginTimestamp",
+              "type": "uint32"
+            },
+            {
+              "internalType": "bool",
+              "name": "lenderRefi",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint128",
+              "name": "accumulatedLenderInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "accumulatedPaidProtocolInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "amount",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "amountDrawn",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint96",
+              "name": "protocolInterestRatePerSecond",
+              "type": "uint96"
+            },
+            {
+              "internalType": "uint128",
+              "name": "slashableLenderInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "unpaidProtocolInterest",
+              "type": "uint128"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct ILendingStructs.LoanAuction",
+          "name": "loanAuction",
+          "type": "tuple"
         }
       ],
       "name": "LoanRepaid",
@@ -284,18 +537,6 @@
         {
           "indexed": true,
           "internalType": "address",
-          "name": "lender",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "borrower",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
           "name": "nftContractAddress",
           "type": "address"
         },
@@ -307,15 +548,97 @@
         },
         {
           "indexed": false,
-          "internalType": "address",
-          "name": "asset",
-          "type": "address"
-        },
-        {
-          "indexed": false,
           "internalType": "uint256",
           "name": "amount",
           "type": "uint256"
+        },
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "nftOwner",
+              "type": "address"
+            },
+            {
+              "internalType": "uint32",
+              "name": "loanEndTimestamp",
+              "type": "uint32"
+            },
+            {
+              "internalType": "uint32",
+              "name": "lastUpdatedTimestamp",
+              "type": "uint32"
+            },
+            {
+              "internalType": "bool",
+              "name": "fixedTerms",
+              "type": "bool"
+            },
+            {
+              "internalType": "address",
+              "name": "lender",
+              "type": "address"
+            },
+            {
+              "internalType": "uint96",
+              "name": "interestRatePerSecond",
+              "type": "uint96"
+            },
+            {
+              "internalType": "address",
+              "name": "asset",
+              "type": "address"
+            },
+            {
+              "internalType": "uint32",
+              "name": "loanBeginTimestamp",
+              "type": "uint32"
+            },
+            {
+              "internalType": "bool",
+              "name": "lenderRefi",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint128",
+              "name": "accumulatedLenderInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "accumulatedPaidProtocolInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "amount",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "amountDrawn",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint96",
+              "name": "protocolInterestRatePerSecond",
+              "type": "uint96"
+            },
+            {
+              "internalType": "uint128",
+              "name": "slashableLenderInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "unpaidProtocolInterest",
+              "type": "uint128"
+            }
+          ],
+          "indexed": false,
+          "internalType": "struct ILendingStructs.LoanAuction",
+          "name": "loanAuction",
+          "type": "tuple"
         }
       ],
       "name": "PartialRepayment",
@@ -359,17 +682,17 @@
           "components": [
             {
               "internalType": "address",
-              "name": "creator",
+              "name": "nftOwner",
               "type": "address"
             },
             {
               "internalType": "uint32",
-              "name": "duration",
+              "name": "loanEndTimestamp",
               "type": "uint32"
             },
             {
               "internalType": "uint32",
-              "name": "expiration",
+              "name": "lastUpdatedTimestamp",
               "type": "uint32"
             },
             {
@@ -378,24 +701,14 @@
               "type": "bool"
             },
             {
-              "internalType": "bool",
-              "name": "floorTerm",
-              "type": "bool"
-            },
-            {
-              "internalType": "bool",
-              "name": "lenderOffer",
-              "type": "bool"
-            },
-            {
               "internalType": "address",
-              "name": "nftContractAddress",
+              "name": "lender",
               "type": "address"
             },
             {
-              "internalType": "uint256",
-              "name": "nftId",
-              "type": "uint256"
+              "internalType": "uint96",
+              "name": "interestRatePerSecond",
+              "type": "uint96"
             },
             {
               "internalType": "address",
@@ -403,19 +716,54 @@
               "type": "address"
             },
             {
+              "internalType": "uint32",
+              "name": "loanBeginTimestamp",
+              "type": "uint32"
+            },
+            {
+              "internalType": "bool",
+              "name": "lenderRefi",
+              "type": "bool"
+            },
+            {
+              "internalType": "uint128",
+              "name": "accumulatedLenderInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "accumulatedPaidProtocolInterest",
+              "type": "uint128"
+            },
+            {
               "internalType": "uint128",
               "name": "amount",
               "type": "uint128"
             },
             {
+              "internalType": "uint128",
+              "name": "amountDrawn",
+              "type": "uint128"
+            },
+            {
               "internalType": "uint96",
-              "name": "interestRatePerSecond",
+              "name": "protocolInterestRatePerSecond",
               "type": "uint96"
+            },
+            {
+              "internalType": "uint128",
+              "name": "slashableLenderInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "unpaidProtocolInterest",
+              "type": "uint128"
             }
           ],
           "indexed": false,
-          "internalType": "struct IOffersStructs.Offer",
-          "name": "offer",
+          "internalType": "struct ILendingStructs.LoanAuction",
+          "name": "loanAuction",
           "type": "tuple"
         }
       ],
@@ -479,11 +827,16 @@
         },
         {
           "internalType": "uint256",
+          "name": "interestBps",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
           "name": "duration",
           "type": "uint256"
         }
       ],
-      "name": "calculateProtocolInterestPerSecond",
+      "name": "calculateInterestPerSecond",
       "outputs": [
         {
           "internalType": "uint96",
@@ -491,7 +844,7 @@
           "type": "uint96"
         }
       ],
-      "stateMutability": "view",
+      "stateMutability": "pure",
       "type": "function"
     },
     {
@@ -833,19 +1186,6 @@
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "gasGriefingProtocolPremiumBps",
-      "outputs": [
-        {
-          "internalType": "uint16",
-          "name": "",
-          "type": "uint16"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [
         {
           "internalType": "address",
@@ -914,7 +1254,7 @@
             },
             {
               "internalType": "uint128",
-              "name": "accumulatedProtocolInterest",
+              "name": "accumulatedPaidProtocolInterest",
               "type": "uint128"
             },
             {
@@ -935,6 +1275,11 @@
             {
               "internalType": "uint128",
               "name": "slashableLenderInterest",
+              "type": "uint128"
+            },
+            {
+              "internalType": "uint128",
+              "name": "unpaidProtocolInterest",
               "type": "uint128"
             }
           ],
@@ -1288,19 +1633,6 @@
         }
       ],
       "name": "updateGasGriefingPremiumBps",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint16",
-          "name": "newGasGriefingProtocolPremiumBps",
-          "type": "uint16"
-        }
-      ],
-      "name": "updateGasGriefingProtocolPremiumBps",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

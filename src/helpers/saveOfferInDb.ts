@@ -1,9 +1,11 @@
 import { getApiUrl } from './getApiUrl';
 
 export async function saveOfferInDb({
+  chainId,
   offerObj,
   offerHash,
 }: {
+  chainId: string;
   offerObj: {
     nftId: string;
     creator: string;
@@ -27,7 +29,7 @@ export async function saveOfferInDb({
     nftContractAddress,
   } = offerObj;
 
-  await fetch(getApiUrl('offers'), {
+  await fetch(getApiUrl(chainId, 'offers'), {
     method: 'POST',
     body: JSON.stringify({
       nftId,

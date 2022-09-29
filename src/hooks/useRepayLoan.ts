@@ -5,6 +5,7 @@ import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
 import { BigNumber } from 'ethers';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
+import { useChainId } from './useChainId';
 import { useLendingContract } from './useContracts';
 import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
 
@@ -23,6 +24,8 @@ export const useRepayLoanByBorrower = ({
 
   const { getTransactionTimestamp } = useGetTransactionTimestamp();
 
+  const chainId = useChainId();
+
   if (!niftyApesContract) {
     return {
       executeLoanByBorrower: undefined,
@@ -35,8 +38,6 @@ export const useRepayLoanByBorrower = ({
         throw new Error('NFT Contract Address not specified');
       }
 
-      const loan = await niftyApesContract.getLoanAuction(nftContractAddress, nftId);
-
       const tx = await niftyApesContract.repayLoan(nftContractAddress, nftId, {
         value: amount,
       });
@@ -47,13 +48,16 @@ export const useRepayLoanByBorrower = ({
 
       const totalPayment = (receipt as any).events[6].args.totalPayment.toString();
 
+      const loan = (receipt as any).events[6].args.loanAuction;
+
       await saveTransactionInDb({
+        chainId,
         from: receipt.from,
         transactionType: transactionTypes.LOAN_FULLY_REPAID_BY_BORROWER,
         timestamp: transactionTimestamp,
         transactionHash: receipt.transactionHash,
-        lender: (receipt as any).events[6].args.lender,
-        borrower: (receipt as any).events[6].args.borrower,
+        lender: loan.lender,
+        borrower: loan.nftOwner,
         data: {
           amount: totalPayment,
           asset: 'ETH',
@@ -63,6 +67,7 @@ export const useRepayLoanByBorrower = ({
       });
 
       await updateLoanStatus({
+        chainId,
         nftContractAddress,
         nftId,
         loanBeginTimestamp: loan.loanBeginTimestamp,

@@ -61,19 +61,6 @@
       "inputs": [
         {
           "internalType": "uint16",
-          "name": "newGasGriefingProtocolPremiumBps",
-          "type": "uint16"
-        }
-      ],
-      "name": "updateGasGriefingProtocolPremiumBps",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint16",
           "name": "newOriginationPremiumBps",
           "type": "uint16"
         }

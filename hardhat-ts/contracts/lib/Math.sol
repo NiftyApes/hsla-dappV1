@@ -19,12 +19,8 @@ library Math {
         return fraction / expScale;
     }
 
-    /// see compound Exponential#mulScalarTurncate
-    function mulScalarTruncate(uint256 scalar, uint256 exponent)
-        internal
-        pure
-        returns (uint256)
-    {
+    /// see compound Exponential#mulScalarTruncate
+    function mulScalarTruncate(uint256 scalar, uint256 exponent) internal pure returns (uint256) {
         uint256 product = exponent * scalar;
         return product / expScale;
     }

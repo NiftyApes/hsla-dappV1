@@ -4,18 +4,17 @@ import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
 import { useState } from 'react';
-import { getLiquidityContract } from '../helpers/getContracts';
+import { useChainId } from './useChainId';
+import { useLiquidityContract } from './useContracts';
 import { useAvailableEthLiquidity } from './useEthLiquidity';
 import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
-import { useWalletProvider } from './useWalletProvider';
 
 export const useWithdrawEthLiquidity = () => {
   const dispatch = useAppDispatch();
 
   const { availableEthLiquidity } = useAvailableEthLiquidity();
 
-  const provider = useWalletProvider();
-  const niftyApesContract = provider ? getLiquidityContract({ provider }) : null;
+  const liquidityContract = useLiquidityContract();
 
   const [withdrawStatus, setWithdrawStatus] = useState<'PENDING' | 'SUCCESS' | 'ERROR' | 'READY'>(
     'READY',
@@ -27,6 +26,8 @@ export const useWithdrawEthLiquidity = () => {
 
   const { getTransactionTimestamp } = useGetTransactionTimestamp();
 
+  const chainId = useChainId();
+
   return {
     withdrawETHLiquidity: async ({
       ethToWithdraw,
@@ -35,14 +36,14 @@ export const useWithdrawEthLiquidity = () => {
       ethToWithdraw: number;
       cleanup: () => void;
     }) => {
-      if (!niftyApesContract) {
+      if (!liquidityContract) {
         throw new Error('Contract is not defined');
       }
 
       setWithdrawStatus('PENDING');
 
       try {
-        const tx = await niftyApesContract.withdrawEth(
+        const tx = await liquidityContract.withdrawEth(
           ethers.utils.parseEther(ethToWithdraw.toString()),
         );
 
@@ -53,6 +54,7 @@ export const useWithdrawEthLiquidity = () => {
         const timestamp = await getTransactionTimestamp(receipt);
 
         await saveTransactionInDb({
+          chainId,
           from: receipt.from,
           transactionType: transactionTypes.LIQUIDITY_WITHDRAWN,
           timestamp,

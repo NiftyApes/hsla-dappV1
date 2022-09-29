@@ -1,6 +1,7 @@
 import { getApiUrl } from 'helpers';
 
 export async function updateLoanStatus({
+  chainId,
   nftContractAddress,
   nftId,
   loanBeginTimestamp,
@@ -8,6 +9,7 @@ export async function updateLoanStatus({
   transactionTimestamp,
   transactionHash,
 }: {
+  chainId: string;
   nftContractAddress: string;
   nftId: string;
   loanBeginTimestamp: number;
@@ -15,7 +17,7 @@ export async function updateLoanStatus({
   transactionTimestamp?: number;
   transactionHash?: string;
 }) {
-  const result = await fetch(getApiUrl('loans'), {
+  const result = await fetch(getApiUrl(chainId, 'loans'), {
     method: 'PATCH',
     body: JSON.stringify({
       nftContractAddress,

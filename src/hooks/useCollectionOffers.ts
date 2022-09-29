@@ -4,6 +4,7 @@ import { RootState } from 'app/store';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
+import { useChainId } from './useChainId';
 import { useOffersContract } from './useContracts';
 
 export const useCollectionOffers = ({ nftContractAddress }: { nftContractAddress?: string }) => {
@@ -13,13 +14,15 @@ export const useCollectionOffers = ({ nftContractAddress }: { nftContractAddress
 
   const niftyApesContract = useOffersContract();
 
+  const chainId = useChainId();
+
   useEffect(() => {
     async function fetchLoanOffersForNFT() {
       if (!niftyApesContract || !nftContractAddress) {
         return;
       }
 
-      const offers = await getOffersByCollection({ nftContractAddress });
+      const offers = await getOffersByCollection({ chainId, nftContractAddress });
 
       for (let i = 0; i < offers.length; i++) {
         const offerHash = offers[i].offerHash;
@@ -44,7 +47,7 @@ export const useCollectionOffers = ({ nftContractAddress }: { nftContractAddress
     }
 
     fetchLoanOffersForNFT();
-  }, [nftContractAddress, niftyApesContract, cacheCounter]);
+  }, [nftContractAddress, niftyApesContract, chainId, cacheCounter]);
 
   if (!offers) {
     return undefined;

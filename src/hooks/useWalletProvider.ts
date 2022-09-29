@@ -13,5 +13,7 @@ export const useWalletProvider = () => {
 
   return chainId === '0x7a69'
     ? new Provider('http://localhost:8545')
+    : chainId === '0x5'
+    ? new Provider('https://eth-goerli.g.alchemy.com/v2/_8-YJwskeUfHw9RMaQufSFupoqkd_ukD')
     : new Provider('https://eth-mainnet.g.alchemy.com/v2/jxUUn2DsYODlc68SEU_7eNGCn2hQ7b63');
 };
