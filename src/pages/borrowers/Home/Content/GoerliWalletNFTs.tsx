@@ -3,7 +3,7 @@ import { useAppDispatch } from 'app/hooks';
 import { GOERLI } from 'constants/contractAddresses';
 import { useLendingContract } from 'hooks/useContracts';
 import { useWalletAddress } from 'hooks/useWalletAddress';
-import { loadGoerliNFTs } from 'nft';
+import { loadGoerliNFTs, resetNFTsByWalletAddress } from 'nft';
 import { useEffect, useState } from 'react';
 import { WalletNFTs } from './WalletNFTs';
 
@@ -64,6 +64,10 @@ export const GoerliWalletNFTs: React.FC<Props> = ({ ...restProps }) => {
     };
 
     getGoerliWalletNFTs();
+
+    return () => {
+      dispatch(resetNFTsByWalletAddress());
+    };
   }, [walletAddress, lendingContract]);
 
   return <WalletNFTs />;

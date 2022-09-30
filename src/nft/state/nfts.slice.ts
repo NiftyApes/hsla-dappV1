@@ -128,7 +128,7 @@ const slice = createSlice({
   name: 'nfts',
   initialState: NFTsInitialState,
   reducers: {
-    resetLocalNFTsByWalletAddress(state) {
+    resetNFTsByWalletAddress(state) {
       state.nftsByWalletAddress = {};
     },
   },
@@ -222,6 +222,6 @@ export const useNFTsByWalletAddress = (walletAddress: WalletAddress) => {
   return useNFTsSelector(selectors.nftsByWalletAddress)[walletAddress];
 };
 
-export const { resetLocalNFTsByWalletAddress } = slice.actions;
+export const { resetNFTsByWalletAddress } = slice.actions;
 
 export default slice.reducer;
