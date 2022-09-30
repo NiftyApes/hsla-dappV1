@@ -1,4 +1,5 @@
 import {
+  getGoerliLendingContract,
   getGoerliLiquidityContract,
   getGoerliOffersContract,
   getLocalLendingContract,
@@ -56,6 +57,6 @@ export const useLendingContract = () => {
   }
 
   if (provider && isGoerli(chainId)) {
-    return getLocalLendingContract({ provider });
+    return getGoerliLendingContract({ provider });
   }
 };

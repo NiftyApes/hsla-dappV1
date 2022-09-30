@@ -58,7 +58,12 @@ export const useExecuteLoanByBorrower = ({
 
       const offer = await offersContract.getOffer(nftContractAddress, nftId, offerHash, true);
 
-      const loan = receipt.events[6].args[2];
+      const loan =
+        chainId === '0x7a69'
+          ? receipt.events[6].args[2]
+          : chainId === '0x5'
+          ? receipt.events[5].args.loanAuction
+          : null;
 
       await saveLoanInDb({
         chainId,

@@ -39,9 +39,13 @@ export type FetchLoanAuctionResponse = {
   fetching: boolean;
 };
 
-export const fetchLoanOffersByNFT = createAsyncThunk<FetchLoanOffersResponse, NFT, LoansThunkApi>(
+export const fetchLoanOffersByNFT = createAsyncThunk<
+  FetchLoanOffersResponse,
+  NFT & { chainId: string },
+  LoansThunkApi
+>(
   'loans/fetchLoanOffersByNFT',
-  async ({ id: nftId, contractAddress: nftContractAddress }, thunkApi) => {
+  async ({ id: nftId, contractAddress: nftContractAddress, chainId }, thunkApi) => {
     const { offersContract } = thunkApi.extra();
 
     if (!offersContract) {
@@ -53,7 +57,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<FetchLoanOffersResponse, NF
 
     const data = await getData<LoanOffer>(
       {
-        url: getApiUrl('0x7a69', 'offers'),
+        url: getApiUrl(chainId, 'offers'),
         data: {
           collection: ethers.utils.getAddress(nftContractAddress),
         },

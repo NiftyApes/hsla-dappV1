@@ -42,13 +42,23 @@ export const useRepayLoanByBorrower = ({
         value: amount,
       });
 
-      const receipt = await tx.wait();
+      const receipt: any = await tx.wait();
 
       const transactionTimestamp = await getTransactionTimestamp(receipt);
 
-      const totalPayment = (receipt as any).events[6].args.totalPayment.toString();
+      const totalPayment =
+        chainId === '0x7a69'
+          ? receipt.events[6].args.totalPayment.toString()
+          : chainId === '0x5'
+          ? receipt.events[5].args.totalPayment.toString()
+          : null;
 
-      const loan = (receipt as any).events[6].args.loanAuction;
+      const loan =
+        chainId === '0x7a69'
+          ? receipt.events[6].args.loanAuction
+          : chainId === '0x5'
+          ? receipt.events[5].args.loanAuction
+          : null;
 
       await saveTransactionInDb({
         chainId,
