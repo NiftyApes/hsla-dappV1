@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Grid, Text, useToast } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
 import { GOERLI, LOCAL } from 'constants/contractAddresses';
-import { BigNumber, Contract, ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 import { useChainId } from 'hooks/useChainId';
 import React, { useState } from 'react';
@@ -14,7 +14,6 @@ import { NFT } from '../../../nft';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
 
 interface Props {
-  contract?: Contract;
   nft: NFT;
   offer: LoanOffer;
 }
@@ -37,7 +36,7 @@ const i18n = {
   totalBorrowed: 'is the most you could owe at the end of your loan',
 };
 
-const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
+const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
   const toast = useToast();
 
   const chainId = useChainId();
@@ -60,13 +59,13 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ contract, offer, nft }) => {
 
   const fmtOfferAmount: string = formatEther(totalAmount);
   const { hasApproval, hasCheckedApproval, grantApproval } = useERC721Approval({
-    contract,
+    contractAddress: nft.contractAddress,
     operator,
     tokenId: nft.id,
   });
 
   const { executeLoanByBorrower } = useExecuteLoanByBorrower({
-    nftContractAddress: contract?.address,
+    nftContractAddress: nft.contractAddress,
     nftId: nft.id,
     offerHash: offer.OfferHash,
     floorTerm: offer.OfferTerms.FloorTerm,
