@@ -1,12 +1,10 @@
 import { Center, Text } from '@chakra-ui/react';
-import { Contract } from 'ethers';
 import React from 'react';
 import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
 import { NFTCardHeader } from '../NFTCard/components/NFTCardHeader';
 
 interface Props {
   collectionName?: string;
-  contract?: Contract;
   img?: string;
   tokenId: string;
   tokenName: string;
