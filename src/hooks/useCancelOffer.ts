@@ -1,4 +1,3 @@
-import {useToast} from '@chakra-ui/toast';
 import {updateOfferStatus} from 'api/updateOfferStatus';
 import {useAppDispatch} from 'app/hooks';
 import {increment} from 'counter/counterSlice';
@@ -16,27 +15,22 @@ export const useCancelOffer = ({
     nftId: string;
     offerHash: string;
 }) => {
-    const niftyApesContract = useOffersContract();
 
+    const niftyApesContract = useOffersContract();
     const dispatch = useAppDispatch();
 
     const {getTransactionTimestamp} = useGetTransactionTimestamp();
 
-    const [cancelStatus, setCancelStatus] = useState<'PENDING' | 'SUCCESS' | 'ERROR' | 'READY'>(
-        'READY',
-    );
-
+    const [cancelStatus, setCancelStatus] = useState<'PENDING' | 'SUCCESS' | 'ERROR' | 'READY'>('READY')
     const [txObject, setTxObject] = useState<ethers.ContractTransaction | null>(null);
-
     const [txReceipt, setTxReceipt] = useState<ethers.ContractReceipt | null>(null);
-
-    const toast = useToast();
 
     if (!niftyApesContract) {
         return {
             seizeAsset: undefined,
         };
     }
+
 
     return {
         cancelOffer: async () => {
@@ -63,13 +57,6 @@ export const useCancelOffer = ({
 
                 setCancelStatus('SUCCESS');
 
-                toast({
-                    title: 'Offer canceled successfully',
-                    status: 'success',
-                    position: 'top-right',
-                    isClosable: true,
-                });
-
                 await updateOfferStatus({
                     nftContractAddress,
                     nftId,
@@ -93,8 +80,6 @@ export const useCancelOffer = ({
                     setTxObject(null);
                     setTxReceipt(null);
                 }, 3000);
-
-                console.error(e);
             }
 
             dispatch(increment());

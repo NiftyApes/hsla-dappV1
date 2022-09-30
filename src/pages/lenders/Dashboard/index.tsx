@@ -1,4 +1,4 @@
-import {Box, Center, Grid, GridItem, Text} from '@chakra-ui/react';
+import {Box, Center, Grid, GridItem, Text, useToast} from '@chakra-ui/react';
 import React from 'react';
 
 import {useActiveLoansForLender} from 'hooks/useActiveLoansForLender';
@@ -8,7 +8,6 @@ import LoansTable from './LoansTable';
 import OffersTable from './OffersTable';
 import TopBar from './TopBar';
 import {EmptyPlaceholder} from "../../../components/cards/EmptyPlaceholder";
-
 
 const i18n = {
     noLoans: "You don't have any active loans...",
@@ -25,6 +24,7 @@ const Dashboard: React.FC = () => {
     return (
         <Box>
             <TopBar/>
+
             <Center px="36px">
 
                 <Grid templateColumns="800px 700px" columnGap="24px">
