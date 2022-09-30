@@ -167,7 +167,7 @@ const slice = createSlice({
       state.loanOffersByNFT = {
         ...state.loanOffersByNFT,
         [nftHash]: {
-          ...state.loanOffersByNFT[nftHash],
+          content: undefined,
           fetching: false,
           error: action.error.message,
         },
@@ -195,7 +195,7 @@ const slice = createSlice({
       state.loanAuctionByNFT = {
         ...state.loanAuctionByNFT,
         [nftHash]: {
-          ...state.loanAuctionByNFT[nftHash],
+          content: undefined,
           fetching: false,
           error: action.error.message,
         },
