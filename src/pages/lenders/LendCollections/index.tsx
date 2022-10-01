@@ -1,35 +1,36 @@
 import React from 'react';
-import { Box, Flex, Text } from '@chakra-ui/react';
-import Collection from './Collection';
+import {
+    Flex,
+    Image,
+    Text,
+    ModalContent,
+    ModalOverlay,
+    Modal,
+} from '@chakra-ui/react';
+import {Link} from "react-router-dom";
+import {useTopCollections} from "../../../hooks/useTopCollections";
+import NFTCollectionCard from "../../../components/cards/NFTCollectionCard";
 
 const LendCollections: React.FC = () => {
-  return (
-    <Box>
-      <Text fontSize="lg" textAlign="center" mt="40px">
-        🚀 LEND: Collections
-      </Text>
-      <Text fontSize="sm" mt="12px" textAlign="center" fontStyle="italic" color="solid.gray0">
-        Select a collection to view Market Data and make collection offers, or Search
-      </Text>
 
-      <Flex gap="40px" flexWrap="wrap" px="30px" mt="65px" justifyContent="center">
-        <Collection />
-        <Collection />
-        <Collection />
-        <Collection />
-        <Collection />
-        <Collection />
-        <Collection />
-        <Collection />
-        <Collection />
-        <Collection />
-        <Collection />
-        <Collection />
-        <Collection />
-        <Collection />
-      </Flex>
-    </Box>
-  );
+    const {collections} = useTopCollections();
+
+    return (
+
+        <Modal isOpen={true} onClose={() => {
+        }} size="xl">
+            <ModalOverlay/>
+            <ModalContent p="5px">
+                {collections.map((collection) => {
+                    return (
+                        <Link to={`/lenders/create-collection-offer/${collection.address}`}>
+                            <NFTCollectionCard contractAddress={collection.address}/>
+                        </Link>
+                    )
+                })}
+            </ModalContent>
+        </Modal>
+    );
 };
 
 export default LendCollections;
