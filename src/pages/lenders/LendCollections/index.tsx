@@ -1,8 +1,5 @@
 import React from 'react';
 import {
-    Flex,
-    Image,
-    Text,
     ModalContent,
     ModalOverlay,
     Modal,
