@@ -1,6 +1,13 @@
+export interface NFTCollection {
+    address:string;
+    image:string;
+    name: string;
+    symbol?:string;
+}
+
 export const useTopCollections = () => {
 
-    const collections = [
+    const collections:Array<NFTCollection> = [
         {
             address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
             image: '/assets/images/collections/collection_bayc.png',
@@ -15,11 +22,6 @@ export const useTopCollections = () => {
             address: '0x60e4d786628fea6478f785a6d7e704777c86a7c6',
             image: '/assets/images/collections/collection_mayc.png',
             name: 'Mutant Ape Yacht Club',
-        },
-        {
-            address: '0x9d305a42a3975ee4c1c57555bed5919889dce63f',
-            image: '/assets/images/collections/collection_sandbox.png',
-            name: 'The Sandbox',
         },
         {
             address: '0xf87e31492faf9a91b02ee0deaad50d51d56d5d4d',
@@ -38,11 +40,6 @@ export const useTopCollections = () => {
         },
         {
             address: '0x23581767a106ae21c074b2276d25e5c3e136a68b',
-            image: '/assets/images/collections/collection_otherdeeds.png',
-            name: 'Moonbirds',
-        },
-        {
-            address: '0x23581767a106ae21c074b2276d25e5c3e136a68b',
             image: '/assets/images/collections/collection_moonbirds.png',
             name: 'Moonbirds',
         },
@@ -53,7 +50,7 @@ export const useTopCollections = () => {
         },
         {
             address: '0x1cb1a5e65610aeff2551a50f76a87a7d3fb649c6',
-            image: '/assets/images/collections/collection_toadz.png',
+            image: '/assets/images/collections/collection_cryptoadz.png',
             name: 'CrypToadz',
         },
     ]

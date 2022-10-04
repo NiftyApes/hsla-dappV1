@@ -1,41 +1,42 @@
 import React from 'react';
-import LoadingIndicator from "../atoms/LoadingIndicator";
-import {Flex, Image, Text} from "@chakra-ui/react";
-import {useCollectionMetadata} from "../../hooks/useCollectionMetadata";
+import {
+    Flex,
+    Image,
+    Text,
+} from "@chakra-ui/react";
 import {useCollectionStats} from "../../hooks/useColectionStats";
+import {NFTCollection} from "../../hooks/useTopCollections";
 
 interface Props {
-    contractAddress?: string;
-    tokenId?: string;
+    collection: NFTCollection;
 }
 
-const NFTCollectionCard: React.FC<Props> = ({contractAddress}) => {
+const NFTCollectionCard: React.FC<Props> = ({collection}) => {
 
-    // This is option.
-    const fetchedNFT: any = useCollectionMetadata({
-        nftContractAddress: contractAddress,
-    });
-
-    const {floorPrice, volume} = useCollectionStats({nftContractAddress: contractAddress});
-
-    if (!fetchedNFT.image) {
-        return <LoadingIndicator size={'md'}/>;
-    }
+    const {floorPrice} = useCollectionStats({nftContractAddress: collection?.address});
 
     return (
-        <Flex flexDir="row" p="10px">
-            <Image src={fetchedNFT.image} w="55px" h="55px" borderRadius="full"/>
+        <Flex flexDir="row" p="10px" borderBottom="1px" borderColor={"gray.100"}>
+            <Image
+                src={collection.image}
+                w="55px"
+                h="55px"
+                mr="7px"
+                borderRadius="full"
+            />
             <Flex flexDir="column" ml="10px">
-                <Text fontWeight='bold'>{fetchedNFT.name}</Text>
-                <Text>{fetchedNFT.address}</Text>
-                <Flex flexDir="column">
-                    <Text>Floor price: {floorPrice}</Text>
-                    <Text>Volume: {volume}</Text>
-                </Flex>
+
+                <Text fontWeight='bold' mt="4px">{collection.name}</Text>
+
+                {floorPrice &&
+                    <Flex flexDir="row">
+                        <Text fontSize="sm" fontWeight="bold" as="span">{floorPrice}Ξ</Text>&nbsp;<Text as="span"
+                                                                                                        fontSize="sm">Floor</Text>
+                    </Flex>
+                }
             </Flex>
         </Flex>
     );
-
 }
 
 export default NFTCollectionCard;
