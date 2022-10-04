@@ -4,7 +4,6 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   Grid,
   GridItem,
   Input,
@@ -112,6 +111,13 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
                   <CryptoIcon symbol="eth" size={36} />
                 </InputLeftElement>
                 <Input
+                  placeholder={availableEthLiquidity ? `${availableEthLiquidity}Ξ available` : ''}
+                  _placeholder={{
+                    fontSize: 16,
+                    textAlign: 'left',
+                    paddingLeft: 50,
+                    transform: 'translateY(-4px)'
+                  }}
                   type="number"
                   textAlign="right"
                   value={collectionOfferAmt}
@@ -125,17 +131,6 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
                   disabled={createCollectionOfferStatus !== 'READY'}
                 />
               </InputGroup>
-              <Box ml="4px">
-                {doesOfferAmountExceedAvailableLiquidity ? (
-                  <FormErrorMessage fontWeight={600}>
-                    Your available liquidity is {availableEthLiquidity}Ξ
-                  </FormErrorMessage>
-                ) : (
-                  <FormHelperText>
-                    Your available liquidity is {availableEthLiquidity}Ξ
-                  </FormHelperText>
-                )}
-              </Box>
             </FormControl>
           </GridItem>
         </Grid>
@@ -238,7 +233,7 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
           >
           CREATE OFFER
         </Button>
-        <Flex alignItems="center" justifyContent="space-between" my="24px">
+        <Flex alignItems="center" justifyContent="space-around" my="24px" mx="30px">
           <Flex alignItems="center">
             <div>
               Expires in{' '}
