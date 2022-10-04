@@ -7,7 +7,7 @@ import "./ILiquidityEvents.sol";
 /// @title NiftyApes interface for managing liquidity.
 interface ILiquidity is ILiquidityAdmin, ILiquidityEvents {
     /// @notice Returns the address of a compound token if the compound token is in the allow list on NiftyApes, otherwise zero address.
-    /// @param asset The assets address (e.g. USDC address)
+    /// @param asset The assets address (e.g. DAI address)
     function assetToCAsset(address asset) external view returns (address);
 
     /// @notice Returns a maximum balance of compound tokens, if there is no limit returns zero.
@@ -33,7 +33,7 @@ interface ILiquidity is ILiquidityAdmin, ILiquidityEvents {
     function getCAssetBalance(address account, address cAsset) external view returns (uint256);
 
     /// @notice Returns the whitelisted cAsset pair to the asset
-    /// @param asset The assets address (e.g. USDC address)
+    /// @param asset The assets address (e.g. DAI address)
     function getCAsset(address asset) external view returns (address);
 
     /// @notice Supply a given ERC20 token.
@@ -80,7 +80,7 @@ interface ILiquidity is ILiquidityAdmin, ILiquidityEvents {
 
     /// @notice Function only callable by the NiftyApesLending contract
     ///         Allows lending contract to affect liquidity directly
-    /// @param asset The assets address (e.g. USDC address)
+    /// @param asset The assets address (e.g. DAI address)
     /// @param amount The amount of eth to withdraw
     /// @param to Recipient address
     function sendValue(
@@ -92,7 +92,7 @@ interface ILiquidity is ILiquidityAdmin, ILiquidityEvents {
     /// @notice Function only callable by the NiftyApesLending contract
     ///         Allows lending contract to affect liquidity directly
     /// @param from The address the transaction is from
-    /// @param asset The assets address (e.g. USDC address)
+    /// @param asset The assets address (e.g. DAI address)
     /// @param amount The amount of eth to withdraw
     function mintCErc20(
         address from,
@@ -106,7 +106,7 @@ interface ILiquidity is ILiquidityAdmin, ILiquidityEvents {
 
     /// @notice Function only callable by the NiftyApesLending contract
     ///         Allows lending contract to affect liquidity directly
-    /// @param asset The assets address (e.g. USDC address)
+    /// @param asset The assets address (e.g. DAI address)
     /// @param amount The amount of eth to withdraw
     function burnCErc20(address asset, uint256 amount) external returns (uint256);
 
@@ -133,7 +133,7 @@ interface ILiquidity is ILiquidityAdmin, ILiquidityEvents {
     ) external;
 
     /// @notice Returns the current amount of ctokens to be minted for a given amount of an underlying asset
-    /// @param asset The assets address (e.g. USDC address)
+    /// @param asset The assets address (e.g. DAI address)
     /// @param amount The amount of asset to convert to cAsset
     function assetAmountToCAssetAmount(address asset, uint256 amount) external returns (uint256);
 

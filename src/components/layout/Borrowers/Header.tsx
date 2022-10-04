@@ -1,34 +1,30 @@
 import { Button, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
-import { useConnectWallet } from '@web3-onboard/react';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { AiOutlineCaretDown } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
 
 import WalletInfo from 'components/molecules/WalletInfo';
 import {
-  borrowersId,
-  borrowersIdDashboard,
-  lendersIdDashboard,
-  lendersIdLend,
-  lendersIdLiquidity,
+  borrowers,
+  borrowersDashboard,
+  lendersDashboard,
+  lendersLend,
+  lendersLiquidity
 } from 'routes/router';
 
 const Header: React.FC = () => {
-  const [{ wallet }] = useConnectWallet();
   const navigate = useNavigate();
 
-  const walletAddress = useMemo(() => wallet?.accounts[0].address, [wallet?.accounts[0].address]);
-
   const navigateToLendersIdDashboard = useCallback(() => {
-    navigate(lendersIdDashboard());
+    navigate(lendersDashboard());
   }, [navigate]);
 
   const navigateToLendersIdLiquidity = useCallback(() => {
-    navigate(lendersIdLiquidity());
+    navigate(lendersLiquidity());
   }, [navigate]);
 
   const navigateToLendersIdLend = useCallback(() => {
-    navigate(lendersIdLend());
+    navigate(lendersLend());
   }, [navigate]);
 
   return (
@@ -37,8 +33,7 @@ const Header: React.FC = () => {
       alignItems="center"
       justifyContent="space-between"
       top="0px"
-      zIndex={9}
-    >
+      zIndex={9}>
       <Flex alignItems="center">
         <Link to="/">
           <Image src="/assets/images/header_logo.png" alt="Logo" mr="15px" cursor="pointer" />
@@ -51,16 +46,18 @@ const Header: React.FC = () => {
           borderRadius="45px"
           alignItems="center"
           columnGap="46px"
-          fontSize="2.5xs"
+          fontSize="md"
+          textTransform={"capitalize"}
           p="17px 26px"
           fontWeight="bold"
         >
-          <Text>
-            <Link to={borrowersId()}>🍌 Borrow</Link>
+          <Text color="solid.gray0">
+            <Link to={borrowersDashboard()}>📊 Dashboard</Link>
           </Text>
           <Text color="solid.gray0">
-            <Link to={borrowersIdDashboard()}>📊 DASH</Link>
+            <Link to={borrowers()}>🍌 Borrow</Link>
           </Text>
+
         </Flex>
         <Menu>
           <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} bg="transparent">
@@ -77,8 +74,7 @@ const Header: React.FC = () => {
                 borderRadius: '10px',
                 p: '15px',
               },
-            }}
-          >
+            }}>
             <MenuItem onClick={navigateToLendersIdDashboard}>📊 Dashboard</MenuItem>
             <MenuItem onClick={navigateToLendersIdLiquidity}>💧 Manage Liquidity</MenuItem>
             <MenuItem onClick={navigateToLendersIdLend}>📜 Create Offers</MenuItem>

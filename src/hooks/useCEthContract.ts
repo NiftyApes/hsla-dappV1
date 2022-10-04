@@ -1,12 +1,15 @@
 import { getCEthContract } from 'helpers/getCEthContract';
+import { useChainId } from './useChainId';
 import { useWalletProvider } from './useWalletProvider';
 
 export const useCEthContract = () => {
   const provider = useWalletProvider();
 
-  if (!provider) {
+  const chainId = useChainId();
+
+  if (!provider || !chainId) {
     return;
   }
 
-  return getCEthContract({ provider });
+  return getCEthContract({ chainId, provider });
 };

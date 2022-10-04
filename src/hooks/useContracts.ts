@@ -1,4 +1,11 @@
-import { getContracts, getLiquidityContract, getOffersContract } from 'helpers/getContracts';
+import {
+  getGoerliLendingContract,
+  getGoerliLiquidityContract,
+  getGoerliOffersContract,
+  getLocalLendingContract,
+  getLocalLiquidityContract,
+  getLocalOffersContract,
+} from 'helpers/getContracts';
 import { useChainId } from './useChainId';
 import { useWalletProvider } from './useWalletProvider';
 
@@ -8,12 +15,11 @@ const i18n = {
 };
 
 const isLocalChain = (cid: string | undefined): boolean | undefined => {
-  if (cid === '0x7a69') {
-    return true;
-  } else if (cid) {
-    throw Error(i18n.noContract(cid));
-  }
-  return false;
+  return cid === '0x7a69';
+};
+
+const isGoerli = (cid: string | undefined): boolean | undefined => {
+  return cid === '0x5';
 };
 
 export const useLiquidityContract = () => {
@@ -21,7 +27,11 @@ export const useLiquidityContract = () => {
   const chainId = useChainId();
 
   if (provider && isLocalChain(chainId)) {
-    return getLiquidityContract({ provider });
+    return getLocalLiquidityContract({ provider });
+  }
+
+  if (provider && isGoerli(chainId)) {
+    return getGoerliLiquidityContract({ provider });
   }
 };
 
@@ -30,7 +40,11 @@ export const useOffersContract = () => {
   const chainId = useChainId();
 
   if (provider && isLocalChain(chainId)) {
-    return getOffersContract({ provider });
+    return getLocalOffersContract({ provider });
+  }
+
+  if (provider && isGoerli(chainId)) {
+    return getGoerliOffersContract({ provider });
   }
 };
 
@@ -39,6 +53,10 @@ export const useLendingContract = () => {
   const chainId = useChainId();
 
   if (provider && isLocalChain(chainId)) {
-    return getContracts({ provider });
+    return getLocalLendingContract({ provider });
+  }
+
+  if (provider && isGoerli(chainId)) {
+    return getGoerliLendingContract({ provider });
   }
 };

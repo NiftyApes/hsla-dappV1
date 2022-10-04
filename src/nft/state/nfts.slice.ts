@@ -46,15 +46,64 @@ export const fetchLocalNFTsByWalletAddress = createAsyncThunk<
   const { lendingContract } = thunkApi.extra();
 
   if (lendingContract) {
-    const nfts = await getLocalNFTsOfAddress({
+    let nfts = await getLocalNFTsOfAddress({
       walletAddress,
       contract,
       lendingContract,
     });
 
+    const nftsWithChainId: Array<NFT & { chainId: string }> | undefined = nfts?.map((nft: NFT) => ({
+      ...nft,
+      chainId: '0x7a69',
+    }));
+
+    if (nftsWithChainId) {
+      nftsWithChainId.forEach((nft) => thunkApi.dispatch(fetchLoanOffersByNFT(nft)));
+      nftsWithChainId.forEach((nft) => thunkApi.dispatch(fetchLoanAuctionByNFT(nft)));
+
+      return {
+        content: nfts,
+        fetching: false,
+        error: undefined,
+      };
+    } else {
+      return thunkApi.rejectWithValue({
+        type: 'global',
+        message: 'Unable to fetch NFTs',
+      });
+    }
+  } else {
+    return thunkApi.rejectWithValue({
+      type: 'global',
+      message: 'NiftyApes contract is undefined',
+    });
+  }
+});
+
+export const loadGoerliNFTs = createAsyncThunk<
+  FetchNFTsResponse | undefined,
+  {
+    walletAddress: WalletAddress;
+    nfts: any;
+  },
+  NFTsThunkApi
+>('nfts/loadGoerliNFTs', async ({ nfts }, thunkApi) => {
+  const { lendingContract } = thunkApi.extra();
+
+  nfts = nfts.map((nft: any) => ({
+    ...nft,
+    id: String(Number(nft.id.tokenId)),
+    contractAddress: nft.contract.address,
+    image: nft.media?.length && nft.media[0].gateway,
+    name: '',
+    collectionName: nft.contractMetadata.name,
+    chainId: '0x5',
+  }));
+
+  if (lendingContract) {
     if (nfts) {
-      nfts.forEach((nft: NFT) => thunkApi.dispatch(fetchLoanOffersByNFT(nft)));
-      nfts.forEach((nft: NFT) => thunkApi.dispatch(fetchLoanAuctionByNFT(nft)));
+      nfts.forEach((nft: any) => thunkApi.dispatch(fetchLoanOffersByNFT(nft)));
+      nfts.forEach((nft: any) => thunkApi.dispatch(fetchLoanAuctionByNFT(nft)));
 
       return {
         content: nfts,
@@ -79,7 +128,7 @@ const slice = createSlice({
   name: 'nfts',
   initialState: NFTsInitialState,
   reducers: {
-    resetLocalNFTsByWalletAddress(state) {
+    resetNFTsByWalletAddress(state) {
       state.nftsByWalletAddress = {};
     },
   },
@@ -103,9 +152,7 @@ const slice = createSlice({
         }
 
         if (action.payload.content) {
-          (state.nftsByWalletAddress[action.meta.arg.walletAddress].content as any).push(
-            ...action.payload.content,
-          );
+          state.nftsByWalletAddress[action.meta.arg.walletAddress].content = action.payload.content;
         }
 
         state.nftsByWalletAddress[action.meta.arg.walletAddress].fetching = false;
@@ -113,6 +160,42 @@ const slice = createSlice({
       }
     });
     builder.addCase(fetchLocalNFTsByWalletAddress.rejected, (state, action) => {
+      state.nftsByWalletAddress = {
+        ...state.nftsByWalletAddress,
+        [action.meta.arg.walletAddress]: {
+          content: undefined,
+          fetching: false,
+          error: action.error.message ?? 'rejected',
+        },
+      };
+    });
+    builder.addCase(loadGoerliNFTs.pending, (state, action) => {
+      state.nftsByWalletAddress = {
+        ...state.nftsByWalletAddress,
+        [action.meta.arg.walletAddress]: {
+          ...state.nftsByWalletAddress[action.meta.arg.walletAddress],
+          fetching: true,
+          error: undefined,
+        },
+      };
+    });
+    builder.addCase(loadGoerliNFTs.fulfilled, (state, action) => {
+      const walletNftArr = state.nftsByWalletAddress[action.meta.arg.walletAddress];
+
+      if (action.payload && action.meta.arg.walletAddress) {
+        if (!state.nftsByWalletAddress[action.meta.arg.walletAddress].content) {
+          state.nftsByWalletAddress[action.meta.arg.walletAddress].content = [];
+        }
+
+        if (action.payload.content) {
+          state.nftsByWalletAddress[action.meta.arg.walletAddress].content = action.payload.content;
+        }
+
+        state.nftsByWalletAddress[action.meta.arg.walletAddress].fetching = false;
+        state.nftsByWalletAddress[action.meta.arg.walletAddress].error = undefined;
+      }
+    });
+    builder.addCase(loadGoerliNFTs.rejected, (state, action) => {
       state.nftsByWalletAddress = {
         ...state.nftsByWalletAddress,
         [action.meta.arg.walletAddress]: {
@@ -135,6 +218,6 @@ export const useNFTsByWalletAddress = (walletAddress: WalletAddress) => {
   return useNFTsSelector(selectors.nftsByWalletAddress)[walletAddress];
 };
 
-export const { resetLocalNFTsByWalletAddress } = slice.actions;
+export const { resetNFTsByWalletAddress } = slice.actions;
 
 export default slice.reducer;

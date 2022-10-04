@@ -10,10 +10,10 @@ import {
   ModalOverlay,
   Text,
 } from '@chakra-ui/react';
-import { useWalletAddress } from 'hooks/useWalletAddress';
 import React from 'react';
 import { IoMdClose } from 'react-icons/io';
 import { Link } from 'react-router-dom';
+import { lendersDashboard } from 'routes/router';
 
 interface SuccessfulOrderCreationModalProps {
   isOpen: boolean;
@@ -24,8 +24,6 @@ export const SuccessfulOrderCreationModal: React.FC<SuccessfulOrderCreationModal
   isOpen,
   onClose,
 }) => {
-  const walletAddress = useWalletAddress();
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="2xl">
       <ModalOverlay />
@@ -45,7 +43,7 @@ export const SuccessfulOrderCreationModal: React.FC<SuccessfulOrderCreationModal
         </ModalBody>
         <ModalFooter>
           <Box mr="1.25rem">
-            <Link to={`/lenders/${walletAddress}/dashboard`}>
+            <Link to={lendersDashboard()}>
               <Button variant="neutralReverse">Dashboard</Button>
             </Link>
           </Box>

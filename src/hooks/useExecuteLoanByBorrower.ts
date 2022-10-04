@@ -1,9 +1,13 @@
-import { useAppDispatch } from 'app/hooks';
+import { useAppDispatch, useAppSelector } from 'app/hooks';
+import { RootState } from 'app/store';
 import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
 import { saveLoanInDb } from 'helpers/saveLoanInDb';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
-import { useLendingContract } from './useContracts';
+import { fetchLoanAuctionByNFT } from 'loan';
+import { NFT } from 'nft';
+import { useChainId } from './useChainId';
+import { useLendingContract, useOffersContract } from './useContracts';
 import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
 import { useWalletAddress } from './useWalletAddress';
 
@@ -19,13 +23,28 @@ export const useExecuteLoanByBorrower = ({
   floorTerm?: boolean;
 }) => {
   const address = useWalletAddress();
-  const niftyApesContract = useLendingContract();
+
+  const lendingContract = useLendingContract();
+
+  const offersContract = useOffersContract();
 
   const dispatch = useAppDispatch();
 
   const { getTransactionTimestamp } = useGetTransactionTimestamp();
 
-  if (!niftyApesContract) {
+  const chainId = useChainId();
+
+  const walletAddress = useWalletAddress();
+
+  const nft = useAppSelector(
+    (state: RootState) =>
+      walletAddress &&
+      state.nfts.nftsByWalletAddress[walletAddress].content?.find(
+        (nft: NFT) => nft.id === nftId && nft.contractAddress === nftContractAddress,
+      ),
+  );
+
+  if (!lendingContract || !offersContract) {
     return {
       executeLoanByBorrower: undefined,
     };
@@ -41,7 +60,11 @@ export const useExecuteLoanByBorrower = ({
         throw new Error('NFT Contract Address not specified');
       }
 
-      const tx = await niftyApesContract.executeLoanByBorrower(
+      if (!nft) {
+        throw new Error('NFT information not in Redux store');
+      }
+
+      const tx = await lendingContract.executeLoanByBorrower(
         nftContractAddress,
         nftId,
         offerHash,
@@ -50,11 +73,19 @@ export const useExecuteLoanByBorrower = ({
 
       const receipt: any = await tx.wait();
 
-      const offer = receipt.events[6].args[2];
+      const offer = await offersContract.getOffer(nftContractAddress, nftId, offerHash, true);
 
-      const loan = await niftyApesContract.getLoanAuction(nftContractAddress, nftId);
+      const loan =
+        chainId === '0x7a69'
+          ? receipt.events[6].args[2]
+          : chainId === '0x5'
+          ? receipt.events[5].args.loanAuction
+          : null;
+
+      dispatch(fetchLoanAuctionByNFT(nft));
 
       await saveLoanInDb({
+        chainId,
         nftContractAddress,
         nftId,
         creator: offer.creator,
@@ -74,6 +105,7 @@ export const useExecuteLoanByBorrower = ({
       const timestamp = await getTransactionTimestamp(receipt);
 
       await saveTransactionInDb({
+        chainId,
         transactionHash: receipt.transactionHash,
         from: receipt.from,
         transactionType: transactionTypes.LOAN_CREATED,

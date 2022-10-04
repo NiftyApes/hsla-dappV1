@@ -13,11 +13,7 @@ export const borrowers = () => {
   return path([ROUTE_BORROWERS]);
 };
 
-export const borrowersId = () => {
-  return path([ROUTE_BORROWERS]);
-};
-
-export const borrowersIdDashboard = () => {
+export const borrowersDashboard = () => {
   return path([ROUTE_BORROWERS, ROUTE_BORROWERS_DASHBOARD]);
 };
 
@@ -33,22 +29,18 @@ export const lenders = () => {
   return path([ROUTE_LENDERS]);
 };
 
-export const lendersId = () => {
-  return path([ROUTE_LENDERS]);
-};
-
-export const lendersIdDashboard = () => {
+export const lendersDashboard = () => {
   return path([ROUTE_LENDERS, ROUTE_BORROWERS_DASHBOARD]);
 };
 
-export const lendersIdLiquidity = () => {
+export const lendersLiquidity = () => {
   return path([ROUTE_LENDERS, ROUTE_LENDERS_LIQUIDITY]);
 };
 
-export const lendersIdOffers = () => {
+export const lendersOffers = () => {
   return path([ROUTE_LENDERS, ROUTE_LENDERS_OFFERS]);
 };
 
-export const lendersIdLend = () => {
+export const lendersLend = () => {
   return path([ROUTE_LENDERS, ROUTE_LENDERS_LEND]);
 };

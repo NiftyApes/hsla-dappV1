@@ -1,5 +1,5 @@
-import { init } from '@web3-onboard/react';
 import injectedModule from '@web3-onboard/injected-wallets';
+import { init } from '@web3-onboard/react';
 import walletConnectModule from '@web3-onboard/walletconnect';
 
 // Replace with your DApp's Infura ID
@@ -28,6 +28,12 @@ export const initWeb3Onboard = init({
       token: 'rETH',
       label: 'Ethereum Rinkeby Testnet',
       rpcUrl: `https://rinkeby.infura.io/v3/${INFURA_ID}`,
+    },
+    {
+      id: '0x5',
+      token: 'GoerliETH',
+      label: 'Ethereum Goerli Testnet',
+      rpcUrl: `https://goerli.infura.io/v3/${INFURA_ID}`,
     },
     {
       id: '0x38',

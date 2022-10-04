@@ -1,84 +1,74 @@
 //SPDX-License-Identifier: MIT
 pragma solidity 0.8.13;
 
-import "../offers/IOffersStructs.sol";
+import "./ILendingStructs.sol";
 
 /// @title Events emitted by the lending part of the protocol.
 interface ILendingEvents {
     /// @notice Emitted when a new loan is executed
     /// @param nftContractAddress The nft contract address
-    /// @param nftId The nft id, this field can be meaningless if the offer is a floor term offer
-    /// @param offer The offer details
+    /// @param nftId The nft id
+    /// @param loanAuction The loanAuction details
     event LoanExecuted(
         address indexed nftContractAddress,
         uint256 indexed nftId,
-        IOffersStructs.Offer offer
+        ILendingStructs.LoanAuction loanAuction
     );
 
     /// @notice Emitted when a loan is refinanced
     /// @param nftContractAddress The nft contract address
-    /// @param nftId The nft id, this field can be meaningless if the offer is a floor term offer
-    /// @param offer The offer details
+    /// @param nftId The nft id
+    /// @param loanAuction The loanAuction details
     event Refinance(
         address indexed nftContractAddress,
         uint256 indexed nftId,
-        IOffersStructs.Offer offer
+        ILendingStructs.LoanAuction loanAuction
     );
 
     /// @notice Emitted when a loan amount is drawn
     /// @param nftContractAddress The nft contract address
-    /// @param nftId The nft id, this field can be meaningless if the offer is a floor term offer
+    /// @param nftId The nft id
     /// @param drawAmount The added amount drawn
-    ///  @param totalDrawn The total amount drawn now
+    /// @param loanAuction The loanAuction details
     event AmountDrawn(
         address indexed nftContractAddress,
         uint256 indexed nftId,
         uint256 drawAmount,
-        uint256 totalDrawn
+        ILendingStructs.LoanAuction loanAuction
     );
 
     /// @notice Emitted when a loan is repaid
-    /// @param lender The lender of the loan
-    /// @param borrower The borrower of the loan
     /// @param nftContractAddress The nft contract address
-    /// @param nftId The nft id, this field can be meaningless if the offer is a floor term offer
-    /// @param asset The asset of the loan
+    /// @param nftId The nft id
     ///  @param totalPayment The total payment amount
+    /// @param loanAuction The loanAuction details
     event LoanRepaid(
-        address indexed lender,
-        address borrower,
         address indexed nftContractAddress,
         uint256 indexed nftId,
-        address asset,
-        uint256 totalPayment
+        uint256 totalPayment,
+        ILendingStructs.LoanAuction loanAuction
     );
 
     /// @notice Emitted when a loan is partially repaid
-    /// @param lender The lender of the loan
-    /// @param borrower The borrower of the loan
     /// @param nftContractAddress The nft contract address
-    /// @param nftId The nft id, this field can be meaningless if the offer is a floor term offer
-    /// @param asset The asset of the loan
+    /// @param nftId The nft id
     ///  @param amount The payment amount
+    /// @param loanAuction The loanAuction details
     event PartialRepayment(
-        address indexed lender,
-        address borrower,
         address indexed nftContractAddress,
         uint256 indexed nftId,
-        address asset,
-        uint256 amount
+        uint256 amount,
+        ILendingStructs.LoanAuction loanAuction
     );
 
     /// @notice Emitted when an asset is seized
-    /// @param lender The lender of the loan
-    /// @param borrower The borrower of the loan
     /// @param nftContractAddress The nft contract address
-    /// @param nftId The nft id, this field can be meaningless if the offer is a floor term offer
+    /// @param nftId The nft id,
+    /// @param loanAuction The loanAuction details
     event AssetSeized(
-        address indexed lender,
-        address borrower,
         address indexed nftContractAddress,
-        uint256 indexed nftId
+        uint256 indexed nftId,
+        ILendingStructs.LoanAuction loanAuction
     );
 
     /// @notice Emitted when the protocol interest fee is updated.

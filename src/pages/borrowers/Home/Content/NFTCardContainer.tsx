@@ -1,4 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+
 import NFTCard from 'components/molecules/NFTCard';
 import NFTNoOfferCard from 'components/molecules/NFTNoOfferCard';
 import NFTActiveLoanCard from '../../../../components/molecules/NFTActiveLoanCard';
@@ -7,16 +8,16 @@ import { useLoanOffersByNFT } from 'loan';
 import { NFTLoadingCard } from '../../../../components/molecules/NFTLoadingCard';
 import { useLoanAuction } from '../../../../hooks/useLoanAuction';
 
-import { Contract, NFT } from 'nft';
+import { NFT } from 'nft';
 
 interface Props {
-  contract: Contract;
   item: NFT;
 }
 
-export const NFTCardContainer = ({ contract, item }: Props) => {
+export const NFTCardContainer = ({ item }: Props) => {
   const { content: loanOffers, fetching: fetchingOffers } = useLoanOffersByNFT(item);
-  const loanAuction = useLoanAuction({ nftContractAddress: contract.address, nftId: item.id });
+
+  const loanAuction = useLoanAuction({ nftContractAddress: item.contractAddress, nftId: item.id });
 
   if (!loanOffers || fetchingOffers) {
     return <NFTLoadingCard />;
@@ -30,7 +31,6 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
   if (loanOffers.length === 0) {
     return (
       <NFTNoOfferCard
-        contract={contract}
         key={item.id}
         collectionName={item.collectionName || ''}
         tokenName={`${item.name}`}
@@ -40,5 +40,5 @@ export const NFTCardContainer = ({ contract, item }: Props) => {
     );
   }
 
-  return <NFTCard contract={contract} key={item.id} nft={item} offers={loanOffers} />;
+  return <NFTCard key={item.id} nft={item} offers={loanOffers} />;
 };

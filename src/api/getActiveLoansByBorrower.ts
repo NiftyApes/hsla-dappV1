@@ -1,7 +1,13 @@
 import { getApiUrl } from 'helpers';
 
-export const getActiveLoansByBorrower = async ({ address }: { address: string }) => {
-  const result = await fetch(getApiUrl(`loans?borrower=${address}&status=active`));
+export const getActiveLoansByBorrower = async ({
+  address,
+  chainId,
+}: {
+  address: string;
+  chainId: string;
+}) => {
+  const result = await fetch(getApiUrl(chainId, `loans?borrower=${address}&status=active`));
   const json = await result.json();
 
   return json.map((item: any) => {

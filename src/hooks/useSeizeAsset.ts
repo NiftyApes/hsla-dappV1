@@ -6,6 +6,7 @@ import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
 import { useState } from 'react';
+import { useChainId } from './useChainId';
 import { useLendingContract } from './useContracts';
 import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
 
@@ -32,7 +33,9 @@ export const useSeizeAsset = ({
 
   const toast = useToast();
 
-  if (!niftyApesContract) {
+  const chainId = useChainId();
+
+  if (!niftyApesContract || !chainId) {
     return {
       seizeAsset: undefined,
     };
@@ -47,11 +50,11 @@ export const useSeizeAsset = ({
       setSeizeStatus('PENDING');
 
       try {
-        const loan = await niftyApesContract.getLoanAuction(nftContractAddress, nftId);
-
         const tx = await niftyApesContract.seizeAsset(nftContractAddress, nftId);
 
         const receipt = await tx.wait();
+
+        const loan = (receipt as any).events[2].args.loanAuction;
 
         const transactionTimestamp = await getTransactionTimestamp(receipt);
 
@@ -60,12 +63,13 @@ export const useSeizeAsset = ({
         setSeizeStatus('SUCCESS');
 
         await saveTransactionInDb({
+          chainId,
           from: receipt.from,
           transactionType: transactionTypes.ASSET_SEIZED,
           timestamp: transactionTimestamp,
           transactionHash: receipt.transactionHash,
-          lender: (receipt as any).events[2].args.lender,
-          borrower: (receipt as any).events[2].args.borrower,
+          lender: loan.lender,
+          borrower: loan.borrower,
           data: {
             nftContractAddress,
             nftId,
@@ -75,6 +79,7 @@ export const useSeizeAsset = ({
         });
 
         await updateLoanStatus({
+          chainId,
           nftContractAddress,
           nftId,
           loanBeginTimestamp: loan.loanBeginTimestamp,

@@ -16,16 +16,18 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import BorrowLoanRepayCard from '../../../components/molecules/BorrowLoanRepayCard';
-import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
 import LoanTable from './LoanTable';
+import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
 import NFTCardHeader from '../../../components/cards/NFTCardHeader';
 import TopCard from 'components/molecules/DashboardTopCard';
+import { formatEther } from 'ethers/lib/utils';
 import _ from 'lodash';
 import { BigNumber } from 'ethers';
 import { LoanAuction } from '../../../loan';
-import { formatEther } from 'ethers/lib/utils';
 import { useActiveLoansForBorrower } from '../../../hooks/useActiveLoansForBorrower';
+import BorrowLoanRepayCard from '../../../components/molecules/BorrowLoanRepayCard';
+import { NFT } from '../../../nft';
+
 import { useNavigate } from 'react-router-dom';
 import { useWalletAddress } from '../../../hooks/useWalletAddress';
 
@@ -61,7 +63,7 @@ const Dashboard: React.FC = () => {
   );
   const interestTotal = activeLoans.reduce(
     (acc: BigNumber, loan: LoanAuction) =>
-      loan.accumulatedLenderInterest.add(loan.accumulatedProtocolInterest).add(acc),
+      loan.accumulatedLenderInterest.add(loan.accumulatedPaidProtocolInterest).add(acc),
     0,
   );
 
@@ -80,8 +82,7 @@ const Dashboard: React.FC = () => {
         alignItems="center"
         justifyContent="center"
         textAlign="center"
-        height="200px"
-      >
+        height="200px">
         <AlertIcon boxSize="40px" mr={0} />
         <AlertTitle mt={4} mb={1} fontSize="lg">
           No Active Loans

@@ -1,16 +1,17 @@
+import { RootState } from 'app/store';
+import { getEthersContractWithEIP1193Provider } from 'helpers/getEthersContractWithEIP1193Provider';
 import { useEffect, useState } from 'react';
-import { Contract } from 'ethers';
-import { useWalletAddress } from './useWalletAddress';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { increment } from '../counter/counterSlice';
-import { RootState } from 'app/store';
+import { useWalletAddress } from './useWalletAddress';
+import { useWalletProvider } from './useWalletProvider';
 
 export const useERC721Approval = ({
   tokenId,
-  contract,
+  contractAddress,
   operator,
 }: {
-  contract?: Contract;
+  contractAddress: string;
   operator?: string;
   tokenId?: string;
 }) => {
@@ -22,6 +23,34 @@ export const useERC721Approval = ({
   const dispatch = useAppDispatch();
 
   const cacheCounter = useAppSelector((state: RootState) => state.counter);
+
+  const provider = useWalletProvider();
+
+  const minimumAbi = [
+    {
+      inputs: [
+        { internalType: 'address', name: 'to', type: 'address' },
+        { internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      ],
+      name: 'approve',
+      outputs: [],
+      stateMutability: 'nonpayable',
+      type: 'function',
+    },
+    {
+      inputs: [{ internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
+      name: 'getApproved',
+      outputs: [{ internalType: 'address', name: '', type: 'address' }],
+      stateMutability: 'view',
+      type: 'function',
+    },
+  ];
+
+  const contract = getEthersContractWithEIP1193Provider({
+    abi: minimumAbi,
+    address: contractAddress,
+    provider,
+  });
 
   useEffect(() => {
     checkWhetherHasApproval();

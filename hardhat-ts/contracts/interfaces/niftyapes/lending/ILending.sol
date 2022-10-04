@@ -34,13 +34,6 @@ interface ILending is ILendingAdmin, ILendingEvents, ILendingStructs, IOffersStr
     ///         Fees are denominated in basis points, parts of 10_000
     function gasGriefingPremiumBps() external view returns (uint16);
 
-    /// @notice Returns the bps premium paid to the protocol for refinancing a loan before the current lender has earned the equivalent amount of interest
-    ///         This value represents the percentage of the gas griefing premium taken by the protocol.
-    ///         For example, if the value of gasGriefingPremiumBps is 25 and 10 bps of interest has been earned, the premium will be 15 bps paid to the current lender
-    ///         This premium is a percentage of the delta from the gasGriefingPremium. In effect, it is an additional percentage paid equivalent to the interest earned X the gasGriefingProtocol premium
-    ///         Fees are denominated in basis points, parts of 10_000
-    function gasGriefingProtocolPremiumBps() external view returns (uint16);
-
     /// @notice Returns the bps premium paid to the protocol for refinancing a loan with terms that do not improve the cumulative terms of the loan by the equivalent basis points
     ///         For example, if termGriefingPremiumBps is 25 then the cumulative improvement of amount, interestRatePerSecond, and duration must be more than 25 bps
     ///         If the amount is 8 bps better, interestRatePerSecond is 7 bps better, and duration is 10 bps better, then no premium is paid
@@ -215,14 +208,15 @@ interface ILending is ILendingAdmin, ILendingEvents, ILendingStructs, IOffersStr
         view
         returns (uint256, uint256);
 
-    /// @notice Returns the protocolInterestRatePerSecond for a given set of terms
-    ///         There is a set protocolInterestRateBps so no interestBps value is provided
+    /// @notice Returns the pinterestRatePerSecond for a given set of terms
     /// @param amount The amount of the loan
+    /// @param interestBps in basis points
     /// @param duration The duration of the loan
-    function calculateProtocolInterestPerSecond(uint256 amount, uint256 duration)
-        external
-        view
-        returns (uint96);
+    function calculateInterestPerSecond(
+        uint256 amount,
+        uint256 interestBps,
+        uint256 duration
+    ) external pure returns (uint96);
 
     /// @notice Returns the delta between the required accumulated interest and the current accumulated interest
     /// @param nftContractAddress The address of the NFT collection
@@ -233,8 +227,13 @@ interface ILending is ILendingAdmin, ILendingEvents, ILendingStructs, IOffersStr
         returns (uint256);
 
     /// @notice Returns whether the lender has provided sufficient terms to not be charged a term griefing premium
+    ///         Amount and duration must be equal to or greater than, and interestRatePerSecond must be less than
+    ///         or equal to the current terms or function will fail
     /// @param nftContractAddress The address of the NFT collection
     /// @param nftId The id of the specified NFT
+    /// @param amount The amount of asset offered
+    /// @param interestRatePerSecond The interest rate per second offered
+    /// @param duration The duration of the loan offered
     function checkSufficientTerms(
         address nftContractAddress,
         uint256 nftId,

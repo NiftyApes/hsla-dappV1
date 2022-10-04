@@ -30,8 +30,8 @@ interface ILendingStructs {
         uint128 accumulatedLenderInterest;
         // 32 unused bytes in slot 1
         // SLOT 2 START
-        // cumulative interest of varying rates accrued by the protocol. To be repaid at the end of the loan.
-        uint128 accumulatedProtocolInterest;
+        // cumulative interest of varying rates accrued by the protocol. Paid by lenders upon refinance, repaid by borrower at the end of the loan.
+        uint128 accumulatedPaidProtocolInterest;
         // The maximum amount of tokens that can be drawn from this loan
         uint128 amount;
         // SLOT 3 START
@@ -42,5 +42,7 @@ interface ILendingStructs {
         // 32 unused bytes in slot 3
         // SLOT 4 START
         uint128 slashableLenderInterest;
+        // cumulative unpaid protocol interest. Accrues per lender period of interest.
+        uint128 unpaidProtocolInterest;
     }
 }

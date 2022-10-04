@@ -14,7 +14,7 @@ import {
 import React, { useState } from 'react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import { BigNumber, Contract, ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { formatNumber } from 'lib/helpers/string';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
 import { getBestLoanOffer, LoanOffer } from '../../../loan';
@@ -26,7 +26,6 @@ import { NFTCardContainerHeader } from './components/NFTCardContainerHeader';
 import NFTCardHeader from '../../cards/NFTCardHeader';
 
 interface Props {
-  contract?: Contract;
   nft: NFT;
   offers: Array<LoanOffer>;
 }
@@ -41,7 +40,7 @@ const i18n = {
   allOffers: 'all offers for',
 };
 
-const NFTCard: React.FC<Props> = ({ contract, nft, offers }) => {
+const NFTCard: React.FC<Props> = ({ nft, offers }) => {
   const {
     isOpen: isOfferDetailsOpen,
     onOpen: onOfferDetailsOpen,
@@ -81,8 +80,7 @@ const NFTCard: React.FC<Props> = ({ contract, nft, offers }) => {
         fontSize="md"
         fontWeight="bold"
         textAlign="center"
-        textTransform="uppercase"
-      >
+        textTransform="uppercase">
         {i18n.offerLabel(bestOffer.type)}
       </Container>
     );
@@ -94,8 +92,7 @@ const NFTCard: React.FC<Props> = ({ contract, nft, offers }) => {
         img={nft.image}
         tokenId={nft.id}
         tokenName={nft.name}
-        collectionName={nft.collectionName || ''}
-      >
+        collectionName={nft.collectionName || ''}>
         <>
           <Flex
             flexDir="column"
@@ -107,8 +104,7 @@ const NFTCard: React.FC<Props> = ({ contract, nft, offers }) => {
             bg="#C4C4C41A"
             w="100%"
             mt="8px"
-            mb="8px"
-          >
+            mb="8px">
             {renderBestOffer()}
 
             <Flex alignItems="center">
@@ -136,8 +132,7 @@ const NFTCard: React.FC<Props> = ({ contract, nft, offers }) => {
             textTransform="uppercase"
             variant="outline"
             w="100%"
-            borderRadius="8px"
-          >
+            borderRadius="8px">
             {i18n.initLoanButtonLabel}
           </Button>
 
@@ -172,7 +167,7 @@ const NFTCard: React.FC<Props> = ({ contract, nft, offers }) => {
                   nft={nft}
                 />
                 <ModalCloseButton />
-                <BorrowOfferDetailsCard contract={contract} offer={activeOffer} nft={nft} />
+                <BorrowOfferDetailsCard offer={activeOffer} nft={nft} />
               </ModalContent>
             </Modal>
           )}
