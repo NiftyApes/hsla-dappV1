@@ -15,14 +15,11 @@ import {
   Text,
 } from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { useCreateCollectionOffer } from 'hooks/useCreateCollectionOffer';
-import { useEasyOfferForCollection } from 'hooks/useEasyOfferForCollection';
 import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
 import { useWalletAddress } from 'hooks/useWalletAddress';
 import _ from 'lodash';
 import React, { useState } from 'react';
-import { EasyBtnPopover } from './EasyBtnPopover';
 
 interface CreateCollectionOfferFormProps {
   nftContractAddress: string;
@@ -55,10 +52,6 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
 
   const [createCollectionOfferStatus, setCreateCollectionOfferStatus] = useState<string>('READY');
 
-  const { easyOfferAmount, easyOfferApr, easyOfferDuration } = useEasyOfferForCollection({
-    nftContractAddress,
-  });
-
   const { availableEthLiquidity } = useAvailableEthLiquidity();
 
   const doesOfferAmountExceedAvailableLiquidity =
@@ -67,6 +60,30 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
   const isDurationLessThanOneDay = duration !== '' && Number(duration) < 1;
 
   const walletAddress = useWalletAddress();
+
+  const onCreateOffer = () => {
+    createCollectionOffer({
+      amount: Number(collectionOfferAmt),
+      aprInPercent: Number(apr),
+      durationInDays: Number(duration),
+      expirationInDays: Number(expiration),
+      onPending: () => setCreateCollectionOfferStatus('PENDING'),
+      onSuccess: (offerHash: string) => {
+        setCollectionOfferAmt('');
+        setApr('');
+        setDuration('');
+        setCreateCollectionOfferStatus('SUCCESS');
+        addNewlyAddedOfferHash(offerHash);
+        openSuccessfulOrderCreationModal();
+        setTimeout(() => setCreateCollectionOfferStatus('READY'), 1000);
+      },
+      onError: (e: any) => {
+        alert(e.message);
+        setCreateCollectionOfferStatus('ERROR');
+        setTimeout(() => setCreateCollectionOfferStatus('READY'), 1000);
+      },
+    });
+  };
 
   return (
     <>
@@ -203,80 +220,51 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
             </Box>
           </GridItem>
         </Grid>
-        <Flex alignItems="center" justifyContent="center" my="24px">
-          Offer Expires in{' '}
-          <Box w="120px" ml="8px">
-            <Select size="sm" onChange={(e) => setExpiration(e.target.value)} value={expiration}>
-              <option value="1">1 day</option>
-              <option value="7">7 days</option>
-              <option value="30">30 days</option>
-            </Select>
-          </Box>
-        </Flex>
         <Button
-          variant="neutral"
+          variant="neutralReverse"
           py="36px"
           borderRadius="15px"
+          mt="20px"
           fontSize="md"
           w="100%"
-          disabled={easyOfferApr <= 0}
-          onClick={() => {
-            setCollectionOfferAmt(String(easyOfferAmount));
-            setApr(String(easyOfferApr));
-            setDuration(String(easyOfferDuration));
-          }}>
-          <em>EASY BUTTON</em>
+          onClick={onCreateOffer}
+          disabled={
+            !walletAddress ||
+            doesOfferAmountExceedAvailableLiquidity ||
+            isDurationLessThanOneDay ||
+            createCollectionOfferStatus !== 'READY'
+          }
+          isLoading={createCollectionOfferStatus === 'PENDING'}
+          >
+          CREATE OFFER
         </Button>
-        <Flex alignItems="center" justifyContent="center" mt="8px" mb="12px">
-          <Text textAlign="center" mr="8px" mb="2px">
-            <em>Create The Best Offer In The Orderbook</em>
-          </Text>
-          <EasyBtnPopover />
+        <Flex alignItems="center" justifyContent="space-between" my="24px">
+          <Flex alignItems="center">
+            <div>
+              Expires in{' '}
+            </div>
+            <Box w="120px" ml="8px">
+              <Select size="sm" onChange={(e) => setExpiration(e.target.value)} value={expiration}>
+                <option value="1">1 day</option>
+                <option value="7">7 days</option>
+                <option value="30">30 days</option>
+              </Select>
+            </Box>
+          </Flex>
+          <Flex alignItems="center">
+            <div>
+              Good for{' '}
+            </div>
+            <Box w="120px" ml="8px">
+              <Select size="sm" onChange={() => {}} value="5">
+                <option value="5">5 Loans</option>
+                <option value="10">10 Loans</option>
+                <option value="30">30 Loans</option>
+              </Select>
+            </Box>
+          </Flex>
         </Flex>
       </Box>
-      <Button
-        variant="neutralReverse"
-        py="36px"
-        borderRadius="15px"
-        mt="20px"
-        fontSize="md"
-        w="100%"
-        onClick={() => {
-          createCollectionOffer({
-            amount: Number(collectionOfferAmt),
-            aprInPercent: Number(apr),
-            durationInDays: Number(duration),
-            expirationInDays: Number(expiration),
-            onPending: () => setCreateCollectionOfferStatus('PENDING'),
-            onSuccess: (offerHash: string) => {
-              setCollectionOfferAmt('');
-              setApr('');
-              setDuration('');
-              setCreateCollectionOfferStatus('SUCCESS');
-              addNewlyAddedOfferHash(offerHash);
-              openSuccessfulOrderCreationModal();
-              setTimeout(() => setCreateCollectionOfferStatus('READY'), 1000);
-            },
-            onError: (e: any) => {
-              alert(e.message);
-              setCreateCollectionOfferStatus('ERROR');
-              setTimeout(() => setCreateCollectionOfferStatus('READY'), 1000);
-            },
-          });
-        }}
-        disabled={
-          !walletAddress ||
-          doesOfferAmountExceedAvailableLiquidity ||
-          isDurationLessThanOneDay ||
-          createCollectionOfferStatus !== 'READY'
-        }>
-        CREATE OFFER{' '}
-        {createCollectionOfferStatus === 'PENDING' ? (
-          <span style={{ paddingLeft: '8px' }}>
-            <LoadingIndicator size="xs" />
-          </span>
-        ) : null}
-      </Button>
     </>
   );
 };

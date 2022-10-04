@@ -1,6 +1,7 @@
-import { Box, Text, useDisclosure } from '@chakra-ui/react';
-import React from 'react';
+import React, { useCallback } from 'react';
+import { Box, Button, Flex, Text, useDisclosure } from '@chakra-ui/react';
 
+import { useEasyOfferForCollection } from 'hooks/useEasyOfferForCollection';
 import { CreateCollectionOfferForm } from './CreateCollectionOfferForm';
 import { SuccessfulOrderCreationModal } from './SuccessfulOrderCreationModal';
 
@@ -31,11 +32,33 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const { easyOfferAmount, easyOfferApr, easyOfferDuration } = useEasyOfferForCollection({
+    nftContractAddress,
+  });
+
+  const onDraftTopOffer = useCallback(() => {
+    setCollectionOfferAmt(String(easyOfferAmount));
+    setApr(String(easyOfferApr));
+    setDuration(String(easyOfferDuration));
+  }, [easyOfferAmount, easyOfferApr, easyOfferDuration]);
+
+
   return (
     <Box maxW="600px" sx={{ position: 'relative', left: '-40px', top: '-16px' }}>
-      <Text fontWeight="bold" color="solid.gray0" mb="16px">
-        CREATE FLOOR OFFER TERMS
-      </Text>
+      <Flex mb="16px" alignItems="center" justifyContent="space-between">
+        <Text fontWeight="bold" color="solid.gray0">
+          CREATE FLOOR OFFER TERMS
+        </Text>
+        <Button
+          padding="8px 12px"
+          disabled={easyOfferApr <= 0}
+          onClick={onDraftTopOffer}
+          color="primary.purple"
+          variant="link"
+        >
+          Draft Top Offer ✏️
+        </Button>
+      </Flex>
       <CreateCollectionOfferForm
         nftContractAddress={nftContractAddress}
         collectionOfferAmt={collectionOfferAmt}
