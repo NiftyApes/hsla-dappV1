@@ -1,4 +1,10 @@
-import {Box, Center, Grid, GridItem, Text, useToast} from '@chakra-ui/react';
+import {
+    Box,
+    Center,
+    Grid,
+    GridItem,
+    Text,
+} from '@chakra-ui/react';
 import React from 'react';
 
 import {useActiveLoansForLender} from 'hooks/useActiveLoansForLender';

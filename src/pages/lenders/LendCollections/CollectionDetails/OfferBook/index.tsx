@@ -1,4 +1,16 @@
-import { Box, Center, Flex, Table, Tag, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import {
+    Box,
+    Center,
+    Flex,
+    Table,
+    Tag,
+    Tbody,
+    Td,
+    Text,
+    Th,
+    Thead,
+    Tr
+} from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { ethers } from 'ethers';
@@ -13,7 +25,7 @@ import { FaSort } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 import { DraftOffer } from './DraftOffer';
 
-interface OfferBook {
+interface OfferBookProps {
   collectionOfferAmt: string;
   apr: string;
   duration: string;
@@ -21,7 +33,7 @@ interface OfferBook {
   newlyAddedOfferHashes: string[];
 }
 
-const OfferBook: React.FC<OfferBook> = ({
+const OfferBook: React.FC<OfferBookProps> = ({
   collectionOfferAmt,
   apr,
   duration,

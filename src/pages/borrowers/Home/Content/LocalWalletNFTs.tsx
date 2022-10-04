@@ -26,10 +26,6 @@ import React, { useEffect, useState } from 'react';
 import LoadingIndicator from '../../../../components/atoms/LoadingIndicator';
 import { NFTCardContainer } from './NFTCardContainer';
 
-const i18n = {
-  loadingText: 'Loading NFTs...',
-  sectionHeaderText: 'NFTs with Offers',
-};
 
 export const LocalhostContent: React.FC = () => {
   const dispatch = useAppDispatch();

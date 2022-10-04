@@ -28,7 +28,6 @@ import {formatEther} from 'ethers/lib/utils';
 import {useActiveLoansForBorrower} from '../../../hooks/useActiveLoansForBorrower';
 import {useNavigate} from 'react-router-dom';
 import {useWalletAddress} from '../../../hooks/useWalletAddress';
-import {nft} from "../../../nft";
 
 const i18n = {
     repayLoanHeader: 'repay loan on ',
