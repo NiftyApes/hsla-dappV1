@@ -26,7 +26,6 @@ import React, { useEffect, useState } from 'react';
 import LoadingIndicator from '../../../../components/atoms/LoadingIndicator';
 import { NFTCardContainer } from './NFTCardContainer';
 
-
 export const LocalhostContent: React.FC = () => {
   const dispatch = useAppDispatch();
   const walletAddress = useWalletAddress();

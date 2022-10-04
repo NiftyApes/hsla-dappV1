@@ -1,16 +1,4 @@
-import {
-    Box,
-    Center,
-    Flex,
-    Table,
-    Tag,
-    Tbody,
-    Td,
-    Text,
-    Th,
-    Thead,
-    Tr
-} from '@chakra-ui/react';
+import { Box, Center, Flex, Table, Tag, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { ethers } from 'ethers';
@@ -157,7 +145,8 @@ const OfferBook: React.FC<OfferBookProps> = ({
         fontWeight="bold"
         color="solid.gray0"
         mb="13px"
-        sx={{ position: 'relative', top: '-16px', left: '4px' }}>
+        sx={{ position: 'relative', top: '-16px', left: '4px' }}
+      >
         OFFER BOOK DATA
       </Text>
       <Table>
@@ -175,7 +164,8 @@ const OfferBook: React.FC<OfferBookProps> = ({
             'tr:last-child > th:last-child': {
               borderBottomRightRadius: '8px',
             },
-          }}>
+          }}
+        >
           <Tr
             background="#F7F7F7"
             sx={{
@@ -187,7 +177,8 @@ const OfferBook: React.FC<OfferBookProps> = ({
                 border: 'none',
                 py: '10px',
               },
-            }}>
+            }}
+          >
             <Th>
               <Flex alignItems="center" justifyContent="center">
                 Amount{' '}
@@ -199,7 +190,8 @@ const OfferBook: React.FC<OfferBookProps> = ({
                     } else {
                       setSortOrder('AMOUNT_DESC');
                     }
-                  }}>
+                  }}
+                >
                   <FaSort size="18px" />
                 </span>
               </Flex>
@@ -215,7 +207,8 @@ const OfferBook: React.FC<OfferBookProps> = ({
                     } else {
                       setSortOrder('APR_DESC');
                     }
-                  }}>
+                  }}
+                >
                   <FaSort size="18px" />
                 </span>
               </Flex>
@@ -231,7 +224,8 @@ const OfferBook: React.FC<OfferBookProps> = ({
                     } else {
                       setSortOrder('DURATION_DESC');
                     }
-                  }}>
+                  }}
+                >
                   <FaSort size="18px" />
                 </span>
               </Flex>
@@ -247,7 +241,8 @@ const OfferBook: React.FC<OfferBookProps> = ({
                     } else {
                       setSortOrder('EXPIRATION_DESC');
                     }
-                  }}>
+                  }}
+                >
                   <FaSort size="18px" />
                 </span>
               </Flex>
@@ -267,7 +262,8 @@ const OfferBook: React.FC<OfferBookProps> = ({
                   },
                 }
               : {}
-          }>
+          }
+        >
           {sortedOffers?.map((offer: any, i: number) => {
             return offer === 'DRAFT_OFFER' ? (
               <DraftOffer
@@ -289,11 +285,13 @@ const OfferBook: React.FC<OfferBookProps> = ({
                     fontSize: 'md',
                     textAlign: 'center',
                   },
-                }}>
+                }}
+              >
                 <Td
                   sx={{
                     position: 'relative',
-                  }}>
+                  }}
+                >
                   <span style={{ whiteSpace: 'nowrap' }}>
                     {walletAddress && walletAddress === offer.creator && (
                       <Tag
@@ -305,7 +303,8 @@ const OfferBook: React.FC<OfferBookProps> = ({
                           position: 'absolute',
                           left: '-24px',
                           top: '14px',
-                        }}>
+                        }}
+                      >
                         YOURS
                       </Tag>
                     )}

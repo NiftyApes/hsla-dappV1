@@ -37,7 +37,8 @@ const Header: React.FC = () => {
       alignItems="center"
       justifyContent="space-between"
       top="0px"
-      zIndex={9}>
+      zIndex={9}
+    >
       <Flex alignItems="center">
         <Link to="/">
           <Image src="/assets/images/header_logo.png" alt="Logo" mr="15px" cursor="pointer" />
@@ -52,7 +53,8 @@ const Header: React.FC = () => {
           columnGap="46px"
           fontSize="2.5xs"
           p="17px 26px"
-          fontWeight="bold">
+          fontWeight="bold"
+        >
           <Text>
             <Link to={borrowersId()}>🍌 Borrow</Link>
           </Text>
@@ -75,7 +77,8 @@ const Header: React.FC = () => {
                 borderRadius: '10px',
                 p: '15px',
               },
-            }}>
+            }}
+          >
             <MenuItem onClick={navigateToLendersIdDashboard}>📊 Dashboard</MenuItem>
             <MenuItem onClick={navigateToLendersIdLiquidity}>💧 Manage Liquidity</MenuItem>
             <MenuItem onClick={navigateToLendersIdLend}>📜 Create Offers</MenuItem>

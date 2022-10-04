@@ -26,7 +26,10 @@ const WalletInfo: React.FC = () => {
   const balance = useWalletBalance();
   const [{ chains, connectedChain }] = useSetChain();
 
-  const currentChain = useMemo(() => _.find(chains, { id: connectedChain?.id }), [chains, connectedChain?.id]);
+  const currentChain = useMemo(
+    () => _.find(chains, { id: connectedChain?.id }),
+    [chains, connectedChain?.id],
+  );
   const currentChainLabel = useMemo(() => currentChain?.label || '', [currentChain?.label]);
   const currentChainColor = useMemo(() => {
     const label = currentChainLabel.toLowerCase() || '';
@@ -36,7 +39,7 @@ const WalletInfo: React.FC = () => {
     }
 
     if (label.match('testnet')) {
-      return 'orange.300'
+      return 'orange.300';
     }
 
     if (label.match('mainnet')) {
@@ -46,24 +49,27 @@ const WalletInfo: React.FC = () => {
     return 'gray';
   }, [currentChainLabel]);
 
-  const menuItems = useMemo(() => [
-    {
-      label: '🍌 About NiftyApes',
-      onClick: () => window.open('https://niftyapes.money'),
-    },
-    {
-      label: '📓 Documentation',
-      onClick: () => window.open('https://docs.niftyapes.money'),
-    },
-    {
-      label: '📬 Discord',
-      onClick: () => window.open('https://discord.gg/Ge8Zwy6syQ'),
-    },
-    {
-      label: '⚖ Legal & Privacy',
-      onClick: () => window.open('https://blog.niftyapes.money/legal-privacy-tos'),
-    }
-  ], [])
+  const menuItems = useMemo(
+    () => [
+      {
+        label: '🍌 About NiftyApes',
+        onClick: () => window.open('https://niftyapes.money'),
+      },
+      {
+        label: '📓 Documentation',
+        onClick: () => window.open('https://docs.niftyapes.money'),
+      },
+      {
+        label: '📬 Discord',
+        onClick: () => window.open('https://discord.gg/Ge8Zwy6syQ'),
+      },
+      {
+        label: '⚖ Legal & Privacy',
+        onClick: () => window.open('https://blog.niftyapes.money/legal-privacy-tos'),
+      },
+    ],
+    [],
+  );
 
   return (
     <>
@@ -71,19 +77,19 @@ const WalletInfo: React.FC = () => {
         {connecting && <LoadingIndicator />}
         {currentChain ? (
           <Flex
-          bg="gray.300"
-          borderRadius="40px"
-          fontSize="2md"
-          fontWeight="bold"
-          alignItems="center"
-          padding="0 .3rem"
-          mr="16px"
-        >
-          <Box ml="14px" bg={currentChainColor} width="10px" height="10px" borderRadius="100%" />
-          <Text m="11px 14px 11px 10px" fontSize="small" color="solid.gray0">
-            {currentChainLabel}
-          </Text>
-        </Flex>
+            bg="gray.300"
+            borderRadius="40px"
+            fontSize="2md"
+            fontWeight="bold"
+            alignItems="center"
+            padding="0 .3rem"
+            mr="16px"
+          >
+            <Box ml="14px" bg={currentChainColor} width="10px" height="10px" borderRadius="100%" />
+            <Text m="11px 14px 11px 10px" fontSize="small" color="solid.gray0">
+              {currentChainLabel}
+            </Text>
+          </Flex>
         ) : null}
         {wallet ? (
           <Flex
@@ -97,7 +103,12 @@ const WalletInfo: React.FC = () => {
             <Text color="solid.gray0" m="11px 14px 11px 18px">
               {balance}Ξ
             </Text>
-            <Button _active={{ backgroundColor: 'white' }} cursor="initial" variant="primary" borderRadius="40px">
+            <Button
+              _active={{ backgroundColor: 'white' }}
+              cursor="initial"
+              variant="primary"
+              borderRadius="40px"
+            >
               <Text mr="12px" p="6px 0px 6px 18px">
                 {`${wallet.accounts[0].address.slice(0, 6)}\u2026${wallet.accounts[0].address.slice(
                   -4,
