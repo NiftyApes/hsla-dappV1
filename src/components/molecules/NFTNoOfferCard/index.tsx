@@ -1,7 +1,7 @@
 import { Center, Text } from '@chakra-ui/react';
 import React from 'react';
 import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
-import { NFTCardHeader } from '../NFTCard/components/NFTCardHeader';
+import { NFTCardContainerHeader } from '../NFTCard/components/NFTCardContainerHeader';
 
 interface Props {
   collectionName?: string;
@@ -17,7 +17,7 @@ const i18n = {
 const NFTNoOfferCard: React.FC<Props> = ({ collectionName, img, tokenId, tokenName }) => {
   return (
     <NFTCardContainer>
-      <NFTCardHeader
+      <NFTCardContainerHeader
         img={img}
         tokenId={tokenId}
         tokenName={tokenName}
@@ -27,7 +27,7 @@ const NFTNoOfferCard: React.FC<Props> = ({ collectionName, img, tokenId, tokenNa
             {i18n.noOffers}
           </Text>
         </Center>
-      </NFTCardHeader>
+      </NFTCardContainerHeader>
     </NFTCardContainer>
   );
 };

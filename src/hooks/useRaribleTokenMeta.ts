@@ -4,24 +4,26 @@ import { NFT } from '../nft';
 const RARIBLE_API_PATH = 'https://api.rarible.org/v0.1';
 
 export const useRaribleTokenMeta = ({
-  nftContractAddress,
+  contractAddress,
   tokenId,
+  enabled = true,
 }: {
-  nftContractAddress?: string;
+  contractAddress?: string;
   tokenId?: string;
+  enabled?: boolean;
 }) => {
   const [meta, setMeta] = useState<NFT>();
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!nftContractAddress || !tokenId) {
+      if (!contractAddress || !tokenId) {
         return;
       }
 
       const container = {
         attributes: [],
-        contractAddress: nftContractAddress,
-        external_url: `https://etherscan.io/token/${nftContractAddress}?a=${tokenId}`,
+        contractAddress: contractAddress,
+        external_url: `https://etherscan.io/token/${contractAddress}?a=${tokenId}`,
         id: tokenId,
         image: '/assets/images/img-missing.png',
         owner: '',
@@ -29,7 +31,7 @@ export const useRaribleTokenMeta = ({
       };
 
       const response = await fetch(
-        `${RARIBLE_API_PATH}/items/ETHEREUM:${nftContractAddress}:${tokenId}`,
+        `${RARIBLE_API_PATH}/items/ETHEREUM:${contractAddress}:${tokenId}`,
         {
           method: 'GET',
         },
@@ -57,8 +59,10 @@ export const useRaribleTokenMeta = ({
           });
         });
     };
-    fetchData();
-  }, [nftContractAddress, tokenId]);
+    if (enabled) {
+      fetchData();
+    }
+  }, [contractAddress, tokenId]);
 
   return { ...meta };
 };

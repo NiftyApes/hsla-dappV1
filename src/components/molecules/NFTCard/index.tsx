@@ -21,9 +21,9 @@ import { getBestLoanOffer, LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
 import Offers from '../../../pages/borrowers/Offers';
 import BorrowOfferDetailsCard from '../BorrowOfferDetailsCard';
-import { CollateralHeader } from '../CollateralHeader';
 import { NFTCardContainer } from './components/NFTCardContainer';
-import { NFTCardHeader } from './components/NFTCardHeader';
+import { NFTCardContainerHeader } from './components/NFTCardContainerHeader';
+import NFTCardHeader from '../../cards/NFTCardHeader';
 
 interface Props {
   nft: NFT;
@@ -88,7 +88,7 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
 
   return (
     <NFTCardContainer>
-      <NFTCardHeader
+      <NFTCardContainerHeader
         img={nft.image}
         tokenId={nft.id}
         tokenName={nft.name}
@@ -144,7 +144,12 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
             <Modal isOpen={true} onClose={onAllOffersClose} size="xl">
               <ModalOverlay />
               <ModalContent p="5px">
-                <CollateralHeader title={i18n.allOffers} nft={nft} />
+                <NFTCardHeader
+                  contractAddress={nft.contractAddress}
+                  tokenId={nft.id}
+                  title={i18n.allOffers}
+                  nft={nft}
+                />
                 <ModalCloseButton />
                 <Offers nft={nft} offers={offers} onOfferSelect={onSecondaryOffer} />
               </ModalContent>
@@ -155,14 +160,19 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
             <Modal isOpen={true} onClose={onOfferDetailsClose} size="xl">
               <ModalOverlay />
               <ModalContent p="5px">
-                <CollateralHeader title={i18n.topOffer} nft={nft} />
+                <NFTCardHeader
+                  contractAddress={nft.contractAddress}
+                  tokenId={nft.id}
+                  title={i18n.topOffer}
+                  nft={nft}
+                />
                 <ModalCloseButton />
                 <BorrowOfferDetailsCard offer={activeOffer} nft={nft} />
               </ModalContent>
             </Modal>
           )}
         </>
-      </NFTCardHeader>
+      </NFTCardContainerHeader>
     </NFTCardContainer>
   );
 };

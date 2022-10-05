@@ -1,10 +1,18 @@
 import { useState, useEffect } from 'react';
+import { useTopCollections } from './useTopCollections';
 
 const RARIBLE_API_PATH = 'https://api.rarible.org/v0.1';
 
 export const useCollectionMetadata = ({ nftContractAddress }: { nftContractAddress?: string }) => {
   const [meta, setMeta] = useState<{ name: string; symbol: string; image: string }>();
+  const { collections } = useTopCollections();
+
   let image = '/assets/images/img-missing.png';
+
+  const collectionMixin = (obj: any) => {
+    const existing = collections.find((item) => item.address === nftContractAddress);
+    return existing ? { ...obj, ...existing } : obj;
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,7 +31,7 @@ export const useCollectionMetadata = ({ nftContractAddress }: { nftContractAddre
           if (meta.content && meta.content.length > 0) {
             image = meta.content.find((item: any) => item['@type'] === 'IMAGE').url;
           }
-          setMeta({ name, symbol, image });
+          setMeta(collectionMixin({ name, symbol, image }));
         })
         .catch((error) => {
           setMeta({

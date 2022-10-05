@@ -12,20 +12,24 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import moment from 'moment';
 import { LoanAuction } from '../../../loan';
 import { NFT } from '../../../nft';
 
 import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
-import { CollateralHeader } from '../CollateralHeader';
 
 import { formatEther } from 'ethers/lib/utils';
 import { getAPR } from '../../../helpers/getAPR';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
-import { NFTCardHeader } from '../NFTCard/components/NFTCardHeader';
+import { NFTCardContainerHeader } from '../NFTCard/components/NFTCardContainerHeader';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
+import {
+  getLoanDurationDays,
+  getLoanTimeRemaining,
+  isLoanDefaulted,
+} from '../../../helpers/getDuration';
+import NFTCardHeader from '../../cards/NFTCardHeader';
 
 interface Props {
   loan: LoanAuction;
@@ -41,7 +45,6 @@ const i18n = {
   activeLoan: 'active loan',
   defaultedLoan: 'defaulted',
   defaultedLoanStatus: 'Asset Has Not Been Seized',
-  loanTimeRemaining: (distance: string) => `${distance} remaining...`,
 };
 
 const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
@@ -51,7 +54,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
     onClose: onRepayLoanClose,
   } = useDisclosure();
 
-  const { amount, interestRatePerSecond: irps, loanBeginTimestamp, loanEndTimestamp } = loan;
+  const { amount, interestRatePerSecond: irps } = loan;
 
   const apr = roundForDisplay(
     getAPR({
@@ -59,10 +62,6 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
       interestRatePerSecond: irps.toNumber(),
     }),
   );
-  const endMoment = moment(loanEndTimestamp * 1000);
-  const duration = Math.round((loanEndTimestamp - loanBeginTimestamp) / 86400);
-  const timeRemaining = endMoment.toNow(true);
-  const isDefaulted = moment().isAfter(endMoment);
 
   const renderDefaultedLoan = () => {
     return (
@@ -159,7 +158,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
 
           <Text fontSize="lg" color="solid.gray0">
             <Text as="span" color="solid.black" fontWeight="semibold">
-              {i18n.loanDuration(duration)}
+              {getLoanDurationDays(loan)}
             </Text>
             &nbsp;at&nbsp;
             <Text as="span" color="solid.black" fontWeight="semibold">
@@ -167,7 +166,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
             </Text>
           </Text>
           <Text color="solid.black" fontSize="sm">
-            {i18n.loanTimeRemaining(timeRemaining)}
+            {getLoanTimeRemaining(loan)} remaining...
           </Text>
         </Flex>
 
@@ -193,27 +192,32 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
 
   return (
     <NFTCardContainer>
-      <NFTCardHeader
+      <NFTCardContainerHeader
         img={nft.image}
         tokenId={nft.id}
         tokenName={nft.name}
         collectionName={nft.collectionName}
       >
         <>
-          {isDefaulted ? renderDefaultedLoan() : renderActiveLoan()}
+          {isLoanDefaulted(loan) ? renderDefaultedLoan() : renderActiveLoan()}
 
           {isRepayLoanOpen && (
             <Modal isOpen={true} onClose={onRepayLoanClose} size="xl">
               <ModalOverlay />
               <ModalContent p="5px">
-                <CollateralHeader title={i18n.repayLoanHeader} nft={nft} />
-                <BorrowLoanRepayCard loan={loan} nft={nft} onRepay={onRepayLoanClose} />
+                <NFTCardHeader
+                  nft={nft}
+                  contractAddress={nft.contractAddress}
+                  tokenId={nft.id}
+                  title={i18n.repayLoanHeader}
+                />
+                <BorrowLoanRepayCard loan={loan} onRepay={onRepayLoanClose} />
                 <ModalCloseButton />
               </ModalContent>
             </Modal>
           )}
         </>
-      </NFTCardHeader>
+      </NFTCardContainerHeader>
     </NFTCardContainer>
   );
 };

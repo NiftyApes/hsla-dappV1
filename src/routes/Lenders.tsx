@@ -12,7 +12,6 @@ import {
 
 const LendersHome = lazy(() => import('../pages/lenders/Home'));
 const Dashboard = lazy(() => import('../pages/lenders/Dashboard'));
-// const Lend = lazy(() => import('../pages/lenders/Lend'));
 const LendCollections = lazy(() => import('../pages/lenders/LendCollections'));
 const Liquidity = lazy(() => import('../pages/lenders/Liquidity'));
 const Offers = lazy(() => import('../pages/lenders/Offers'));

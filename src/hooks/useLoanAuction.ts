@@ -27,7 +27,11 @@ export const useLoanAuction = ({
       }
 
       const result: any = await niftyApesContract.getLoanAuction(nftContractAddress, nftId);
-      setLoanAuction(result);
+      setLoanAuction({
+        nftContractAddress: nftContractAddress,
+        nftId: nftId,
+        ...result,
+      });
     }
   }, [niftyApesContract, nftContractAddress, nftId, cacheCounter]);
 

@@ -1,4 +1,5 @@
-import { Box, Button, Flex, Td, Text, Tr } from '@chakra-ui/react';
+import { useEffect } from 'react';
+import { Box, Button, Flex, Td, Text, Tr, useToast } from '@chakra-ui/react';
 
 import Icon from 'components/atoms/Icon';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
@@ -7,13 +8,26 @@ import { getAPR } from 'helpers/getAPR';
 import { roundForDisplay } from 'helpers/roundForDisplay';
 import { useCancelOffer } from 'hooks/useCancelOffer';
 import moment from 'moment';
+import { ToastSuccessCard } from '../../../../components/cards/ToastSuccessCard';
 
 export const OfferRow = ({ offer, offerHash }: any) => {
-  const { cancelOffer, cancelStatus } = useCancelOffer({
+  const toast = useToast();
+  const { cancelOffer, cancelStatus, txReceipt } = useCancelOffer({
     nftContractAddress: offer.nftContractAddress,
     nftId: offer.nftId,
     offerHash,
   });
+
+  useEffect(() => {
+    if (cancelStatus === 'SUCCESS' && txReceipt) {
+      toast({
+        render: (props) => <ToastSuccessCard title="Offer Cancelled" txn={txReceipt} {...props} />,
+        position: 'top-right',
+        duration: 9000,
+        isClosable: true,
+      });
+    }
+  }, [cancelStatus, txReceipt]);
 
   if (!offer) {
     return null;

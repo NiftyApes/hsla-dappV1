@@ -1,17 +1,28 @@
-import { Flex, Image, Text } from '@chakra-ui/react';
+import {
+  Flex,
+  Image,
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react';
 import React from 'react';
 
 import Icon from 'components/atoms/Icon';
 import { useParams } from 'react-router-dom';
 import { useCollectionMetadata } from '../../../../../hooks/useCollectionMetadata';
 import { useCollectionStats } from '../../../../../hooks/useColectionStats';
+import LendCollections from '../../index';
 
 const CollectionHeader: React.FC = () => {
   const { collectionAddress } = useParams();
 
   const { name, image } = useCollectionMetadata({ nftContractAddress: collectionAddress });
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { floorPrice, items, marketCap, owners, volume } = useCollectionStats({
+  const { floorPrice, items, owners, volume } = useCollectionStats({
     nftContractAddress: collectionAddress,
   });
 
@@ -31,6 +42,8 @@ const CollectionHeader: React.FC = () => {
     >
       <Flex alignItems="center">
         <Flex
+          as="button"
+          onClick={onOpen}
           alignItems="center"
           background="#FAF5FF"
           padding=".45rem .85rem"
@@ -96,6 +109,14 @@ const CollectionHeader: React.FC = () => {
           Volume
         </Text>
       </Flex>
+
+      <Modal isOpen={isOpen} onClose={onClose} size="xl">
+        <ModalOverlay />
+        <ModalContent p="5px">
+          <ModalCloseButton />
+          <LendCollections />
+        </ModalContent>
+      </Modal>
     </Flex>
   );
 };

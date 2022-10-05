@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
   Alert,
   AlertDescription,
@@ -14,19 +15,18 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
 
+import LoanTable from './LoanTable';
+import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
+import NFTCardHeader from '../../../components/cards/NFTCardHeader';
 import TopCard from 'components/molecules/DashboardTopCard';
-import { BigNumber } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 import _ from 'lodash';
-import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
-import BorrowLoanRepayCard from '../../../components/molecules/BorrowLoanRepayCard';
-import { CollateralHeader } from '../../../components/molecules/CollateralHeader';
-import { useActiveLoansForBorrower } from '../../../hooks/useActiveLoansForBorrower';
+import { BigNumber } from 'ethers';
 import { LoanAuction } from '../../../loan';
+import { useActiveLoansForBorrower } from '../../../hooks/useActiveLoansForBorrower';
+import BorrowLoanRepayCard from '../../../components/molecules/BorrowLoanRepayCard';
 import { NFT } from '../../../nft';
-import LoanTable from './LoanTable';
 
 import { useNavigate } from 'react-router-dom';
 import { useWalletAddress } from '../../../hooks/useWalletAddress';
@@ -47,7 +47,6 @@ const Dashboard: React.FC = () => {
   } = useDisclosure();
 
   const [loan, setLoan] = useState<LoanAuction | undefined>();
-  const [nft, setNft] = useState<any>();
 
   if (_.isUndefined(activeLoans)) {
     return (
@@ -68,9 +67,8 @@ const Dashboard: React.FC = () => {
     0,
   );
 
-  const onRepayLoan = (loan: LoanAuction, nft: NFT) => {
+  const onRepayLoan = (loan: LoanAuction) => {
     setLoan(loan);
-    setNft(nft);
     onRepayLoanOpen();
   };
 
@@ -119,12 +117,16 @@ const Dashboard: React.FC = () => {
 
       <LoanTable loans={activeLoans} onClick={onRepayLoan} />
 
-      {isRepayLoanOpen && nft && loan && (
+      {isRepayLoanOpen && loan && (
         <Modal isOpen={true} onClose={onRepayLoanClose} size="xl">
           <ModalOverlay />
           <ModalContent p="5px">
-            <CollateralHeader title={i18n.repayLoanHeader} nft={nft} />
-            <BorrowLoanRepayCard loan={loan} nft={nft} onRepay={onRepayLoanClose} />
+            <NFTCardHeader
+              tokenId={loan.nftId}
+              contractAddress={loan.nftContractAddress}
+              title={i18n.repayLoanHeader}
+            />
+            <BorrowLoanRepayCard loan={loan} onRepay={onRepayLoanClose} />
             <ModalCloseButton />
           </ModalContent>
         </Modal>
