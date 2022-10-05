@@ -2,6 +2,7 @@ import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
+import { ethers } from 'ethers';
 import { saveLoanInDb } from 'helpers/saveLoanInDb';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
 import { fetchLoanAuctionByNFT } from 'loan';
@@ -86,7 +87,7 @@ export const useExecuteLoanByBorrower = ({
 
       await saveLoanInDb({
         chainId,
-        nftContractAddress,
+        nftContractAddress: ethers.utils.getAddress(nftContractAddress),
         nftId,
         creator: offer.creator,
         borrower: address,
@@ -116,7 +117,6 @@ export const useExecuteLoanByBorrower = ({
           lender: offer.creator,
           nftContractAddress: offer.nftContractAddress,
           nftId,
-          floorTerm,
           amount: offer.amount.toString(),
           asset: 'ETH',
           interestRatePerSecond: offer.interestRatePerSecond.toString(),

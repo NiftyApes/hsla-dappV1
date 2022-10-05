@@ -4,7 +4,7 @@ import { RootState } from 'app/store';
 import { transactionTypes } from 'constants/transactionTypes';
 
 import { increment } from 'counter/counterSlice';
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
 import { fetchLoanAuctionByNFT } from 'loan';
 import { NFT } from 'nft';
@@ -91,7 +91,7 @@ export const useRepayLoanByBorrower = ({
         data: {
           amount: totalPayment,
           asset: 'ETH',
-          nftContractAddress,
+          nftContractAddress: ethers.utils.getAddress(nftContractAddress),
           nftId,
         },
       });
