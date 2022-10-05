@@ -115,7 +115,7 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
             </Flex>
 
             <Text fontSize="lg" color="solid.gray0">
-              <Text as="span" color="solid.black" fontWeight="sepmibold">
+              <Text as="span" color="solid.black" fontWeight="semibold">
                 {i18n.offerDuration(bestOffer.durationDays)}
               </Text>
               &nbsp;at&nbsp;
