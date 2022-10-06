@@ -9,7 +9,7 @@ import {useWalletAddress} from "../../../hooks/useWalletAddress";
 import {EmptyPlaceholder} from "../../cards/EmptyPlaceholder";
 
 const i18n = {
-disconnected: 'Please connect your wallet to proceed...'
+    disconnected: 'Please connect your wallet to proceed...'
 }
 
 export const LiquidityInfo: React.FC = () => {

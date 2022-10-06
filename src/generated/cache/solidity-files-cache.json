@@ -2,7 +2,7 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/andreitaraschuk/Documents/code/niftyapes/dappV1/hardhat-ts/contracts/interfaces/compound/ICERC20.sol": {
-      "lastModificationDate": 1664918898363,
+      "lastModificationDate": 1665013558926,
       "contentHash": "4ac0d1574cdb1c546f675c483911275a",
       "sourceName": "contracts/interfaces/compound/ICERC20.sol",
       "solcConfig": {
@@ -46,7 +46,7 @@
       ]
     },
     "/Users/andreitaraschuk/Documents/code/niftyapes/dappV1/hardhat-ts/contracts/interfaces/compound/ICToken.sol": {
-      "lastModificationDate": 1664918898364,
+      "lastModificationDate": 1665006523374,
       "contentHash": "a3a831b3870b7c43b21c06e81e9f5331",
       "sourceName": "contracts/interfaces/compound/ICToken.sol",
       "solcConfig": {
@@ -452,7 +452,7 @@
       ]
     },
     "/Users/andreitaraschuk/Documents/code/niftyapes/dappV1/hardhat-ts/contracts/interfaces/compound/ICEther.sol": {
-      "lastModificationDate": 1664914443744,
+      "lastModificationDate": 1665011218099,
       "contentHash": "5cbb9195b62ab24eb1c92fa46da77bcd",
       "sourceName": "contracts/interfaces/compound/ICEther.sol",
       "solcConfig": {
@@ -677,7 +677,7 @@
       ]
     },
     "/Users/andreitaraschuk/Documents/code/niftyapes/dappV1/hardhat-ts/contracts/lib/Math.sol": {
-      "lastModificationDate": 1664918898370,
+      "lastModificationDate": 1665012849343,
       "contentHash": "852fe1aa61ed706b42c8ae294fabf8b7",
       "sourceName": "contracts/lib/Math.sol",
       "solcConfig": {
@@ -807,7 +807,7 @@
       ]
     },
     "/Users/andreitaraschuk/Documents/code/niftyapes/dappV1/hardhat-ts/contracts/interfaces/niftyapes/liquidity/ILiquidityAdmin.sol": {
-      "lastModificationDate": 1664918898368,
+      "lastModificationDate": 1665015159115,
       "contentHash": "ec343bda33412999cadc2ad61570b3ec",
       "sourceName": "contracts/interfaces/niftyapes/liquidity/ILiquidityAdmin.sol",
       "solcConfig": {
@@ -891,7 +891,7 @@
       ]
     },
     "/Users/andreitaraschuk/Documents/code/niftyapes/dappV1/hardhat-ts/contracts/interfaces/niftyapes/lending/ILendingAdmin.sol": {
-      "lastModificationDate": 1664918898367,
+      "lastModificationDate": 1665015919234,
       "contentHash": "95275ad6ebf682f1328949e227e20554",
       "sourceName": "contracts/interfaces/niftyapes/lending/ILendingAdmin.sol",
       "solcConfig": {
@@ -979,7 +979,7 @@
       ]
     },
     "/Users/andreitaraschuk/Documents/code/niftyapes/dappV1/hardhat-ts/contracts/interfaces/niftyapes/lending/ILendingStructs.sol": {
-      "lastModificationDate": 1664918898367,
+      "lastModificationDate": 1665016662113,
       "contentHash": "d87ff5e27f04717e913b12ff17e12eda",
       "sourceName": "contracts/interfaces/niftyapes/lending/ILendingStructs.sol",
       "solcConfig": {
@@ -1021,7 +1021,7 @@
       ]
     },
     "/Users/andreitaraschuk/Documents/code/niftyapes/dappV1/hardhat-ts/contracts/interfaces/niftyapes/offers/IOffersStructs.sol": {
-      "lastModificationDate": 1664914443817,
+      "lastModificationDate": 1665013800978,
       "contentHash": "0a9a249daca67d714ab7266f987775de",
       "sourceName": "contracts/interfaces/niftyapes/offers/IOffersStructs.sol",
       "solcConfig": {
@@ -1063,7 +1063,7 @@
       ]
     },
     "/Users/andreitaraschuk/Documents/code/niftyapes/dappV1/hardhat-ts/contracts/interfaces/niftyapes/offers/IOffersAdmin.sol": {
-      "lastModificationDate": 1664914443806,
+      "lastModificationDate": 1665011328493,
       "contentHash": "af9a6907b3ee6483f664b48e3834e314",
       "sourceName": "contracts/interfaces/niftyapes/offers/IOffersAdmin.sol",
       "solcConfig": {
@@ -1105,7 +1105,7 @@
       ]
     },
     "/Users/andreitaraschuk/Documents/code/niftyapes/dappV1/hardhat-ts/contracts/interfaces/niftyapes/offers/IOffersEvents.sol": {
-      "lastModificationDate": 1664914443811,
+      "lastModificationDate": 1665016856598,
       "contentHash": "c9a16981781c5493bda5d648f1b4d24a",
       "sourceName": "contracts/interfaces/niftyapes/offers/IOffersEvents.sol",
       "solcConfig": {
@@ -1467,7 +1467,7 @@
       ]
     },
     "/Users/andreitaraschuk/Documents/code/niftyapes/dappV1/hardhat-ts/contracts/interfaces/niftyapes/sigLending/ISigLending.sol": {
-      "lastModificationDate": 1664914443824,
+      "lastModificationDate": 1665016712693,
       "contentHash": "5513f8b2d08d5f2214a8d0a7c7a55ba7",
       "sourceName": "contracts/interfaces/niftyapes/sigLending/ISigLending.sol",
       "solcConfig": {
@@ -1513,7 +1513,7 @@
       ]
     },
     "/Users/andreitaraschuk/Documents/code/niftyapes/dappV1/hardhat-ts/contracts/interfaces/niftyapes/sigLending/ISigLendingAdmin.sol": {
-      "lastModificationDate": 1664914443829,
+      "lastModificationDate": 1665010495610,
       "contentHash": "622023a6e679fc93b1239e339c231d16",
       "sourceName": "contracts/interfaces/niftyapes/sigLending/ISigLendingAdmin.sol",
       "solcConfig": {
@@ -1557,7 +1557,7 @@
       ]
     },
     "/Users/andreitaraschuk/Documents/code/niftyapes/dappV1/hardhat-ts/contracts/interfaces/niftyapes/sigLending/ISigLendingEvents.sol": {
-      "lastModificationDate": 1664914443834,
+      "lastModificationDate": 1665009927595,
       "contentHash": "d9a21ec4a0f63abdd491b0d6b9bd688f",
       "sourceName": "contracts/interfaces/niftyapes/sigLending/ISigLendingEvents.sol",
       "solcConfig": {
@@ -1730,7 +1730,7 @@
       ]
     },
     "/Users/andreitaraschuk/Documents/code/niftyapes/dappV1/hardhat-ts/contracts/lib/ECDSABridge.sol": {
-      "lastModificationDate": 1664918898369,
+      "lastModificationDate": 1665009119058,
       "contentHash": "353ed6d999c3678c578d2d91161e50dc",
       "sourceName": "contracts/lib/ECDSABridge.sol",
       "solcConfig": {
@@ -1826,7 +1826,7 @@
       ]
     },
     "/Users/andreitaraschuk/Documents/code/niftyapes/dappV1/hardhat-ts/contracts/YourCollectible.sol": {
-      "lastModificationDate": 1664914443722,
+      "lastModificationDate": 1665015962177,
       "contentHash": "e12f671bf9ae0675cb8a83a174d56124",
       "sourceName": "contracts/YourCollectible.sol",
       "solcConfig": {
@@ -2485,7 +2485,7 @@
       ]
     },
     "/Users/andreitaraschuk/Documents/code/niftyapes/dappV1/hardhat-ts/contracts/YourContract.sol": {
-      "lastModificationDate": 1664914443728,
+      "lastModificationDate": 1665012866685,
       "contentHash": "b801a6fd4161e5cae04b445fa9035892",
       "sourceName": "contracts/YourContract.sol",
       "solcConfig": {
