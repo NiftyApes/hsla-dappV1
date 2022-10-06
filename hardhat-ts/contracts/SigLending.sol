@@ -1,4 +1,4 @@
-//SPDX-License-Identifier: Unlicensed
+//SPDX-License-Identifier: MIT
 pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
@@ -8,7 +8,13 @@ import "./interfaces/niftyapes/lending/ILending.sol";
 import "./interfaces/niftyapes/sigLending/ISigLending.sol";
 import "./interfaces/niftyapes/offers/IOffers.sol";
 
-/// @title Implementation of the ILending interface
+/// @title NiftyApes Signature Lending
+/// @custom:version 1.0
+/// @author captnseagraves (captnseagraves.eth)
+/// @custom:contributor dankurka
+/// @custom:contributor 0xAlcibiades (alcibiades.eth)
+/// @custom:contributor zjmiller (zjmiller.eth)
+
 contract NiftyApesSigLending is OwnableUpgradeable, PausableUpgradeable, ReentrancyGuardUpgradeable, ISigLending {
   /// @inheritdoc ISigLending
   address public offersContractAddress;
@@ -47,24 +53,37 @@ contract NiftyApesSigLending is OwnableUpgradeable, PausableUpgradeable, Reentra
     _unpause();
   }
 
+  function _sigOfferNftIdAndCountChecks(
+    Offer memory offer,
+    bytes memory signature,
+    uint256 nftId
+  ) internal returns (address signer) {
+    signer = IOffers(offersContractAddress).getOfferSigner(offer, signature);
+
+    _requireOfferCreator(offer, signer);
+    IOffers(offersContractAddress).requireAvailableSignature(signature);
+    IOffers(offersContractAddress).requireSignature65(signature);
+    IOffers(offersContractAddress).requireMinimumDuration(offer);
+
+    if (!offer.floorTerm) {
+      _requireMatchingNftId(offer, nftId);
+      IOffers(offersContractAddress).markSignatureUsed(offer, signature);
+    } else {
+      require(IOffers(offersContractAddress).getSigFloorOfferCount(signature) < offer.floorTermLimit, "00051");
+
+      IOffers(offersContractAddress).incrementSigFloorOfferCount(signature);
+    }
+  }
+
   // @inheritdoc ISigLending
   function executeLoanByBorrowerSignature(
     Offer memory offer,
     bytes memory signature,
     uint256 nftId
   ) external payable whenNotPaused nonReentrant {
-    address lender = IOffers(offersContractAddress).getOfferSigner(offer, signature);
+    address lender = _sigOfferNftIdAndCountChecks(offer, signature, nftId);
 
-    _requireOfferCreator(offer, lender);
-    IOffers(offersContractAddress).requireAvailableSignature(signature);
-    IOffers(offersContractAddress).requireSignature65(signature);
-    IOffers(offersContractAddress).requireMinimumDuration(offer);
     _requireLenderOffer(offer);
-
-    if (!offer.floorTerm) {
-      _requireMatchingNftId(offer, nftId);
-      IOffers(offersContractAddress).markSignatureUsed(offer, signature);
-    }
 
     // execute state changes for executeLoanByBid
     ILending(lendingContractAddress).doExecuteLoan(offer, lender, msg.sender, nftId);
@@ -93,17 +112,7 @@ contract NiftyApesSigLending is OwnableUpgradeable, PausableUpgradeable, Reentra
     uint256 nftId,
     uint32 expectedLastUpdatedTimestamp
   ) external whenNotPaused nonReentrant {
-    address signer = IOffers(offersContractAddress).getOfferSigner(offer, signature);
-
-    _requireOfferCreator(offer, signer);
-    IOffers(offersContractAddress).requireAvailableSignature(signature);
-    IOffers(offersContractAddress).requireSignature65(signature);
-    IOffers(offersContractAddress).requireMinimumDuration(offer);
-
-    if (!offer.floorTerm) {
-      _requireMatchingNftId(offer, nftId);
-      IOffers(offersContractAddress).markSignatureUsed(offer, signature);
-    }
+    _sigOfferNftIdAndCountChecks(offer, signature, nftId);
 
     ILending(lendingContractAddress).doRefinanceByBorrower(offer, nftId, msg.sender, expectedLastUpdatedTimestamp);
   }

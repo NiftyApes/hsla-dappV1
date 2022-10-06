@@ -6,8 +6,7 @@ import "./ILendingEvents.sol";
 import "./ILendingStructs.sol";
 import "../offers/IOffersStructs.sol";
 
-/// @title The lending interface for Nifty Apes
-///        This interface is intended to be used for interacting with loans on the protocol.
+/// @title NiftyApes interface for managing loans.
 interface ILending is ILendingAdmin, ILendingEvents, ILendingStructs, IOffersStructs {
     /// @notice Returns the address for the associated offers contract
     function offersContractAddress() external view returns (address);
