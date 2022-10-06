@@ -82,22 +82,21 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
 
           if (
             !offerFromChain ||
-            offerFromChain?.creator === '0x0000000000000000000000000000000000000000'
+            offerFromChain.creator === '0x0000000000000000000000000000000000000000'
           ) {
             return false;
           }
 
           const lenderLiquidityInCEth = await liquidityContract.getCAssetBalance(
-            offerFromChain?.creator,
-            offerFromChain?.asset,
+            offerFromChain.creator,
+            cEthContract.address,
           );
 
           const exchangeRate = await cEthContract.exchangeRateStored();
 
-          // We need to divide by exchangeRate to get balance in Eth
-          const lenderLiquidityInEth =
-            Number(ethers.utils.formatEther(lenderLiquidityInCEth)) *
-            Number(ethers.utils.formatEther(exchangeRate));
+          const lenderLiquidityInEth = lenderLiquidityInCEth
+            .mul(exchangeRate)
+            .div((1e18).toString()); // This doesn't work if you don't toString
 
           if (offerFromChain.amount.gt(lenderLiquidityInEth)) {
             return false;
