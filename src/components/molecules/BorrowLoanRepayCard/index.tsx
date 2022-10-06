@@ -14,15 +14,15 @@ import {
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { useRepayLoanByBorrower } from '../../../hooks/useRepayLoan';
 import { LoanAuction } from '../../../loan';
-import { NFT } from '../../../nft';
 import { formatEther } from 'ethers/lib/utils';
 import { humanizeContractError } from '../../../helpers/errorsMap';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
 import { useCalculateInterestAccrued } from '../../../hooks/useCalculateInterestAccrued';
 import { BigNumber } from 'ethers';
-import moment from 'moment';
 import { getAPR } from '../../../helpers/getAPR';
 import { concatForDisplay, roundForDisplay } from '../../../helpers/roundForDisplay';
+import { getLoanTimeRemaining, isLoanDefaulted } from '../../../helpers/getDuration';
+import { NFT } from '../../../nft';
 
 interface callbackType {
   (): void;
@@ -30,7 +30,6 @@ interface callbackType {
 
 interface Props {
   loan: LoanAuction;
-  nft: NFT;
   onRepay: callbackType;
 }
 
@@ -49,17 +48,17 @@ const i18n = {
   toastSuccess: 'Loan repaid successfully',
 };
 
-const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan, onRepay }) => {
+const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
   const toast = useToast();
 
   const [isExecuting, setExecuting] = useState<boolean>(false);
 
   const accruedInterest: Array<BigNumber> = useCalculateInterestAccrued({
-    nftContractAddress: nft.contractAddress,
-    nftId: nft.id,
+    nftContractAddress: loan.nftContractAddress,
+    nftId: loan.nftId,
   });
 
-  const { amount, interestRatePerSecond: irps, loanEndTimestamp } = loan;
+  const { amount, interestRatePerSecond: irps } = loan;
 
   // Note: When running this on a local chain, the interest will be 0 until a new block is created.
   // Simply create a new transaction and the correct amount of interest will show up
@@ -75,13 +74,9 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan, onRepay }) => {
     interestRatePerSecond: irps.toNumber(),
   });
 
-  const endMoment = moment(loanEndTimestamp * 1000);
-  const timeRemaining = endMoment.toNow(true);
-  const isDefaulted = moment().isAfter(endMoment);
-
   const { repayLoanByBorrower } = useRepayLoanByBorrower({
-    nftContractAddress: nft.contractAddress,
-    nftId: nft.id,
+    nftContractAddress: loan.nftContractAddress,
+    nftId: loan.nftId,
     amount: totalOwed.add(padding),
   });
 
@@ -114,7 +109,7 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan, onRepay }) => {
 
   return (
     <Box>
-      <Flex flexDir="column" width="100%" p="10px">
+      <Flex flexDir="column" width="100%" p="5px">
         <Flex
           width="100%"
           flexDir="column"
@@ -150,10 +145,10 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan, onRepay }) => {
             >
               <GridItem>
                 <Text>
-                  {isDefaulted ? i18n.loanDefaulted : i18n.loanActive}
-                  {!isDefaulted && (
+                  {isLoanDefaulted(loan) ? i18n.loanDefaulted : i18n.loanActive}
+                  {!isLoanDefaulted(loan) && (
                     <Text as="span" fontWeight="bold">
-                      &nbsp;{timeRemaining}
+                      &nbsp;{getLoanTimeRemaining(loan)}
                     </Text>
                   )}
                 </Text>
@@ -210,7 +205,7 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan, onRepay }) => {
           <Divider mt="20px" mb="15px" color="accents.100" />
           <Button
             borderRadius="8px"
-            colorScheme={isDefaulted ? 'red' : 'purple'}
+            colorScheme={isLoanDefaulted(loan) ? 'red' : 'purple'}
             onClick={onRepayLoan}
             py="6px"
             size="lg"
@@ -229,5 +224,4 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ nft, loan, onRepay }) => {
     </Box>
   );
 };
-
 export default BorrowLoanRepayCard;

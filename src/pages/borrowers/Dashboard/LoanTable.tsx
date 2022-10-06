@@ -3,10 +3,9 @@ import { Box, Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 
 import { LoanAuction } from '../../../loan';
 import LoanTableRow from './LoanTableRow';
-import { NFT } from '../../../nft';
 
 interface callbackType {
-  (loan: LoanAuction, nft: NFT): void;
+  (loan: LoanAuction): void;
 }
 
 interface Props {

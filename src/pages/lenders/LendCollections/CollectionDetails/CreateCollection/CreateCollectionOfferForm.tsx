@@ -108,7 +108,8 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
         px="19px"
         py="11px"
         bg="solid.white"
-        boxShadow="0px 4px 24px 0px #4910921A">
+        boxShadow="0px 4px 24px 0px #4910921A"
+      >
         <Text
           bg="#f7f7f7"
           borderRadius="8px"
@@ -116,7 +117,8 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
           fontWeight="bold"
           py="9px"
           textAlign="center"
-          color="solid.gray0">
+          color="solid.gray0"
+        >
           HOW MUCH?
         </Text>
         <Grid gridTemplateColumns="repeat(3, minmax(0, 1fr))" my="18px" alignItems="center">
@@ -157,7 +159,8 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
           fontWeight="bold"
           py="9px"
           textAlign="center"
-          color="solid.gray0">
+          color="solid.gray0"
+        >
           WHAT APR AND FOR HOW LONG?
         </Text>
         <Grid gridTemplateColumns="repeat(2, minmax(0, 1fr))" px="6px" columnGap="28px" mt="12px">
@@ -184,7 +187,8 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
                 position="absolute"
                 bottom="22px"
                 right="24px"
-                color="solid.gray0">
+                color="solid.gray0"
+              >
                 %
               </Text>
             </Box>
@@ -215,7 +219,8 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
                       color="solid.gray0"
                       position="absolute"
                       top="26px"
-                      right="16px">
+                      right="16px"
+                    >
                       DAYS
                     </Text>
                   </InputRightElement>

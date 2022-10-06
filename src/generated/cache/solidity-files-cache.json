@@ -2,7 +2,7 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/compound/ICERC20.sol": {
-      "lastModificationDate": 1664209723513,
+      "lastModificationDate": 1664891882402,
       "contentHash": "4ac0d1574cdb1c546f675c483911275a",
       "sourceName": "contracts/interfaces/compound/ICERC20.sol",
       "solcConfig": {
@@ -25,7 +25,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -33,12 +35,18 @@
           }
         }
       },
-      "imports": ["./ICToken.sol"],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["ICERC20"]
+      "imports": [
+        "./ICToken.sol"
+      ],
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "ICERC20"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/compound/ICToken.sol": {
-      "lastModificationDate": 1664210133387,
+      "lastModificationDate": 1664891882403,
       "contentHash": "a3a831b3870b7c43b21c06e81e9f5331",
       "sourceName": "contracts/interfaces/compound/ICToken.sol",
       "solcConfig": {
@@ -61,7 +69,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -69,9 +79,15 @@
           }
         }
       },
-      "imports": ["@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol"],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["ICToken"]
+      "imports": [
+        "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol"
+      ],
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "ICToken"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol": {
       "lastModificationDate": 1652293558654,
@@ -97,7 +113,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -106,12 +124,16 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["IERC20Upgradeable"]
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC20Upgradeable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/Liquidity.sol": {
-      "lastModificationDate": 1664210183226,
-      "contentHash": "a500af37bbf78bfb53d333d41b11f1cd",
+      "lastModificationDate": 1665068670726,
+      "contentHash": "172678dd1328874b3f98a309d38ae17c",
       "sourceName": "contracts/Liquidity.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -133,7 +155,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -147,7 +171,6 @@
         "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol",
         "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol",
         "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol",
-        "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol",
         "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol",
         "./interfaces/compound/ICEther.sol",
         "./interfaces/compound/ICERC20.sol",
@@ -157,8 +180,12 @@
         "./interfaces/sanctions/SanctionsList.sol",
         "./lib/Math.sol"
       ],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["NiftyApesLiquidity"]
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "NiftyApesLiquidity"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol": {
       "lastModificationDate": 1652293558627,
@@ -184,7 +211,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -192,9 +221,16 @@
           }
         }
       },
-      "imports": ["../utils/ContextUpgradeable.sol", "../proxy/utils/Initializable.sol"],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["OwnableUpgradeable"]
+      "imports": [
+        "../utils/ContextUpgradeable.sol",
+        "../proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "OwnableUpgradeable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol": {
       "lastModificationDate": 1652293558627,
@@ -220,7 +256,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -228,9 +266,16 @@
           }
         }
       },
-      "imports": ["../utils/ContextUpgradeable.sol", "../proxy/utils/Initializable.sol"],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["PausableUpgradeable"]
+      "imports": [
+        "../utils/ContextUpgradeable.sol",
+        "../proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "PausableUpgradeable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol": {
       "lastModificationDate": 1652293558627,
@@ -256,7 +301,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -264,9 +311,15 @@
           }
         }
       },
-      "imports": ["../proxy/utils/Initializable.sol"],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["ReentrancyGuardUpgradeable"]
+      "imports": [
+        "../proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ReentrancyGuardUpgradeable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeable.sol": {
       "lastModificationDate": 1652293558678,
@@ -292,7 +345,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -300,45 +355,16 @@
           }
         }
       },
-      "imports": ["../IERC20Upgradeable.sol", "../../../utils/AddressUpgradeable.sol"],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["SafeERC20Upgradeable"]
-    },
-    "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol": {
-      "lastModificationDate": 1652293558627,
-      "contentHash": "41f4d29b2a205d081a4ffb0838ef00ad",
-      "sourceName": "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol",
-      "solcConfig": {
-        "version": "0.8.13",
-        "settings": {
-          "optimizer": {
-            "enabled": true,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": ["ast"]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["MathUpgradeable"]
+      "imports": [
+        "../IERC20Upgradeable.sol",
+        "../../../utils/AddressUpgradeable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SafeERC20Upgradeable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol": {
       "lastModificationDate": 1652293558627,
@@ -364,7 +390,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -373,8 +401,12 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["^0.8.1"],
-      "artifacts": ["AddressUpgradeable"]
+      "versionPragmas": [
+        "^0.8.1"
+      ],
+      "artifacts": [
+        "AddressUpgradeable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/compound/ICEther.sol": {
       "lastModificationDate": 1664209723514,
@@ -400,7 +432,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -408,13 +442,19 @@
           }
         }
       },
-      "imports": ["./ICToken.sol"],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["ICEther"]
+      "imports": [
+        "./ICToken.sol"
+      ],
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "ICEther"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/niftyapes/liquidity/ILiquidity.sol": {
-      "lastModificationDate": 1664209723517,
-      "contentHash": "57ace2291acb70e6a7244477011e0608",
+      "lastModificationDate": 1665068750021,
+      "contentHash": "62c7d62656a980e1123cb2b0cb065f4a",
       "sourceName": "contracts/interfaces/niftyapes/liquidity/ILiquidity.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -436,7 +476,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -444,13 +486,20 @@
           }
         }
       },
-      "imports": ["./ILiquidityAdmin.sol", "./ILiquidityEvents.sol"],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["ILiquidity"]
+      "imports": [
+        "./ILiquidityAdmin.sol",
+        "./ILiquidityEvents.sol"
+      ],
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "ILiquidity"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/niftyapes/lending/ILending.sol": {
-      "lastModificationDate": 1664209723515,
-      "contentHash": "2691c4e680460f305e6fd1ed5cc8c97e",
+      "lastModificationDate": 1665068750019,
+      "contentHash": "26a5a36ba17a46cb88ff80226f95791f",
       "sourceName": "contracts/interfaces/niftyapes/lending/ILending.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -472,7 +521,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -486,12 +537,16 @@
         "./ILendingStructs.sol",
         "../offers/IOffersStructs.sol"
       ],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["ILending"]
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "ILending"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/niftyapes/offers/IOffers.sol": {
-      "lastModificationDate": 1664209723519,
-      "contentHash": "5984f6ef08cdc52c821d1843e31770a4",
+      "lastModificationDate": 1665068750016,
+      "contentHash": "87529a7e81cea6749d08e51c5f493a46",
       "sourceName": "contracts/interfaces/niftyapes/offers/IOffers.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -513,7 +568,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -527,8 +584,12 @@
         "./IOffersStructs.sol",
         "../lending/ILendingStructs.sol"
       ],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["IOffers"]
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "IOffers"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/sanctions/SanctionsList.sol": {
       "lastModificationDate": 1664209723523,
@@ -554,7 +615,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -563,11 +626,15 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["SanctionsList"]
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "SanctionsList"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/lib/Math.sol": {
-      "lastModificationDate": 1664209723538,
+      "lastModificationDate": 1664891882405,
       "contentHash": "852fe1aa61ed706b42c8ae294fabf8b7",
       "sourceName": "contracts/lib/Math.sol",
       "solcConfig": {
@@ -590,7 +657,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -599,8 +668,12 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["Math"]
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "Math"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol": {
       "lastModificationDate": 1652293558627,
@@ -626,7 +699,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -634,9 +709,15 @@
           }
         }
       },
-      "imports": ["../proxy/utils/Initializable.sol"],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["ContextUpgradeable"]
+      "imports": [
+        "../proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ContextUpgradeable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol": {
       "lastModificationDate": 1652293558627,
@@ -662,7 +743,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -670,12 +753,18 @@
           }
         }
       },
-      "imports": ["../../utils/AddressUpgradeable.sol"],
-      "versionPragmas": ["^0.8.2"],
-      "artifacts": ["Initializable"]
+      "imports": [
+        "../../utils/AddressUpgradeable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.2"
+      ],
+      "artifacts": [
+        "Initializable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/niftyapes/liquidity/ILiquidityAdmin.sol": {
-      "lastModificationDate": 1664209723518,
+      "lastModificationDate": 1665068750022,
       "contentHash": "ec343bda33412999cadc2ad61570b3ec",
       "sourceName": "contracts/interfaces/niftyapes/liquidity/ILiquidityAdmin.sol",
       "solcConfig": {
@@ -698,7 +787,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -707,11 +798,15 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["ILiquidityAdmin"]
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "ILiquidityAdmin"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/niftyapes/liquidity/ILiquidityEvents.sol": {
-      "lastModificationDate": 1664209723518,
+      "lastModificationDate": 1665068750021,
       "contentHash": "199ff791701dd8a7b7de19523c5029b5",
       "sourceName": "contracts/interfaces/niftyapes/liquidity/ILiquidityEvents.sol",
       "solcConfig": {
@@ -734,7 +829,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -743,11 +840,15 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["ILiquidityEvents"]
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "ILiquidityEvents"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/niftyapes/lending/ILendingAdmin.sol": {
-      "lastModificationDate": 1664209723516,
+      "lastModificationDate": 1665068750019,
       "contentHash": "95275ad6ebf682f1328949e227e20554",
       "sourceName": "contracts/interfaces/niftyapes/lending/ILendingAdmin.sol",
       "solcConfig": {
@@ -770,7 +871,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -778,12 +881,18 @@
           }
         }
       },
-      "imports": ["./ILendingEvents.sol"],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["ILendingAdmin"]
+      "imports": [
+        "./ILendingEvents.sol"
+      ],
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "ILendingAdmin"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/niftyapes/lending/ILendingEvents.sol": {
-      "lastModificationDate": 1664209723516,
+      "lastModificationDate": 1665068750018,
       "contentHash": "a9e4d5cb5755ec2ace6e671387ce420b",
       "sourceName": "contracts/interfaces/niftyapes/lending/ILendingEvents.sol",
       "solcConfig": {
@@ -806,7 +915,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -814,12 +925,18 @@
           }
         }
       },
-      "imports": ["./ILendingStructs.sol"],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["ILendingEvents"]
+      "imports": [
+        "./ILendingStructs.sol"
+      ],
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "ILendingEvents"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/niftyapes/lending/ILendingStructs.sol": {
-      "lastModificationDate": 1664209723517,
+      "lastModificationDate": 1665068750020,
       "contentHash": "d87ff5e27f04717e913b12ff17e12eda",
       "sourceName": "contracts/interfaces/niftyapes/lending/ILendingStructs.sol",
       "solcConfig": {
@@ -842,7 +959,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -851,12 +970,16 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["ILendingStructs"]
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "ILendingStructs"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/niftyapes/offers/IOffersStructs.sol": {
-      "lastModificationDate": 1664209723520,
-      "contentHash": "0a9a249daca67d714ab7266f987775de",
+      "lastModificationDate": 1665068750014,
+      "contentHash": "bf3c50920a608c9b3a4f44df870f2b91",
       "sourceName": "contracts/interfaces/niftyapes/offers/IOffersStructs.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -878,7 +1001,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -887,11 +1012,15 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["IOffersStructs"]
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "IOffersStructs"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/niftyapes/offers/IOffersAdmin.sol": {
-      "lastModificationDate": 1664209723519,
+      "lastModificationDate": 1665068750014,
       "contentHash": "af9a6907b3ee6483f664b48e3834e314",
       "sourceName": "contracts/interfaces/niftyapes/offers/IOffersAdmin.sol",
       "solcConfig": {
@@ -914,7 +1043,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -923,11 +1054,15 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["IOffersAdmin"]
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "IOffersAdmin"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/niftyapes/offers/IOffersEvents.sol": {
-      "lastModificationDate": 1664209723520,
+      "lastModificationDate": 1665068750015,
       "contentHash": "c9a16981781c5493bda5d648f1b4d24a",
       "sourceName": "contracts/interfaces/niftyapes/offers/IOffersEvents.sol",
       "solcConfig": {
@@ -950,7 +1085,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -958,13 +1095,19 @@
           }
         }
       },
-      "imports": ["./IOffersStructs.sol"],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["IOffersEvents"]
+      "imports": [
+        "./IOffersStructs.sol"
+      ],
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "IOffersEvents"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/Lending.sol": {
-      "lastModificationDate": 1664210175106,
-      "contentHash": "d62861f9f1c60baee5e8f4e032cb1add",
+      "lastModificationDate": 1665068686974,
+      "contentHash": "7accc75727af35518a1eb70d6cbd733e",
       "sourceName": "contracts/Lending.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -986,7 +1129,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1007,8 +1152,12 @@
         "./interfaces/niftyapes/offers/IOffers.sol",
         "./interfaces/sanctions/SanctionsList.sol"
       ],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["NiftyApesLending"]
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "NiftyApesLending"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/token/ERC721/IERC721Upgradeable.sol": {
       "lastModificationDate": 1652293558654,
@@ -1034,7 +1183,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1042,9 +1193,15 @@
           }
         }
       },
-      "imports": ["../../utils/introspection/IERC165Upgradeable.sol"],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["IERC721Upgradeable"]
+      "imports": [
+        "../../utils/introspection/IERC165Upgradeable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721Upgradeable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/token/ERC721/utils/ERC721HolderUpgradeable.sol": {
       "lastModificationDate": 1652293558678,
@@ -1070,7 +1227,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1078,9 +1237,16 @@
           }
         }
       },
-      "imports": ["../IERC721ReceiverUpgradeable.sol", "../../../proxy/utils/Initializable.sol"],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["ERC721HolderUpgradeable"]
+      "imports": [
+        "../IERC721ReceiverUpgradeable.sol",
+        "../../../proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC721HolderUpgradeable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/utils/math/SafeCastUpgradeable.sol": {
       "lastModificationDate": 1652293558627,
@@ -1106,7 +1272,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1115,8 +1283,12 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["SafeCastUpgradeable"]
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SafeCastUpgradeable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/utils/introspection/IERC165Upgradeable.sol": {
       "lastModificationDate": 1652293558627,
@@ -1142,7 +1314,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1151,8 +1325,12 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["IERC165Upgradeable"]
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC165Upgradeable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/token/ERC721/IERC721ReceiverUpgradeable.sol": {
       "lastModificationDate": 1652293558677,
@@ -1178,7 +1356,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1187,12 +1367,16 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["IERC721ReceiverUpgradeable"]
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721ReceiverUpgradeable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/SigLending.sol": {
-      "lastModificationDate": 1664210197638,
-      "contentHash": "49ad3501f60318abba7dd2b35c4737d5",
+      "lastModificationDate": 1665068699460,
+      "contentHash": "2005d1318827639b7eafb4bf400aa600",
       "sourceName": "contracts/SigLending.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -1214,7 +1398,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1230,11 +1416,15 @@
         "./interfaces/niftyapes/sigLending/ISigLending.sol",
         "./interfaces/niftyapes/offers/IOffers.sol"
       ],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["NiftyApesSigLending"]
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "NiftyApesSigLending"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/niftyapes/sigLending/ISigLending.sol": {
-      "lastModificationDate": 1664209723521,
+      "lastModificationDate": 1665068750017,
       "contentHash": "5513f8b2d08d5f2214a8d0a7c7a55ba7",
       "sourceName": "contracts/interfaces/niftyapes/sigLending/ISigLending.sol",
       "solcConfig": {
@@ -1257,7 +1447,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1270,11 +1462,15 @@
         "./ISigLendingEvents.sol",
         "../offers/IOffersStructs.sol"
       ],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["ISigLending"]
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "ISigLending"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/niftyapes/sigLending/ISigLendingAdmin.sol": {
-      "lastModificationDate": 1664209723521,
+      "lastModificationDate": 1665068750017,
       "contentHash": "622023a6e679fc93b1239e339c231d16",
       "sourceName": "contracts/interfaces/niftyapes/sigLending/ISigLendingAdmin.sol",
       "solcConfig": {
@@ -1297,7 +1493,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1305,12 +1503,18 @@
           }
         }
       },
-      "imports": ["./ISigLendingEvents.sol"],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["ISigLendingAdmin"]
+      "imports": [
+        "./ISigLendingEvents.sol"
+      ],
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "ISigLendingAdmin"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/interfaces/niftyapes/sigLending/ISigLendingEvents.sol": {
-      "lastModificationDate": 1664209723522,
+      "lastModificationDate": 1665068750018,
       "contentHash": "d9a21ec4a0f63abdd491b0d6b9bd688f",
       "sourceName": "contracts/interfaces/niftyapes/sigLending/ISigLendingEvents.sol",
       "solcConfig": {
@@ -1333,7 +1537,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1342,8 +1548,12 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["ISigLendingEvents"]
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "ISigLendingEvents"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/utils/cryptography/draft-EIP712Upgradeable.sol": {
       "lastModificationDate": 1652293558627,
@@ -1369,7 +1579,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1377,9 +1589,16 @@
           }
         }
       },
-      "imports": ["./ECDSAUpgradeable.sol", "../../proxy/utils/Initializable.sol"],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["EIP712Upgradeable"]
+      "imports": [
+        "./ECDSAUpgradeable.sol",
+        "../../proxy/utils/Initializable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "EIP712Upgradeable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol": {
       "lastModificationDate": 1652293558627,
@@ -1405,7 +1624,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1413,9 +1634,15 @@
           }
         }
       },
-      "imports": ["../StringsUpgradeable.sol"],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["ECDSAUpgradeable"]
+      "imports": [
+        "../StringsUpgradeable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ECDSAUpgradeable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol": {
       "lastModificationDate": 1652293558627,
@@ -1441,7 +1668,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1450,11 +1679,15 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["StringsUpgradeable"]
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "StringsUpgradeable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/lib/ECDSABridge.sol": {
-      "lastModificationDate": 1664210794909,
+      "lastModificationDate": 1664891882405,
       "contentHash": "353ed6d999c3678c578d2d91161e50dc",
       "sourceName": "contracts/lib/ECDSABridge.sol",
       "solcConfig": {
@@ -1477,7 +1710,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1485,13 +1720,19 @@
           }
         }
       },
-      "imports": ["@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol"],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["ECDSABridge"]
+      "imports": [
+        "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol"
+      ],
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "ECDSABridge"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/Offers.sol": {
-      "lastModificationDate": 1664210191445,
-      "contentHash": "9a51d72a7cafc2946e1d75f95d09601c",
+      "lastModificationDate": 1665068659888,
+      "contentHash": "8f850fdd10a9a5efe96ee7bb2bd319e2",
       "sourceName": "contracts/Offers.sol",
       "solcConfig": {
         "version": "0.8.13",
@@ -1513,7 +1754,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1532,8 +1775,12 @@
         "./interfaces/niftyapes/liquidity/ILiquidity.sol",
         "./lib/ECDSABridge.sol"
       ],
-      "versionPragmas": ["0.8.13"],
-      "artifacts": ["NiftyApesOffers"]
+      "versionPragmas": [
+        "0.8.13"
+      ],
+      "artifacts": [
+        "NiftyApesOffers"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/YourCollectible.sol": {
       "lastModificationDate": 1664210905302,
@@ -1559,7 +1806,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1574,8 +1823,12 @@
         "@openzeppelin/contracts/access/Ownable.sol",
         "@openzeppelin/contracts/utils/Counters.sol"
       ],
-      "versionPragmas": ["^0.8.2"],
-      "artifacts": ["YourCollectible"]
+      "versionPragmas": [
+        "^0.8.2"
+      ],
+      "artifacts": [
+        "YourCollectible"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
       "lastModificationDate": 1650552499441,
@@ -1601,7 +1854,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1618,8 +1873,12 @@
         "../../utils/Strings.sol",
         "../../utils/introspection/ERC165.sol"
       ],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["ERC721"]
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC721"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol": {
       "lastModificationDate": 1650552501144,
@@ -1645,7 +1904,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1653,9 +1914,16 @@
           }
         }
       },
-      "imports": ["../ERC721.sol", "./IERC721Enumerable.sol"],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["ERC721Enumerable"]
+      "imports": [
+        "../ERC721.sol",
+        "./IERC721Enumerable.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC721Enumerable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol": {
       "lastModificationDate": 1650552501144,
@@ -1681,7 +1949,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1689,9 +1959,15 @@
           }
         }
       },
-      "imports": ["../ERC721.sol"],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["ERC721URIStorage"]
+      "imports": [
+        "../ERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC721URIStorage"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
       "lastModificationDate": 1650552496976,
@@ -1717,7 +1993,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1725,9 +2003,15 @@
           }
         }
       },
-      "imports": ["../utils/Context.sol"],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["Ownable"]
+      "imports": [
+        "../utils/Context.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Ownable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts/utils/Counters.sol": {
       "lastModificationDate": 1650552496977,
@@ -1753,7 +2037,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1762,8 +2048,12 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["Counters"]
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Counters"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
       "lastModificationDate": 1650552499441,
@@ -1789,7 +2079,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1797,9 +2089,15 @@
           }
         }
       },
-      "imports": ["../../utils/introspection/IERC165.sol"],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["IERC721"]
+      "imports": [
+        "../../utils/introspection/IERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
       "lastModificationDate": 1650552499441,
@@ -1825,7 +2123,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1834,8 +2134,12 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["IERC721Receiver"]
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721Receiver"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
       "lastModificationDate": 1650552501144,
@@ -1861,7 +2165,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1869,9 +2175,15 @@
           }
         }
       },
-      "imports": ["../IERC721.sol"],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["IERC721Metadata"]
+      "imports": [
+        "../IERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721Metadata"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts/utils/Address.sol": {
       "lastModificationDate": 1650552496977,
@@ -1897,7 +2209,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1906,8 +2220,12 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["^0.8.1"],
-      "artifacts": ["Address"]
+      "versionPragmas": [
+        "^0.8.1"
+      ],
+      "artifacts": [
+        "Address"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts/utils/Context.sol": {
       "lastModificationDate": 1650552496977,
@@ -1933,7 +2251,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1942,8 +2262,12 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["Context"]
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Context"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
       "lastModificationDate": 1650552496977,
@@ -1969,7 +2293,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -1978,8 +2304,12 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["Strings"]
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "Strings"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts/utils/introspection/ERC165.sol": {
       "lastModificationDate": 1650552499426,
@@ -2005,7 +2335,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -2013,9 +2345,15 @@
           }
         }
       },
-      "imports": ["./IERC165.sol"],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["ERC165"]
+      "imports": [
+        "./IERC165.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ERC165"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts/utils/introspection/IERC165.sol": {
       "lastModificationDate": 1650552499426,
@@ -2041,7 +2379,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -2050,8 +2390,12 @@
         }
       },
       "imports": [],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["IERC165"]
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC165"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Enumerable.sol": {
       "lastModificationDate": 1650552501144,
@@ -2077,7 +2421,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -2085,9 +2431,15 @@
           }
         }
       },
-      "imports": ["../IERC721.sol"],
-      "versionPragmas": ["^0.8.0"],
-      "artifacts": ["IERC721Enumerable"]
+      "imports": [
+        "../IERC721.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721Enumerable"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/contracts/YourContract.sol": {
       "lastModificationDate": 1664210902645,
@@ -2113,7 +2465,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -2121,9 +2475,15 @@
           }
         }
       },
-      "imports": ["hardhat/console.sol"],
-      "versionPragmas": [">=0.8.0 <0.9.0"],
-      "artifacts": ["YourContract"]
+      "imports": [
+        "hardhat/console.sol"
+      ],
+      "versionPragmas": [
+        ">=0.8.0 <0.9.0"
+      ],
+      "artifacts": [
+        "YourContract"
+      ]
     },
     "/Users/zacharymiller/Blockchain/dappV1/hardhat-ts/node_modules/hardhat/console.sol": {
       "lastModificationDate": 1650552495179,
@@ -2149,7 +2509,9 @@
                 "storageLayout",
                 "evm.gasEstimates"
               ],
-              "": ["ast"]
+              "": [
+                "ast"
+              ]
             }
           },
           "metadata": {
@@ -2158,8 +2520,12 @@
         }
       },
       "imports": [],
-      "versionPragmas": [">=0.4.22 <0.9.0"],
-      "artifacts": ["console"]
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
     }
   }
 }

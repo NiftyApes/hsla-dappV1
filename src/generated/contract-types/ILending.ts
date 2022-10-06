@@ -13,10 +13,10 @@ import {
   PopulatedTransaction,
   Signer,
   utils,
-} from 'ethers';
-import { FunctionFragment, Result, EventFragment } from '@ethersproject/abi';
-import { Listener, Provider } from '@ethersproject/providers';
-import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from './common';
+} from "ethers";
+import { FunctionFragment, Result, EventFragment } from "@ethersproject/abi";
+import { Listener, Provider } from "@ethersproject/providers";
+import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
 
 export declare namespace ILendingStructs {
   export type LoanAuctionStruct = {
@@ -54,7 +54,7 @@ export declare namespace ILendingStructs {
     BigNumber,
     BigNumber,
     BigNumber,
-    BigNumber,
+    BigNumber
   ] & {
     nftOwner: string;
     loanEndTimestamp: number;
@@ -88,6 +88,7 @@ export declare namespace IOffersStructs {
     asset: string;
     amount: BigNumberish;
     interestRatePerSecond: BigNumberish;
+    floorTermLimit: BigNumberish;
   };
 
   export type OfferStructOutput = [
@@ -102,6 +103,7 @@ export declare namespace IOffersStructs {
     string,
     BigNumber,
     BigNumber,
+    BigNumber
   ] & {
     creator: string;
     duration: number;
@@ -114,209 +116,343 @@ export declare namespace IOffersStructs {
     asset: string;
     amount: BigNumber;
     interestRatePerSecond: BigNumber;
+    floorTermLimit: BigNumber;
   };
 }
 
 export interface ILendingInterface extends utils.Interface {
-  contractName: 'ILending';
+  contractName: "ILending";
   functions: {
-    'calculateInterestAccrued(address,uint256)': FunctionFragment;
-    'calculateInterestPerSecond(uint256,uint256,uint256)': FunctionFragment;
-    'checkSufficientInterestAccumulated(address,uint256)': FunctionFragment;
-    'checkSufficientTerms(address,uint256,uint128,uint96,uint32)': FunctionFragment;
-    'defaultRefinancePremiumBps()': FunctionFragment;
-    'doExecuteLoan((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96),address,address,uint256)': FunctionFragment;
-    'doRefinanceByBorrower((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96),uint256,address,uint32)': FunctionFragment;
-    'drawLoanAmount(address,uint256,uint256)': FunctionFragment;
-    'executeLoanByBorrower(address,uint256,bytes32,bool)': FunctionFragment;
-    'executeLoanByLender(address,uint256,bytes32,bool)': FunctionFragment;
-    'gasGriefingPremiumBps()': FunctionFragment;
-    'getLoanAuction(address,uint256)': FunctionFragment;
-    'liquidityContractAddress()': FunctionFragment;
-    'offersContractAddress()': FunctionFragment;
-    'originationPremiumBps()': FunctionFragment;
-    'ownerOf(address,uint256)': FunctionFragment;
-    'partialRepayLoan(address,uint256,uint256)': FunctionFragment;
-    'pause()': FunctionFragment;
-    'pauseSanctions()': FunctionFragment;
-    'protocolInterestBps()': FunctionFragment;
-    'refinanceByBorrower(address,uint256,bool,bytes32,uint32)': FunctionFragment;
-    'refinanceByLender((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96),uint32)': FunctionFragment;
-    'repayLoan(address,uint256)': FunctionFragment;
-    'repayLoanForAccount(address,uint256,uint32)': FunctionFragment;
-    'seizeAsset(address,uint256)': FunctionFragment;
-    'sigLendingContractAddress()': FunctionFragment;
-    'termGriefingPremiumBps()': FunctionFragment;
-    'unpause()': FunctionFragment;
-    'unpauseSanctions()': FunctionFragment;
-    'updateDefaultRefinancePremiumBps(uint16)': FunctionFragment;
-    'updateGasGriefingPremiumBps(uint16)': FunctionFragment;
-    'updateOriginationPremiumLenderBps(uint16)': FunctionFragment;
-    'updateProtocolInterestBps(uint16)': FunctionFragment;
-    'updateTermGriefingPremiumBps(uint16)': FunctionFragment;
+    "calculateInterestAccrued(address,uint256)": FunctionFragment;
+    "calculateInterestPerSecond(uint256,uint256,uint256)": FunctionFragment;
+    "checkSufficientInterestAccumulated(address,uint256)": FunctionFragment;
+    "checkSufficientTerms(address,uint256,uint128,uint96,uint32)": FunctionFragment;
+    "defaultRefinancePremiumBps()": FunctionFragment;
+    "doExecuteLoan((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64),address,address,uint256)": FunctionFragment;
+    "doRefinanceByBorrower((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64),uint256,address,uint32)": FunctionFragment;
+    "drawLoanAmount(address,uint256,uint256)": FunctionFragment;
+    "executeLoanByBorrower(address,uint256,bytes32,bool)": FunctionFragment;
+    "executeLoanByLender(address,uint256,bytes32,bool)": FunctionFragment;
+    "gasGriefingPremiumBps()": FunctionFragment;
+    "getLoanAuction(address,uint256)": FunctionFragment;
+    "liquidityContractAddress()": FunctionFragment;
+    "offersContractAddress()": FunctionFragment;
+    "originationPremiumBps()": FunctionFragment;
+    "ownerOf(address,uint256)": FunctionFragment;
+    "partialRepayLoan(address,uint256,uint256)": FunctionFragment;
+    "pause()": FunctionFragment;
+    "pauseSanctions()": FunctionFragment;
+    "protocolInterestBps()": FunctionFragment;
+    "refinanceByBorrower(address,uint256,bool,bytes32,uint32)": FunctionFragment;
+    "refinanceByLender((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64),uint32)": FunctionFragment;
+    "repayLoan(address,uint256)": FunctionFragment;
+    "repayLoanForAccount(address,uint256,uint32)": FunctionFragment;
+    "seizeAsset(address,uint256)": FunctionFragment;
+    "sigLendingContractAddress()": FunctionFragment;
+    "termGriefingPremiumBps()": FunctionFragment;
+    "unpause()": FunctionFragment;
+    "unpauseSanctions()": FunctionFragment;
+    "updateDefaultRefinancePremiumBps(uint16)": FunctionFragment;
+    "updateGasGriefingPremiumBps(uint16)": FunctionFragment;
+    "updateOriginationPremiumLenderBps(uint16)": FunctionFragment;
+    "updateProtocolInterestBps(uint16)": FunctionFragment;
+    "updateTermGriefingPremiumBps(uint16)": FunctionFragment;
   };
 
   encodeFunctionData(
-    functionFragment: 'calculateInterestAccrued',
-    values: [string, BigNumberish],
+    functionFragment: "calculateInterestAccrued",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: 'calculateInterestPerSecond',
-    values: [BigNumberish, BigNumberish, BigNumberish],
+    functionFragment: "calculateInterestPerSecond",
+    values: [BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: 'checkSufficientInterestAccumulated',
-    values: [string, BigNumberish],
+    functionFragment: "checkSufficientInterestAccumulated",
+    values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: 'checkSufficientTerms',
-    values: [string, BigNumberish, BigNumberish, BigNumberish, BigNumberish],
-  ): string;
-  encodeFunctionData(functionFragment: 'defaultRefinancePremiumBps', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'doExecuteLoan',
-    values: [IOffersStructs.OfferStruct, string, string, BigNumberish],
+    functionFragment: "checkSufficientTerms",
+    values: [string, BigNumberish, BigNumberish, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: 'doRefinanceByBorrower',
-    values: [IOffersStructs.OfferStruct, BigNumberish, string, BigNumberish],
+    functionFragment: "defaultRefinancePremiumBps",
+    values?: undefined
   ): string;
   encodeFunctionData(
-    functionFragment: 'drawLoanAmount',
-    values: [string, BigNumberish, BigNumberish],
+    functionFragment: "doExecuteLoan",
+    values: [IOffersStructs.OfferStruct, string, string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: 'executeLoanByBorrower',
-    values: [string, BigNumberish, BytesLike, boolean],
+    functionFragment: "doRefinanceByBorrower",
+    values: [IOffersStructs.OfferStruct, BigNumberish, string, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: 'executeLoanByLender',
-    values: [string, BigNumberish, BytesLike, boolean],
-  ): string;
-  encodeFunctionData(functionFragment: 'gasGriefingPremiumBps', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'getLoanAuction', values: [string, BigNumberish]): string;
-  encodeFunctionData(functionFragment: 'liquidityContractAddress', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'offersContractAddress', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'originationPremiumBps', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'ownerOf', values: [string, BigNumberish]): string;
-  encodeFunctionData(
-    functionFragment: 'partialRepayLoan',
-    values: [string, BigNumberish, BigNumberish],
-  ): string;
-  encodeFunctionData(functionFragment: 'pause', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'pauseSanctions', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'protocolInterestBps', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'refinanceByBorrower',
-    values: [string, BigNumberish, boolean, BytesLike, BigNumberish],
+    functionFragment: "drawLoanAmount",
+    values: [string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
-    functionFragment: 'refinanceByLender',
-    values: [IOffersStructs.OfferStruct, BigNumberish],
-  ): string;
-  encodeFunctionData(functionFragment: 'repayLoan', values: [string, BigNumberish]): string;
-  encodeFunctionData(
-    functionFragment: 'repayLoanForAccount',
-    values: [string, BigNumberish, BigNumberish],
-  ): string;
-  encodeFunctionData(functionFragment: 'seizeAsset', values: [string, BigNumberish]): string;
-  encodeFunctionData(functionFragment: 'sigLendingContractAddress', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'termGriefingPremiumBps', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'unpause', values?: undefined): string;
-  encodeFunctionData(functionFragment: 'unpauseSanctions', values?: undefined): string;
-  encodeFunctionData(
-    functionFragment: 'updateDefaultRefinancePremiumBps',
-    values: [BigNumberish],
+    functionFragment: "executeLoanByBorrower",
+    values: [string, BigNumberish, BytesLike, boolean]
   ): string;
   encodeFunctionData(
-    functionFragment: 'updateGasGriefingPremiumBps',
-    values: [BigNumberish],
+    functionFragment: "executeLoanByLender",
+    values: [string, BigNumberish, BytesLike, boolean]
   ): string;
   encodeFunctionData(
-    functionFragment: 'updateOriginationPremiumLenderBps',
-    values: [BigNumberish],
+    functionFragment: "gasGriefingPremiumBps",
+    values?: undefined
   ): string;
-  encodeFunctionData(functionFragment: 'updateProtocolInterestBps', values: [BigNumberish]): string;
   encodeFunctionData(
-    functionFragment: 'updateTermGriefingPremiumBps',
-    values: [BigNumberish],
+    functionFragment: "getLoanAuction",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "liquidityContractAddress",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "offersContractAddress",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "originationPremiumBps",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "ownerOf",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "partialRepayLoan",
+    values: [string, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: "pause", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "pauseSanctions",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "protocolInterestBps",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "refinanceByBorrower",
+    values: [string, BigNumberish, boolean, BytesLike, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "refinanceByLender",
+    values: [IOffersStructs.OfferStruct, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "repayLoan",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "repayLoanForAccount",
+    values: [string, BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "seizeAsset",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "sigLendingContractAddress",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "termGriefingPremiumBps",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "unpause", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "unpauseSanctions",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateDefaultRefinancePremiumBps",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateGasGriefingPremiumBps",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateOriginationPremiumLenderBps",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateProtocolInterestBps",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateTermGriefingPremiumBps",
+    values: [BigNumberish]
   ): string;
 
-  decodeFunctionResult(functionFragment: 'calculateInterestAccrued', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'calculateInterestPerSecond', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'checkSufficientInterestAccumulated',
-    data: BytesLike,
+    functionFragment: "calculateInterestAccrued",
+    data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: 'checkSufficientTerms', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'defaultRefinancePremiumBps', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'doExecuteLoan', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'doRefinanceByBorrower', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'drawLoanAmount', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'executeLoanByBorrower', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'executeLoanByLender', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'gasGriefingPremiumBps', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'getLoanAuction', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'liquidityContractAddress', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'offersContractAddress', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'originationPremiumBps', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'ownerOf', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'partialRepayLoan', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'pause', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'pauseSanctions', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'protocolInterestBps', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'refinanceByBorrower', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'refinanceByLender', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'repayLoan', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'repayLoanForAccount', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'seizeAsset', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'sigLendingContractAddress', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'termGriefingPremiumBps', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'unpause', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'unpauseSanctions', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'updateDefaultRefinancePremiumBps',
-    data: BytesLike,
+    functionFragment: "calculateInterestPerSecond",
+    data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: 'updateGasGriefingPremiumBps', data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: 'updateOriginationPremiumLenderBps',
-    data: BytesLike,
+    functionFragment: "checkSufficientInterestAccumulated",
+    data: BytesLike
   ): Result;
-  decodeFunctionResult(functionFragment: 'updateProtocolInterestBps', data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: 'updateTermGriefingPremiumBps', data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "checkSufficientTerms",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "defaultRefinancePremiumBps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "doExecuteLoan",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "doRefinanceByBorrower",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "drawLoanAmount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "executeLoanByBorrower",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "executeLoanByLender",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "gasGriefingPremiumBps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getLoanAuction",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "liquidityContractAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "offersContractAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "originationPremiumBps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "partialRepayLoan",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "pause", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "pauseSanctions",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "protocolInterestBps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "refinanceByBorrower",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "refinanceByLender",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "repayLoan", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "repayLoanForAccount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "seizeAsset", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "sigLendingContractAddress",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "termGriefingPremiumBps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "unpause", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "unpauseSanctions",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateDefaultRefinancePremiumBps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateGasGriefingPremiumBps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateOriginationPremiumLenderBps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateProtocolInterestBps",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateTermGriefingPremiumBps",
+    data: BytesLike
+  ): Result;
 
   events: {
-    'AmountDrawn(address,uint256,uint256,tuple)': EventFragment;
-    'AssetSeized(address,uint256,tuple)': EventFragment;
-    'DefaultRefinancePremiumBpsUpdated(uint16,uint16)': EventFragment;
-    'GasGriefingPremiumBpsUpdated(uint16,uint16)': EventFragment;
-    'GasGriefingProtocolPremiumBpsUpdated(uint16,uint16)': EventFragment;
-    'LendingSanctionsPaused()': EventFragment;
-    'LendingSanctionsUnpaused()': EventFragment;
-    'LoanExecuted(address,uint256,tuple)': EventFragment;
-    'LoanRepaid(address,uint256,uint256,tuple)': EventFragment;
-    'OriginationPremiumBpsUpdated(uint16,uint16)': EventFragment;
-    'PartialRepayment(address,uint256,uint256,tuple)': EventFragment;
-    'ProtocolInterestBpsUpdated(uint96,uint96)': EventFragment;
-    'Refinance(address,uint256,tuple)': EventFragment;
-    'TermGriefingPremiumBpsUpdated(uint16,uint16)': EventFragment;
+    "AmountDrawn(address,uint256,uint256,tuple)": EventFragment;
+    "AssetSeized(address,uint256,tuple)": EventFragment;
+    "DefaultRefinancePremiumBpsUpdated(uint16,uint16)": EventFragment;
+    "GasGriefingPremiumBpsUpdated(uint16,uint16)": EventFragment;
+    "GasGriefingProtocolPremiumBpsUpdated(uint16,uint16)": EventFragment;
+    "LendingSanctionsPaused()": EventFragment;
+    "LendingSanctionsUnpaused()": EventFragment;
+    "LoanExecuted(address,uint256,tuple)": EventFragment;
+    "LoanRepaid(address,uint256,uint256,tuple)": EventFragment;
+    "OriginationPremiumBpsUpdated(uint16,uint16)": EventFragment;
+    "PartialRepayment(address,uint256,uint256,tuple)": EventFragment;
+    "ProtocolInterestBpsUpdated(uint96,uint96)": EventFragment;
+    "Refinance(address,uint256,tuple)": EventFragment;
+    "TermGriefingPremiumBpsUpdated(uint16,uint16)": EventFragment;
   };
 
-  getEvent(nameOrSignatureOrTopic: 'AmountDrawn'): EventFragment;
-  getEvent(nameOrSignatureOrTopic: 'AssetSeized'): EventFragment;
-  getEvent(nameOrSignatureOrTopic: 'DefaultRefinancePremiumBpsUpdated'): EventFragment;
-  getEvent(nameOrSignatureOrTopic: 'GasGriefingPremiumBpsUpdated'): EventFragment;
-  getEvent(nameOrSignatureOrTopic: 'GasGriefingProtocolPremiumBpsUpdated'): EventFragment;
-  getEvent(nameOrSignatureOrTopic: 'LendingSanctionsPaused'): EventFragment;
-  getEvent(nameOrSignatureOrTopic: 'LendingSanctionsUnpaused'): EventFragment;
-  getEvent(nameOrSignatureOrTopic: 'LoanExecuted'): EventFragment;
-  getEvent(nameOrSignatureOrTopic: 'LoanRepaid'): EventFragment;
-  getEvent(nameOrSignatureOrTopic: 'OriginationPremiumBpsUpdated'): EventFragment;
-  getEvent(nameOrSignatureOrTopic: 'PartialRepayment'): EventFragment;
-  getEvent(nameOrSignatureOrTopic: 'ProtocolInterestBpsUpdated'): EventFragment;
-  getEvent(nameOrSignatureOrTopic: 'Refinance'): EventFragment;
-  getEvent(nameOrSignatureOrTopic: 'TermGriefingPremiumBpsUpdated'): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "AmountDrawn"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "AssetSeized"): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "DefaultRefinancePremiumBpsUpdated"
+  ): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "GasGriefingPremiumBpsUpdated"
+  ): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "GasGriefingProtocolPremiumBpsUpdated"
+  ): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "LendingSanctionsPaused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "LendingSanctionsUnpaused"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "LoanExecuted"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "LoanRepaid"): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "OriginationPremiumBpsUpdated"
+  ): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "PartialRepayment"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "ProtocolInterestBpsUpdated"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "Refinance"): EventFragment;
+  getEvent(
+    nameOrSignatureOrTopic: "TermGriefingPremiumBpsUpdated"
+  ): EventFragment;
 }
 
 export type AmountDrawnEvent = TypedEvent<
@@ -374,11 +510,13 @@ export type GasGriefingProtocolPremiumBpsUpdatedEventFilter =
 
 export type LendingSanctionsPausedEvent = TypedEvent<[], {}>;
 
-export type LendingSanctionsPausedEventFilter = TypedEventFilter<LendingSanctionsPausedEvent>;
+export type LendingSanctionsPausedEventFilter =
+  TypedEventFilter<LendingSanctionsPausedEvent>;
 
 export type LendingSanctionsUnpausedEvent = TypedEvent<[], {}>;
 
-export type LendingSanctionsUnpausedEventFilter = TypedEventFilter<LendingSanctionsUnpausedEvent>;
+export type LendingSanctionsUnpausedEventFilter =
+  TypedEventFilter<LendingSanctionsUnpausedEvent>;
 
 export type LoanExecutedEvent = TypedEvent<
   [string, BigNumber, ILendingStructs.LoanAuctionStructOutput],
@@ -421,7 +559,8 @@ export type PartialRepaymentEvent = TypedEvent<
   }
 >;
 
-export type PartialRepaymentEventFilter = TypedEventFilter<PartialRepaymentEvent>;
+export type PartialRepaymentEventFilter =
+  TypedEventFilter<PartialRepaymentEvent>;
 
 export type ProtocolInterestBpsUpdatedEvent = TypedEvent<
   [BigNumber, BigNumber],
@@ -451,7 +590,7 @@ export type TermGriefingPremiumBpsUpdatedEventFilter =
   TypedEventFilter<TermGriefingPremiumBpsUpdatedEvent>;
 
 export interface ILending extends BaseContract {
-  contractName: 'ILending';
+  contractName: "ILending";
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -461,14 +600,16 @@ export interface ILending extends BaseContract {
   queryFilter<TEvent extends TypedEvent>(
     event: TypedEventFilter<TEvent>,
     fromBlockOrBlockhash?: string | number | undefined,
-    toBlock?: string | number | undefined,
+    toBlock?: string | number | undefined
   ): Promise<Array<TEvent>>;
 
   listeners<TEvent extends TypedEvent>(
-    eventFilter?: TypedEventFilter<TEvent>,
+    eventFilter?: TypedEventFilter<TEvent>
   ): Array<TypedListener<TEvent>>;
   listeners(eventName?: string): Array<Listener>;
-  removeAllListeners<TEvent extends TypedEvent>(eventFilter: TypedEventFilter<TEvent>): this;
+  removeAllListeners<TEvent extends TypedEvent>(
+    eventFilter: TypedEventFilter<TEvent>
+  ): this;
   removeAllListeners(eventName?: string): this;
   off: OnEvent<this>;
   on: OnEvent<this>;
@@ -479,20 +620,20 @@ export interface ILending extends BaseContract {
     calculateInterestAccrued(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber]>;
 
     calculateInterestPerSecond(
       amount: BigNumberish,
       interestBps: BigNumberish,
       duration: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     checkSufficientInterestAccumulated(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<[BigNumber]>;
 
     checkSufficientTerms(
@@ -501,7 +642,7 @@ export interface ILending extends BaseContract {
       amount: BigNumberish,
       interestRatePerSecond: BigNumberish,
       duration: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<[boolean]>;
 
     defaultRefinancePremiumBps(overrides?: CallOverrides): Promise<[number]>;
@@ -511,7 +652,7 @@ export interface ILending extends BaseContract {
       lender: string,
       borrower: string,
       nftId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     doRefinanceByBorrower(
@@ -519,14 +660,14 @@ export interface ILending extends BaseContract {
       nftId: BigNumberish,
       nftOwner: string,
       expectedLastUpdatedTimestamp: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     drawLoanAmount(
       nftContractAddress: string,
       nftId: BigNumberish,
       drawAmount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     executeLoanByBorrower(
@@ -534,7 +675,7 @@ export interface ILending extends BaseContract {
       nftId: BigNumberish,
       offerHash: BytesLike,
       floorTerm: boolean,
-      overrides?: PayableOverrides & { from?: string | Promise<string> },
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     executeLoanByLender(
@@ -542,7 +683,7 @@ export interface ILending extends BaseContract {
       nftId: BigNumberish,
       offerHash: BytesLike,
       floorTerm: boolean,
-      overrides?: PayableOverrides & { from?: string | Promise<string> },
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     gasGriefingPremiumBps(overrides?: CallOverrides): Promise<[number]>;
@@ -550,7 +691,7 @@ export interface ILending extends BaseContract {
     getLoanAuction(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<
       [ILendingStructs.LoanAuctionStructOutput] & {
         auction: ILendingStructs.LoanAuctionStructOutput;
@@ -566,22 +707,22 @@ export interface ILending extends BaseContract {
     ownerOf(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<[string]>;
 
     partialRepayLoan(
       nftContractAddress: string,
       nftId: BigNumberish,
       amount: BigNumberish,
-      overrides?: PayableOverrides & { from?: string | Promise<string> },
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     pause(
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     pauseSanctions(
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     protocolInterestBps(overrides?: CallOverrides): Promise<[number]>;
@@ -592,32 +733,32 @@ export interface ILending extends BaseContract {
       floorTerm: boolean,
       offerHash: BytesLike,
       expectedLastUpdatedTimestamp: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     refinanceByLender(
       offer: IOffersStructs.OfferStruct,
       expectedLastUpdatedTimestamp: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     repayLoan(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: PayableOverrides & { from?: string | Promise<string> },
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     repayLoanForAccount(
       nftContractAddress: string,
       nftId: BigNumberish,
       expectedLoanBeginTimestamp: BigNumberish,
-      overrides?: PayableOverrides & { from?: string | Promise<string> },
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     seizeAsset(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     sigLendingContractAddress(overrides?: CallOverrides): Promise<[string]>;
@@ -625,56 +766,56 @@ export interface ILending extends BaseContract {
     termGriefingPremiumBps(overrides?: CallOverrides): Promise<[number]>;
 
     unpause(
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     unpauseSanctions(
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     updateDefaultRefinancePremiumBps(
       newDefaultRefinancePremiumBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     updateGasGriefingPremiumBps(
       newGasGriefingPremiumBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     updateOriginationPremiumLenderBps(
       newOriginationPremiumBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     updateProtocolInterestBps(
       newProtocolInterestBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     updateTermGriefingPremiumBps(
       newTermGriefingPremiumBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
   };
 
   calculateInterestAccrued(
     nftContractAddress: string,
     nftId: BigNumberish,
-    overrides?: CallOverrides,
+    overrides?: CallOverrides
   ): Promise<[BigNumber, BigNumber]>;
 
   calculateInterestPerSecond(
     amount: BigNumberish,
     interestBps: BigNumberish,
     duration: BigNumberish,
-    overrides?: CallOverrides,
+    overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   checkSufficientInterestAccumulated(
     nftContractAddress: string,
     nftId: BigNumberish,
-    overrides?: CallOverrides,
+    overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   checkSufficientTerms(
@@ -683,7 +824,7 @@ export interface ILending extends BaseContract {
     amount: BigNumberish,
     interestRatePerSecond: BigNumberish,
     duration: BigNumberish,
-    overrides?: CallOverrides,
+    overrides?: CallOverrides
   ): Promise<boolean>;
 
   defaultRefinancePremiumBps(overrides?: CallOverrides): Promise<number>;
@@ -693,7 +834,7 @@ export interface ILending extends BaseContract {
     lender: string,
     borrower: string,
     nftId: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> },
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   doRefinanceByBorrower(
@@ -701,14 +842,14 @@ export interface ILending extends BaseContract {
     nftId: BigNumberish,
     nftOwner: string,
     expectedLastUpdatedTimestamp: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> },
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   drawLoanAmount(
     nftContractAddress: string,
     nftId: BigNumberish,
     drawAmount: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> },
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   executeLoanByBorrower(
@@ -716,7 +857,7 @@ export interface ILending extends BaseContract {
     nftId: BigNumberish,
     offerHash: BytesLike,
     floorTerm: boolean,
-    overrides?: PayableOverrides & { from?: string | Promise<string> },
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   executeLoanByLender(
@@ -724,7 +865,7 @@ export interface ILending extends BaseContract {
     nftId: BigNumberish,
     offerHash: BytesLike,
     floorTerm: boolean,
-    overrides?: PayableOverrides & { from?: string | Promise<string> },
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   gasGriefingPremiumBps(overrides?: CallOverrides): Promise<number>;
@@ -732,7 +873,7 @@ export interface ILending extends BaseContract {
   getLoanAuction(
     nftContractAddress: string,
     nftId: BigNumberish,
-    overrides?: CallOverrides,
+    overrides?: CallOverrides
   ): Promise<ILendingStructs.LoanAuctionStructOutput>;
 
   liquidityContractAddress(overrides?: CallOverrides): Promise<string>;
@@ -744,20 +885,22 @@ export interface ILending extends BaseContract {
   ownerOf(
     nftContractAddress: string,
     nftId: BigNumberish,
-    overrides?: CallOverrides,
+    overrides?: CallOverrides
   ): Promise<string>;
 
   partialRepayLoan(
     nftContractAddress: string,
     nftId: BigNumberish,
     amount: BigNumberish,
-    overrides?: PayableOverrides & { from?: string | Promise<string> },
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
-  pause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<ContractTransaction>;
+  pause(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   pauseSanctions(
-    overrides?: Overrides & { from?: string | Promise<string> },
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   protocolInterestBps(overrides?: CallOverrides): Promise<number>;
@@ -768,32 +911,32 @@ export interface ILending extends BaseContract {
     floorTerm: boolean,
     offerHash: BytesLike,
     expectedLastUpdatedTimestamp: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> },
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   refinanceByLender(
     offer: IOffersStructs.OfferStruct,
     expectedLastUpdatedTimestamp: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> },
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   repayLoan(
     nftContractAddress: string,
     nftId: BigNumberish,
-    overrides?: PayableOverrides & { from?: string | Promise<string> },
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   repayLoanForAccount(
     nftContractAddress: string,
     nftId: BigNumberish,
     expectedLoanBeginTimestamp: BigNumberish,
-    overrides?: PayableOverrides & { from?: string | Promise<string> },
+    overrides?: PayableOverrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   seizeAsset(
     nftContractAddress: string,
     nftId: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> },
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   sigLendingContractAddress(overrides?: CallOverrides): Promise<string>;
@@ -801,56 +944,56 @@ export interface ILending extends BaseContract {
   termGriefingPremiumBps(overrides?: CallOverrides): Promise<number>;
 
   unpause(
-    overrides?: Overrides & { from?: string | Promise<string> },
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   unpauseSanctions(
-    overrides?: Overrides & { from?: string | Promise<string> },
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   updateDefaultRefinancePremiumBps(
     newDefaultRefinancePremiumBps: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> },
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   updateGasGriefingPremiumBps(
     newGasGriefingPremiumBps: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> },
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   updateOriginationPremiumLenderBps(
     newOriginationPremiumBps: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> },
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   updateProtocolInterestBps(
     newProtocolInterestBps: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> },
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   updateTermGriefingPremiumBps(
     newTermGriefingPremiumBps: BigNumberish,
-    overrides?: Overrides & { from?: string | Promise<string> },
+    overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   callStatic: {
     calculateInterestAccrued(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<[BigNumber, BigNumber]>;
 
     calculateInterestPerSecond(
       amount: BigNumberish,
       interestBps: BigNumberish,
       duration: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     checkSufficientInterestAccumulated(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     checkSufficientTerms(
@@ -859,7 +1002,7 @@ export interface ILending extends BaseContract {
       amount: BigNumberish,
       interestRatePerSecond: BigNumberish,
       duration: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<boolean>;
 
     defaultRefinancePremiumBps(overrides?: CallOverrides): Promise<number>;
@@ -869,7 +1012,7 @@ export interface ILending extends BaseContract {
       lender: string,
       borrower: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<void>;
 
     doRefinanceByBorrower(
@@ -877,14 +1020,14 @@ export interface ILending extends BaseContract {
       nftId: BigNumberish,
       nftOwner: string,
       expectedLastUpdatedTimestamp: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<void>;
 
     drawLoanAmount(
       nftContractAddress: string,
       nftId: BigNumberish,
       drawAmount: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<void>;
 
     executeLoanByBorrower(
@@ -892,7 +1035,7 @@ export interface ILending extends BaseContract {
       nftId: BigNumberish,
       offerHash: BytesLike,
       floorTerm: boolean,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<void>;
 
     executeLoanByLender(
@@ -900,7 +1043,7 @@ export interface ILending extends BaseContract {
       nftId: BigNumberish,
       offerHash: BytesLike,
       floorTerm: boolean,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<void>;
 
     gasGriefingPremiumBps(overrides?: CallOverrides): Promise<number>;
@@ -908,7 +1051,7 @@ export interface ILending extends BaseContract {
     getLoanAuction(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<ILendingStructs.LoanAuctionStructOutput>;
 
     liquidityContractAddress(overrides?: CallOverrides): Promise<string>;
@@ -920,14 +1063,14 @@ export interface ILending extends BaseContract {
     ownerOf(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<string>;
 
     partialRepayLoan(
       nftContractAddress: string,
       nftId: BigNumberish,
       amount: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<void>;
 
     pause(overrides?: CallOverrides): Promise<void>;
@@ -942,32 +1085,32 @@ export interface ILending extends BaseContract {
       floorTerm: boolean,
       offerHash: BytesLike,
       expectedLastUpdatedTimestamp: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<void>;
 
     refinanceByLender(
       offer: IOffersStructs.OfferStruct,
       expectedLastUpdatedTimestamp: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<void>;
 
     repayLoan(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<void>;
 
     repayLoanForAccount(
       nftContractAddress: string,
       nftId: BigNumberish,
       expectedLoanBeginTimestamp: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<void>;
 
     seizeAsset(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<void>;
 
     sigLendingContractAddress(overrides?: CallOverrides): Promise<string>;
@@ -980,161 +1123,161 @@ export interface ILending extends BaseContract {
 
     updateDefaultRefinancePremiumBps(
       newDefaultRefinancePremiumBps: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<void>;
 
     updateGasGriefingPremiumBps(
       newGasGriefingPremiumBps: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<void>;
 
     updateOriginationPremiumLenderBps(
       newOriginationPremiumBps: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<void>;
 
     updateProtocolInterestBps(
       newProtocolInterestBps: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<void>;
 
     updateTermGriefingPremiumBps(
       newTermGriefingPremiumBps: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<void>;
   };
 
   filters: {
-    'AmountDrawn(address,uint256,uint256,tuple)'(
+    "AmountDrawn(address,uint256,uint256,tuple)"(
       nftContractAddress?: string | null,
       nftId?: BigNumberish | null,
       drawAmount?: null,
-      loanAuction?: null,
+      loanAuction?: null
     ): AmountDrawnEventFilter;
     AmountDrawn(
       nftContractAddress?: string | null,
       nftId?: BigNumberish | null,
       drawAmount?: null,
-      loanAuction?: null,
+      loanAuction?: null
     ): AmountDrawnEventFilter;
 
-    'AssetSeized(address,uint256,tuple)'(
+    "AssetSeized(address,uint256,tuple)"(
       nftContractAddress?: string | null,
       nftId?: BigNumberish | null,
-      loanAuction?: null,
+      loanAuction?: null
     ): AssetSeizedEventFilter;
     AssetSeized(
       nftContractAddress?: string | null,
       nftId?: BigNumberish | null,
-      loanAuction?: null,
+      loanAuction?: null
     ): AssetSeizedEventFilter;
 
-    'DefaultRefinancePremiumBpsUpdated(uint16,uint16)'(
+    "DefaultRefinancePremiumBpsUpdated(uint16,uint16)"(
       oldDefaultRefinancePremiumBps?: null,
-      newDefaultRefinancePremiumBps?: null,
+      newDefaultRefinancePremiumBps?: null
     ): DefaultRefinancePremiumBpsUpdatedEventFilter;
     DefaultRefinancePremiumBpsUpdated(
       oldDefaultRefinancePremiumBps?: null,
-      newDefaultRefinancePremiumBps?: null,
+      newDefaultRefinancePremiumBps?: null
     ): DefaultRefinancePremiumBpsUpdatedEventFilter;
 
-    'GasGriefingPremiumBpsUpdated(uint16,uint16)'(
+    "GasGriefingPremiumBpsUpdated(uint16,uint16)"(
       oldGasGriefingPremiumBps?: null,
-      newGasGriefingPremiumBps?: null,
+      newGasGriefingPremiumBps?: null
     ): GasGriefingPremiumBpsUpdatedEventFilter;
     GasGriefingPremiumBpsUpdated(
       oldGasGriefingPremiumBps?: null,
-      newGasGriefingPremiumBps?: null,
+      newGasGriefingPremiumBps?: null
     ): GasGriefingPremiumBpsUpdatedEventFilter;
 
-    'GasGriefingProtocolPremiumBpsUpdated(uint16,uint16)'(
+    "GasGriefingProtocolPremiumBpsUpdated(uint16,uint16)"(
       oldGasGriefingProtocolPremiumBps?: null,
-      newGasGriefingProtocolPremiumBps?: null,
+      newGasGriefingProtocolPremiumBps?: null
     ): GasGriefingProtocolPremiumBpsUpdatedEventFilter;
     GasGriefingProtocolPremiumBpsUpdated(
       oldGasGriefingProtocolPremiumBps?: null,
-      newGasGriefingProtocolPremiumBps?: null,
+      newGasGriefingProtocolPremiumBps?: null
     ): GasGriefingProtocolPremiumBpsUpdatedEventFilter;
 
-    'LendingSanctionsPaused()'(): LendingSanctionsPausedEventFilter;
+    "LendingSanctionsPaused()"(): LendingSanctionsPausedEventFilter;
     LendingSanctionsPaused(): LendingSanctionsPausedEventFilter;
 
-    'LendingSanctionsUnpaused()'(): LendingSanctionsUnpausedEventFilter;
+    "LendingSanctionsUnpaused()"(): LendingSanctionsUnpausedEventFilter;
     LendingSanctionsUnpaused(): LendingSanctionsUnpausedEventFilter;
 
-    'LoanExecuted(address,uint256,tuple)'(
+    "LoanExecuted(address,uint256,tuple)"(
       nftContractAddress?: string | null,
       nftId?: BigNumberish | null,
-      loanAuction?: null,
+      loanAuction?: null
     ): LoanExecutedEventFilter;
     LoanExecuted(
       nftContractAddress?: string | null,
       nftId?: BigNumberish | null,
-      loanAuction?: null,
+      loanAuction?: null
     ): LoanExecutedEventFilter;
 
-    'LoanRepaid(address,uint256,uint256,tuple)'(
+    "LoanRepaid(address,uint256,uint256,tuple)"(
       nftContractAddress?: string | null,
       nftId?: BigNumberish | null,
       totalPayment?: null,
-      loanAuction?: null,
+      loanAuction?: null
     ): LoanRepaidEventFilter;
     LoanRepaid(
       nftContractAddress?: string | null,
       nftId?: BigNumberish | null,
       totalPayment?: null,
-      loanAuction?: null,
+      loanAuction?: null
     ): LoanRepaidEventFilter;
 
-    'OriginationPremiumBpsUpdated(uint16,uint16)'(
+    "OriginationPremiumBpsUpdated(uint16,uint16)"(
       oldOriginationPremiumBps?: null,
-      newOriginationPremiumBps?: null,
+      newOriginationPremiumBps?: null
     ): OriginationPremiumBpsUpdatedEventFilter;
     OriginationPremiumBpsUpdated(
       oldOriginationPremiumBps?: null,
-      newOriginationPremiumBps?: null,
+      newOriginationPremiumBps?: null
     ): OriginationPremiumBpsUpdatedEventFilter;
 
-    'PartialRepayment(address,uint256,uint256,tuple)'(
+    "PartialRepayment(address,uint256,uint256,tuple)"(
       nftContractAddress?: string | null,
       nftId?: BigNumberish | null,
       amount?: null,
-      loanAuction?: null,
+      loanAuction?: null
     ): PartialRepaymentEventFilter;
     PartialRepayment(
       nftContractAddress?: string | null,
       nftId?: BigNumberish | null,
       amount?: null,
-      loanAuction?: null,
+      loanAuction?: null
     ): PartialRepaymentEventFilter;
 
-    'ProtocolInterestBpsUpdated(uint96,uint96)'(
+    "ProtocolInterestBpsUpdated(uint96,uint96)"(
       oldProtocolInterestBps?: null,
-      newProtocolInterestBps?: null,
+      newProtocolInterestBps?: null
     ): ProtocolInterestBpsUpdatedEventFilter;
     ProtocolInterestBpsUpdated(
       oldProtocolInterestBps?: null,
-      newProtocolInterestBps?: null,
+      newProtocolInterestBps?: null
     ): ProtocolInterestBpsUpdatedEventFilter;
 
-    'Refinance(address,uint256,tuple)'(
+    "Refinance(address,uint256,tuple)"(
       nftContractAddress?: string | null,
       nftId?: BigNumberish | null,
-      loanAuction?: null,
+      loanAuction?: null
     ): RefinanceEventFilter;
     Refinance(
       nftContractAddress?: string | null,
       nftId?: BigNumberish | null,
-      loanAuction?: null,
+      loanAuction?: null
     ): RefinanceEventFilter;
 
-    'TermGriefingPremiumBpsUpdated(uint16,uint16)'(
+    "TermGriefingPremiumBpsUpdated(uint16,uint16)"(
       oldTermGriefingPremiumBps?: null,
-      newTermGriefingPremiumBps?: null,
+      newTermGriefingPremiumBps?: null
     ): TermGriefingPremiumBpsUpdatedEventFilter;
     TermGriefingPremiumBpsUpdated(
       oldTermGriefingPremiumBps?: null,
-      newTermGriefingPremiumBps?: null,
+      newTermGriefingPremiumBps?: null
     ): TermGriefingPremiumBpsUpdatedEventFilter;
   };
 
@@ -1142,20 +1285,20 @@ export interface ILending extends BaseContract {
     calculateInterestAccrued(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     calculateInterestPerSecond(
       amount: BigNumberish,
       interestBps: BigNumberish,
       duration: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     checkSufficientInterestAccumulated(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     checkSufficientTerms(
@@ -1164,7 +1307,7 @@ export interface ILending extends BaseContract {
       amount: BigNumberish,
       interestRatePerSecond: BigNumberish,
       duration: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     defaultRefinancePremiumBps(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1174,7 +1317,7 @@ export interface ILending extends BaseContract {
       lender: string,
       borrower: string,
       nftId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     doRefinanceByBorrower(
@@ -1182,14 +1325,14 @@ export interface ILending extends BaseContract {
       nftId: BigNumberish,
       nftOwner: string,
       expectedLastUpdatedTimestamp: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     drawLoanAmount(
       nftContractAddress: string,
       nftId: BigNumberish,
       drawAmount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     executeLoanByBorrower(
@@ -1197,7 +1340,7 @@ export interface ILending extends BaseContract {
       nftId: BigNumberish,
       offerHash: BytesLike,
       floorTerm: boolean,
-      overrides?: PayableOverrides & { from?: string | Promise<string> },
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     executeLoanByLender(
@@ -1205,7 +1348,7 @@ export interface ILending extends BaseContract {
       nftId: BigNumberish,
       offerHash: BytesLike,
       floorTerm: boolean,
-      overrides?: PayableOverrides & { from?: string | Promise<string> },
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     gasGriefingPremiumBps(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1213,7 +1356,7 @@ export interface ILending extends BaseContract {
     getLoanAuction(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     liquidityContractAddress(overrides?: CallOverrides): Promise<BigNumber>;
@@ -1225,19 +1368,23 @@ export interface ILending extends BaseContract {
     ownerOf(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     partialRepayLoan(
       nftContractAddress: string,
       nftId: BigNumberish,
       amount: BigNumberish,
-      overrides?: PayableOverrides & { from?: string | Promise<string> },
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
-    pause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
+    pause(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
-    pauseSanctions(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
+    pauseSanctions(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     protocolInterestBps(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -1247,67 +1394,69 @@ export interface ILending extends BaseContract {
       floorTerm: boolean,
       offerHash: BytesLike,
       expectedLastUpdatedTimestamp: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     refinanceByLender(
       offer: IOffersStructs.OfferStruct,
       expectedLastUpdatedTimestamp: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     repayLoan(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: PayableOverrides & { from?: string | Promise<string> },
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     repayLoanForAccount(
       nftContractAddress: string,
       nftId: BigNumberish,
       expectedLoanBeginTimestamp: BigNumberish,
-      overrides?: PayableOverrides & { from?: string | Promise<string> },
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     seizeAsset(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     sigLendingContractAddress(overrides?: CallOverrides): Promise<BigNumber>;
 
     termGriefingPremiumBps(overrides?: CallOverrides): Promise<BigNumber>;
 
-    unpause(overrides?: Overrides & { from?: string | Promise<string> }): Promise<BigNumber>;
+    unpause(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
 
     unpauseSanctions(
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     updateDefaultRefinancePremiumBps(
       newDefaultRefinancePremiumBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     updateGasGriefingPremiumBps(
       newGasGriefingPremiumBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     updateOriginationPremiumLenderBps(
       newOriginationPremiumBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     updateProtocolInterestBps(
       newProtocolInterestBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     updateTermGriefingPremiumBps(
       newTermGriefingPremiumBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
   };
 
@@ -1315,20 +1464,20 @@ export interface ILending extends BaseContract {
     calculateInterestAccrued(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     calculateInterestPerSecond(
       amount: BigNumberish,
       interestBps: BigNumberish,
       duration: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     checkSufficientInterestAccumulated(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     checkSufficientTerms(
@@ -1337,17 +1486,19 @@ export interface ILending extends BaseContract {
       amount: BigNumberish,
       interestRatePerSecond: BigNumberish,
       duration: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    defaultRefinancePremiumBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    defaultRefinancePremiumBps(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     doExecuteLoan(
       offer: IOffersStructs.OfferStruct,
       lender: string,
       borrower: string,
       nftId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     doRefinanceByBorrower(
@@ -1355,14 +1506,14 @@ export interface ILending extends BaseContract {
       nftId: BigNumberish,
       nftOwner: string,
       expectedLastUpdatedTimestamp: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     drawLoanAmount(
       nftContractAddress: string,
       nftId: BigNumberish,
       drawAmount: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     executeLoanByBorrower(
@@ -1370,7 +1521,7 @@ export interface ILending extends BaseContract {
       nftId: BigNumberish,
       offerHash: BytesLike,
       floorTerm: boolean,
-      overrides?: PayableOverrides & { from?: string | Promise<string> },
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     executeLoanByLender(
@@ -1378,45 +1529,55 @@ export interface ILending extends BaseContract {
       nftId: BigNumberish,
       offerHash: BytesLike,
       floorTerm: boolean,
-      overrides?: PayableOverrides & { from?: string | Promise<string> },
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    gasGriefingPremiumBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    gasGriefingPremiumBps(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     getLoanAuction(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    liquidityContractAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    liquidityContractAddress(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    offersContractAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    offersContractAddress(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    originationPremiumBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    originationPremiumBps(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     ownerOf(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: CallOverrides,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     partialRepayLoan(
       nftContractAddress: string,
       nftId: BigNumberish,
       amount: BigNumberish,
-      overrides?: PayableOverrides & { from?: string | Promise<string> },
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     pause(
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     pauseSanctions(
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    protocolInterestBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    protocolInterestBps(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     refinanceByBorrower(
       nftContractAddress: string,
@@ -1424,69 +1585,73 @@ export interface ILending extends BaseContract {
       floorTerm: boolean,
       offerHash: BytesLike,
       expectedLastUpdatedTimestamp: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     refinanceByLender(
       offer: IOffersStructs.OfferStruct,
       expectedLastUpdatedTimestamp: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     repayLoan(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: PayableOverrides & { from?: string | Promise<string> },
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     repayLoanForAccount(
       nftContractAddress: string,
       nftId: BigNumberish,
       expectedLoanBeginTimestamp: BigNumberish,
-      overrides?: PayableOverrides & { from?: string | Promise<string> },
+      overrides?: PayableOverrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     seizeAsset(
       nftContractAddress: string,
       nftId: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
-    sigLendingContractAddress(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    sigLendingContractAddress(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
-    termGriefingPremiumBps(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+    termGriefingPremiumBps(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     unpause(
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     unpauseSanctions(
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     updateDefaultRefinancePremiumBps(
       newDefaultRefinancePremiumBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     updateGasGriefingPremiumBps(
       newGasGriefingPremiumBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     updateOriginationPremiumLenderBps(
       newOriginationPremiumBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     updateProtocolInterestBps(
       newProtocolInterestBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     updateTermGriefingPremiumBps(
       newTermGriefingPremiumBps: BigNumberish,
-      overrides?: Overrides & { from?: string | Promise<string> },
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

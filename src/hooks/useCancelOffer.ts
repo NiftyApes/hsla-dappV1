@@ -31,8 +31,6 @@ export const useCancelOffer = ({
 
   const [txReceipt, setTxReceipt] = useState<ethers.ContractReceipt | null>(null);
 
-  const toast = useToast();
-
   const chainId = useChainId();
 
   if (!niftyApesContract || !chainId) {
@@ -66,13 +64,6 @@ export const useCancelOffer = ({
 
         setCancelStatus('SUCCESS');
 
-        toast({
-          title: 'Offer canceled successfully',
-          status: 'success',
-          position: 'top-right',
-          isClosable: true,
-        });
-
         await updateOfferStatus({
           chainId,
           nftContractAddress,
@@ -97,8 +88,6 @@ export const useCancelOffer = ({
           setTxObject(null);
           setTxReceipt(null);
         }, 3000);
-
-        console.error(e);
       }
 
       dispatch(increment());

@@ -2,103 +2,103 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import { Contract, Signer, utils } from 'ethers';
-import { Provider } from '@ethersproject/providers';
-import type { ILendingAdmin, ILendingAdminInterface } from '../ILendingAdmin';
+import { Contract, Signer, utils } from "ethers";
+import { Provider } from "@ethersproject/providers";
+import type { ILendingAdmin, ILendingAdminInterface } from "../ILendingAdmin";
 
 const _abi = [
   {
     inputs: [],
-    name: 'pause',
+    name: "pause",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [],
-    name: 'pauseSanctions',
+    name: "pauseSanctions",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [],
-    name: 'unpause',
+    name: "unpause",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [],
-    name: 'unpauseSanctions',
+    name: "unpauseSanctions",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'uint16',
-        name: 'newDefaultRefinancePremiumBps',
-        type: 'uint16',
+        internalType: "uint16",
+        name: "newDefaultRefinancePremiumBps",
+        type: "uint16",
       },
     ],
-    name: 'updateDefaultRefinancePremiumBps',
+    name: "updateDefaultRefinancePremiumBps",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'uint16',
-        name: 'newGasGriefingPremiumBps',
-        type: 'uint16',
+        internalType: "uint16",
+        name: "newGasGriefingPremiumBps",
+        type: "uint16",
       },
     ],
-    name: 'updateGasGriefingPremiumBps',
+    name: "updateGasGriefingPremiumBps",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'uint16',
-        name: 'newOriginationPremiumBps',
-        type: 'uint16',
+        internalType: "uint16",
+        name: "newOriginationPremiumBps",
+        type: "uint16",
       },
     ],
-    name: 'updateOriginationPremiumLenderBps',
+    name: "updateOriginationPremiumLenderBps",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'uint16',
-        name: 'newProtocolInterestBps',
-        type: 'uint16',
+        internalType: "uint16",
+        name: "newProtocolInterestBps",
+        type: "uint16",
       },
     ],
-    name: 'updateProtocolInterestBps',
+    name: "updateProtocolInterestBps",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
       {
-        internalType: 'uint16',
-        name: 'newTermGriefingPremiumBps',
-        type: 'uint16',
+        internalType: "uint16",
+        name: "newTermGriefingPremiumBps",
+        type: "uint16",
       },
     ],
-    name: 'updateTermGriefingPremiumBps',
+    name: "updateTermGriefingPremiumBps",
     outputs: [],
-    stateMutability: 'nonpayable',
-    type: 'function',
+    stateMutability: "nonpayable",
+    type: "function",
   },
 ];
 
@@ -107,7 +107,10 @@ export class ILendingAdmin__factory {
   static createInterface(): ILendingAdminInterface {
     return new utils.Interface(_abi) as ILendingAdminInterface;
   }
-  static connect(address: string, signerOrProvider: Signer | Provider): ILendingAdmin {
+  static connect(
+    address: string,
+    signerOrProvider: Signer | Provider
+  ): ILendingAdmin {
     return new Contract(address, _abi, signerOrProvider) as ILendingAdmin;
   }
 }

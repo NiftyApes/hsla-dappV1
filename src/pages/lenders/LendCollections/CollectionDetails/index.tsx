@@ -28,7 +28,8 @@ const CollectionDetailsModal: React.FC = () => {
           mt="16px"
           gridTemplateColumns="max(1140*0.60px, min(60vw, 1600*0.60px)) 1fr"
           columnGap="8px"
-          px="20px">
+          px="20px"
+        >
           <GridItem>
             <OfferBook
               collectionOfferAmt={collectionOfferAmt}

@@ -4,7 +4,7 @@ import { RootState } from 'app/store';
 import { transactionTypes } from 'constants/transactionTypes';
 
 import { increment } from 'counter/counterSlice';
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
 import { fetchLoanAuctionByNFT } from 'loan';
 import { NFT } from 'nft';
@@ -19,7 +19,7 @@ export const useRepayLoanByBorrower = ({
   amount,
 }: {
   nftContractAddress?: string;
-  nftId: string;
+  nftId?: string;
   amount: BigNumber;
 }) => {
   const niftyApesContract = useLendingContract();
@@ -40,7 +40,7 @@ export const useRepayLoanByBorrower = ({
       ),
   );
 
-  if (!niftyApesContract) {
+  if (!niftyApesContract || !nftId) {
     return {
       executeLoanByBorrower: undefined,
     };
@@ -91,7 +91,7 @@ export const useRepayLoanByBorrower = ({
         data: {
           amount: totalPayment,
           asset: 'ETH',
-          nftContractAddress,
+          nftContractAddress: ethers.utils.getAddress(nftContractAddress),
           nftId,
         },
       });
