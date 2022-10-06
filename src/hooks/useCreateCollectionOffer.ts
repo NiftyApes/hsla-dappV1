@@ -28,6 +28,7 @@ export const useCreateCollectionOffer = ({
       aprInPercent,
       durationInDays,
       expirationInDays,
+      floorTermLimit,
       asset = 'ETH',
       onPending,
       onSuccess,
@@ -39,6 +40,7 @@ export const useCreateCollectionOffer = ({
       aprInPercent: number;
       durationInDays: number;
       expirationInDays: number;
+      floorTermLimit: number;
       asset?: string;
       onPending?: any;
       onSuccess?: any;
@@ -73,7 +75,7 @@ export const useCreateCollectionOffer = ({
           duration: Math.floor(durationInDays * 86400),
           expiration: Math.floor(Date.now() / 1000 + expirationInDays * 86400),
           // TODO: Allow user to edit this in UI
-          floorTermLimit: 5,
+          floorTermLimit,
         });
 
         onTxSubmitted && onTxSubmitted(tx);

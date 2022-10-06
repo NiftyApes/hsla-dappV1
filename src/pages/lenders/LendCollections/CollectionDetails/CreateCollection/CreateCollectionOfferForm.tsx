@@ -82,6 +82,7 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
       aprInPercent: Number(apr),
       durationInDays: Number(duration),
       expirationInDays: Number(expiration),
+      floorTermLimit: Number(floorTermLimit),
       onPending: () => setCreateCollectionOfferStatus('PENDING'),
       onSuccess: (offerHash: string) => {
         setCollectionOfferAmt('');
