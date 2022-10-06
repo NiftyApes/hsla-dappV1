@@ -8,14 +8,14 @@ import {
     InputRightElement,
     useToast,
 } from '@chakra-ui/react';
+import CryptoIcon from 'components/atoms/CryptoIcon';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
-import {useDepositEthLiquidity} from 'hooks/useDepositEthLiquidity';
-import {useWalletBalance} from 'hooks/useWalletBalance';
-import {useEffect, useState} from 'react';
 import {DepositBtn} from './DepositBtn';
 import {DepositMsg} from './DepositMsg';
-import CryptoIcon from 'components/atoms/CryptoIcon';
 import {ToastSuccessCard} from "../../cards/ToastSuccessCard";
+import {useDepositEthLiquidity} from 'hooks/useDepositEthLiquidity';
+import {useEffect, useState} from 'react';
+import {useWalletBalance} from 'hooks/useWalletBalance';
 
 export const DepositLiquidity: React.FC = () => {
 
