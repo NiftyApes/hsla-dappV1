@@ -7,3 +7,4 @@ export type Contract = EthersContract;
 export type LendingContract = NiftyApesLending;
 export type LiquidityContract = NiftyApesLiquidity;
 export type OffersContract = NiftyApesOffers;
+export type CEthContract = Contract;
