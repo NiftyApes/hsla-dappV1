@@ -19,7 +19,7 @@ import LendCollections from '../../index';
 const CollectionHeader: React.FC = () => {
     const {collectionAddress} = useParams();
 
-    const {name, image} = useRaribleCollectionMetadata({nftContractAddress: collectionAddress});
+    const {name, image} = useRaribleCollectionMetadata({contractAddress: collectionAddress});
     const {isOpen, onOpen, onClose} = useDisclosure();
 
     const {floorPrice, items, owners, volume} = useRaribleCollectionStats({
@@ -114,7 +114,7 @@ const CollectionHeader: React.FC = () => {
                 <ModalOverlay/>
                 <ModalContent p="5px">
                     <ModalCloseButton/>
-                    <LendCollections/>
+                    <LendCollections onClick={onClose}/>
                 </ModalContent>
             </Modal>
         </Flex>

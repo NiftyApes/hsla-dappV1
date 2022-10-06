@@ -3,21 +3,21 @@ import { useTopCollections } from './useTopCollections';
 
 const RARIBLE_API_PATH = 'https://api.rarible.org/v0.1';
 
-export const useRaribleCollectionMetadata = ({ nftContractAddress }: { nftContractAddress?: string }) => {
+export const useRaribleCollectionMetadata = ({ contractAddress }: { contractAddress?: string }) => {
   const [meta, setMeta] = useState<{ name: string; symbol: string; image: string }>();
   const { collections } = useTopCollections();
 
   let image = '/assets/images/img-missing.png';
 
   const collectionMixin = (obj: any) => {
-    const existing = collections.find((item) => item.address === nftContractAddress);
+    const existing = collections.find((item) => item.address === contractAddress);
     return existing ? { ...obj, ...existing } : obj;
   };
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch(
-        `${RARIBLE_API_PATH}/collections/ETHEREUM:${nftContractAddress}`,
+        `${RARIBLE_API_PATH}/collections/ETHEREUM:${contractAddress}`,
         {
           method: 'GET',
         },
@@ -42,7 +42,7 @@ export const useRaribleCollectionMetadata = ({ nftContractAddress }: { nftContra
         });
     };
     fetchData();
-  }, [nftContractAddress]);
+  }, [contractAddress]);
 
   return { ...meta };
 };

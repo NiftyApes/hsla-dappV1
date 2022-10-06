@@ -10,9 +10,14 @@ import {NFTCollection} from "../../hooks/useTopCollections";
 interface Props {
     collection: NFTCollection;
     throttle?: number;
+    onClick?: () => void;
 }
 
-const NFTCollectionCard: React.FC<Props> = ({collection, throttle = 0}) => {
+const NFTCollectionCard: React.FC<Props> = ({
+                                                collection,
+                                                throttle = 0,
+                                                onClick,
+                                            }) => {
 
     const {floorPrice} = useRaribleCollectionStats({
         enabled: true,
@@ -21,7 +26,7 @@ const NFTCollectionCard: React.FC<Props> = ({collection, throttle = 0}) => {
     });
 
     return (
-        <Flex flexDir="row" p="10px" borderBottom="1px" borderColor={"gray.100"}>
+        <Flex as="button" flexDir="row" p="10px" borderBottom="1px" borderColor={"gray.100"} onClick={onClick}>
             <Image
                 src={collection.image}
                 w="55px"
@@ -35,8 +40,8 @@ const NFTCollectionCard: React.FC<Props> = ({collection, throttle = 0}) => {
 
                 {floorPrice &&
                     <Flex flexDir="row">
-                        <Text fontSize="sm" fontWeight="bold" as="span">{floorPrice}Ξ</Text>&nbsp;<Text as="span"
-                                                                                                        fontSize="sm">Floor</Text>
+                        <Text fontSize="sm" fontWeight="bold" as="span">{floorPrice}Ξ
+                        </Text>&nbsp;<Text as="span" fontSize="sm">Floor</Text>
                     </Flex>
                 }
             </Flex>

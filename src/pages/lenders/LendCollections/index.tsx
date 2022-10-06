@@ -9,10 +9,11 @@ import {
     Button,
     InputRightElement,
 } from '@chakra-ui/react';
-import {Link, useNavigate} from 'react-router-dom';
-import {useTopCollections} from '../../../hooks/useTopCollections';
+
 import NFTCollectionCard from '../../../components/cards/NFTCollectionCard';
 import {ethers} from 'ethers';
+import {useNavigate} from 'react-router-dom';
+import {useTopCollections} from '../../../hooks/useTopCollections';
 
 const i18n = {
     inputHeader: 'select a collection',
@@ -20,7 +21,12 @@ const i18n = {
     inputButton: 'Go',
 };
 
-const LendCollections: React.FC = () => {
+interface Props {
+    onClick?: () => void
+}
+
+const LendCollections: React.FC<Props> = ({onClick}) => {
+
     const navigate = useNavigate();
     const {collections} = useTopCollections();
     const [collectionAddress, setCollectionAddress] = useState('');
@@ -65,9 +71,12 @@ const LendCollections: React.FC = () => {
             <Flex direction="column">
                 {collections.map((collection, index) => {
                     return (
-                        <Link to={`/lenders/create-collection-offer/${collection.address}`} key={index}>
-                            <NFTCollectionCard collection={collection} throttle={100 * index}/>
-                        </Link>
+                        <NFTCollectionCard collection={collection} throttle={100 * index} onClick={() => {
+                            navigate(`/lenders/create-collection-offer/${collection.address}`);
+                            if (onClick) {
+                                onClick();
+                            }
+                        }}/>
                     );
                 })}
             </Flex>

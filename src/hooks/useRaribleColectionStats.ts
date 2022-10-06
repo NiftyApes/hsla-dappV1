@@ -33,7 +33,6 @@ export const useRaribleCollectionStats = ({enabled = true, contractAddress, thro
 
     useEffect(() => {
 
-
         const fetchData = async () => {
 
             const response = await fetch(
@@ -58,7 +57,7 @@ export const useRaribleCollectionStats = ({enabled = true, contractAddress, thro
             if (hasCache()) {
                 return setMeta({...localCache[contractAddress]});
             } else {
-                
+
                 // Throttle Rarible API requests to avoid 429
                 setTimeout(() => fetchData(), throttle);
             }
