@@ -1,5 +1,6 @@
 import { EIP1193Provider } from '@web3-onboard/core';
 import { GOERLI, LOCAL } from 'constants/contractAddresses';
+import { CEthContract } from 'nft';
 import { getEthersContractWithEIP1193Provider } from './getEthersContractWithEIP1193Provider';
 
 export function getCEthContract({
@@ -14,5 +15,5 @@ export function getCEthContract({
     address:
       chainId === '0x7a69' ? LOCAL.CETH.ADDRESS : chainId === '0x5' ? GOERLI.CETH.ADDRESS : '',
     provider,
-  });
+  }) as CEthContract;
 }

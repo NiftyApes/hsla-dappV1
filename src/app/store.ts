@@ -1,19 +1,28 @@
 // Zak: Copy-pasted from Redux Toolkit
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
+import {
+  CEthContract,
+  LendingContract,
+  LiquidityContract,
+  OffersContract,
+  Wallet,
+} from 'nft/model';
 import counterReducer from '../counter/counterSlice';
 import loansReducer from '../loan/state/loans.slice';
 import nftsReducer from '../nft/state/nfts.slice';
-import { LendingContract, OffersContract, LiquidityContract, Wallet } from 'nft/model';
 
 let wallet: Wallet | null = null;
 let lendingContract: LendingContract | null = null;
 let offersContract: OffersContract | null = null;
 let liquidityContract: LiquidityContract | null = null;
+let cEthContract: any | null = null;
 
 export type ThunkExtra = {
   wallet?: Wallet | null;
   lendingContract?: LendingContract | null;
   offersContract?: OffersContract | null;
+  liquidityContract?: LiquidityContract | null;
+  cEthContract?: CEthContract | null;
 };
 
 const getExtraArgs = () => ({
@@ -21,6 +30,7 @@ const getExtraArgs = () => ({
   lendingContract,
   offersContract,
   liquidityContract,
+  cEthContract,
 });
 
 export const store = configureStore({
@@ -51,6 +61,10 @@ export const getStoreOffersContract = () => offersContract;
 export const setStoreLiquidityContract = (newContract?: LiquidityContract | null) =>
   (liquidityContract = newContract || null);
 export const getStoreLiquidityContract = () => liquidityContract;
+
+export const setStoreCEthContract = (newContract?: CEthContract | null) =>
+  (cEthContract = newContract || null);
+export const getStoreCEthContract = () => cEthContract;
 
 export const setStoreWallet = (newWallet: Wallet | null) => (wallet = newWallet);
 export const getStoreWallet = () => wallet;
