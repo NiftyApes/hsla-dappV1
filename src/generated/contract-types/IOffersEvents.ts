@@ -19,6 +19,7 @@ export declare namespace IOffersStructs {
     asset: string;
     amount: BigNumberish;
     interestRatePerSecond: BigNumberish;
+    floorTermLimit: BigNumberish;
   };
 
   export type OfferStructOutput = [
@@ -31,6 +32,7 @@ export declare namespace IOffersStructs {
     string,
     BigNumber,
     string,
+    BigNumber,
     BigNumber,
     BigNumber
   ] & {
@@ -45,6 +47,7 @@ export declare namespace IOffersStructs {
     asset: string;
     amount: BigNumber;
     interestRatePerSecond: BigNumber;
+    floorTermLimit: BigNumber;
   };
 }
 

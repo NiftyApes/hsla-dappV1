@@ -30,6 +30,7 @@ export declare namespace IOffersStructs {
     asset: string;
     amount: BigNumberish;
     interestRatePerSecond: BigNumberish;
+    floorTermLimit: BigNumberish;
   };
 
   export type OfferStructOutput = [
@@ -42,6 +43,7 @@ export declare namespace IOffersStructs {
     string,
     BigNumber,
     string,
+    BigNumber,
     BigNumber,
     BigNumber
   ] & {
@@ -56,41 +58,50 @@ export declare namespace IOffersStructs {
     asset: string;
     amount: BigNumber;
     interestRatePerSecond: BigNumber;
+    floorTermLimit: BigNumber;
   };
 }
 
 export interface NiftyApesOffersInterface extends utils.Interface {
   contractName: "NiftyApesOffers";
   functions: {
-    "createOffer((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96))": FunctionFragment;
+    "createOffer((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64))": FunctionFragment;
+    "getFloorOfferCount(bytes32)": FunctionFragment;
     "getOffer(address,uint256,bytes32,bool)": FunctionFragment;
-    "getOfferHash((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96))": FunctionFragment;
+    "getOfferHash((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64))": FunctionFragment;
     "getOfferSignatureStatus(bytes)": FunctionFragment;
-    "getOfferSigner((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96),bytes)": FunctionFragment;
+    "getOfferSigner((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64),bytes)": FunctionFragment;
+    "getSigFloorOfferCount(bytes)": FunctionFragment;
+    "incrementFloorOfferCount(bytes32)": FunctionFragment;
+    "incrementSigFloorOfferCount(bytes)": FunctionFragment;
     "initialize(address)": FunctionFragment;
     "lendingContractAddress()": FunctionFragment;
     "liquidityContractAddress()": FunctionFragment;
-    "markSignatureUsed((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96),bytes)": FunctionFragment;
+    "markSignatureUsed((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64),bytes)": FunctionFragment;
     "owner()": FunctionFragment;
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
     "removeOffer(address,uint256,bytes32,bool)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "requireAvailableSignature(bytes)": FunctionFragment;
-    "requireMinimumDuration((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96))": FunctionFragment;
-    "requireNoFloorTerms((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96))": FunctionFragment;
+    "requireMinimumDuration((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64))": FunctionFragment;
+    "requireNoFloorTerms((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64))": FunctionFragment;
     "requireSignature65(bytes)": FunctionFragment;
     "sigLendingContractAddress()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unpause()": FunctionFragment;
     "updateLendingContractAddress(address)": FunctionFragment;
     "updateSigLendingContractAddress(address)": FunctionFragment;
-    "withdrawOfferSignature((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96),bytes)": FunctionFragment;
+    "withdrawOfferSignature((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64),bytes)": FunctionFragment;
   };
 
   encodeFunctionData(
     functionFragment: "createOffer",
     values: [IOffersStructs.OfferStruct]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getFloorOfferCount",
+    values: [BytesLike]
   ): string;
   encodeFunctionData(
     functionFragment: "getOffer",
@@ -107,6 +118,18 @@ export interface NiftyApesOffersInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "getOfferSigner",
     values: [IOffersStructs.OfferStruct, BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getSigFloorOfferCount",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "incrementFloorOfferCount",
+    values: [BytesLike]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "incrementSigFloorOfferCount",
+    values: [BytesLike]
   ): string;
   encodeFunctionData(functionFragment: "initialize", values: [string]): string;
   encodeFunctionData(
@@ -174,6 +197,10 @@ export interface NiftyApesOffersInterface extends utils.Interface {
     functionFragment: "createOffer",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(
+    functionFragment: "getFloorOfferCount",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getOffer", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getOfferHash",
@@ -185,6 +212,18 @@ export interface NiftyApesOffersInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "getOfferSigner",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getSigFloorOfferCount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "incrementFloorOfferCount",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "incrementSigFloorOfferCount",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
@@ -384,6 +423,11 @@ export interface NiftyApesOffers extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    getFloorOfferCount(
+      offerHash: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { count: BigNumber }>;
+
     getOffer(
       nftContractAddress: string,
       nftId: BigNumberish,
@@ -407,6 +451,21 @@ export interface NiftyApesOffers extends BaseContract {
       signature: BytesLike,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    getSigFloorOfferCount(
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { count: BigNumber }>;
+
+    incrementFloorOfferCount(
+      offerHash: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    incrementSigFloorOfferCount(
+      signature: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     initialize(
       newliquidityContractAddress: string,
@@ -496,6 +555,11 @@ export interface NiftyApesOffers extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  getFloorOfferCount(
+    offerHash: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
   getOffer(
     nftContractAddress: string,
     nftId: BigNumberish,
@@ -519,6 +583,21 @@ export interface NiftyApesOffers extends BaseContract {
     signature: BytesLike,
     overrides?: CallOverrides
   ): Promise<string>;
+
+  getSigFloorOfferCount(
+    signature: BytesLike,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  incrementFloorOfferCount(
+    offerHash: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  incrementSigFloorOfferCount(
+    signature: BytesLike,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   initialize(
     newliquidityContractAddress: string,
@@ -608,6 +687,11 @@ export interface NiftyApesOffers extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    getFloorOfferCount(
+      offerHash: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getOffer(
       nftContractAddress: string,
       nftId: BigNumberish,
@@ -631,6 +715,21 @@ export interface NiftyApesOffers extends BaseContract {
       signature: BytesLike,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    getSigFloorOfferCount(
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    incrementFloorOfferCount(
+      offerHash: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    incrementSigFloorOfferCount(
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     initialize(
       newliquidityContractAddress: string,
@@ -796,6 +895,11 @@ export interface NiftyApesOffers extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    getFloorOfferCount(
+      offerHash: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getOffer(
       nftContractAddress: string,
       nftId: BigNumberish,
@@ -818,6 +922,21 @@ export interface NiftyApesOffers extends BaseContract {
       offer: IOffersStructs.OfferStruct,
       signature: BytesLike,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getSigFloorOfferCount(
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    incrementFloorOfferCount(
+      offerHash: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    incrementSigFloorOfferCount(
+      signature: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     initialize(
@@ -909,6 +1028,11 @@ export interface NiftyApesOffers extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    getFloorOfferCount(
+      offerHash: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getOffer(
       nftContractAddress: string,
       nftId: BigNumberish,
@@ -931,6 +1055,21 @@ export interface NiftyApesOffers extends BaseContract {
       offer: IOffersStructs.OfferStruct,
       signature: BytesLike,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getSigFloorOfferCount(
+      signature: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    incrementFloorOfferCount(
+      offerHash: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    incrementSigFloorOfferCount(
+      signature: BytesLike,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     initialize(
