@@ -31,7 +31,7 @@ const TopBar: React.FC = () => {
       <Flex flexDir="column" alignItems="center">
         <Flex alignItems="center" justifyContent="center">
           <Text fontSize="7xl" ml="8px">
-            {totalEthLoanedOut}Ξ
+            {totalEthLoanedOut && roundForDisplay(totalEthLoanedOut)}Ξ
           </Text>
         </Flex>
         <Text fontSize="2xs" color="solid.darkGray">
