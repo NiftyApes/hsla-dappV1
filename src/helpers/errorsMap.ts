@@ -1,5 +1,5 @@
 export const humanizeContractError = (error: string): string => {
-  const code = error.split('reason string')[1].trim().replace(/[']/g, '');
+  const code = error.split(':')[1].trim().replace(/[']/g, '');
 
   switch (code) {
     case '00001':
