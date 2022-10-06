@@ -3,7 +3,7 @@ import { useTopCollections } from './useTopCollections';
 
 const RARIBLE_API_PATH = 'https://api.rarible.org/v0.1';
 
-export const useCollectionMetadata = ({ nftContractAddress }: { nftContractAddress?: string }) => {
+export const useRaribleCollectionMetadata = ({ nftContractAddress }: { nftContractAddress?: string }) => {
   const [meta, setMeta] = useState<{ name: string; symbol: string; image: string }>();
   const { collections } = useTopCollections();
 

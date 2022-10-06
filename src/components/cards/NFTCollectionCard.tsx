@@ -4,16 +4,21 @@ import {
     Image,
     Text,
 } from "@chakra-ui/react";
-import {useCollectionStats} from "../../hooks/useColectionStats";
+import {useRaribleCollectionStats} from "../../hooks/useRaribleColectionStats";
 import {NFTCollection} from "../../hooks/useTopCollections";
 
 interface Props {
     collection: NFTCollection;
+    throttle?: number;
 }
 
-const NFTCollectionCard: React.FC<Props> = ({collection}) => {
+const NFTCollectionCard: React.FC<Props> = ({collection, throttle = 0}) => {
 
-    const {floorPrice} = useCollectionStats({nftContractAddress: collection?.address});
+    const {floorPrice} = useRaribleCollectionStats({
+        enabled: true,
+        contractAddress: collection?.address,
+        throttle,
+    });
 
     return (
         <Flex flexDir="row" p="10px" borderBottom="1px" borderColor={"gray.100"}>
