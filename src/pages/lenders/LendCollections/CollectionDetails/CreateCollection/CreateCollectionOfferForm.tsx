@@ -14,11 +14,12 @@ import {
   Text,
 } from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
+import { SECONDS_IN_YEAR } from 'constants/misc';
 import { useCreateCollectionOffer } from 'hooks/useCreateCollectionOffer';
 import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
 import { useWalletAddress } from 'hooks/useWalletAddress';
 import _ from 'lodash';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 interface CreateCollectionOfferFormProps {
   nftContractAddress: string;
@@ -32,6 +33,8 @@ interface CreateCollectionOfferFormProps {
   setExpiration: React.Dispatch<React.SetStateAction<string>>;
   addNewlyAddedOfferHash: (offerHash: string) => void;
   openSuccessfulOrderCreationModal: () => void;
+  floorTermLimit: string;
+  setFloorTermLimit: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps> = ({
@@ -46,6 +49,8 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
   setExpiration,
   addNewlyAddedOfferHash,
   openSuccessfulOrderCreationModal,
+  floorTermLimit,
+  setFloorTermLimit
 }) => {
   const { createCollectionOffer } = useCreateCollectionOffer({ nftContractAddress });
 
@@ -59,6 +64,17 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
   const isDurationLessThanOneDay = duration !== '' && Number(duration) < 1;
 
   const walletAddress = useWalletAddress();
+
+  const estimatedProfit = useMemo(() => {
+    const APRPercentage = Number(apr) / 100;
+    const amountCalculation = Number(collectionOfferAmt) * 1e18;
+
+    const interestRatePerSecond = Math.round((APRPercentage * amountCalculation) / SECONDS_IN_YEAR);
+
+    return interestRatePerSecond * Number(duration)
+  }, [apr, collectionOfferAmt, duration]);
+
+  console.log({ estimatedProfit });
 
   const onCreateOffer = () => {
     createCollectionOffer({
@@ -251,7 +267,7 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
               Good for{' '}
             </div>
             <Box w="120px" ml="8px">
-              <Select size="sm" onChange={() => {}} value="5">
+              <Select size="sm" onChange={(e) => setFloorTermLimit(e.target.value)} value={floorTermLimit}>
                 <option value="5">5 Loans</option>
                 <option value="10">10 Loans</option>
                 <option value="30">30 Loans</option>

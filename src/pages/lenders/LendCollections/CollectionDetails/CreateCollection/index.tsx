@@ -16,6 +16,8 @@ interface CreateCollectionOfferProps {
   expiration: string;
   setExpiration: React.Dispatch<React.SetStateAction<string>>;
   addNewlyAddedOfferHash: (offerHash: string) => void;
+  floorTermLimit: string;
+  setFloorTermLimit: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
@@ -29,6 +31,8 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
   expiration,
   setExpiration,
   addNewlyAddedOfferHash,
+  floorTermLimit,
+  setFloorTermLimit,
 }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -71,6 +75,8 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
         setExpiration={setExpiration}
         addNewlyAddedOfferHash={addNewlyAddedOfferHash}
         openSuccessfulOrderCreationModal={onOpen}
+        floorTermLimit={floorTermLimit}
+        setFloorTermLimit={setFloorTermLimit}
       />
       <SuccessfulOrderCreationModal isOpen={isOpen} onClose={onClose} />
     </Box>
