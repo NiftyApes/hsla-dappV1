@@ -88,6 +88,7 @@ export declare namespace IOffersStructs {
     asset: string;
     amount: BigNumberish;
     interestRatePerSecond: BigNumberish;
+    floorTermLimit: BigNumberish;
   };
 
   export type OfferStructOutput = [
@@ -100,6 +101,7 @@ export declare namespace IOffersStructs {
     string,
     BigNumber,
     string,
+    BigNumber,
     BigNumber,
     BigNumber
   ] & {
@@ -114,6 +116,7 @@ export declare namespace IOffersStructs {
     asset: string;
     amount: BigNumber;
     interestRatePerSecond: BigNumber;
+    floorTermLimit: BigNumber;
   };
 }
 
@@ -125,8 +128,8 @@ export interface NiftyApesLendingInterface extends utils.Interface {
     "checkSufficientInterestAccumulated(address,uint256)": FunctionFragment;
     "checkSufficientTerms(address,uint256,uint128,uint96,uint32)": FunctionFragment;
     "defaultRefinancePremiumBps()": FunctionFragment;
-    "doExecuteLoan((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96),address,address,uint256)": FunctionFragment;
-    "doRefinanceByBorrower((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96),uint256,address,uint32)": FunctionFragment;
+    "doExecuteLoan((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64),address,address,uint256)": FunctionFragment;
+    "doRefinanceByBorrower((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64),uint256,address,uint32)": FunctionFragment;
     "drawLoanAmount(address,uint256,uint256)": FunctionFragment;
     "executeLoanByBorrower(address,uint256,bytes32,bool)": FunctionFragment;
     "executeLoanByLender(address,uint256,bytes32,bool)": FunctionFragment;
@@ -145,7 +148,7 @@ export interface NiftyApesLendingInterface extends utils.Interface {
     "paused()": FunctionFragment;
     "protocolInterestBps()": FunctionFragment;
     "refinanceByBorrower(address,uint256,bool,bytes32,uint32)": FunctionFragment;
-    "refinanceByLender((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96),uint32)": FunctionFragment;
+    "refinanceByLender((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64),uint32)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "repayLoan(address,uint256)": FunctionFragment;
     "repayLoanForAccount(address,uint256,uint32)": FunctionFragment;

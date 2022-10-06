@@ -31,6 +31,7 @@ export declare namespace IOffersStructs {
     asset: string;
     amount: BigNumberish;
     interestRatePerSecond: BigNumberish;
+    floorTermLimit: BigNumberish;
   };
 
   export type OfferStructOutput = [
@@ -43,6 +44,7 @@ export declare namespace IOffersStructs {
     string,
     BigNumber,
     string,
+    BigNumber,
     BigNumber,
     BigNumber
   ] & {
@@ -57,21 +59,22 @@ export declare namespace IOffersStructs {
     asset: string;
     amount: BigNumber;
     interestRatePerSecond: BigNumber;
+    floorTermLimit: BigNumber;
   };
 }
 
 export interface NiftyApesSigLendingInterface extends utils.Interface {
   contractName: "NiftyApesSigLending";
   functions: {
-    "executeLoanByBorrowerSignature((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96),bytes,uint256)": FunctionFragment;
-    "executeLoanByLenderSignature((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96),bytes)": FunctionFragment;
+    "executeLoanByBorrowerSignature((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64),bytes,uint256)": FunctionFragment;
+    "executeLoanByLenderSignature((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64),bytes)": FunctionFragment;
     "initialize(address)": FunctionFragment;
     "lendingContractAddress()": FunctionFragment;
     "offersContractAddress()": FunctionFragment;
     "owner()": FunctionFragment;
     "pause()": FunctionFragment;
     "paused()": FunctionFragment;
-    "refinanceByBorrowerSignature((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96),bytes,uint256,uint32)": FunctionFragment;
+    "refinanceByBorrowerSignature((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64),bytes,uint256,uint32)": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "unpause()": FunctionFragment;

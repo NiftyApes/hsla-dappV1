@@ -1058,6 +1058,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "indexed": false,
@@ -1152,6 +1157,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "indexed": false,
@@ -1240,6 +1250,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "indexed": false,
@@ -1398,6 +1413,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "internalType": "struct IOffersStructs.Offer",
@@ -1414,6 +1434,25 @@
                 }
               ],
               "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "bytes32",
+                  "name": "offerHash",
+                  "type": "bytes32"
+                }
+              ],
+              "name": "getFloorOfferCount",
+              "outputs": [
+                {
+                  "internalType": "uint64",
+                  "name": "count",
+                  "type": "uint64"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             },
             {
@@ -1497,6 +1536,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "internalType": "struct IOffersStructs.Offer",
@@ -1565,6 +1609,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "internalType": "struct IOffersStructs.Offer",
@@ -1660,6 +1709,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "internalType": "struct IOffersStructs.Offer",
@@ -1681,6 +1735,51 @@
                 }
               ],
               "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "bytes",
+                  "name": "signature",
+                  "type": "bytes"
+                }
+              ],
+              "name": "getSigFloorOfferCount",
+              "outputs": [
+                {
+                  "internalType": "uint64",
+                  "name": "count",
+                  "type": "uint64"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "bytes32",
+                  "name": "offerHash",
+                  "type": "bytes32"
+                }
+              ],
+              "name": "incrementFloorOfferCount",
+              "outputs": [],
+              "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [
+                {
+                  "internalType": "bytes",
+                  "name": "signature",
+                  "type": "bytes"
+                }
+              ],
+              "name": "incrementSigFloorOfferCount",
+              "outputs": [],
+              "stateMutability": "nonpayable",
               "type": "function"
             },
             {
@@ -1780,6 +1879,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "internalType": "struct IOffersStructs.Offer",
@@ -1936,6 +2040,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "internalType": "struct IOffersStructs.Offer",
@@ -2006,6 +2115,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "internalType": "struct IOffersStructs.Offer",
@@ -2148,6 +2262,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "internalType": "struct IOffersStructs.Offer",
@@ -2305,6 +2424,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "internalType": "struct IOffersStructs.Offer",
@@ -2385,6 +2509,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "internalType": "struct IOffersStructs.Offer",
@@ -2532,6 +2661,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "internalType": "struct IOffersStructs.Offer",
@@ -3640,6 +3774,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "internalType": "struct IOffersStructs.Offer",
@@ -3725,6 +3864,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "internalType": "struct IOffersStructs.Offer",
@@ -4237,6 +4381,11 @@
                       "internalType": "uint96",
                       "name": "interestRatePerSecond",
                       "type": "uint96"
+                    },
+                    {
+                      "internalType": "uint64",
+                      "name": "floorTermLimit",
+                      "type": "uint64"
                     }
                   ],
                   "internalType": "struct IOffersStructs.Offer",

@@ -46,7 +46,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
 >(
   'loans/fetchLoanOffersByNFT',
   async ({ id: nftId, contractAddress: nftContractAddress, chainId }, thunkApi) => {
-    const { offersContract } = thunkApi.extra();
+    const { offersContract, liquidityContract, cEthContract } = thunkApi.extra();
 
     if (!offersContract) {
       return thunkApi.rejectWithValue({
@@ -67,6 +67,10 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
 
     const processedOffers = await Promise.all(
       data.map(async (offer) => {
+        if (!liquidityContract || !cEthContract) {
+          return false;
+        }
+
         if (offer.OfferTerms.NftId === nftId || offer.OfferTerms.FloorTerm) {
           const offerFromChain = await getLoanOfferFromHash({
             offersContract,
@@ -76,9 +80,29 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
             floorTerm: offer.OfferTerms.FloorTerm,
           });
 
-          if (offerFromChain?.creator !== '0x0000000000000000000000000000000000000000') {
-            return true;
+          if (
+            !offerFromChain ||
+            offerFromChain.creator === '0x0000000000000000000000000000000000000000'
+          ) {
+            return false;
           }
+
+          const lenderLiquidityInCEth = await liquidityContract.getCAssetBalance(
+            offerFromChain.creator,
+            cEthContract.address,
+          );
+
+          const exchangeRate = await cEthContract.exchangeRateStored();
+
+          const lenderLiquidityInEth = lenderLiquidityInCEth
+            .mul(exchangeRate)
+            .div((1e18).toString()); // This doesn't work if you don't toString
+
+          if (offerFromChain.amount.gt(lenderLiquidityInEth)) {
+            return false;
+          }
+
+          return true;
         }
       }),
     ).then((results) => data.filter((offer, i) => results[i]));

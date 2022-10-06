@@ -35,7 +35,7 @@ export const useAvailableEthLiquidity = () => {
 
       const exchangeRate = await cETHContract.exchangeRateStored();
 
-      // We need to divide by exchangeRate to get balance in Eth
+      // We need to multiply by exchangeRate to get balance in Eth
       const liquidityInEth =
         Number(ethers.utils.formatEther(result)) * Number(ethers.utils.formatEther(exchangeRate));
 

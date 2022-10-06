@@ -31,6 +31,7 @@ export declare namespace IOffersStructs {
     asset: string;
     amount: BigNumberish;
     interestRatePerSecond: BigNumberish;
+    floorTermLimit: BigNumberish;
   };
 
   export type OfferStructOutput = [
@@ -43,6 +44,7 @@ export declare namespace IOffersStructs {
     string,
     BigNumber,
     string,
+    BigNumber,
     BigNumber,
     BigNumber
   ] & {
@@ -57,18 +59,19 @@ export declare namespace IOffersStructs {
     asset: string;
     amount: BigNumber;
     interestRatePerSecond: BigNumber;
+    floorTermLimit: BigNumber;
   };
 }
 
 export interface ISigLendingInterface extends utils.Interface {
   contractName: "ISigLending";
   functions: {
-    "executeLoanByBorrowerSignature((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96),bytes,uint256)": FunctionFragment;
-    "executeLoanByLenderSignature((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96),bytes)": FunctionFragment;
+    "executeLoanByBorrowerSignature((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64),bytes,uint256)": FunctionFragment;
+    "executeLoanByLenderSignature((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64),bytes)": FunctionFragment;
     "lendingContractAddress()": FunctionFragment;
     "offersContractAddress()": FunctionFragment;
     "pause()": FunctionFragment;
-    "refinanceByBorrowerSignature((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96),bytes,uint256,uint32)": FunctionFragment;
+    "refinanceByBorrowerSignature((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64),bytes,uint256,uint32)": FunctionFragment;
     "unpause()": FunctionFragment;
     "updateLendingContractAddress(address)": FunctionFragment;
   };

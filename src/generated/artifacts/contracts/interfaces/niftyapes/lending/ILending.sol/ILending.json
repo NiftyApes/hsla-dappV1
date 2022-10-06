@@ -981,6 +981,11 @@
               "internalType": "uint96",
               "name": "interestRatePerSecond",
               "type": "uint96"
+            },
+            {
+              "internalType": "uint64",
+              "name": "floorTermLimit",
+              "type": "uint64"
             }
           ],
           "internalType": "struct IOffersStructs.Offer",
@@ -1066,6 +1071,11 @@
               "internalType": "uint96",
               "name": "interestRatePerSecond",
               "type": "uint96"
+            },
+            {
+              "internalType": "uint64",
+              "name": "floorTermLimit",
+              "type": "uint64"
             }
           ],
           "internalType": "struct IOffersStructs.Offer",
@@ -1495,6 +1505,11 @@
               "internalType": "uint96",
               "name": "interestRatePerSecond",
               "type": "uint96"
+            },
+            {
+              "internalType": "uint64",
+              "name": "floorTermLimit",
+              "type": "uint64"
             }
           ],
           "internalType": "struct IOffersStructs.Offer",
