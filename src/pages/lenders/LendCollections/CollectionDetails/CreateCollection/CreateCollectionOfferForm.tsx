@@ -74,8 +74,6 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
     return interestRatePerSecond * Number(duration)
   }, [apr, collectionOfferAmt, duration]);
 
-  console.log({ estimatedProfit });
-
   const onCreateOffer = () => {
     createCollectionOffer({
       amount: Number(collectionOfferAmt),
@@ -237,6 +235,15 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
             </Box>
           </GridItem>
         </Grid>
+        <Text 
+          fontSize="md"
+          fontWeight="bold"
+          pt="24px"
+          textAlign="center"
+          color="solid.gray0"
+          >
+            Estimated Profit: {estimatedProfit}
+        </Text>
         <Button
           variant="neutralReverse"
           py="36px"
