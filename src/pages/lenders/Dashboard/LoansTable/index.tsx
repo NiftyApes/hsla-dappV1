@@ -18,8 +18,7 @@ const LoansTable: React.FC<any> = ({ activeLoans }) => {
                 border: 'none',
                 textAlign: 'center',
               },
-            }}
-          >
+            }}>
             <Th>collateral</Th>
             <Th>loan details</Th>
             <Th>time remaining</Th>
@@ -40,10 +39,9 @@ const LoansTable: React.FC<any> = ({ activeLoans }) => {
             'tr:last-child > td:last-child': {
               borderBottomRightRadius: '10px',
             },
-          }}
-        >
+          }}>
           {activeLoans?.map((loan: any, i: number) => (
-            <LoanRow loanFromDb={loan} key={i} />
+            <LoanRow loanFromDb={loan} key={`${loan.nftContractAddress}_${loan.nftId}`} />
           ))}
         </Tbody>
       </Table>

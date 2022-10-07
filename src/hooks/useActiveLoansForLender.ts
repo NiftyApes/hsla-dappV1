@@ -19,7 +19,7 @@ export const useActiveLoansForLender = () => {
   const chainId = useChainId();
 
   useEffect(() => {
-    async function fetchLoanOffersForNFT() {
+    async function fetchActiveLoansForLender() {
       if (!lendingContract || !address || !chainId) {
         return;
       }
@@ -51,12 +51,15 @@ export const useActiveLoansForLender = () => {
         }
       }
 
-      const filteredOffers = _.compact(loans);
+      const filteredLoans = _.uniqBy(
+        _.compact(loans),
+        (loan: any) => `${loan.nftContractAddress}${loan.nftId}`,
+      );
 
-      setLoans(filteredOffers);
+      setLoans(filteredLoans);
     }
 
-    fetchLoanOffersForNFT();
+    fetchActiveLoansForLender();
   }, [address, lendingContract, chainId, cacheCounter]);
 
   console.log('loans', loans);
