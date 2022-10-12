@@ -14,11 +14,11 @@ const i18n = {
     `App not currently configured to connect to NiftyApes contract on current chain id: ${cid}`,
 };
 
-const isLocalChain = (cid: string | undefined): boolean | undefined => {
+export const isLocalChain = (cid: string | undefined): boolean | undefined => {
   return cid === '0x7a69';
 };
 
-const isGoerli = (cid: string | undefined): boolean | undefined => {
+export const isGoerli = (cid: string | undefined): boolean | undefined => {
   return cid === '0x5';
 };
 
