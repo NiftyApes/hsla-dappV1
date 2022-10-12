@@ -12,7 +12,7 @@ import {
   InputLeftElement,
   InputRightElement,
   Select,
-  Text,
+  Text
 } from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
@@ -20,9 +20,16 @@ import { useCreateCollectionOffer } from 'hooks/useCreateCollectionOffer';
 import { useEasyOfferForCollection } from 'hooks/useEasyOfferForCollection';
 import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
 import { useWalletAddress } from 'hooks/useWalletAddress';
+import JSConfetti from 'js-confetti';
 import _ from 'lodash';
 import React, { useState } from 'react';
 import { EasyBtnPopover } from './EasyBtnPopover';
+
+const jsConfetti = new JSConfetti()
+
+jsConfetti.addConfetti({
+  emojis: ['🌈', '#WAGMI', '💥', '✨', '💫', '🌸'],
+})
 
 interface CreateCollectionOfferFormProps {
   nftContractAddress: string;
