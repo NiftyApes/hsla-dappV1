@@ -115,7 +115,11 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
   },
 );
 
-export const fetchLoanAuctionByNFT = createAsyncThunk<FetchLoanAuctionResponse, NFT, LoansThunkApi>(
+export const fetchLoanAuctionByNFT = createAsyncThunk<
+  FetchLoanAuctionResponse,
+  { id: string; contractAddress: string },
+  LoansThunkApi
+>(
   'loans/fetchLoanAuctionByNFT',
   async ({ id: nftId, contractAddress: nftContractAddress }, thunkApi) => {
     const { lendingContract } = thunkApi.extra();
