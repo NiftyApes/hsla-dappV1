@@ -13,6 +13,7 @@ const CollectionDetailsModal: React.FC = () => {
   const [apr, setApr] = useState<string>('');
   const [duration, setDuration] = useState<string>('');
   const [expiration, setExpiration] = useState<string>('30');
+  const [floorTermLimit, setFloorTermLimit] = useState('5');
   const [newlyAddedOfferHashes, setNewlyAddedOfferHashes] = useState<string[]>([]);
 
   if (!collectionAddress) {
@@ -48,6 +49,8 @@ const CollectionDetailsModal: React.FC = () => {
               setDuration={setDuration}
               expiration={expiration}
               setExpiration={setExpiration}
+              floorTermLimit={floorTermLimit}
+              setFloorTermLimit={setFloorTermLimit}
               nftContractAddress={collectionAddress}
               addNewlyAddedOfferHash={(offerHash: string) => {
                 setNewlyAddedOfferHashes([...newlyAddedOfferHashes, offerHash]);

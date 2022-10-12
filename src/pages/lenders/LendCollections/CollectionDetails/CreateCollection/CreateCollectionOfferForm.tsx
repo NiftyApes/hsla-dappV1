@@ -4,7 +4,6 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   Grid,
   GridItem,
   Input,
@@ -15,14 +14,12 @@ import {
   Text,
 } from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import LoadingIndicator from 'components/atoms/LoadingIndicator';
+import { SECONDS_IN_YEAR } from 'constants/misc';
 import { useCreateCollectionOffer } from 'hooks/useCreateCollectionOffer';
-import { useEasyOfferForCollection } from 'hooks/useEasyOfferForCollection';
 import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
 import { useWalletAddress } from 'hooks/useWalletAddress';
 import _ from 'lodash';
-import React, { useState } from 'react';
-import { EasyBtnPopover } from './EasyBtnPopover';
+import React, { useMemo, useState } from 'react';
 
 interface CreateCollectionOfferFormProps {
   nftContractAddress: string;
@@ -36,6 +33,8 @@ interface CreateCollectionOfferFormProps {
   setExpiration: React.Dispatch<React.SetStateAction<string>>;
   addNewlyAddedOfferHash: (offerHash: string) => void;
   openSuccessfulOrderCreationModal: () => void;
+  floorTermLimit: string;
+  setFloorTermLimit: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps> = ({
@@ -50,14 +49,12 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
   setExpiration,
   addNewlyAddedOfferHash,
   openSuccessfulOrderCreationModal,
+  floorTermLimit,
+  setFloorTermLimit
 }) => {
   const { createCollectionOffer } = useCreateCollectionOffer({ nftContractAddress });
 
   const [createCollectionOfferStatus, setCreateCollectionOfferStatus] = useState<string>('READY');
-
-  const { easyOfferAmount, easyOfferApr, easyOfferDuration } = useEasyOfferForCollection({
-    nftContractAddress,
-  });
 
   const { availableEthLiquidity } = useAvailableEthLiquidity();
 
@@ -67,6 +64,40 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
   const isDurationLessThanOneDay = duration !== '' && Number(duration) < 1;
 
   const walletAddress = useWalletAddress();
+
+  const estimatedProfit = useMemo(() => {
+    const APRPercentage = Number(apr) / 100;
+    const amountCalculation = Number(collectionOfferAmt) * 1e18;
+
+    const interestRatePerSecond = Math.round((APRPercentage * amountCalculation) / SECONDS_IN_YEAR);
+
+    return interestRatePerSecond * Number(duration)
+  }, [apr, collectionOfferAmt, duration]);
+
+  const onCreateOffer = () => {
+    createCollectionOffer({
+      amount: Number(collectionOfferAmt),
+      aprInPercent: Number(apr),
+      durationInDays: Number(duration),
+      expirationInDays: Number(expiration),
+      floorTermLimit: Number(floorTermLimit),
+      onPending: () => setCreateCollectionOfferStatus('PENDING'),
+      onSuccess: (offerHash: string) => {
+        setCollectionOfferAmt('');
+        setApr('');
+        setDuration('');
+        setCreateCollectionOfferStatus('SUCCESS');
+        addNewlyAddedOfferHash(offerHash);
+        openSuccessfulOrderCreationModal();
+        setTimeout(() => setCreateCollectionOfferStatus('READY'), 1000);
+      },
+      onError: (e: any) => {
+        alert(e.message);
+        setCreateCollectionOfferStatus('ERROR');
+        setTimeout(() => setCreateCollectionOfferStatus('READY'), 1000);
+      },
+    });
+  };
 
   return (
     <>
@@ -97,6 +128,13 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
                   <CryptoIcon symbol="eth" size={36} />
                 </InputLeftElement>
                 <Input
+                  placeholder={availableEthLiquidity ? `${availableEthLiquidity}Ξ available` : ''}
+                  _placeholder={{
+                    fontSize: 16,
+                    textAlign: 'left',
+                    paddingLeft: 50,
+                    transform: 'translateY(-4px)'
+                  }}
                   type="number"
                   textAlign="right"
                   value={collectionOfferAmt}
@@ -110,17 +148,6 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
                   disabled={createCollectionOfferStatus !== 'READY'}
                 />
               </InputGroup>
-              <Box ml="4px">
-                {doesOfferAmountExceedAvailableLiquidity ? (
-                  <FormErrorMessage fontWeight={600}>
-                    Your available liquidity is {availableEthLiquidity}Ξ
-                  </FormErrorMessage>
-                ) : (
-                  <FormHelperText>
-                    Your available liquidity is {availableEthLiquidity}Ξ
-                  </FormHelperText>
-                )}
-              </Box>
             </FormControl>
           </GridItem>
         </Grid>
@@ -208,82 +235,60 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
             </Box>
           </GridItem>
         </Grid>
-        <Flex alignItems="center" justifyContent="center" my="24px">
-          Offer Expires in{' '}
-          <Box w="120px" ml="8px">
-            <Select size="sm" onChange={(e) => setExpiration(e.target.value)} value={expiration}>
-              <option value="1">1 day</option>
-              <option value="7">7 days</option>
-              <option value="30">30 days</option>
-            </Select>
-          </Box>
-        </Flex>
+        <Text 
+          fontSize="md"
+          fontWeight="bold"
+          pt="24px"
+          textAlign="center"
+          color="solid.gray0"
+          >
+            Estimated Profit: {estimatedProfit}
+        </Text>
         <Button
-          variant="neutral"
+          variant="neutralReverse"
           py="36px"
           borderRadius="15px"
+          mt="20px"
           fontSize="md"
           w="100%"
-          disabled={easyOfferApr <= 0}
-          onClick={() => {
-            setCollectionOfferAmt(String(easyOfferAmount));
-            setApr(String(easyOfferApr));
-            setDuration(String(easyOfferDuration));
-          }}
-        >
-          <em>EASY BUTTON</em>
+          onClick={onCreateOffer}
+          disabled={
+            !walletAddress ||
+            doesOfferAmountExceedAvailableLiquidity ||
+            isDurationLessThanOneDay ||
+            createCollectionOfferStatus !== 'READY'
+          }
+          isLoading={createCollectionOfferStatus === 'PENDING'}
+          >
+          CREATE OFFER
         </Button>
-        <Flex alignItems="center" justifyContent="center" mt="8px" mb="12px">
-          <Text textAlign="center" mr="8px" mb="2px">
-            <em>Create The Best Offer In The Orderbook</em>
-          </Text>
-          <EasyBtnPopover />
+        <Flex alignItems="center" justifyContent="space-around" my="24px" mx="30px">
+          <Flex alignItems="center">
+            <div>
+              Expires in{' '}
+            </div>
+            <Box w="120px" ml="8px">
+              <Select size="sm" onChange={(e) => setExpiration(e.target.value)} value={expiration}>
+                <option value="1">1 day</option>
+                <option value="7">7 days</option>
+                <option value="30">30 days</option>
+              </Select>
+            </Box>
+          </Flex>
+          <Flex alignItems="center">
+            <div>
+              Good for{' '}
+            </div>
+            <Box w="120px" ml="8px">
+              <Select size="sm" onChange={(e) => setFloorTermLimit(e.target.value)} value={floorTermLimit}>
+                <option value="5">5 Loans</option>
+                <option value="10">10 Loans</option>
+                <option value="30">30 Loans</option>
+              </Select>
+            </Box>
+          </Flex>
         </Flex>
       </Box>
-      <Button
-        variant="neutralReverse"
-        py="36px"
-        borderRadius="15px"
-        mt="20px"
-        fontSize="md"
-        w="100%"
-        onClick={() => {
-          createCollectionOffer({
-            amount: Number(collectionOfferAmt),
-            aprInPercent: Number(apr),
-            durationInDays: Number(duration),
-            expirationInDays: Number(expiration),
-            onPending: () => setCreateCollectionOfferStatus('PENDING'),
-            onSuccess: (offerHash: string) => {
-              setCollectionOfferAmt('');
-              setApr('');
-              setDuration('');
-              setCreateCollectionOfferStatus('SUCCESS');
-              addNewlyAddedOfferHash(offerHash);
-              openSuccessfulOrderCreationModal();
-              setTimeout(() => setCreateCollectionOfferStatus('READY'), 1000);
-            },
-            onError: (e: any) => {
-              alert(e.message);
-              setCreateCollectionOfferStatus('ERROR');
-              setTimeout(() => setCreateCollectionOfferStatus('READY'), 1000);
-            },
-          });
-        }}
-        disabled={
-          !walletAddress ||
-          doesOfferAmountExceedAvailableLiquidity ||
-          isDurationLessThanOneDay ||
-          createCollectionOfferStatus !== 'READY'
-        }
-      >
-        CREATE OFFER{' '}
-        {createCollectionOfferStatus === 'PENDING' ? (
-          <span style={{ paddingLeft: '8px' }}>
-            <LoadingIndicator size="xs" />
-          </span>
-        ) : null}
-      </Button>
     </>
   );
 };
