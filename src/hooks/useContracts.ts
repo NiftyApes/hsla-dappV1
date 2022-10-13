@@ -19,7 +19,7 @@ const isGoerli = (cid: string | undefined): boolean | undefined => {
 };
 
 export const useLiquidityContract = () => {
-  const provider = useWalletProvider();
+  const provider: any = useWalletProvider();
   const chainId = useChainId();
 
   if (provider && isLocalChain(chainId)) {
@@ -32,7 +32,7 @@ export const useLiquidityContract = () => {
 };
 
 export const useOffersContract = () => {
-  const provider = useWalletProvider();
+  const provider: any = useWalletProvider();
   const chainId = useChainId();
 
   if (provider && isLocalChain(chainId)) {
@@ -45,7 +45,7 @@ export const useOffersContract = () => {
 };
 
 export const useLendingContract = () => {
-  const provider = useWalletProvider();
+  const provider: any = useWalletProvider();
   const chainId = useChainId();
 
   if (provider && isLocalChain(chainId)) {

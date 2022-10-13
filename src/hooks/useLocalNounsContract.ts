@@ -2,7 +2,7 @@ import { getForkedNounsContract } from 'helpers/getForkedNounsContract';
 import { useWalletProvider } from './useWalletProvider';
 
 export const useLocalNounsContract = () => {
-  const provider = useWalletProvider();
+  const provider: any = useWalletProvider();
 
   if (!provider) {
     return undefined;

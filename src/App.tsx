@@ -28,7 +28,7 @@ const App: React.FC = () => {
   const liquidityContract = useLiquidityContract();
   const cEthContract = useCEthContract();
 
-  setStoreWallet(wallet);
+  setStoreWallet(wallet as any);
 
   setStoreLendingContract(lendingContract);
   setStoreOffersContract(offersContract);

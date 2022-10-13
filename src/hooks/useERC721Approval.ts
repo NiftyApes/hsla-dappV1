@@ -25,7 +25,7 @@ export const useERC721Approval = ({
 
   const cacheCounter = useAppSelector((state: RootState) => state.counter);
 
-  const provider = useWalletProvider();
+  const provider: any = useWalletProvider();
 
   const minimumAbi = [
     {
