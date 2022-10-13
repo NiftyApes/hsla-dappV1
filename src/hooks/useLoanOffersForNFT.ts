@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable @typescript-eslint/no-shadow */
 import { getOffersByNft } from 'api/getOffersByNft';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
@@ -28,21 +30,28 @@ export const useLoanOffersForNFT = ({
         return;
       }
 
-      const offers = await getOffersByNft({ chainId, nftContractAddress, nftId });
+      const offers = await getOffersByNft({
+        chainId,
+        nftContractAddress,
+        nftId,
+      });
 
       // remove any offers not found on-chain
       for (let i = 0; i < offers.length; i++) {
-        const offerHash = offers[i].offerHash;
+        const { offerHash } = offers[i];
 
         const offerFromChain = await getLoanOfferFromHash({
-          offersContract: offersContract,
+          offersContract,
           nftContractAddress,
           nftId,
           offerHash,
           floorTerm: offers[i].offer.floorTerm,
         });
 
-        if (!offerFromChain || offerFromChain[0] === '0x0000000000000000000000000000000000000000') {
+        if (
+          !offerFromChain ||
+          offerFromChain[0] === '0x0000000000000000000000000000000000000000'
+        ) {
           offers[i] = undefined;
         }
       }

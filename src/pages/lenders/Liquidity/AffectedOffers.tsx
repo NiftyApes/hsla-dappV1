@@ -1,4 +1,16 @@
-import { Box, Flex, Text, Table, Tbody, Th, Thead, Tr, Td, Image, Button } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Text,
+  Table,
+  Tbody,
+  Th,
+  Thead,
+  Tr,
+  Td,
+  Image,
+  Button,
+} from '@chakra-ui/react';
 import React from 'react';
 
 import Icon from 'components/atoms/Icon';
@@ -72,7 +84,12 @@ const AffectedOffers: React.FC = () => {
                 <br />
                 -- Profits
               </Text>
-              <Button variant="link" color="primary.purple" fontSize="sm" fontWeight="normal">
+              <Button
+                variant="link"
+                color="primary.purple"
+                fontSize="sm"
+                fontWeight="normal"
+              >
                 Offerbook
               </Button>
             </Td>
@@ -88,7 +105,11 @@ const AffectedOffers: React.FC = () => {
                 </Box>
                 <Icon name="arrow-right" />
                 <Box textAlign="center">
-                  <Text fontSize="xl" fontWeight="bold" color="notification.notify">
+                  <Text
+                    fontSize="xl"
+                    fontWeight="bold"
+                    color="notification.notify"
+                  >
                     77
                   </Text>
                   <Text fontSize="sm" color="solid.gray0">

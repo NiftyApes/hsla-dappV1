@@ -9,7 +9,11 @@ import {
 } from 'app/store';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { useCEthContract } from 'hooks/useCEthContract';
-import { useLendingContract, useLiquidityContract, useOffersContract } from 'hooks/useContracts';
+import {
+  useLendingContract,
+  useLiquidityContract,
+  useOffersContract,
+} from 'hooks/useContracts';
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes } from 'react-router-dom';
 import Borrowers from 'routes/Borrowers';

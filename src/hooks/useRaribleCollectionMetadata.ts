@@ -1,16 +1,27 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import { useState, useEffect } from 'react';
 import { useTopCollections } from './useTopCollections';
 
 const RARIBLE_API_PATH = 'https://api.rarible.org/v0.1';
 
-export const useRaribleCollectionMetadata = ({ contractAddress }: { contractAddress?: string }) => {
-  const [meta, setMeta] = useState<{ name: string; symbol: string; image: string }>();
+export const useRaribleCollectionMetadata = ({
+  contractAddress,
+}: {
+  contractAddress?: string;
+}) => {
+  const [meta, setMeta] = useState<{
+    name: string;
+    symbol: string;
+    image: string;
+  }>();
   const { collections } = useTopCollections();
 
   let image = '/assets/images/img-missing.png';
 
   const collectionMixin = (obj: any) => {
-    const existing = collections.find((item) => item.address === contractAddress);
+    const existing = collections.find(
+      (item) => item.address === contractAddress,
+    );
     return existing ? { ...obj, ...existing } : obj;
   };
 
@@ -29,11 +40,13 @@ export const useRaribleCollectionMetadata = ({ contractAddress }: { contractAddr
           const { name, symbol, meta } = data;
 
           if (meta.content && meta.content.length > 0) {
-            image = meta.content.find((item: any) => item['@type'] === 'IMAGE').url;
+            image = meta.content.find(
+              (item: any) => item['@type'] === 'IMAGE',
+            ).url;
           }
           setMeta(collectionMixin({ name, symbol, image }));
         })
-        .catch((error) => {
+        .catch(() => {
           setMeta({
             name: 'NOT FOUND',
             symbol: 'NOTFOUND',

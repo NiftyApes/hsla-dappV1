@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import { updateLoanStatus } from 'api/updateLoanStatus';
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
@@ -36,7 +37,8 @@ export const useRepayLoanByBorrower = ({
     (state: RootState) =>
       walletAddress &&
       state.nfts.nftsByWalletAddress[walletAddress].content?.find(
-        (nft: NFT) => nft.id === nftId && nft.contractAddress === nftContractAddress,
+        (nft: NFT) =>
+          nft.id === nftId && nft.contractAddress === nftContractAddress,
       ),
   );
 

@@ -38,7 +38,9 @@ interface CreateCollectionOfferFormProps {
   openSuccessfulOrderCreationModal: () => void;
 }
 
-export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps> = ({
+export const CreateCollectionOfferForm: React.FC<
+  CreateCollectionOfferFormProps
+> = ({
   nftContractAddress,
   collectionOfferAmt,
   setCollectionOfferAmt,
@@ -51,18 +53,23 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
   addNewlyAddedOfferHash,
   openSuccessfulOrderCreationModal,
 }) => {
-  const { createCollectionOffer } = useCreateCollectionOffer({ nftContractAddress });
-
-  const [createCollectionOfferStatus, setCreateCollectionOfferStatus] = useState<string>('READY');
-
-  const { easyOfferAmount, easyOfferApr, easyOfferDuration } = useEasyOfferForCollection({
+  const { createCollectionOffer } = useCreateCollectionOffer({
     nftContractAddress,
   });
+
+  const [createCollectionOfferStatus, setCreateCollectionOfferStatus] =
+    useState<string>('READY');
+
+  const { easyOfferAmount, easyOfferApr, easyOfferDuration } =
+    useEasyOfferForCollection({
+      nftContractAddress,
+    });
 
   const { availableEthLiquidity } = useAvailableEthLiquidity();
 
   const doesOfferAmountExceedAvailableLiquidity =
-    !_.isNil(availableEthLiquidity) && Number(collectionOfferAmt) > availableEthLiquidity;
+    !_.isNil(availableEthLiquidity) &&
+    Number(collectionOfferAmt) > availableEthLiquidity;
 
   const isDurationLessThanOneDay = duration !== '' && Number(duration) < 1;
 
@@ -89,7 +96,11 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
         >
           HOW MUCH?
         </Text>
-        <Grid gridTemplateColumns="repeat(3, minmax(0, 1fr))" my="18px" alignItems="center">
+        <Grid
+          gridTemplateColumns="repeat(3, minmax(0, 1fr))"
+          my="18px"
+          alignItems="center"
+        >
           <GridItem colSpan={3}>
             <FormControl isInvalid={doesOfferAmountExceedAvailableLiquidity}>
               <InputGroup>
@@ -135,7 +146,12 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
         >
           WHAT APR AND FOR HOW LONG?
         </Text>
-        <Grid gridTemplateColumns="repeat(2, minmax(0, 1fr))" px="6px" columnGap="28px" mt="12px">
+        <Grid
+          gridTemplateColumns="repeat(2, minmax(0, 1fr))"
+          px="6px"
+          columnGap="28px"
+          mt="12px"
+        >
           <GridItem>
             <Text fontSize="sm" textAlign="center" mb="12px" fontWeight="bold">
               APR
@@ -211,7 +227,11 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
         <Flex alignItems="center" justifyContent="center" my="24px">
           Offer Expires in{' '}
           <Box w="120px" ml="8px">
-            <Select size="sm" onChange={(e) => setExpiration(e.target.value)} value={expiration}>
+            <Select
+              size="sm"
+              onChange={(e) => setExpiration(e.target.value)}
+              value={expiration}
+            >
               <option value="1">1 day</option>
               <option value="7">7 days</option>
               <option value="30">30 days</option>

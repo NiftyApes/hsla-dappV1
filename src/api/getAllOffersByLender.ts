@@ -9,7 +9,10 @@ export const getAllOffersByLender = async ({
   lenderAddress: string;
 }) => {
   const result = await fetch(
-    getApiUrl(chainId, `offers?lender=${ethers.utils.getAddress(lenderAddress)}`),
+    getApiUrl(
+      chainId,
+      `offers?lender=${ethers.utils.getAddress(lenderAddress)}`,
+    ),
   );
 
   const json = await result.json();

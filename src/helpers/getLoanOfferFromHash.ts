@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { OffersContract } from 'nft/model';
 
 export async function getLoanOfferFromHash({
@@ -17,7 +18,12 @@ export async function getLoanOfferFromHash({
     return;
   }
 
-  const result = await offersContract.getOffer(nftContractAddress, nftId, offerHash, floorTerm);
+  const result = await offersContract.getOffer(
+    nftContractAddress,
+    nftId,
+    offerHash,
+    floorTerm,
+  );
 
   return result;
 }

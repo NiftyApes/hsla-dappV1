@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { stringify, IStringifyOptions } from 'qs';
 
 export const buildBase = (base: string[]) => {

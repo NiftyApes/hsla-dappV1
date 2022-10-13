@@ -1,4 +1,13 @@
-import { Button, Flex, Image, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Image,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+} from '@chakra-ui/react';
 import React, { useCallback } from 'react';
 import { AiOutlineCaretDown } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,7 +18,7 @@ import {
   borrowersDashboard,
   lendersDashboard,
   lendersLend,
-  lendersLiquidity
+  lendersLiquidity,
 } from 'routes/router';
 
 const Header: React.FC = () => {
@@ -33,12 +42,23 @@ const Header: React.FC = () => {
       alignItems="center"
       justifyContent="space-between"
       top="0px"
-      zIndex={9}>
+      zIndex={9}
+    >
       <Flex alignItems="center">
         <Link to="/">
-          <Image src="/assets/images/header_logo.png" alt="Logo" mr="15px" cursor="pointer" />
+          <Image
+            src="/assets/images/header_logo.png"
+            alt="Logo"
+            mr="15px"
+            cursor="pointer"
+          />
         </Link>
-        <Text textTransform="uppercase" fontSize="md" fontWeight="bold" mr="20px">
+        <Text
+          textTransform="uppercase"
+          fontSize="md"
+          fontWeight="bold"
+          mr="20px"
+        >
           Borrowers
         </Text>
         <Flex
@@ -47,7 +67,7 @@ const Header: React.FC = () => {
           alignItems="center"
           columnGap="46px"
           fontSize="md"
-          textTransform={"capitalize"}
+          textTransform="capitalize"
           p="17px 26px"
           fontWeight="bold"
         >
@@ -57,10 +77,13 @@ const Header: React.FC = () => {
           <Text color="solid.gray0">
             <Link to={borrowers()}>🍌 Borrow</Link>
           </Text>
-
         </Flex>
         <Menu>
-          <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} bg="transparent">
+          <MenuButton
+            as={Button}
+            rightIcon={<AiOutlineCaretDown />}
+            bg="transparent"
+          >
             LENDERS
           </MenuButton>
           <MenuList
@@ -74,10 +97,17 @@ const Header: React.FC = () => {
                 borderRadius: '10px',
                 p: '15px',
               },
-            }}>
-            <MenuItem onClick={navigateToLendersIdDashboard}>📊 Dashboard</MenuItem>
-            <MenuItem onClick={navigateToLendersIdLiquidity}>💧 Manage Liquidity</MenuItem>
-            <MenuItem onClick={navigateToLendersIdLend}>📜 Create Offers</MenuItem>
+            }}
+          >
+            <MenuItem onClick={navigateToLendersIdDashboard}>
+              📊 Dashboard
+            </MenuItem>
+            <MenuItem onClick={navigateToLendersIdLiquidity}>
+              💧 Manage Liquidity
+            </MenuItem>
+            <MenuItem onClick={navigateToLendersIdLend}>
+              📜 Create Offers
+            </MenuItem>
           </MenuList>
         </Menu>
       </Flex>

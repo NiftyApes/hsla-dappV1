@@ -39,20 +39,20 @@ const loanAuction = (
   txnHash?: string | undefined,
 ): LoanAuction => {
   return {
-    accumulatedLenderInterest: accumulatedLenderInterest,
-    accumulatedPaidProtocolInterest: accumulatedPaidProtocolInterest,
-    amount: amount,
-    amountDrawn: amountDrawn,
+    accumulatedLenderInterest,
+    accumulatedPaidProtocolInterest,
+    amount,
+    amountDrawn,
     asset,
     fixedTerms,
-    interestRatePerSecond: interestRatePerSecond,
+    interestRatePerSecond,
     lastUpdatedTimestamp,
     lender,
     loanBeginTimestamp,
     loanEndTimestamp,
     loanTxnHash: txnHash,
     nftOwner,
-    protocolInterestRatePerSecond: protocolInterestRatePerSecond,
+    protocolInterestRatePerSecond,
   };
 };
 

@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable @typescript-eslint/no-shadow */
 import { getOffersByCollection } from 'api/getOffersByCollection';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
@@ -7,7 +9,11 @@ import { useEffect, useState } from 'react';
 import { useChainId } from './useChainId';
 import { useOffersContract } from './useContracts';
 
-export const useCollectionOffers = ({ nftContractAddress }: { nftContractAddress?: string }) => {
+export const useCollectionOffers = ({
+  nftContractAddress,
+}: {
+  nftContractAddress?: string;
+}) => {
   const [offers, setOffers] = useState<any>();
 
   const cacheCounter = useAppSelector((state: RootState) => state.counter);
@@ -22,10 +28,13 @@ export const useCollectionOffers = ({ nftContractAddress }: { nftContractAddress
         return;
       }
 
-      const offers = await getOffersByCollection({ chainId, nftContractAddress });
+      const offers = await getOffersByCollection({
+        chainId,
+        nftContractAddress,
+      });
 
       for (let i = 0; i < offers.length; i++) {
-        const offerHash = offers[i].offerHash;
+        const { offerHash } = offers[i];
 
         const offerFromChain = await getLoanOfferFromHash({
           offersContract: niftyApesContract,
@@ -36,7 +45,10 @@ export const useCollectionOffers = ({ nftContractAddress }: { nftContractAddress
           floorTerm: offers[i].offer.floorTerm,
         });
 
-        if (!offerFromChain || offerFromChain[0] === '0x0000000000000000000000000000000000000000') {
+        if (
+          !offerFromChain ||
+          offerFromChain[0] === '0x0000000000000000000000000000000000000000'
+        ) {
           offers[i] = undefined;
         }
       }

@@ -12,25 +12,30 @@ import {
 } from '@chakra-ui/react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
+import { formatEther } from 'ethers/lib/utils';
+import { BigNumber } from 'ethers';
 import { useRepayLoanByBorrower } from '../../../hooks/useRepayLoan';
 import { LoanAuction } from '../../../loan';
-import { formatEther } from 'ethers/lib/utils';
 import { humanizeContractError } from '../../../helpers/errorsMap';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
 import { useCalculateInterestAccrued } from '../../../hooks/useCalculateInterestAccrued';
-import { BigNumber } from 'ethers';
 import { getAPR } from '../../../helpers/getAPR';
-import { concatForDisplay, roundForDisplay } from '../../../helpers/roundForDisplay';
-import { getLoanTimeRemaining, isLoanDefaulted } from '../../../helpers/getDuration';
-import { NFT } from '../../../nft';
+import {
+  concatForDisplay,
+  roundForDisplay,
+} from '../../../helpers/roundForDisplay';
+import {
+  getLoanTimeRemaining,
+  isLoanDefaulted,
+} from '../../../helpers/getDuration';
 
-interface callbackType {
+interface Callbacktype {
   (): void;
 }
 
 interface Props {
   loan: LoanAuction;
-  onRepay: callbackType;
+  onRepay: Callbacktype;
 }
 
 const i18n = {

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 import { Box, Center, Grid, GridItem, Text } from '@chakra-ui/react';
 import React from 'react';
 
@@ -16,7 +17,10 @@ const i18n = {
 
 const Dashboard: React.FC = () => {
   const address = useWalletAddress();
-  const offers = useOffersForLender({ lenderAddress: address, onlyActive: false });
+  const offers = useOffersForLender({
+    lenderAddress: address,
+    onlyActive: false,
+  });
 
   const activeLoans = useActiveLoansForLender();
 

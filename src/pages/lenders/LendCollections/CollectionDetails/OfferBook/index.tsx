@@ -1,4 +1,19 @@
-import { Box, Center, Flex, Table, Tag, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+import {
+  Box,
+  Center,
+  Flex,
+  Table,
+  Tag,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { ethers } from 'ethers';
@@ -247,7 +262,7 @@ const OfferBook: React.FC<OfferBookProps> = ({
                 </span>
               </Flex>
             </Th>
-            <Th></Th>{' '}
+            <Th />{' '}
           </Tr>
         </Thead>
         <Tbody
@@ -278,7 +293,9 @@ const OfferBook: React.FC<OfferBookProps> = ({
                 key={i}
                 sx={{
                   td: {
-                    backgroundColor: newlyAddedOfferHashes.includes(offer.offerHash)
+                    backgroundColor: newlyAddedOfferHashes.includes(
+                      offer.offerHash,
+                    )
                       ? 'yellow.100'
                       : 'auto',
                     border: 'none',
@@ -310,7 +327,9 @@ const OfferBook: React.FC<OfferBookProps> = ({
                     )}
                     <Flex alignItems="center" justifyContent="center">
                       <CryptoIcon symbol="eth" size={16} />
-                      <Text ml="8px">{ethers.utils.formatEther(offer.amount)}</Text>
+                      <Text ml="8px">
+                        {ethers.utils.formatEther(offer.amount)}
+                      </Text>
                     </Flex>
                   </span>
                 </Td>
@@ -332,9 +351,13 @@ const OfferBook: React.FC<OfferBookProps> = ({
                   </Text>
                 </Td>
                 <Td>
-                  <Text>{moment(offer.expiration * 1000).format('h:mma, MMM D YYYY')}</Text>
+                  <Text>
+                    {moment(offer.expiration * 1000).format(
+                      'h:mma, MMM D YYYY',
+                    )}
+                  </Text>
                 </Td>
-                <Td></Td>
+                <Td />
               </Tr>
             );
           })}

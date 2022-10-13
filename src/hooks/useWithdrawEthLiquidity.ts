@@ -16,13 +16,17 @@ export const useWithdrawEthLiquidity = () => {
 
   const liquidityContract = useLiquidityContract();
 
-  const [withdrawStatus, setWithdrawStatus] = useState<'PENDING' | 'SUCCESS' | 'ERROR' | 'READY'>(
-    'READY',
+  const [withdrawStatus, setWithdrawStatus] = useState<
+    'PENDING' | 'SUCCESS' | 'ERROR' | 'READY'
+  >('READY');
+
+  const [txObject, setTxObject] = useState<ethers.ContractTransaction | null>(
+    null,
   );
 
-  const [txObject, setTxObject] = useState<ethers.ContractTransaction | null>(null);
-
-  const [txReceipt, setTxReceipt] = useState<ethers.ContractReceipt | null>(null);
+  const [txReceipt, setTxReceipt] = useState<ethers.ContractReceipt | null>(
+    null,
+  );
 
   const { getTransactionTimestamp } = useGetTransactionTimestamp();
 
@@ -61,7 +65,9 @@ export const useWithdrawEthLiquidity = () => {
           transactionHash: receipt.transactionHash,
           lender: receipt.from,
           data: {
-            amount: ethers.utils.parseEther(ethToWithdraw.toString()).toString(),
+            amount: ethers.utils
+              .parseEther(ethToWithdraw.toString())
+              .toString(),
             asset: 'ETH',
           },
         });

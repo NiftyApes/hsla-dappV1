@@ -19,7 +19,7 @@ export async function updateOfferStatus({
   transactionTimestamp?: number;
   transactionHash?: string;
 }) {
-  const result = await fetch(getApiUrl(chainId, 'offers'), {
+  await fetch(getApiUrl(chainId, 'offers'), {
     method: 'PATCH',
     body: JSON.stringify({
       nftContractAddress,

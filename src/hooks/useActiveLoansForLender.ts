@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable @typescript-eslint/no-shadow */
 import { getActiveLoansByLender } from 'api/getActiveLoansByLender';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
@@ -24,7 +26,10 @@ export const useActiveLoansForLender = () => {
         return;
       }
 
-      const loans = await getActiveLoansByLender({ chainId, lenderAddress: address });
+      const loans = await getActiveLoansByLender({
+        chainId,
+        lenderAddress: address,
+      });
 
       // remove any loans in DB but not on-chain
       for (let i = 0; i < loans.length; i++) {
@@ -36,13 +41,17 @@ export const useActiveLoansForLender = () => {
           lendingContract,
         });
 
-        if (!loanFromChain || loanFromChain[0] === '0x0000000000000000000000000000000000000000') {
+        if (
+          !loanFromChain ||
+          loanFromChain[0] === '0x0000000000000000000000000000000000000000'
+        ) {
           loans[i] = undefined;
         } else {
-          const [accruedInterest] = await lendingContract.calculateInterestAccrued(
-            loan.nftContractAddress,
-            loan.nftId,
-          );
+          const [accruedInterest] =
+            await lendingContract.calculateInterestAccrued(
+              loan.nftContractAddress,
+              loan.nftId,
+            );
           loans[i] = {
             ...loans[i],
             accruedInterest: Number(ethers.utils.formatEther(accruedInterest)),

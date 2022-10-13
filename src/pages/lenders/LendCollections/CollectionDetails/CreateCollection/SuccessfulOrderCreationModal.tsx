@@ -20,17 +20,16 @@ interface SuccessfulOrderCreationModalProps {
   onClose: () => void;
 }
 
-export const SuccessfulOrderCreationModal: React.FC<SuccessfulOrderCreationModalProps> = ({
-  isOpen,
-  onClose,
-}) => {
+export const SuccessfulOrderCreationModal: React.FC<
+  SuccessfulOrderCreationModalProps
+> = ({ isOpen, onClose }) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="2xl">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader borderBottom="1px solid #ccc" py="0.75rem">
           <Flex alignItems="center" justifyContent="space-between">
-            <span></span>
+            <span />
             <span style={{ color: '#777' }}>🎉 Offer Made 🎉</span>
             <IoMdClose onClick={onClose} style={{ cursor: 'pointer' }} />
           </Flex>

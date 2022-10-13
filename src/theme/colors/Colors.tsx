@@ -7,7 +7,12 @@ import colors from '.';
 const Colors: FC = () => {
   return (
     <Grid
-      gridTemplateColumns={['repeat(1, 1fr)', 'repeat(3, 1fr)', 'repeat(5, 1fr)', 'repeat(6, 1fr)']}
+      gridTemplateColumns={[
+        'repeat(1, 1fr)',
+        'repeat(3, 1fr)',
+        'repeat(5, 1fr)',
+        'repeat(6, 1fr)',
+      ]}
       gridRowGap="20px"
     >
       {Object.entries(colors).map(([key, value]) => {
@@ -19,16 +24,15 @@ const Colors: FC = () => {
               {value}
             </Box>
           );
-        } else {
-          const child = colors[key as keyof typeof colors];
-          return Object.entries(child).map(([childKey, childValue]) => (
-            <Box textTransform="capitalize">
-              {key}.{childKey}
-              <Box w="100px" h="50px" backgroundColor={childValue} />
-              {childValue}
-            </Box>
-          ));
         }
+        const child = colors[key as keyof typeof colors];
+        return Object.entries(child).map(([childKey, childValue]) => (
+          <Box textTransform="capitalize">
+            {key}.{childKey}
+            <Box w="100px" h="50px" backgroundColor={childValue} />
+            {childValue}
+          </Box>
+        ));
       })}
     </Grid>
   );

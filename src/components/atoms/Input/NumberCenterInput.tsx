@@ -1,7 +1,10 @@
 import { Input, InputProps } from '@chakra-ui/react';
 import React from 'react';
 
-const NumberCenterInput: React.FC<InputProps> = ({ placeholder, ...restProps }) => {
+const NumberCenterInput: React.FC<InputProps> = ({
+  placeholder,
+  ...restProps
+}) => {
   return (
     <Input
       variant="secondary"

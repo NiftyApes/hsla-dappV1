@@ -17,7 +17,7 @@ export async function updateLoanStatus({
   transactionTimestamp?: number;
   transactionHash?: string;
 }) {
-  const result = await fetch(getApiUrl(chainId, 'loans'), {
+  await fetch(getApiUrl(chainId, 'loans'), {
     method: 'PATCH',
     body: JSON.stringify({
       nftContractAddress,

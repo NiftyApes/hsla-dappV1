@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { getCEthContract } from 'helpers/getCEthContract';
 import { useChainId } from './useChainId';
 import { useWalletProvider } from './useWalletProvider';

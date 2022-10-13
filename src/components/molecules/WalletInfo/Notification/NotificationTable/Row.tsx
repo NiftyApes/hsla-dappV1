@@ -18,7 +18,11 @@ const Row: React.FC = () => {
       </Td>
       <Td px="10px">
         <Flex>
-          <Image src="/assets/mocks/bored_ape_square.png" borderRadius="3px" flexShrink={0} />
+          <Image
+            src="/assets/mocks/bored_ape_square.png"
+            borderRadius="3px"
+            flexShrink={0}
+          />
           <Grid gap="3px" ml="-10px" flexShrink={0}>
             <Image src="/assets/images/etherscan.png" />
             <Image src="/assets/images/os.png" />
@@ -45,7 +49,12 @@ const Row: React.FC = () => {
         </Text>
       </Td>
       <Td>
-        <Text fontSize="sm" textTransform="uppercase" textDecor="underline" color="solid.gray0">
+        <Text
+          fontSize="sm"
+          textTransform="uppercase"
+          textDecor="underline"
+          color="solid.gray0"
+        >
           [ timestamp ]
         </Text>
       </Td>

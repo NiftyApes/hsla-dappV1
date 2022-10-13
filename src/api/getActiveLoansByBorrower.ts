@@ -7,7 +7,9 @@ export const getActiveLoansByBorrower = async ({
   address: string;
   chainId: string;
 }) => {
-  const result = await fetch(getApiUrl(chainId, `loans?borrower=${address}&status=active`));
+  const result = await fetch(
+    getApiUrl(chainId, `loans?borrower=${address}&status=active`),
+  );
   const json = await result.json();
 
   return json.map((item: any) => {

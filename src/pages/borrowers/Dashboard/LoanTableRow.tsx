@@ -1,10 +1,11 @@
 import React from 'react';
-import { LoanAuction } from '../../../loan';
 import { Button, Td, Text, Tr } from '@chakra-ui/react';
 import { formatEther } from 'ethers/lib/utils';
-import { getAPR } from '../../../helpers/getAPR';
 import moment from 'moment';
 import { BigNumber } from 'ethers';
+import _ from 'lodash';
+import { LoanAuction } from '../../../loan';
+import { getAPR } from '../../../helpers/getAPR';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
 import NFTCardSmall from '../../../components/cards/NFTCardSmall';
 import {
@@ -12,15 +13,14 @@ import {
   getLoanTimeRemaining,
   isLoanDefaulted,
 } from '../../../helpers/getDuration';
-import _ from 'lodash';
 
-interface callbackType {
+interface CallbackType {
   (loan: LoanAuction): void;
 }
 
 interface Props {
   loan: LoanAuction;
-  onClick: callbackType;
+  onClick: CallbackType;
 }
 
 const i18n = {
@@ -45,7 +45,9 @@ const LoanTableRow: React.FC<Props> = ({ loan, onClick }) => {
     loan.loanEndTimestamp - loan.loanBeginTimestamp,
   );
   const totalAmount: BigNumber = loan.amount.add(
-    loan.interestRatePerSecond.mul(loan.loanEndTimestamp - loan.loanBeginTimestamp),
+    loan.interestRatePerSecond.mul(
+      loan.loanEndTimestamp - loan.loanBeginTimestamp,
+    ),
   );
 
   if (_.isUndefined(loan.nftContractAddress)) {
@@ -55,10 +57,17 @@ const LoanTableRow: React.FC<Props> = ({ loan, onClick }) => {
   return (
     <Tr>
       <Td>
-        <NFTCardSmall contractAddress={loan.nftContractAddress} tokenId={loan.nftId} />
+        <NFTCardSmall
+          contractAddress={loan.nftContractAddress}
+          tokenId={loan.nftId}
+        />
       </Td>
       <Td>
-        <a href={`https://etherscan.io/tx/${loan.loanTxnHash}`} target="_blank">
+        <a
+          href={`https://etherscan.io/tx/${loan.loanTxnHash}`}
+          target="_blank"
+          rel="noreferrer"
+        >
           {startMoment.format('MMMM Do YYYY, h:mm:ss')}
         </a>
       </Td>
@@ -83,7 +92,9 @@ const LoanTableRow: React.FC<Props> = ({ loan, onClick }) => {
         </Text>
       </Td>
       <Td>
-        {isLoanDefaulted(loan) ? i18n.loanDefaulted : `${getLoanTimeRemaining(loan)} remaining...`}
+        {isLoanDefaulted(loan)
+          ? i18n.loanDefaulted
+          : `${getLoanTimeRemaining(loan)} remaining...`}
       </Td>
       <Td>
         <Button variant="neutral" onClick={() => onClick(loan)}>

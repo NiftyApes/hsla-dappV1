@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable consistent-return */
 import { Contract } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useLendingContract } from './useContracts';
@@ -36,7 +38,10 @@ export const useSlowWayToGetNFTsOfAddress = ({
         if (owner.toUpperCase() === address.toUpperCase()) {
           results.push({ id: tokenId, owner, ...json });
         } else {
-          const niftyApesOwner = await niftyApesContract.ownerOf(contract.address, tokenId);
+          const niftyApesOwner = await niftyApesContract.ownerOf(
+            contract.address,
+            tokenId,
+          );
 
           if (niftyApesOwner.toUpperCase() === address.toUpperCase()) {
             results.push({ id: tokenId, owner, ...json });

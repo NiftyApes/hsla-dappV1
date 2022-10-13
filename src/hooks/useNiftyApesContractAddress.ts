@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { LOCAL } from 'constants/contractAddresses';
 import { useChainId } from './useChainId';
 

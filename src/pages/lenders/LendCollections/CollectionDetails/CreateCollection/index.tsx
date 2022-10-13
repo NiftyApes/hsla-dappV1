@@ -32,7 +32,10 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Box maxW="600px" sx={{ position: 'relative', left: '-40px', top: '-16px' }}>
+    <Box
+      maxW="600px"
+      sx={{ position: 'relative', left: '-40px', top: '-16px' }}
+    >
       <Text fontWeight="bold" color="solid.gray0" mb="16px">
         CREATE FLOOR OFFER TERMS
       </Text>

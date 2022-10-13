@@ -1,8 +1,8 @@
 import React from 'react';
 import { Box, Button, Flex, Grid, Input, Select, Text } from '@chakra-ui/react';
 
-import Card from './Card';
 import { COIN_SYMBOL_MAP } from 'lib/constants/coinSymbols';
+import Card from './Card';
 
 const Lend: React.FC = () => {
   return (
@@ -16,8 +16,12 @@ const Lend: React.FC = () => {
               <Input type="number" />
               <Select borderColor="gray.100">
                 <option value="">Select Coin</option>
-                <option value={COIN_SYMBOL_MAP.dai.name}>{COIN_SYMBOL_MAP.dai.name}</option>
-                <option value={COIN_SYMBOL_MAP.usdc.name}>{COIN_SYMBOL_MAP.usdc.name}</option>
+                <option value={COIN_SYMBOL_MAP.dai.name}>
+                  {COIN_SYMBOL_MAP.dai.name}
+                </option>
+                <option value={COIN_SYMBOL_MAP.usdc.name}>
+                  {COIN_SYMBOL_MAP.usdc.name}
+                </option>
               </Select>
               <Button variant="neutral" flexShrink={0}>
                 Approve
@@ -64,8 +68,12 @@ const Lend: React.FC = () => {
               <Input type="number" />
               <Select borderColor="gray.100">
                 <option value="">Select Coin</option>
-                <option value={COIN_SYMBOL_MAP.dai.name}>{COIN_SYMBOL_MAP.dai.name}</option>
-                <option value={COIN_SYMBOL_MAP.usdc.name}>{COIN_SYMBOL_MAP.usdc.name}</option>
+                <option value={COIN_SYMBOL_MAP.dai.name}>
+                  {COIN_SYMBOL_MAP.dai.name}
+                </option>
+                <option value={COIN_SYMBOL_MAP.usdc.name}>
+                  {COIN_SYMBOL_MAP.usdc.name}
+                </option>
               </Select>
             </Flex>
           </Box>

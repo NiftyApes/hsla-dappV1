@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch, ThunkExtra } from 'app/store';
 import { ethers } from 'ethers';
@@ -45,8 +47,12 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
   LoansThunkApi
 >(
   'loans/fetchLoanOffersByNFT',
-  async ({ id: nftId, contractAddress: nftContractAddress, chainId }, thunkApi) => {
-    const { offersContract, liquidityContract, cEthContract } = thunkApi.extra();
+  async (
+    { id: nftId, contractAddress: nftContractAddress, chainId },
+    thunkApi,
+  ) => {
+    const { offersContract, liquidityContract, cEthContract } =
+      thunkApi.extra();
 
     if (!offersContract) {
       return thunkApi.rejectWithValue({
@@ -55,7 +61,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
       });
     }
 
-    const data = await getData<LoanOffer>(
+    const data: any = await getData<LoanOffer>(
       {
         url: getApiUrl(chainId, 'offers'),
         data: {
@@ -66,7 +72,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
     );
 
     const processedOffers = await Promise.all(
-      data.map(async (offer) => {
+      data.map(async (offer: any) => {
         if (!liquidityContract || !cEthContract) {
           return false;
         }
@@ -82,15 +88,17 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
 
           if (
             !offerFromChain ||
-            offerFromChain.creator === '0x0000000000000000000000000000000000000000'
+            offerFromChain.creator ===
+              '0x0000000000000000000000000000000000000000'
           ) {
             return false;
           }
 
-          const lenderLiquidityInCEth = await liquidityContract.getCAssetBalance(
-            offerFromChain.creator,
-            cEthContract.address,
-          );
+          const lenderLiquidityInCEth =
+            await liquidityContract.getCAssetBalance(
+              offerFromChain.creator,
+              cEthContract.address,
+            );
 
           const exchangeRate = await cEthContract.exchangeRateStored();
 
@@ -105,7 +113,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
           return true;
         }
       }),
-    ).then((results) => data.filter((offer, i) => results[i]));
+    ).then((results) => data.filter((offer: any, i: number) => results[i]));
 
     return {
       content: processedOffers,
@@ -115,7 +123,11 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
   },
 );
 
-export const fetchLoanAuctionByNFT = createAsyncThunk<FetchLoanAuctionResponse, NFT, LoansThunkApi>(
+export const fetchLoanAuctionByNFT = createAsyncThunk<
+  FetchLoanAuctionResponse,
+  NFT,
+  LoansThunkApi
+>(
   'loans/fetchLoanAuctionByNFT',
   async ({ id: nftId, contractAddress: nftContractAddress }, thunkApi) => {
     const { lendingContract } = thunkApi.extra();
@@ -127,7 +139,10 @@ export const fetchLoanAuctionByNFT = createAsyncThunk<FetchLoanAuctionResponse, 
       });
     }
 
-    const result = await lendingContract.getLoanAuction(nftContractAddress, nftId);
+    const result = await lendingContract.getLoanAuction(
+      nftContractAddress,
+      nftId,
+    );
 
     if (result.nftOwner === '0x0000000000000000000000000000000000000000') {
       return thunkApi.rejectWithValue({
@@ -155,7 +170,7 @@ export const repayLoanByBorrower = createAsyncThunk<
   {
     walletAddress: string;
   }
->('loans/repayLoanByBorrower', async (args) => {
+>('loans/repayLoanByBorrower', async () => {
   // const temp = args.walletAddress;
   return {
     content: undefined,
@@ -228,7 +243,8 @@ const slice = createSlice({
   },
 });
 
-export const useLoansSelector: TypedUseSelectorHook<RootLoansState> = useSelector;
+export const useLoansSelector: TypedUseSelectorHook<RootLoansState> =
+  useSelector;
 
 export const selectors = {
   loanAuctionsByNFT: (s: RootLoansState) => s.loans?.loanAuctionByNFT,

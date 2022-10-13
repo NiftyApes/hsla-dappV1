@@ -8,7 +8,10 @@ export interface DynamicSVGImportOptions {
   onError?: React.ReactEventHandler<SVGSVGElement>;
 }
 
-export default function useDynamicSVGImport(name: string, options: DynamicSVGImportOptions = {}) {
+export default function useDynamicSVGImport(
+  name: string,
+  options: DynamicSVGImportOptions = {},
+) {
   const [iconURL, setIconURL] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [error] = useState<Error>();

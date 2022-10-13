@@ -27,6 +27,13 @@
         "prettier"
     ],
     "rules": {
+        "react/prop-types": ["off"],
+        "jsx-a11y/anchor-is-valid": ["off"],
+        "no-plusplus": ["off"],
+        "no-underscore-dangle": ["off"],
+        "no-nested-ternary": ["off"],
+        "react/require-default-props": ["off"],
+        "import/prefer-default-export": ["off"],
         "react/react-in-jsx-scope": ["off"],
         "react/jsx-uses-react": ["off"],
         "react/jsx-props-no-spreading": ["warn"],

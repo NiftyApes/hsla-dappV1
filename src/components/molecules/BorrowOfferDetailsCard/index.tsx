@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { Box, Button, Flex, Grid, Text, useToast } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
 import { GOERLI, LOCAL } from 'constants/contractAddresses';
@@ -53,9 +54,9 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
     String(offer.OfferTerms.InterestRatePerSecond),
   ).mul(BigNumber.from(String(offer.OfferTerms.Duration)));
 
-  const totalBorrowed: BigNumber = BigNumber.from(String(offer.OfferTerms.Amount)).add(
-    totalInterest,
-  );
+  const totalBorrowed: BigNumber = BigNumber.from(
+    String(offer.OfferTerms.Amount),
+  ).add(totalInterest);
 
   const fmtOfferAmount: string = formatEther(totalAmount);
   const { hasApproval, hasCheckedApproval, grantApproval } = useERC721Approval({
@@ -99,7 +100,8 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
     }
   };
 
-  const [transferApprovalStatus, setTransferApprovalStatus] = useState<string>('READY');
+  const [transferApprovalStatus, setTransferApprovalStatus] =
+    useState<string>('READY');
   const onApproveTransfer = async () => {
     await grantApproval({
       onPending: () => setTransferApprovalStatus('PENDING'),
@@ -138,8 +140,13 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
           size="lg"
           textTransform="uppercase"
           variant="outline"
-          width="100%">
-          {transferApprovalStatus === 'PENDING' ? <LoadingIndicator size="xs" /> : i18n.allowButton}
+          width="100%"
+        >
+          {transferApprovalStatus === 'PENDING' ? (
+            <LoadingIndicator size="xs" />
+          ) : (
+            i18n.allowButton
+          )}
         </Button>
       );
     }
@@ -151,14 +158,16 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
         width="100%"
         flexDir="column"
         border="1px solid rgba(101, 101, 101, 0.2)"
-        borderRadius="15px">
+        borderRadius="15px"
+      >
         <Box
           borderBottom="1px solid"
           borderColor="rgba(101, 101, 101, 0.2)"
           bg="white"
           borderRadius="15px 15px 0 0"
           textAlign="center"
-          w="100%">
+          w="100%"
+        >
           <Text color="solid.gray0" textTransform="uppercase">
             {i18n.dealTermsLabel}
           </Text>
@@ -170,9 +179,16 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
             w="100%"
             borderColor="solid.lightPurple"
             textAlign="center"
-            bgColor="solid.white">
+            bgColor="solid.white"
+          >
             <Flex flexDir="column" alignItems="center">
-              <Text fontSize="sm" color="solid.gray0" mr="3px" mt="30px" textTransform="uppercase">
+              <Text
+                fontSize="sm"
+                color="solid.gray0"
+                mr="3px"
+                mt="30px"
+                textTransform="uppercase"
+              >
                 {i18n.dealTermsLabel}
               </Text>
               <Flex alignItems="center">
@@ -194,7 +210,12 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
 
             <Flex flexDir="column" alignItems="center">
               <Flex alignItems="center" mt="30px">
-                <Text fontSize="sm" color="solid.gray0" mr="3px" textTransform="uppercase">
+                <Text
+                  fontSize="sm"
+                  color="solid.gray0"
+                  mr="3px"
+                  textTransform="uppercase"
+                >
                   {i18n.totalInterest}
                 </Text>
                 <Icon name="help-circle" color="solid.gray0" />
@@ -229,7 +250,8 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
         size="lg"
         textTransform="uppercase"
         variant="outline"
-        width="100%">
+        width="100%"
+      >
         {isExecuting ? <LoadingIndicator size="xs" /> : i18n.approveButton}
       </Button>
     );

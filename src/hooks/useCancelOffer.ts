@@ -1,4 +1,3 @@
-import { useToast } from '@chakra-ui/toast';
 import { updateOfferStatus } from 'api/updateOfferStatus';
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
@@ -23,13 +22,17 @@ export const useCancelOffer = ({
 
   const { getTransactionTimestamp } = useGetTransactionTimestamp();
 
-  const [cancelStatus, setCancelStatus] = useState<'PENDING' | 'SUCCESS' | 'ERROR' | 'READY'>(
-    'READY',
+  const [cancelStatus, setCancelStatus] = useState<
+    'PENDING' | 'SUCCESS' | 'ERROR' | 'READY'
+  >('READY');
+
+  const [txObject, setTxObject] = useState<ethers.ContractTransaction | null>(
+    null,
   );
 
-  const [txObject, setTxObject] = useState<ethers.ContractTransaction | null>(null);
-
-  const [txReceipt, setTxReceipt] = useState<ethers.ContractReceipt | null>(null);
+  const [txReceipt, setTxReceipt] = useState<ethers.ContractReceipt | null>(
+    null,
+  );
 
   const chainId = useChainId();
 
@@ -48,11 +51,21 @@ export const useCancelOffer = ({
       setCancelStatus('PENDING');
 
       try {
-        const offer = await niftyApesContract.getOffer(nftContractAddress, nftId, offerHash, true);
+        const offer = await niftyApesContract.getOffer(
+          nftContractAddress,
+          nftId,
+          offerHash,
+          true,
+        );
 
         const offerExpiration = offer.expiration;
 
-        const tx = await niftyApesContract.removeOffer(nftContractAddress, nftId, offerHash, true);
+        const tx = await niftyApesContract.removeOffer(
+          nftContractAddress,
+          nftId,
+          offerHash,
+          true,
+        );
 
         setTxObject(tx);
 

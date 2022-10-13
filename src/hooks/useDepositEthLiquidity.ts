@@ -16,13 +16,17 @@ export const useDepositEthLiquidity = () => {
 
   const liquidityContract = useLiquidityContract();
 
-  const [depositStatus, setDepositStatus] = useState<'PENDING' | 'SUCCESS' | 'ERROR' | 'READY'>(
-    'READY',
+  const [depositStatus, setDepositStatus] = useState<
+    'PENDING' | 'SUCCESS' | 'ERROR' | 'READY'
+  >('READY');
+
+  const [txObject, setTxObject] = useState<ethers.ContractTransaction | null>(
+    null,
   );
 
-  const [txObject, setTxObject] = useState<ethers.ContractTransaction | null>(null);
-
-  const [txReceipt, setTxReceipt] = useState<ethers.ContractReceipt | null>(null);
+  const [txReceipt, setTxReceipt] = useState<ethers.ContractReceipt | null>(
+    null,
+  );
 
   const { getTransactionTimestamp } = useGetTransactionTimestamp();
 

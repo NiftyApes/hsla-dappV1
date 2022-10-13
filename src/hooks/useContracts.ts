@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import {
   getGoerliLendingContract,
   getGoerliLiquidityContract,
@@ -8,11 +9,6 @@ import {
 } from 'helpers/getContracts';
 import { useChainId } from './useChainId';
 import { useWalletProvider } from './useWalletProvider';
-
-const i18n = {
-  noContract: (cid: string | undefined) =>
-    `App not currently configured to connect to NiftyApes contract on current chain id: ${cid}`,
-};
 
 const isLocalChain = (cid: string | undefined): boolean | undefined => {
   return cid === '0x7a69';
