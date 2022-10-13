@@ -11,15 +11,17 @@ import {
     InputLeftElement,
     InputRightElement,
     Select,
-    Text,
+    Text, useToast,
 } from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import {SECONDS_IN_DAY, SECONDS_IN_YEAR} from 'constants/misc';
 import {useCreateCollectionOffer} from 'hooks/useCreateCollectionOffer';
 import {useAvailableEthLiquidity} from 'hooks/useEthLiquidity';
 import {useWalletAddress} from 'hooks/useWalletAddress';
+import {TransactionReceipt} from "@ethersproject/abstract-provider";
 import _ from 'lodash';
 import React, {useMemo, useState} from 'react';
+import {ToastSuccessCard} from "../../../../../components/cards/ToastSuccessCard";
 
 interface CreateCollectionOfferFormProps {
     nftContractAddress: string;
@@ -32,7 +34,6 @@ interface CreateCollectionOfferFormProps {
     expiration: string;
     setExpiration: React.Dispatch<React.SetStateAction<string>>;
     addNewlyAddedOfferHash: (offerHash: string) => void;
-    openSuccessfulOrderCreationModal: () => void;
     floorTermLimit: string;
     setFloorTermLimit: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -48,7 +49,6 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
                                                                                         expiration,
                                                                                         setExpiration,
                                                                                         addNewlyAddedOfferHash,
-                                                                                        openSuccessfulOrderCreationModal,
                                                                                         floorTermLimit,
                                                                                         setFloorTermLimit
                                                                                     }) => {
@@ -61,6 +61,7 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
     const doesOfferAmountExceedAvailableLiquidity =
         !_.isNil(availableEthLiquidity) && Number(collectionOfferAmt) > availableEthLiquidity;
 
+    const toast = useToast();
 
     const isDurationValid: boolean = !_.isEmpty(duration) && Number(duration) >= 1;
     const isAprValid: boolean = !_.isEmpty(apr);
@@ -86,14 +87,25 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
             durationInDays: Number(duration),
             expirationInDays: Number(expiration),
             floorTermLimit: Number(floorTermLimit),
+            onTxMined: (receipt: TransactionReceipt) => {
+                toast({
+                    render: (props) => <ToastSuccessCard title="Offer Created" txn={receipt} {...props} />,
+                    position: 'top-right',
+                    duration: 9000,
+                    isClosable: true,
+                });
+            },
+
             onPending: () => setCreateCollectionOfferStatus('PENDING'),
             onSuccess: (offerHash: string) => {
+
+                console.log("Offer hash", offerHash);
+
                 setCollectionOfferAmt('');
                 setApr('');
                 setDuration('');
                 setCreateCollectionOfferStatus('SUCCESS');
                 addNewlyAddedOfferHash(offerHash);
-                openSuccessfulOrderCreationModal();
                 setTimeout(() => setCreateCollectionOfferStatus('READY'), 1000);
             },
             onError: (e: any) => {
