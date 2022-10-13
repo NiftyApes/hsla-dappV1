@@ -22,7 +22,7 @@ export interface NFTAttribute {
 export const getTokenId = (tokenId: NFTId) =>
   tokenId instanceof BigNumber ? tokenId.toString() : tokenId;
 
-export const getNFTHash = (nft: NFT) => {
+export const getNFTHash = (nft: { id: string; contractAddress: string }) => {
   return `${nft.contractAddress}_${nft.id}`;
 };
 

@@ -61,7 +61,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
       });
     }
 
-    const data: any = await getData<LoanOffer>(
+    const data = await getData<LoanOffer>(
       {
         url: getApiUrl(chainId, 'offers'),
         data: {
@@ -72,7 +72,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
     );
 
     const processedOffers = await Promise.all(
-      data.map(async (offer: any) => {
+      data.map(async (offer) => {
         if (!liquidityContract || !cEthContract) {
           return false;
         }
@@ -113,7 +113,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
           return true;
         }
       }),
-    ).then((results) => data.filter((offer: any, i: number) => results[i]));
+    ).then((results) => data.filter((offer, i) => results[i]));
 
     return {
       content: processedOffers,
@@ -125,7 +125,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
 
 export const fetchLoanAuctionByNFT = createAsyncThunk<
   FetchLoanAuctionResponse,
-  NFT,
+  { id: string; contractAddress: string },
   LoansThunkApi
 >(
   'loans/fetchLoanAuctionByNFT',

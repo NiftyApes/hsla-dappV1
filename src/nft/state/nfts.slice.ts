@@ -160,8 +160,9 @@ const slice = createSlice({
           }
 
           if (action.payload.content) {
-            state.nftsByWalletAddress[action.meta.arg.walletAddress].content =
-              action.payload.content;
+            state.nftsByWalletAddress[
+              action.meta.arg.walletAddress
+            ].content?.push(...action.payload.content);
           }
 
           state.nftsByWalletAddress[action.meta.arg.walletAddress].fetching =

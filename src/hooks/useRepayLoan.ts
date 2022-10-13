@@ -1,7 +1,5 @@
-/* eslint-disable @typescript-eslint/no-shadow */
 import { updateLoanStatus } from 'api/updateLoanStatus';
-import { useAppDispatch, useAppSelector } from 'app/hooks';
-import { RootState } from 'app/store';
+import { useAppDispatch } from 'app/hooks';
 import { transactionTypes } from 'constants/transactionTypes';
 
 import { increment } from 'counter/counterSlice';
@@ -12,7 +10,6 @@ import { NFT } from 'nft';
 import { useChainId } from './useChainId';
 import { useLendingContract } from './useContracts';
 import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
-import { useWalletAddress } from './useWalletAddress';
 
 export const useRepayLoanByBorrower = ({
   nftContractAddress,
@@ -31,17 +28,6 @@ export const useRepayLoanByBorrower = ({
 
   const chainId = useChainId();
 
-  const walletAddress = useWalletAddress();
-
-  const nft = useAppSelector(
-    (state: RootState) =>
-      walletAddress &&
-      state.nfts.nftsByWalletAddress[walletAddress].content?.find(
-        (nft: NFT) =>
-          nft.id === nftId && nft.contractAddress === nftContractAddress,
-      ),
-  );
-
   if (!niftyApesContract || !nftId) {
     return {
       executeLoanByBorrower: undefined,
@@ -52,10 +38,6 @@ export const useRepayLoanByBorrower = ({
     repayLoanByBorrower: async () => {
       if (!nftContractAddress) {
         throw new Error('NFT Contract Address not specified');
-      }
-
-      if (!nft) {
-        throw new Error('NFT information not in Redux store');
       }
 
       const tx = await niftyApesContract.repayLoan(nftContractAddress, nftId, {
@@ -80,7 +62,12 @@ export const useRepayLoanByBorrower = ({
           ? receipt.events[5].args.loanAuction
           : null;
 
-      dispatch(fetchLoanAuctionByNFT(nft));
+      dispatch(
+        fetchLoanAuctionByNFT({
+          id: nftId,
+          contractAddress: nftContractAddress,
+        } as NFT),
+      );
 
       await saveTransactionInDb({
         chainId,

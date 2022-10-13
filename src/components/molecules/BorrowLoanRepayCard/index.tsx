@@ -29,13 +29,13 @@ import {
   isLoanDefaulted,
 } from '../../../helpers/getDuration';
 
-interface Callbacktype {
+interface CallbackType {
   (): void;
 }
 
 interface Props {
   loan: LoanAuction;
-  onRepay: Callbacktype;
+  onRepay: CallbackType;
 }
 
 const i18n = {
@@ -67,9 +67,17 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
 
   // Note: When running this on a local chain, the interest will be 0 until a new block is created.
   // Simply create a new transaction and the correct amount of interest will show up
-  const totalAccruedInterest: BigNumber = accruedInterest
+  let totalAccruedInterest: BigNumber = accruedInterest
     ? accruedInterest[0].add(accruedInterest[1])
     : BigNumber.from(0);
+
+  // 25 basis points of the total amount
+  const basisPoints: BigNumber = amount.mul(25).div(10000);
+
+  // Add basis points if total interest is less than
+  if (totalAccruedInterest.lt(basisPoints)) {
+    totalAccruedInterest = basisPoints;
+  }
 
   // Additional 20 minutes worth of interest
   const padding: BigNumber = irps.mul(3600);
@@ -82,7 +90,7 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
   const { repayLoanByBorrower } = useRepayLoanByBorrower({
     nftContractAddress: loan.nftContractAddress,
     nftId: loan.nftId,
-    amount: totalOwed.add(padding),
+    amount: totalOwed,
   });
 
   const onRepayLoan = async () => {
