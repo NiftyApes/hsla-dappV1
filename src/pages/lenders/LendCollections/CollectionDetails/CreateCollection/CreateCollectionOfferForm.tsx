@@ -11,7 +11,7 @@ import {
   InputLeftElement,
   InputRightElement,
   Select,
-  Text,
+  Text
 } from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { SECONDS_IN_YEAR } from 'constants/misc';
@@ -275,10 +275,10 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
               </Select>
             </Box>
           </Flex>
-          <Flex alignItems="center">
-            <div>
+          <Flex>
+            <Box>
               Good for{' '}
-            </div>
+            </Box>
             <Box w="120px" ml="8px">
               <Select size="sm" onChange={(e) => setFloorTermLimit(e.target.value)} value={floorTermLimit}>
                 <option value="5">5 Loans</option>
