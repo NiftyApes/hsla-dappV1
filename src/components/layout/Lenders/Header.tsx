@@ -65,7 +65,6 @@ const Header: React.FC = () => {
             <Text whiteSpace="nowrap">
               <Link to={lendersDashboard()}>📊 Dashboard</Link>
             </Text>
-            {/* <Text noOfLines={1}> */}
             <Text whiteSpace="nowrap">
               <Link to={lendersLiquidity()}>💧 Manage Liquidity </Link>
             </Text>
