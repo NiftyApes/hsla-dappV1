@@ -8,6 +8,7 @@ import {
   setStoreWallet,
 } from 'app/store';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
+import GlobalModal from 'components/organisms/GlobalModal';
 import { useCEthContract } from 'hooks/useCEthContract';
 import { useLendingContract, useLiquidityContract, useOffersContract } from 'hooks/useContracts';
 import React, { Suspense } from 'react';
@@ -24,6 +25,7 @@ const App: React.FC = () => {
   const liquidityContract = useLiquidityContract();
   const cEthContract = useCEthContract();
 
+
   setStoreWallet(wallet);
 
   setStoreLendingContract(lendingContract);
@@ -35,6 +37,12 @@ const App: React.FC = () => {
     <ChakraProvider theme={theme}>
       <Router>
         <Suspense fallback={<LoadingIndicator fullScreen />}>
+          <GlobalModal 
+            storageKey="TOS"
+            actionText="Accept"
+            title="Terms of Services"
+            description="Lorem Ipsum Bipsum Tipsum"
+          />
           <Routes>
             {Marketing}
             {Borrowers}
