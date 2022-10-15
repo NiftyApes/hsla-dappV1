@@ -1,22 +1,18 @@
-import React, { useContext, useMemo } from 'react';
 import {
-  Flex,
-  Button,
-  Image,
-  Text,
-  Menu,
+  Box, Button, Flex, Image, Menu,
   MenuButton,
   MenuItem,
-  MenuList,
-  Box,
+  MenuList, Show, Text
 } from '@chakra-ui/react';
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
 import _ from 'lodash';
+import React, { useContext, useMemo } from 'react';
 
 import Icon from 'components/atoms/Icon';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
-import { WalletContext } from 'lib/contexts/WalletProvider';
 import { useWalletBalance } from 'hooks/useWalletBalance';
+import { WalletContext } from 'lib/contexts/WalletProvider';
+
 
 const WalletInfo: React.FC = () => {
   const [{ wallet, connecting }] = useConnectWallet();
@@ -86,9 +82,16 @@ const WalletInfo: React.FC = () => {
             mr="16px"
           >
             <Box ml="14px" bg={currentChainColor} width="10px" height="10px" borderRadius="100%" />
-            <Text m="11px 14px 11px 10px" fontSize="small" color="solid.gray0">
+            <Show above="lg">
+              <Text 
+              m="11px 14px 11px 10px"
+              fontSize="small" 
+              color="solid.gray0" 
+              noOfLines={1}
+              >
               {currentChainLabel}
             </Text>
+            </Show>
           </Flex>
         ) : null}
         {wallet ? (
@@ -122,7 +125,7 @@ const WalletInfo: React.FC = () => {
             </Button>
           </Flex>
         ) : (
-          <Button variant="primary" color="primary.purple" onClick={connectWallet}>
+          <Button variant="primary" color="primary.purple" onClick={connectWallet} >
             Connect Wallet
           </Button>
         )}
