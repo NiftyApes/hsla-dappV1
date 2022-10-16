@@ -302,8 +302,8 @@ export const CreateCollectionOfferForm: React.FC<
             </Select>
           </Box>
         </Flex>
-        <Flex alignItems="center">
-          <div>Good for </div>
+        <Flex>
+          <Box>Good for </Box>
           <Box w="120px" ml="8px">
             <Select
               size="sm"

@@ -1,22 +1,23 @@
-import React, { useContext, useMemo } from 'react';
 import {
-  Flex,
+  Box,
   Button,
+  Flex,
   Image,
-  Text,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Box,
+  Show,
+  Text,
 } from '@chakra-ui/react';
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
 import _ from 'lodash';
+import React, { useContext, useMemo } from 'react';
 
 import Icon from 'components/atoms/Icon';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
-import { WalletContext } from 'lib/contexts/WalletProvider';
 import { useWalletBalance } from 'hooks/useWalletBalance';
+import { WalletContext } from 'lib/contexts/WalletProvider';
 
 const WalletInfo: React.FC = () => {
   const [{ wallet, connecting }] = useConnectWallet();
@@ -95,9 +96,16 @@ const WalletInfo: React.FC = () => {
             height="10px"
             borderRadius="100%"
           />
-          <Text m="11px 14px 11px 10px" fontSize="small" color="solid.gray0">
-            {currentChainLabel}
-          </Text>
+          <Show above="lg">
+            <Text
+              m="11px 14px 11px 10px"
+              fontSize="small"
+              color="solid.gray0"
+              noOfLines={1}
+            >
+              {currentChainLabel}
+            </Text>
+          </Show>
         </Flex>
       ) : null}
       {wallet ? (

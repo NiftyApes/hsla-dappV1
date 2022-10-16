@@ -55,9 +55,10 @@ const Header: React.FC = () => {
         </Link>
         <Text
           textTransform="uppercase"
-          fontSize="md"
           fontWeight="bold"
           mr="20px"
+          noOfLines={1}
+          fontSize={{ base: '14px', xl: '16px' }}
         >
           Borrowers
         </Text>
@@ -66,15 +67,15 @@ const Header: React.FC = () => {
           borderRadius="45px"
           alignItems="center"
           columnGap="46px"
-          fontSize="md"
+          fontSize={{ base: '14px', xl: '16px' }}
           textTransform="capitalize"
           p="17px 26px"
           fontWeight="bold"
         >
-          <Text color="solid.gray0">
+          <Text color="solid.gray0" whiteSpace="nowrap">
             <Link to={borrowersDashboard()}>📊 Dashboard</Link>
           </Text>
-          <Text color="solid.gray0">
+          <Text color="solid.gray0" whiteSpace="nowrap">
             <Link to={borrowers()}>🍌 Borrow</Link>
           </Text>
         </Flex>
@@ -83,6 +84,8 @@ const Header: React.FC = () => {
             as={Button}
             rightIcon={<AiOutlineCaretDown />}
             bg="transparent"
+            noOfLines={1}
+            fontSize={{ base: '14px', xl: '16px' }}
           >
             LENDERS
           </MenuButton>
@@ -90,7 +93,6 @@ const Header: React.FC = () => {
             borderRadius="15px"
             boxShadow="0px 0px 21px rgba(58, 0, 131, 0.1)"
             p="9px 7px"
-            fontSize="md"
             sx={{
               button: {
                 fontWeight: 'bold',

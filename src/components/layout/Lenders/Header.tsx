@@ -1,6 +1,7 @@
 import {
   Button,
   Flex,
+  Hide,
   Image,
   Menu,
   MenuButton,
@@ -23,6 +24,18 @@ import {
 
 const Header: React.FC = () => {
   const navigate = useNavigate();
+
+  const navigateToLendersIdDashboard = useCallback(() => {
+    navigate(lendersDashboard());
+  }, [navigate]);
+
+  const navigateToLendersIdLiquidity = useCallback(() => {
+    navigate(lendersLiquidity());
+  }, [navigate]);
+
+  const navigateToLendersIdLend = useCallback(() => {
+    navigate(lendersLend());
+  }, [navigate]);
 
   const navigateToBorrowersDashboard = useCallback(() => {
     navigate(borrowersDashboard());
@@ -49,34 +62,81 @@ const Header: React.FC = () => {
             cursor="pointer"
           />
         </Link>
-        <Text
-          textTransform="uppercase"
-          fontSize="md"
-          fontWeight="bold"
-          mr="20px"
-        >
-          Lenders
-        </Text>
-        <Flex
-          bg="gray.300"
-          borderRadius="45px"
-          alignItems="center"
-          columnGap="46px"
-          p="17px 26px"
-          color="solid.gray0"
-          fontWeight="bold"
-          fontSize="md"
-          textTransform="capitalize"
-        >
-          <Link to={lendersDashboard()}>📊 Dashboard</Link>
-          <Link to={lendersLiquidity()}>💧 Manage Liquidity </Link>
-          <Link to={lendersLend()}>📃 Create Offers</Link>
-        </Flex>
+
+        <Hide below="md">
+          <Text
+            textTransform="uppercase"
+            fontWeight="bold"
+            mr="20px"
+            noOfLines={1}
+            fontSize={{ base: '14px', xl: '16px' }}
+          >
+            Lenders
+          </Text>
+          <Flex
+            bg="gray.300"
+            borderRadius="45px"
+            alignItems="center"
+            columnGap="46px"
+            p="17px 26px"
+            color="solid.gray0"
+            fontWeight="bold"
+            fontSize={{ base: '14px', xl: '16px' }}
+            textTransform="capitalize"
+          >
+            <Text whiteSpace="nowrap">
+              <Link to={lendersDashboard()}>📊 Dashboard</Link>
+            </Text>
+            <Text whiteSpace="nowrap">
+              <Link to={lendersLiquidity()}>💧 Manage Liquidity </Link>
+            </Text>
+            <Text whiteSpace="nowrap">
+              <Link to={lendersLend()}>📃 Create Offers</Link>
+            </Text>
+          </Flex>
+        </Hide>
+        <Hide above="md">
+          <Menu>
+            <MenuButton
+              as={Button}
+              rightIcon={<AiOutlineCaretDown />}
+              bg="transparent"
+              noOfLines={1}
+              fontSize={{ base: '14px', xl: '16px' }}
+            >
+              LENDERS
+            </MenuButton>
+            <MenuList
+              borderRadius="15px"
+              boxShadow="0px 0px 21px rgba(58, 0, 131, 0.1)"
+              p="9px 7px"
+              sx={{
+                button: {
+                  fontWeight: 'bold',
+                  borderRadius: '10px',
+                  p: '15px',
+                },
+              }}
+            >
+              <MenuItem onClick={navigateToLendersIdDashboard}>
+                📊 Dashboard
+              </MenuItem>
+              <MenuItem onClick={navigateToLendersIdLiquidity}>
+                💧 Manage Liquidity
+              </MenuItem>
+              <MenuItem onClick={navigateToLendersIdLend}>
+                📜 Create Offers
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        </Hide>
         <Menu key={window.location.pathname}>
           <MenuButton
             as={Button}
             rightIcon={<AiOutlineCaretDown />}
             bg="transparent"
+            noOfLines={1}
+            fontSize={{ base: '14px', xl: '16px' }}
           >
             BORROWERS
           </MenuButton>
