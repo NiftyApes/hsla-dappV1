@@ -1,6 +1,7 @@
 import {
     Flex,
     Image,
+    Link,
     Modal,
     ModalCloseButton,
     ModalContent,
@@ -65,11 +66,12 @@ const CollectionHeader: React.FC = () => {
                 <Flex flexDirection="column">
                     <Flex>
                         <Icon name="etherscan" mr="5px" ml="3px"/>
-                        <span style={{textDecoration: 'underline'}}>Etherscan</span>
+                        <Link href={`https://etherscan.io/token/${collectionAddress}`} target="_blank">Etherscan</Link>
                     </Flex>
                     <Flex>
                         <Icon name="os" size={23} mr="3px"/>
-                        <span style={{textDecoration: 'underline'}}>Opensea</span>
+                        <Link href={`https://opensea.io/assets?search[query]=${collectionAddress}`}
+                              target="_blank">OpenSea</Link>
                     </Flex>
                 </Flex>
             </Flex>
