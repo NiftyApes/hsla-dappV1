@@ -24,14 +24,13 @@ const CollectionDetailsModal: React.FC = () => {
 
   return (
     <Center>
-      <Box minW="1120px" maxW="1600px">
+      <Box minW="1120px" maxW="1600px" >
         <CollectionHeader />
         <Grid
           mt="16px"
-          gridTemplateColumns="max(1140*0.60px, min(60vw, 1600*0.60px)) 1fr"
-          columnGap="8px"
-          px="20px"
+          gridTemplateColumns="max(1160*0.60px, min(60vw, 1600*0.60px)) 1fr"
         >
+
           <GridItem>
             <OfferBook
               collectionOfferAmt={collectionOfferAmt}

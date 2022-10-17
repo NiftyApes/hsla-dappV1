@@ -1,9 +1,8 @@
 import React, { useCallback } from 'react';
-import { Box, Button, Flex, Text, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Flex, Text } from '@chakra-ui/react';
 
 import { useEasyOfferForCollection } from 'hooks/useEasyOfferForCollection';
 import { CreateCollectionOfferForm } from './CreateCollectionOfferForm';
-import { SuccessfulOrderCreationModal } from './SuccessfulOrderCreationModal';
 
 interface CreateCollectionOfferProps {
   nftContractAddress: string;
@@ -34,7 +33,6 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
   floorTermLimit,
   setFloorTermLimit,
 }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { easyOfferAmount, easyOfferApr, easyOfferDuration } =
     useEasyOfferForCollection({
@@ -48,10 +46,14 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
   }, [easyOfferAmount, easyOfferApr, easyOfferDuration]);
 
   return (
+<<<<<<< HEAD
     <Box
       maxW="600px"
       sx={{ position: 'relative', left: '-40px', top: '-16px' }}
     >
+=======
+    <Box maxW="600px" sx={{ position: 'relative', top: '-16px' }}>
+>>>>>>> master
       <Flex mb="16px" alignItems="center" justifyContent="space-between">
         <Text fontWeight="bold" color="solid.gray0">
           CREATE FLOOR OFFER TERMS
@@ -77,11 +79,9 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
         expiration={expiration}
         setExpiration={setExpiration}
         addNewlyAddedOfferHash={addNewlyAddedOfferHash}
-        openSuccessfulOrderCreationModal={onOpen}
         floorTermLimit={floorTermLimit}
         setFloorTermLimit={setFloorTermLimit}
       />
-      <SuccessfulOrderCreationModal isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 };
