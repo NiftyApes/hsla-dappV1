@@ -1,13 +1,18 @@
+import {useChainId} from "./useChainId";
+import {isGoerli, isLocalChain} from "./useContracts";
+
 export interface NFTCollection {
-    address:string;
-    image:string;
+    address: string;
+    image: string;
     name: string;
-    symbol?:string;
+    symbol?: string;
 }
 
 export const useTopCollections = () => {
 
-    const collections:Array<NFTCollection> = [
+    const chainId = useChainId();
+
+    const collections: Array<NFTCollection> = [
         {
             address: '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d',
             image: '/assets/images/collections/collection_bayc.png',
@@ -54,6 +59,23 @@ export const useTopCollections = () => {
             name: 'CrypToadz',
         },
     ]
+
+
+    if (isLocalChain(chainId)) {
+        collections.unshift({
+            address: '0xb007167714e2940013EC3bb551584130B7497E22',
+            image: '/assets/images/NA-BLACK.png',
+            name: 'Dev Contract (Local)',
+        })
+    }
+
+    if (isGoerli(chainId)) {
+        collections.unshift({
+            address: '0x01c7851AE4D42f7B649ce168716C78fC25fE3D16',
+            image: '/assets/images/collections/bananaman.png',
+            name: 'Bananaman (Goerli)',
+        });
+    }
 
     return {collections};
 }
