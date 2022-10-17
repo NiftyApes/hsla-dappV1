@@ -4,10 +4,10 @@ import React from 'react';
 import { useActiveLoansForLender } from 'hooks/useActiveLoansForLender';
 import { useOffersForLender } from 'hooks/useOffersOfLender';
 import { useWalletAddress } from 'hooks/useWalletAddress';
+import { EmptyPlaceholder } from '../../../components/cards/EmptyPlaceholder';
 import LoansTable from './LoansTable';
 import OffersTable from './OffersTable';
 import TopBar from './TopBar';
-import { EmptyPlaceholder } from '../../../components/cards/EmptyPlaceholder';
 
 const i18n = {
   noLoans: "You don't have any active loans...",
@@ -25,8 +25,8 @@ const Dashboard: React.FC = () => {
       <TopBar />
 
       <Center px="36px">
-        <Grid templateColumns="800px 700px" columnGap="24px">
-          <GridItem>
+        <Grid templateColumns={{ base: 'repeat(1)', xl: 'repeat(2, 1fr)'}} gap={6}>
+          <GridItem w='100%'>
             {offers && offers.length === 0 && (
               <EmptyPlaceholder>
                 <>{i18n.noOffers}</>
@@ -43,7 +43,7 @@ const Dashboard: React.FC = () => {
             )}
           </GridItem>
 
-          <GridItem>
+          <GridItem w='100%'>
             {activeLoans && activeLoans.length === 0 && (
               <EmptyPlaceholder>
                 <>{i18n.noLoans}</>

@@ -35,10 +35,16 @@ const Header: React.FC = () => {
       top="0px"
       zIndex={9}>
       <Flex alignItems="center">
-        <Link to="/">
+        <Link to="/" >
           <Image src="/assets/images/header_logo.png" alt="Logo" mr="15px" cursor="pointer" />
         </Link>
-        <Text textTransform="uppercase" fontSize="md" fontWeight="bold" mr="20px">
+        <Text 
+          textTransform="uppercase" 
+          fontWeight="bold" 
+          mr="20px" 
+          noOfLines={1}
+          fontSize={{ base: "14px",  xl: "16px" }}
+          >
           Borrowers
         </Text>
         <Flex
@@ -46,28 +52,31 @@ const Header: React.FC = () => {
           borderRadius="45px"
           alignItems="center"
           columnGap="46px"
-          fontSize="md"
+          fontSize={{ base: "14px",  xl: "16px" }}
           textTransform={"capitalize"}
           p="17px 26px"
           fontWeight="bold"
         >
-          <Text color="solid.gray0">
+          <Text color="solid.gray0" whiteSpace="nowrap">
             <Link to={borrowersDashboard()}>📊 Dashboard</Link>
           </Text>
-          <Text color="solid.gray0">
+          <Text color="solid.gray0" whiteSpace="nowrap">
             <Link to={borrowers()}>🍌 Borrow</Link>
           </Text>
 
         </Flex>
         <Menu>
-          <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} bg="transparent">
+          <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} 
+            bg="transparent"
+            noOfLines={1}
+            fontSize={{ base: "14px",  xl: "16px" }}
+            >
             LENDERS
           </MenuButton>
           <MenuList
             borderRadius="15px"
             boxShadow="0px 0px 21px rgba(58, 0, 131, 0.1)"
             p="9px 7px"
-            fontSize="md"
             sx={{
               button: {
                 fontWeight: 'bold',
