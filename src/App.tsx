@@ -43,7 +43,7 @@ const App: React.FC = () => {
     }
   }, [chainId, wallet]);
 
-  if (!chainId || (chainId !== '0x7a69' && chainId !== '0x5')) {
+  if (wallet && (!chainId || (chainId !== '0x7a69' && chainId !== '0x5'))) {
     return (
       <div>
         NiftyApes currently doesn't support this chain. Please switch to Goerli to explore the
