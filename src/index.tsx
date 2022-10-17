@@ -1,4 +1,5 @@
 import { ColorModeScript } from '@chakra-ui/react';
+import { WalletProvider } from 'lib/contexts/WalletProvider';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import theme from 'theme';
@@ -13,7 +14,9 @@ root.render(
   <>
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />
     <Provider store={store}>
-      <App />
+      <WalletProvider>
+        <App />
+      </WalletProvider>
     </Provider>
   </>,
 );
