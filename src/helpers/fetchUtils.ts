@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/return-await */
 type FetchParams = {
   url: string;
   options?: FetchOptions;
@@ -17,12 +18,47 @@ export enum RequestErrorType {
   httpNonOk = 'HttpNonOk',
 }
 
+export function paramify(
+  data: Record<string, string> | string | undefined,
+  excludeUndefined = false,
+) {
+  if (!data) {
+    return '';
+  }
+  if (typeof data !== 'object') {
+    return data;
+  }
+  const form: Array<string> = [];
+  Object.keys(data || {}).forEach((key) => {
+    if (excludeUndefined && data[key] === undefined) {
+      return;
+    }
+    form.push(`${key}=${data[key]}`);
+  });
+
+  return form.join('&');
+}
+
+export function appendParamsToQueryString(url: string, paramsString: string) {
+  if (paramsString) {
+    const mark = url.match(/\?/) ? '&' : '?';
+    return `${url}${mark}${paramsString}`;
+  }
+  return url;
+}
+
 export class RequestError extends Error {
   private _type: RequestErrorType;
+
   private _httpErrorCode?: number;
+
   private _response?: Response;
 
-  constructor(type: RequestErrorType, httpErrorCode?: number, response?: Response) {
+  constructor(
+    type: RequestErrorType,
+    httpErrorCode?: number,
+    response?: Response,
+  ) {
     super();
     this._type = type;
     this._httpErrorCode = httpErrorCode;
@@ -62,7 +98,11 @@ export async function getJson(params: FetchParams): Promise<JSON> {
 
   const response = await get(params);
   if (!response.ok) {
-    throw new RequestError(RequestErrorType.httpNonOk, response.status, response);
+    throw new RequestError(
+      RequestErrorType.httpNonOk,
+      response.status,
+      response,
+    );
   }
   const json = response.status === 204 ? {} : await response.json();
   return await (withResponseHeaders
@@ -99,7 +139,8 @@ export function post({ url, data, options }: FetchParams) {
       method: 'post',
       headers: {
         ...headers,
-        'Content-Type': headers['Content-Type'] || 'application/x-www-form-urlencoded',
+        'Content-Type':
+          headers['Content-Type'] || 'application/x-www-form-urlencoded',
       },
     },
   });
@@ -110,7 +151,11 @@ export async function postJson(options: FetchParams) {
 
   const response = await post(options);
   if (!response.ok) {
-    throw new RequestError(RequestErrorType.httpNonOk, response.status, response);
+    throw new RequestError(
+      RequestErrorType.httpNonOk,
+      response.status,
+      response,
+    );
   }
   const json = response.status === 204 ? {} : await response.json();
   return await (withResponseHeaders
@@ -123,32 +168,3 @@ export async function postJson(options: FetchParams) {
 }
 
 export const isClient = typeof document !== 'undefined';
-
-export function paramify(
-  data: Record<string, string> | string | undefined,
-  excludeUndefined = false,
-) {
-  if (!data) {
-    return '';
-  }
-  if (typeof data !== 'object') {
-    return data;
-  }
-  const form: Array<string> = [];
-  Object.keys(data || {}).forEach((key) => {
-    if (excludeUndefined && data[key] === undefined) {
-      return;
-    }
-    form.push(`${key}=${data[key]}`);
-  });
-
-  return form.join('&');
-}
-
-export function appendParamsToQueryString(url: string, paramsString: string) {
-  if (paramsString) {
-    const mark = url.match(/\?/) ? '&' : '?';
-    return `${url}${mark}${paramsString}`;
-  }
-  return url;
-}

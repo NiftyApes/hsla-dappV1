@@ -1,17 +1,28 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
-import { Button, Flex, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import { LoanOffer } from '../../../loan';
 import { BigNumber, ethers } from 'ethers';
+import { LoanOffer } from '../../../loan';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
 
-interface callbackType {
+interface CallbackType {
   (offer: LoanOffer): void;
 }
 
 interface Props {
   offers: Array<LoanOffer>;
-  onClick: callbackType;
+  onClick: CallbackType;
 }
 
 const i18n = {
@@ -42,7 +53,7 @@ const OffersTable: React.FC<Props> = ({ offers, onClick }) => {
           <Th borderRadius="8px 0px 0px 8px">{i18n.colAmount}</Th>
           <Th>{i18n.colDuration}</Th>
           <Th>{i18n.colApr}</Th>
-          <Th borderRadius="0px 8px 8px 0px"></Th>
+          <Th borderRadius="0px 8px 8px 0px" />
         </Tr>
       </Thead>
       <Tbody

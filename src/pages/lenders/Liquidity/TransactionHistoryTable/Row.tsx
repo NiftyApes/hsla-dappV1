@@ -60,11 +60,17 @@ const Row: React.FC = () => {
       </Td>
       <Td>
         <Text fontSize="sm">
-          25.5Ξ @ <strong>5% APR</strong> on all <strong>Bored Ape Yatch Club Tokens</strong>
+          25.5Ξ @ <strong>5% APR</strong> on all{' '}
+          <strong>Bored Ape Yatch Club Tokens</strong>
         </Text>
       </Td>
       <Td textAlign="center">
-        <Button variant="link" fontWeight="normal" fontSize="2xs" textDecor="underline">
+        <Button
+          variant="link"
+          fontWeight="normal"
+          fontSize="2xs"
+          textDecor="underline"
+        >
           Etherscan Link
         </Button>
       </Td>

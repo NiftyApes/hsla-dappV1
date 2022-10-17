@@ -5,7 +5,9 @@ import { OfferRow } from './OfferRow';
 
 const OffersTable: React.FC<any> = ({ offers }) => {
   const sortedOffers = _.sortBy(offers, (offer: any) =>
-    offer.offer.expiration < Date.now() / 1000 ? Infinity : offer.offer.expiration,
+    offer.offer.expiration < Date.now() / 1000
+      ? Infinity
+      : offer.offer.expiration,
   );
 
   return (
@@ -22,11 +24,12 @@ const OffersTable: React.FC<any> = ({ offers }) => {
                 border: 'none',
                 textAlign: 'center',
               },
-            }}>
+            }}
+          >
             <Th>collateral</Th>
             <Th>terms</Th>
             <Th>status</Th>
-            <Th></Th>
+            <Th />
           </Tr>
         </Thead>
         <Tbody
@@ -43,9 +46,14 @@ const OffersTable: React.FC<any> = ({ offers }) => {
             'tr:last-child > td:last-child': {
               borderBottomRightRadius: '10px',
             },
-          }}>
-          {sortedOffers?.map((offer: any, i: number) => (
-            <OfferRow key={offer.offerHash} offer={offer.offer} offerHash={offer.offerHash} />
+          }}
+        >
+          {sortedOffers?.map((offer: any) => (
+            <OfferRow
+              key={offer.offerHash}
+              offer={offer.offer}
+              offerHash={offer.offerHash}
+            />
           ))}
         </Tbody>
       </Table>

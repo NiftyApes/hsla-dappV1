@@ -16,9 +16,24 @@ const maycAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'approved', type: 'address' },
-      { indexed: true, internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'approved',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
     ],
     name: 'Approval',
     type: 'event',
@@ -26,8 +41,18 @@ const maycAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'operator', type: 'address' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'operator',
+        type: 'address',
+      },
       { indexed: false, internalType: 'bool', name: 'approved', type: 'bool' },
     ],
     name: 'ApprovalForAll',
@@ -36,8 +61,18 @@ const maycAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'uint256', name: '_currentPrice', type: 'uint256' },
-      { indexed: true, internalType: 'uint256', name: '_timeElapsed', type: 'uint256' },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: '_currentPrice',
+        type: 'uint256',
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: '_timeElapsed',
+        type: 'uint256',
+      },
     ],
     name: 'MutantPublicSalePaused',
     type: 'event',
@@ -45,8 +80,18 @@ const maycAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'uint256', name: '_saleDuration', type: 'uint256' },
-      { indexed: true, internalType: 'uint256', name: '_saleStartTime', type: 'uint256' },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: '_saleDuration',
+        type: 'uint256',
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: '_saleStartTime',
+        type: 'uint256',
+      },
     ],
     name: 'MutantPublicSaleStart',
     type: 'event',
@@ -54,8 +99,18 @@ const maycAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'previousOwner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'newOwner', type: 'address' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'previousOwner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
     ],
     name: 'OwnershipTransferred',
     type: 'event',
@@ -84,7 +139,12 @@ const maycAbi = [
     inputs: [
       { indexed: true, internalType: 'address', name: 'from', type: 'address' },
       { indexed: true, internalType: 'address', name: 'to', type: 'address' },
-      { indexed: true, internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
     ],
     name: 'Transfer',
     type: 'event',
@@ -462,10 +522,20 @@ const maycAbi = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
-  { inputs: [], name: 'withdraw', outputs: [], stateMutability: 'nonpayable', type: 'function' },
+  {
+    inputs: [],
+    name: 'withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
 ];
 
-export function getForkedMaycContract({ provider }: { provider: EIP1193Provider }) {
+export function getForkedMaycContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
   return getEthersContractWithEIP1193Provider({
     abi: maycAbi,
     address: MAYC_CONTRACT_ADDRESS,

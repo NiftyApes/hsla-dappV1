@@ -6,9 +6,19 @@ interface Props extends FlexProps {
   size?: string;
 }
 
-const LoadingIndicator: React.FC<Props> = ({ fullScreen = false, size = 'xl', ...restProps }) =>
+const LoadingIndicator: React.FC<Props> = ({
+  fullScreen = false,
+  size = 'xl',
+  ...restProps
+}) =>
   fullScreen ? (
-    <Flex width="100%" height="100%" justifyContent="center" alignItems="center" {...restProps}>
+    <Flex
+      width="100%"
+      height="100%"
+      justifyContent="center"
+      alignItems="center"
+      {...restProps}
+    >
       <Spinner
         thickness="4px"
         speed="0.65s"

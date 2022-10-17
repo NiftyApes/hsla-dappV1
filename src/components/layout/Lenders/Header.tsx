@@ -1,4 +1,14 @@
-import { Button, Flex, Hide, Image, Menu, MenuButton, MenuItem, MenuList, Text } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Hide,
+  Image,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Text,
+} from '@chakra-ui/react';
 import React, { useCallback } from 'react';
 import { AiOutlineCaretDown } from 'react-icons/ai';
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,7 +19,7 @@ import {
   borrowersDashboard,
   lendersDashboard,
   lendersLend,
-  lendersLiquidity
+  lendersLiquidity,
 } from 'routes/router';
 
 const Header: React.FC = () => {
@@ -41,14 +51,26 @@ const Header: React.FC = () => {
       alignItems="center"
       justifyContent="space-between"
       top="0px"
-      zIndex={9}>
+      zIndex={9}
+    >
       <Flex alignItems="center">
         <Link to="/">
-          <Image src="/assets/images/header_logo.png" alt="Logo" mr="15px" cursor="pointer" />
+          <Image
+            src="/assets/images/header_logo.png"
+            alt="Logo"
+            mr="15px"
+            cursor="pointer"
+          />
         </Link>
-       
-        <Hide below='md'>
-        <Text textTransform="uppercase" fontWeight="bold" mr="20px" noOfLines={1} fontSize={{ base: "14px",  xl: "16px" }}>
+
+        <Hide below="md">
+          <Text
+            textTransform="uppercase"
+            fontWeight="bold"
+            mr="20px"
+            noOfLines={1}
+            fontSize={{ base: '14px', xl: '16px' }}
+          >
             Lenders
           </Text>
           <Flex
@@ -59,8 +81,8 @@ const Header: React.FC = () => {
             p="17px 26px"
             color="solid.gray0"
             fontWeight="bold"
-            fontSize={{ base: "14px",  xl: "16px" }}
-            textTransform={"capitalize"}
+            fontSize={{ base: '14px', xl: '16px' }}
+            textTransform="capitalize"
           >
             <Text whiteSpace="nowrap">
               <Link to={lendersDashboard()}>📊 Dashboard</Link>
@@ -73,13 +95,15 @@ const Header: React.FC = () => {
             </Text>
           </Flex>
         </Hide>
-        <Hide above='md'>
+        <Hide above="md">
           <Menu>
-            <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} 
+            <MenuButton
+              as={Button}
+              rightIcon={<AiOutlineCaretDown />}
               bg="transparent"
               noOfLines={1}
-              fontSize={{ base: "14px",  xl: "16px" }}
-              >
+              fontSize={{ base: '14px', xl: '16px' }}
+            >
               LENDERS
             </MenuButton>
             <MenuList
@@ -92,16 +116,28 @@ const Header: React.FC = () => {
                   borderRadius: '10px',
                   p: '15px',
                 },
-              }}>
-              <MenuItem onClick={navigateToLendersIdDashboard}>📊 Dashboard</MenuItem>
-              <MenuItem onClick={navigateToLendersIdLiquidity}>💧 Manage Liquidity</MenuItem>
-              <MenuItem onClick={navigateToLendersIdLend}>📜 Create Offers</MenuItem>
+              }}
+            >
+              <MenuItem onClick={navigateToLendersIdDashboard}>
+                📊 Dashboard
+              </MenuItem>
+              <MenuItem onClick={navigateToLendersIdLiquidity}>
+                💧 Manage Liquidity
+              </MenuItem>
+              <MenuItem onClick={navigateToLendersIdLend}>
+                📜 Create Offers
+              </MenuItem>
             </MenuList>
           </Menu>
         </Hide>
         <Menu key={window.location.pathname}>
-          <MenuButton as={Button} rightIcon={<AiOutlineCaretDown />} 
-            bg="transparent" noOfLines={1} fontSize={{ base: "14px",  xl: "16px" }}>
+          <MenuButton
+            as={Button}
+            rightIcon={<AiOutlineCaretDown />}
+            bg="transparent"
+            noOfLines={1}
+            fontSize={{ base: '14px', xl: '16px' }}
+          >
             BORROWERS
           </MenuButton>
           <MenuList
@@ -115,8 +151,11 @@ const Header: React.FC = () => {
                 borderRadius: '10px',
                 p: '15px',
               },
-            }}>
-            <MenuItem onClick={navigateToBorrowersDashboard}>📊 Dashboard</MenuItem>
+            }}
+          >
+            <MenuItem onClick={navigateToBorrowersDashboard}>
+              📊 Dashboard
+            </MenuItem>
             <MenuItem onClick={navigateToBorrowers}>🍌 Borrow</MenuItem>
           </MenuList>
         </Menu>

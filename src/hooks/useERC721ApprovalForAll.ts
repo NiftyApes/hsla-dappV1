@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { useEffect, useState } from 'react';
 import { Contract } from 'ethers';
+import { RootState } from 'app/store';
 import { useWalletAddress } from './useWalletAddress';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { increment } from '../counter/counterSlice';
-import { RootState } from 'app/store';
 
 export const useERC721ApprovalForAll = ({
   contract,
@@ -22,8 +23,6 @@ export const useERC721ApprovalForAll = ({
   const cacheCounter = useAppSelector((state: RootState) => state.counter);
 
   useEffect(() => {
-    checkWhetherHasApprovalForAll();
-
     async function checkWhetherHasApprovalForAll() {
       if (!contract || !operator || !owner) {
         return;
@@ -34,6 +33,8 @@ export const useERC721ApprovalForAll = ({
       setHasApprovalForAll(result);
       setHasCheckedApproval(true);
     }
+
+    checkWhetherHasApprovalForAll();
   }, [owner, contract, cacheCounter]);
 
   return {

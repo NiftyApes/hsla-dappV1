@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useAppDispatch } from 'app/hooks';
 import { SECONDS_IN_YEAR } from 'constants/misc';
 import { increment } from 'counter/counterSlice';

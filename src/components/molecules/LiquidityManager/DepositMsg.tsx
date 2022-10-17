@@ -8,11 +8,12 @@ export const DepositMsg: React.FC = () => {
       </Box>
       <Box textAlign="center" mt="1rem">
         <span>
-          Deposit funds to begin serving loans. When your funds aren't
-          being used in a loan, they're earning interest in{' '}
+          Deposit funds to begin serving loans. When your funds aren't being
+          used in a loan, they're earning interest in{' '}
           <Link color="purple" href="https://compound.finance/" isExternal>
             Compound
-          </Link>. 
+          </Link>
+          .
         </span>
       </Box>
     </Box>

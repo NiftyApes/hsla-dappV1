@@ -36,7 +36,7 @@ export const LiquidityPieChart: React.FC = () => {
             labelStyle={() => ({ fontSize: '20px' })}
             radius={100}
             data={data}
-            label={({ dataEntry }) => '0Ξ'}
+            label={() => '0Ξ'}
             viewBoxSize={[400, 300]}
             center={[200, 130]}
           />
@@ -74,7 +74,9 @@ export const LiquidityPieChart: React.FC = () => {
           radius={100}
           data={data}
           label={({ dataEntry }) =>
-            `${dataEntry.title === 'In Use' ? '🔒' : ''}${Number(dataEntry.value.toFixed(2))}Ξ`
+            `${dataEntry.title === 'In Use' ? '🔒' : ''}${Number(
+              dataEntry.value.toFixed(2),
+            )}Ξ`
           }
           viewBoxSize={[400, 300]}
           center={[200, 130]}

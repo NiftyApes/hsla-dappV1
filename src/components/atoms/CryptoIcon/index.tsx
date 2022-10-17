@@ -2,7 +2,9 @@ import { Image } from '@chakra-ui/react';
 import React from 'react';
 
 import { CoinSymbol } from 'lib/constants/coinSymbols';
-import useDynamicSVGImport, { DynamicSVGImportOptions } from './useDynamicSVGImport';
+import useDynamicSVGImport, {
+  DynamicSVGImportOptions,
+} from './useDynamicSVGImport';
 
 export interface IconProps extends React.SVGProps<SVGSVGElement> {
   symbol: CoinSymbol;
@@ -33,7 +35,12 @@ const CryptoIcon: React.FC<IconProps> = ({
   }
   if (iconURL) {
     return (
-      <Image src={`${iconURL}`} width={`${size}px`} height={`${size}px`} objectFit="contain" />
+      <Image
+        src={`${iconURL}`}
+        width={`${size}px`}
+        height={`${size}px`}
+        objectFit="contain"
+      />
     );
   }
   return null;

@@ -63,7 +63,11 @@ export const LoanRow = ({ loanFromDb }: any) => {
         <Td>
           <Flex>
             <Box flex="1" />
-            <Flex flexDirection="column" alignItems="flex-start" justifyContent="flex-start">
+            <Flex
+              flexDirection="column"
+              alignItems="flex-start"
+              justifyContent="flex-start"
+            >
               <Text fontSize="sm" mb="10px">
                 Initiated {getLoanBeginDate(loanFromChain)}
               </Text>
@@ -80,7 +84,8 @@ export const LoanRow = ({ loanFromDb }: any) => {
                   {roundForDisplay(
                     getAPR({
                       amount: loanFromChain.amount,
-                      interestRatePerSecond: loanFromChain.interestRatePerSecond,
+                      interestRatePerSecond:
+                        loanFromChain.interestRatePerSecond,
                     }),
                   )}
                   %
@@ -102,13 +107,16 @@ export const LoanRow = ({ loanFromDb }: any) => {
             {isDefaulted ? 'Defaulted' : 'Active Loan'}
           </Text>
           <Text fontSize="sm" fontStyle="italic">
-            {getLoanTimeRemaining(loanFromChain)} {isDefaulted ? 'ago' : 'remaining'}
+            {getLoanTimeRemaining(loanFromChain)}{' '}
+            {isDefaulted ? 'ago' : 'remaining'}
           </Text>
         </Td>
         <Td>
           <Text fontSize="sm">
             {lenderInterestAsBigNumber &&
-              `${roundForDisplay(Number(ethers.utils.formatEther(lenderInterestAsBigNumber)))}Ξ`}
+              `${roundForDisplay(
+                Number(ethers.utils.formatEther(lenderInterestAsBigNumber)),
+              )}Ξ`}
           </Text>
         </Td>
       </Tr>

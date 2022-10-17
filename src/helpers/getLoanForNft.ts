@@ -1,3 +1,4 @@
+/* eslint-disable consistent-return */
 import { LendingContract } from 'nft';
 
 export async function getLoanForNft({
@@ -13,6 +14,9 @@ export async function getLoanForNft({
     return;
   }
 
-  const result = await lendingContract.getLoanAuction(nftContractAddress, nftId);
+  const result = await lendingContract.getLoanAuction(
+    nftContractAddress,
+    nftId,
+  );
   return result;
 }

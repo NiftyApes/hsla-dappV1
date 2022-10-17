@@ -16,7 +16,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode | React.ReactN
 }) => {
   const [{ wallet }, connect] = useConnectWallet();
   const connectedWallets = useWallets();
-  const web3Onboard: OnboardAPI = initWeb3Onboard;
+  const web3Onboard: any = initWeb3Onboard;
 
   const saveWalletsToLocalStorage = () => {
     const connectedWalletsLabelArray = connectedWallets.map(({ label }) => label);

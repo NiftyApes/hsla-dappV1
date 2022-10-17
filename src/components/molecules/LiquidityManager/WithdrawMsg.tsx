@@ -8,9 +8,9 @@ export const WithdrawMsg: React.FC = () => {
       </Box>
       <Box textAlign="center" mt="1rem">
         <span>
-          You can withdraw all of your <strong>available liquidity.</strong> <br /> Any liquidity that is
-          being used for an active loan cannot be withdrawn (it's earning you
-          interest in your loans)!
+          You can withdraw all of your <strong>available liquidity.</strong>{' '}
+          <br /> Any liquidity that is being used for an active loan cannot be
+          withdrawn (it's earning you interest in your loans)!
         </span>
       </Box>
     </Box>

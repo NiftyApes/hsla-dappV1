@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { NetworkID } from '@dethcrypto/eth-sdk/dist/abi-management/networks';
 import { TExternalContractsAddressMap } from 'eth-hooks/models';
 

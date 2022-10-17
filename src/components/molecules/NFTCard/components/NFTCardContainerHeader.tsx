@@ -20,12 +20,13 @@ export const NFTCardContainerHeader: React.FC<Props> = ({
 
   return (
     <>
-      <Image 
-        borderRadius="8px 8px 0 0" 
-        h="260px" 
-        objectFit="cover" 
-        src={img} w="260px" 
-        />
+      <Image
+        borderRadius="8px 8px 0 0"
+        h="260px"
+        objectFit="cover"
+        src={img}
+        w="260px"
+      />
 
       <Flex
         align="center"
@@ -38,16 +39,15 @@ export const NFTCardContainerHeader: React.FC<Props> = ({
         zIndex="1"
         _after={{
           content: '""',
-          background: 'linear-gradient(360deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 100%)',
-          width: '260px', 
+          background:
+            'linear-gradient(360deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 100%)',
+          width: '260px',
           height: '75px',
           display: 'block',
           position: 'absolute',
-          bottom: '0', 
+          bottom: '0',
           zIndex: '-10',
-          
         }}
-
       >
         {collectionName && collectionName !== '' && (
           <Text
@@ -57,7 +57,7 @@ export const NFTCardContainerHeader: React.FC<Props> = ({
             maxW="240px"
             textShadow="0px 0px 4px #000000"
             textTransform="uppercase"
-            textAlign={"center"}
+            textAlign="center"
             noOfLines={1}
           >
             {collectionName}
@@ -72,7 +72,7 @@ export const NFTCardContainerHeader: React.FC<Props> = ({
           maxW="240px"
           textShadow="0px 0px 4px #000000"
           textTransform="uppercase"
-          textAlign={"center"}
+          textAlign="center"
         >
           {tokenName} #{tokenId}
         </Text>

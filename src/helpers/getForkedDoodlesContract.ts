@@ -7,9 +7,24 @@ const doodlesAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'approved', type: 'address' },
-      { indexed: true, internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'approved',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
     ],
     name: 'Approval',
     type: 'event',
@@ -17,8 +32,18 @@ const doodlesAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'operator', type: 'address' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'operator',
+        type: 'address',
+      },
       { indexed: false, internalType: 'bool', name: 'approved', type: 'bool' },
     ],
     name: 'ApprovalForAll',
@@ -27,8 +52,18 @@ const doodlesAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'previousOwner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'newOwner', type: 'address' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'previousOwner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
     ],
     name: 'OwnershipTransferred',
     type: 'event',
@@ -38,7 +73,12 @@ const doodlesAbi = [
     inputs: [
       { indexed: true, internalType: 'address', name: 'from', type: 'address' },
       { indexed: true, internalType: 'address', name: 'to', type: 'address' },
-      { indexed: true, internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
     ],
     name: 'Transfer',
     type: 'event',
@@ -113,7 +153,9 @@ const doodlesAbi = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'numberOfTokens', type: 'uint256' }],
+    inputs: [
+      { internalType: 'uint256', name: 'numberOfTokens', type: 'uint256' },
+    ],
     name: 'mint',
     outputs: [],
     stateMutability: 'payable',
@@ -226,7 +268,9 @@ const doodlesAbi = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'bool', name: '_isAllowListActive', type: 'bool' }],
+    inputs: [
+      { internalType: 'bool', name: '_isAllowListActive', type: 'bool' },
+    ],
     name: 'setIsAllowListActive',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -309,10 +353,20 @@ const doodlesAbi = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
-  { inputs: [], name: 'withdraw', outputs: [], stateMutability: 'nonpayable', type: 'function' },
+  {
+    inputs: [],
+    name: 'withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
 ];
 
-export function getForkedDoodlesContract({ provider }: { provider: EIP1193Provider }) {
+export function getForkedDoodlesContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
   return getEthersContractWithEIP1193Provider({
     abi: doodlesAbi,
     address: DOODLES_CONTRACT_ADDRESS,

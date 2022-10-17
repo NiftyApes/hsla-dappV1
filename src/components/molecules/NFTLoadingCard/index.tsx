@@ -1,6 +1,6 @@
 import { Center } from '@chakra-ui/react';
-import LoadingIndicator from '../../atoms/LoadingIndicator';
 import React from 'react';
+import LoadingIndicator from '../../atoms/LoadingIndicator';
 import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
 
 export const NFTLoadingCard: React.FC = () => (

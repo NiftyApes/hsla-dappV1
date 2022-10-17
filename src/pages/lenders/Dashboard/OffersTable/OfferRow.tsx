@@ -21,7 +21,13 @@ export const OfferRow = ({ offer, offerHash }: any) => {
   useEffect(() => {
     if (cancelStatus === 'SUCCESS' && txReceipt) {
       toast({
-        render: (props) => <ToastSuccessCard title="Offer Cancelled" txn={txReceipt} {...props} />,
+        render: (props) => (
+          <ToastSuccessCard
+            title="Offer Cancelled"
+            txn={txReceipt}
+            {...props}
+          />
+        ),
         position: 'top-right',
         duration: 9000,
         isClosable: true,
@@ -64,7 +70,12 @@ export const OfferRow = ({ offer, offerHash }: any) => {
           </Text>
           <Flex>
             <Icon name="os" size={25} />
-            <Box border="2px solid" borderRadius="50%" borderColor="solid.white" bgColor="white">
+            <Box
+              border="2px solid"
+              borderRadius="50%"
+              borderColor="solid.white"
+              bgColor="white"
+            >
               <Icon name="etherscan" size={20} />
             </Box>
           </Flex>
@@ -78,7 +89,11 @@ export const OfferRow = ({ offer, offerHash }: any) => {
       <Td>
         <Flex>
           <Box flex="1" />
-          <Flex flexDirection="column" alignItems="flex-start" justifyContent="flex-start">
+          <Flex
+            flexDirection="column"
+            alignItems="flex-start"
+            justifyContent="flex-start"
+          >
             <Box mb="2px">
               <Text as="span" fontSize="xl" fontWeight="bold">
                 {ethers.utils.formatEther(offer.amount)}Ξ
@@ -106,7 +121,11 @@ export const OfferRow = ({ offer, offerHash }: any) => {
         </Flex>
       </Td>
       <Td>
-        <Text fontSize="md" fontWeight="bold" color={hasExpired ? 'notification.info' : '#24DFA5'}>
+        <Text
+          fontSize="md"
+          fontWeight="bold"
+          color={hasExpired ? 'notification.info' : '#24DFA5'}
+        >
           {hasExpired ? 'Expired' : 'Active'}
         </Text>
         {hasExpired
@@ -116,7 +135,11 @@ export const OfferRow = ({ offer, offerHash }: any) => {
       <Td>
         {!hasExpired && (
           <Flex flexDir="column" alignItems="center">
-            <Button disabled={cancelStatus !== 'READY'} variant="neutral" onClick={cancelOffer}>
+            <Button
+              disabled={cancelStatus !== 'READY'}
+              variant="neutral"
+              onClick={cancelOffer}
+            >
               Cancel
               {cancelStatus !== 'READY' ? (
                 <Flex as="span" alignItems="center" ml="8px">

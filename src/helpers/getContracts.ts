@@ -2,11 +2,10 @@ import { EIP1193Provider } from '@web3-onboard/core';
 
 import { LendingContract, LiquidityContract, OffersContract } from 'nft/model';
 
-import { getEthersContractWithEIP1193Provider } from './getEthersContractWithEIP1193Provider';
-
 import { GOERLI, LOCAL } from 'constants/contractAddresses';
 
 import { Contract } from 'ethers';
+import { getEthersContractWithEIP1193Provider } from './getEthersContractWithEIP1193Provider';
 
 import {
   getStoreLendingContract,
@@ -26,11 +25,16 @@ function doesProviderMismatchContract({
 }) {
   return (
     !(provider as any).connection &&
-    (contract?.provider as any).provider.connection?.url !== (provider as any).connection?.url
+    (contract?.provider as any).provider.connection?.url !==
+      (provider as any).connection?.url
   );
 }
 
-export function getLocalLendingContract({ provider }: { provider: EIP1193Provider }) {
+export function getLocalLendingContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
   let contract = getStoreLendingContract();
 
   if (!contract || doesProviderMismatchContract({ provider, contract })) {
@@ -46,7 +50,11 @@ export function getLocalLendingContract({ provider }: { provider: EIP1193Provide
   return getStoreLendingContract();
 }
 
-export function getGoerliLendingContract({ provider }: { provider: EIP1193Provider }) {
+export function getGoerliLendingContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
   let contract = getStoreLendingContract();
 
   if (!contract || doesProviderMismatchContract({ provider, contract })) {
@@ -62,7 +70,11 @@ export function getGoerliLendingContract({ provider }: { provider: EIP1193Provid
   return getStoreLendingContract();
 }
 
-export function getLocalLiquidityContract({ provider }: { provider: EIP1193Provider }) {
+export function getLocalLiquidityContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
   let contract = getStoreLiquidityContract();
 
   if (!contract || doesProviderMismatchContract({ provider, contract })) {
@@ -78,7 +90,11 @@ export function getLocalLiquidityContract({ provider }: { provider: EIP1193Provi
   return contract;
 }
 
-export function getGoerliLiquidityContract({ provider }: { provider: EIP1193Provider }) {
+export function getGoerliLiquidityContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
   let contract = getStoreLiquidityContract();
 
   if (!contract || doesProviderMismatchContract({ provider, contract })) {
@@ -94,7 +110,11 @@ export function getGoerliLiquidityContract({ provider }: { provider: EIP1193Prov
   return contract;
 }
 
-export function getLocalOffersContract({ provider }: { provider: EIP1193Provider }) {
+export function getLocalOffersContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
   let contract = getStoreOffersContract();
 
   if (!contract || doesProviderMismatchContract({ provider, contract })) {
@@ -110,7 +130,11 @@ export function getLocalOffersContract({ provider }: { provider: EIP1193Provider
   return contract;
 }
 
-export function getGoerliOffersContract({ provider }: { provider: EIP1193Provider }) {
+export function getGoerliOffersContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
   let contract = getStoreOffersContract();
 
   if (!contract || doesProviderMismatchContract({ provider, contract })) {

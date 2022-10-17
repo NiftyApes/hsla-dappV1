@@ -12,7 +12,14 @@ const Step: React.FC<Props> = ({ title, desc, img, onReadMore }) => {
   return (
     <Flex w="230px" flexDir="column" alignItems="center">
       {img ? (
-        <Image src={img} alt="Step" w="200px" h="200px" borderRadius="50%" objectFit="cover" />
+        <Image
+          src={img}
+          alt="Step"
+          w="200px"
+          h="200px"
+          borderRadius="50%"
+          objectFit="cover"
+        />
       ) : (
         <Flex
           w="200px"

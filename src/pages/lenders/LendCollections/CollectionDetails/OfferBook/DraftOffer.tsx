@@ -23,11 +23,11 @@ export const DraftOffer: React.FC<DraftOfferProps> = ({
         td: { border: 'none' },
       }}
     >
-      <Td></Td>
-      <Td></Td>
-      <Td></Td>
-      <Td></Td>
-      <Td></Td>
+      <Td />
+      <Td />
+      <Td />
+      <Td />
+      <Td />
     </Tr>
 
     <Tr
@@ -83,9 +83,13 @@ Pretty clearly not worth spending a day or so on this
         </Text>
       </Td>
       <Td>
-        <Text>{moment(expirationInMilliseconds + Date.now()).format('h:mma, MMM D YYYY')}</Text>
+        <Text>
+          {moment(expirationInMilliseconds + Date.now()).format(
+            'h:mma, MMM D YYYY',
+          )}
+        </Text>
       </Td>
-      <Td></Td>
+      <Td />
     </Tr>
   </>
 );

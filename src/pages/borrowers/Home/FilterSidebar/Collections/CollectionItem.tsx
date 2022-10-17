@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Checkbox, Flex, Text } from '@chakra-ui/react';
 import React from 'react';
 

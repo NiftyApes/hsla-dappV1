@@ -62,7 +62,12 @@ const Row: React.FC = () => {
         <Text fontSize="sm" color="solid.gray0">
           -- Profits
         </Text>
-        <Button variant="link" color="primary.purple" fontSize="sm" fontWeight="normal">
+        <Button
+          variant="link"
+          color="primary.purple"
+          fontSize="sm"
+          fontWeight="normal"
+        >
           Offerbook
         </Button>
       </Td>

@@ -26,7 +26,12 @@ export const getNFTHash = (nft: { id: string; contractAddress: string }) => {
   return `${nft.contractAddress}_${nft.id}`;
 };
 
-const nft = (tokenId: NFTId, nftContractAddress: string, owner: string, json: any): NFT => {
+const nft = (
+  tokenId: NFTId,
+  nftContractAddress: string,
+  owner: string,
+  json: any,
+): NFT => {
   return {
     ...json,
     id: getTokenId(tokenId),

@@ -14,14 +14,20 @@ const i18n = {
   noOffers: 'no offers available',
 };
 
-const NFTNoOfferCard: React.FC<Props> = ({ collectionName, img, tokenId, tokenName }) => {
+const NFTNoOfferCard: React.FC<Props> = ({
+  collectionName,
+  img,
+  tokenId,
+  tokenName,
+}) => {
   return (
     <NFTCardContainer>
       <NFTCardContainerHeader
         img={img}
         tokenId={tokenId}
         tokenName={tokenName}
-        collectionName={collectionName}>
+        collectionName={collectionName}
+      >
         <Center mt="8px">
           <Text color="solid.gray0" fontSize="sm" textTransform="uppercase">
             {i18n.noOffers}
