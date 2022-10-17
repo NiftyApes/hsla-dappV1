@@ -33,7 +33,6 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
   floorTermLimit,
   setFloorTermLimit,
 }) => {
-
   const { easyOfferAmount, easyOfferApr, easyOfferDuration } =
     useEasyOfferForCollection({
       nftContractAddress,
@@ -46,14 +45,7 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
   }, [easyOfferAmount, easyOfferApr, easyOfferDuration]);
 
   return (
-<<<<<<< HEAD
-    <Box
-      maxW="600px"
-      sx={{ position: 'relative', left: '-40px', top: '-16px' }}
-    >
-=======
     <Box maxW="600px" sx={{ position: 'relative', top: '-16px' }}>
->>>>>>> master
       <Flex mb="16px" alignItems="center" justifyContent="space-between">
         <Text fontWeight="bold" color="solid.gray0">
           CREATE FLOOR OFFER TERMS

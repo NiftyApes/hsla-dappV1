@@ -1,5 +1,4 @@
 import {
-<<<<<<< HEAD
   Box,
   Button,
   Flex,
@@ -13,48 +12,33 @@ import {
   InputRightElement,
   Select,
   Text,
-=======
-    Box,
-    Button,
-    Flex,
-    FormControl,
-    FormErrorMessage,
-    Grid,
-    GridItem,
-    Input,
-    InputGroup,
-    InputLeftElement,
-    InputRightElement,
-    Select,
-    Text, useToast,
->>>>>>> master
+  useToast,
 } from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import {SECONDS_IN_DAY, SECONDS_IN_YEAR} from 'constants/misc';
-import {useCreateCollectionOffer} from 'hooks/useCreateCollectionOffer';
-import {useAvailableEthLiquidity} from 'hooks/useEthLiquidity';
-import {useWalletAddress} from 'hooks/useWalletAddress';
-import {TransactionReceipt} from "@ethersproject/abstract-provider";
+import { SECONDS_IN_DAY, SECONDS_IN_YEAR } from 'constants/misc';
+import { useCreateCollectionOffer } from 'hooks/useCreateCollectionOffer';
+import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
+import { useWalletAddress } from 'hooks/useWalletAddress';
+import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import _ from 'lodash';
-import React, {useMemo, useState} from 'react';
-import {ToastSuccessCard} from "../../../../../components/cards/ToastSuccessCard";
+import React, { useMemo, useState } from 'react';
+import { ToastSuccessCard } from '../../../../../components/cards/ToastSuccessCard';
 
 interface CreateCollectionOfferFormProps {
-    nftContractAddress: string;
-    collectionOfferAmt: string;
-    setCollectionOfferAmt: React.Dispatch<React.SetStateAction<string>>;
-    apr: string;
-    setApr: React.Dispatch<React.SetStateAction<string>>;
-    duration: string;
-    setDuration: React.Dispatch<React.SetStateAction<string>>;
-    expiration: string;
-    setExpiration: React.Dispatch<React.SetStateAction<string>>;
-    addNewlyAddedOfferHash: (offerHash: string) => void;
-    floorTermLimit: string;
-    setFloorTermLimit: React.Dispatch<React.SetStateAction<string>>;
+  nftContractAddress: string;
+  collectionOfferAmt: string;
+  setCollectionOfferAmt: React.Dispatch<React.SetStateAction<string>>;
+  apr: string;
+  setApr: React.Dispatch<React.SetStateAction<string>>;
+  duration: string;
+  setDuration: React.Dispatch<React.SetStateAction<string>>;
+  expiration: string;
+  setExpiration: React.Dispatch<React.SetStateAction<string>>;
+  addNewlyAddedOfferHash: (offerHash: string) => void;
+  floorTermLimit: string;
+  setFloorTermLimit: React.Dispatch<React.SetStateAction<string>>;
 }
 
-<<<<<<< HEAD
 export const CreateCollectionOfferForm: React.FC<
   CreateCollectionOfferFormProps
 > = ({
@@ -68,7 +52,6 @@ export const CreateCollectionOfferForm: React.FC<
   expiration,
   setExpiration,
   addNewlyAddedOfferHash,
-  openSuccessfulOrderCreationModal,
   floorTermLimit,
   setFloorTermLimit,
 }) => {
@@ -78,60 +61,68 @@ export const CreateCollectionOfferForm: React.FC<
 
   const [createCollectionOfferStatus, setCreateCollectionOfferStatus] =
     useState<string>('READY');
-=======
-export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps> = ({
-                                                                                        nftContractAddress,
-                                                                                        collectionOfferAmt,
-                                                                                        setCollectionOfferAmt,
-                                                                                        apr,
-                                                                                        setApr,
-                                                                                        duration,
-                                                                                        setDuration,
-                                                                                        expiration,
-                                                                                        setExpiration,
-                                                                                        addNewlyAddedOfferHash,
-                                                                                        floorTermLimit,
-                                                                                        setFloorTermLimit
-                                                                                    }) => {
-    const {createCollectionOffer} = useCreateCollectionOffer({nftContractAddress});
 
-    const [createCollectionOfferStatus, setCreateCollectionOfferStatus] = useState<string>('READY');
->>>>>>> master
+  const { availableEthLiquidity } = useAvailableEthLiquidity();
 
-    const {availableEthLiquidity} = useAvailableEthLiquidity();
-
-<<<<<<< HEAD
   const doesOfferAmountExceedAvailableLiquidity =
     !_.isNil(availableEthLiquidity) &&
     Number(collectionOfferAmt) > availableEthLiquidity;
-=======
-    const doesOfferAmountExceedAvailableLiquidity =
-        !_.isNil(availableEthLiquidity) && Number(collectionOfferAmt) > availableEthLiquidity;
->>>>>>> master
 
-    const toast = useToast();
+  const toast = useToast();
 
-    const isDurationValid: boolean = !_.isEmpty(duration) && Number(duration) >= 1;
-    const isAprValid: boolean = !_.isEmpty(apr);
-    const isOfferValid: boolean = !_.isEmpty(collectionOfferAmt) && Number(collectionOfferAmt) > 0;
+  const isDurationValid: boolean =
+    !_.isEmpty(duration) && Number(duration) >= 1;
+  const isAprValid: boolean = !_.isEmpty(apr);
+  const isOfferValid: boolean =
+    !_.isEmpty(collectionOfferAmt) && Number(collectionOfferAmt) > 0;
 
+  const isOfferReady: boolean = isDurationValid && isAprValid && isOfferValid;
 
-<<<<<<< HEAD
-    const interestRatePerSecond = Math.round(
-      (APRPercentage * amountCalculation) / SECONDS_IN_YEAR,
-    );
+  const walletAddress = useWalletAddress();
 
-    return interestRatePerSecond * Number(duration);
+  const estimatedProfit = useMemo(() => {
+    const irps: number = Number(apr) / 100 / SECONDS_IN_YEAR;
+    const secs: number = Number(duration) * SECONDS_IN_DAY;
+    return irps * secs * Number(collectionOfferAmt);
   }, [apr, collectionOfferAmt, duration]);
-=======
-    const isOfferReady: boolean = isDurationValid && isAprValid && isOfferValid;
 
-    const walletAddress = useWalletAddress();
->>>>>>> master
+  const onCreateOffer = () => {
+    createCollectionOffer({
+      amount: Number(collectionOfferAmt),
+      aprInPercent: Number(apr),
+      durationInDays: Number(duration),
+      expirationInDays: Number(expiration),
+      floorTermLimit: Number(floorTermLimit),
+      onTxMined: (receipt: TransactionReceipt) => {
+        toast({
+          render: (props) => (
+            <ToastSuccessCard title="Offer Created" txn={receipt} {...props} />
+          ),
+          position: 'top-right',
+          duration: 9000,
+          isClosable: true,
+        });
+      },
 
-    const estimatedProfit = useMemo(() => {
+      onPending: () => setCreateCollectionOfferStatus('PENDING'),
+      onSuccess: (offerHash: string) => {
+        console.log('Offer hash', offerHash);
 
-<<<<<<< HEAD
+        setCollectionOfferAmt('');
+        setApr('');
+        setDuration('');
+        setCreateCollectionOfferStatus('SUCCESS');
+        addNewlyAddedOfferHash(offerHash);
+        setTimeout(() => setCreateCollectionOfferStatus('READY'), 1000);
+      },
+      onError: (e: any) => {
+        alert(e.message);
+        setCreateCollectionOfferStatus('ERROR');
+        setTimeout(() => setCreateCollectionOfferStatus('READY'), 1000);
+      },
+    });
+  };
+
   return (
     <Box
       border="1px solid #EAD9FF"
@@ -171,16 +162,14 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
                 }
                 _placeholder={{
                   fontSize: 16,
-                  textAlign: 'left',
-                  paddingLeft: 50,
                   transform: 'translateY(-4px)',
                 }}
                 type="number"
-                textAlign="right"
+                textAlign="left"
                 value={collectionOfferAmt}
                 onChange={(e) => setCollectionOfferAmt(e.target.value)}
                 bg="#F9F3FF"
-                p="15px 25px"
+                p="15px 25px 15px 60px"
                 borderRadius="20px"
                 fontSize="3xl"
                 h="auto"
@@ -242,7 +231,7 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
             DURATION
           </Text>
           <Box position="relative">
-            <FormControl isInvalid={isDurationLessThanOneDay}>
+            <FormControl isInvalid={!isDurationValid}>
               <InputGroup position="relative">
                 <Input
                   type="number"
@@ -270,7 +259,7 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
                 </InputRightElement>
               </InputGroup>
               <Box ml="4px">
-                {isDurationLessThanOneDay && (
+                {!isDurationValid && (
                   <FormErrorMessage fontWeight={600}>
                     Duration must be at least 1 day
                   </FormErrorMessage>
@@ -300,7 +289,7 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
         disabled={
           !walletAddress ||
           doesOfferAmountExceedAvailableLiquidity ||
-          isDurationLessThanOneDay ||
+          !isOfferReady ||
           createCollectionOfferStatus !== 'READY'
         }
         isLoading={createCollectionOfferStatus === 'PENDING'}
@@ -327,8 +316,8 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
             </Select>
           </Box>
         </Flex>
-        <Flex>
-          <Box>Good for </Box>
+        <Flex alignItems="center">
+          <div>Good for </div>
           <Box w="120px" ml="8px">
             <Select
               size="sm"
@@ -344,241 +333,4 @@ export const CreateCollectionOfferForm: React.FC<CreateCollectionOfferFormProps>
       </Flex>
     </Box>
   );
-=======
-        const irps: number = (Number(apr) / 100) / SECONDS_IN_YEAR;
-        const secs: number = (Number(duration) * SECONDS_IN_DAY);
-        return (irps * secs) * Number(collectionOfferAmt);
-
-    }, [apr, collectionOfferAmt, duration]);
-
-    const onCreateOffer = () => {
-        createCollectionOffer({
-            amount: Number(collectionOfferAmt),
-            aprInPercent: Number(apr),
-            durationInDays: Number(duration),
-            expirationInDays: Number(expiration),
-            floorTermLimit: Number(floorTermLimit),
-            onTxMined: (receipt: TransactionReceipt) => {
-                toast({
-                    render: (props) => <ToastSuccessCard title="Offer Created" txn={receipt} {...props} />,
-                    position: 'top-right',
-                    duration: 9000,
-                    isClosable: true,
-                });
-            },
-
-            onPending: () => setCreateCollectionOfferStatus('PENDING'),
-            onSuccess: (offerHash: string) => {
-
-                console.log("Offer hash", offerHash);
-
-                setCollectionOfferAmt('');
-                setApr('');
-                setDuration('');
-                setCreateCollectionOfferStatus('SUCCESS');
-                addNewlyAddedOfferHash(offerHash);
-                setTimeout(() => setCreateCollectionOfferStatus('READY'), 1000);
-            },
-            onError: (e: any) => {
-                alert(e.message);
-                setCreateCollectionOfferStatus('ERROR');
-                setTimeout(() => setCreateCollectionOfferStatus('READY'), 1000);
-            },
-        });
-    };
-
-    return (
-        <>
-            <Box
-                border="1px solid #EAD9FF"
-                borderRadius="10px"
-                px="19px"
-                py="11px"
-                bg="solid.white"
-                boxShadow="0px 4px 24px 0px #4910921A"
-            >
-                <Text
-                    bg="#f7f7f7"
-                    borderRadius="8px"
-                    fontSize="sm"
-                    fontWeight="bold"
-                    py="9px"
-                    textAlign="center"
-                    color="solid.gray0"
-                >
-                    HOW MUCH?
-                </Text>
-                <Grid gridTemplateColumns="repeat(3, minmax(0, 1fr))" my="18px" alignItems="center">
-                    <GridItem colSpan={3}>
-                        <FormControl isInvalid={doesOfferAmountExceedAvailableLiquidity}>
-                            <InputGroup>
-                                <InputLeftElement sx={{top: '17px', left: '16px'}}>
-                                    <CryptoIcon symbol="eth" size={36}/>
-                                </InputLeftElement>
-                                <Input
-                                    placeholder={availableEthLiquidity ? `${availableEthLiquidity}Ξ available` : ''}
-                                    _placeholder={{
-                                        fontSize: 16,
-                                        transform: 'translateY(-4px)'
-                                    }}
-                                    type="number"
-                                    textAlign="left"
-
-                                    value={collectionOfferAmt}
-                                    onChange={(e) => setCollectionOfferAmt(e.target.value)}
-                                    bg="#F9F3FF"
-
-                                    p="15px 25px 15px 60px"
-                                    borderRadius="20px"
-                                    fontSize="3xl"
-                                    h="auto"
-                                    border="none"
-                                    disabled={createCollectionOfferStatus !== 'READY'}
-                                />
-                            </InputGroup>
-                        </FormControl>
-                    </GridItem>
-                </Grid>
-                <Text
-                    bg="#f7f7f7"
-                    borderRadius="8px"
-                    fontSize="sm"
-                    fontWeight="bold"
-                    py="9px"
-                    textAlign="center"
-                    color="solid.gray0"
-                >
-                    WHAT APR AND FOR HOW LONG?
-                </Text>
-                <Grid gridTemplateColumns="repeat(2, minmax(0, 1fr))" px="6px" columnGap="28px" mt="12px">
-                    <GridItem>
-                        <Text fontSize="sm" textAlign="center" mb="12px" fontWeight="bold">
-                            APR
-                        </Text>
-                        <Box position="relative">
-                            <Input
-                                type="number"
-                                value={apr}
-                                onChange={(e) => setApr(e.target.value)}
-                                bg="#F9F3FF"
-                                p="15px 25px"
-                                borderRadius="20px"
-                                fontSize="3xl"
-                                h="auto"
-                                border="none"
-                                disabled={createCollectionOfferStatus !== 'READY'}
-                            />
-                            <Text
-                                fontSize="20px"
-                                fontWeight={600}
-                                position="absolute"
-                                bottom="22px"
-                                right="24px"
-                                color="solid.gray0"
-                            >
-                                %
-                            </Text>
-                        </Box>
-                    </GridItem>
-                    <GridItem>
-                        <Text fontSize="sm" textAlign="center" mb="12px" fontWeight="bold">
-                            DURATION
-                        </Text>
-                        <Box position="relative">
-                            <FormControl isInvalid={!isDurationValid}>
-                                <InputGroup position="relative">
-                                    <Input
-                                        type="number"
-                                        value={duration}
-                                        onChange={(e) => setDuration(e.target.value)}
-                                        bg="#F9F3FF"
-                                        p="15px 25px"
-                                        borderRadius="20px"
-                                        fontSize="3xl"
-                                        h="auto"
-                                        border="none"
-                                        disabled={createCollectionOfferStatus !== 'READY'}
-                                    />
-                                    <InputRightElement>
-                                        <Text
-                                            fontSize="16px"
-                                            fontWeight={600}
-                                            color="solid.gray0"
-                                            position="absolute"
-                                            top="26px"
-                                            right="16px"
-                                        >
-                                            DAYS
-                                        </Text>
-                                    </InputRightElement>
-                                </InputGroup>
-                                <Box ml="4px">
-                                    {!isDurationValid && (
-                                        <FormErrorMessage fontWeight={600}>
-                                            Duration must be at least 1 day
-                                        </FormErrorMessage>
-                                    )}
-                                </Box>
-                            </FormControl>
-                        </Box>
-                    </GridItem>
-                </Grid>
-                <Text
-                    fontSize="md"
-                    fontWeight="bold"
-                    pt="24px"
-                    textAlign="center"
-                    color="solid.gray0"
-                >
-                    Estimated Profit: {estimatedProfit}
-                </Text>
-                <Button
-                    variant="neutralReverse"
-                    py="36px"
-                    borderRadius="15px"
-                    mt="20px"
-                    fontSize="md"
-                    w="100%"
-                    onClick={onCreateOffer}
-                    disabled={
-                        !walletAddress ||
-                        doesOfferAmountExceedAvailableLiquidity ||
-                        !isOfferReady ||
-                        createCollectionOfferStatus !== 'READY'
-                    }
-                    isLoading={createCollectionOfferStatus === 'PENDING'}
-                >
-                    CREATE OFFER
-                </Button>
-                <Flex alignItems="center" justifyContent="space-around" my="24px" mx="30px">
-                    <Flex alignItems="center">
-                        <div>
-                            Expires in{' '}
-                        </div>
-                        <Box w="120px" ml="8px">
-                            <Select size="sm" onChange={(e) => setExpiration(e.target.value)} value={expiration}>
-                                <option value="1">1 day</option>
-                                <option value="7">7 days</option>
-                                <option value="30">30 days</option>
-                            </Select>
-                        </Box>
-                    </Flex>
-                    <Flex alignItems="center">
-                        <div>
-                            Good for{' '}
-                        </div>
-                        <Box w="120px" ml="8px">
-                            <Select size="sm" onChange={(e) => setFloorTermLimit(e.target.value)}
-                                    value={floorTermLimit}>
-                                <option value="5">5 Loans</option>
-                                <option value="10">10 Loans</option>
-                                <option value="30">30 Loans</option>
-                            </Select>
-                        </Box>
-                    </Flex>
-                </Flex>
-            </Box>
-        </>
-    );
->>>>>>> master
 };

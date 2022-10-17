@@ -1,24 +1,13 @@
 import {
-<<<<<<< HEAD
   Flex,
   Image,
+  Link,
   Modal,
   ModalCloseButton,
   ModalContent,
   ModalOverlay,
   Text,
   useDisclosure,
-=======
-    Flex,
-    Image,
-    Link,
-    Modal,
-    ModalCloseButton,
-    ModalContent,
-    ModalOverlay,
-    Text,
-    useDisclosure,
->>>>>>> master
 } from '@chakra-ui/react';
 import React from 'react';
 
@@ -65,7 +54,6 @@ const CollectionHeader: React.FC = () => {
           mr="1rem"
           _after={{ content: '"↓"', ml: '.75rem' }}
         >
-<<<<<<< HEAD
           <Image
             borderRadius="full"
             style={{ height: '3.5rem', width: '3.5rem' }}
@@ -80,50 +68,24 @@ const CollectionHeader: React.FC = () => {
         <Flex flexDirection="column">
           <Flex>
             <Icon name="etherscan" mr="5px" ml="3px" />
-            <span style={{ textDecoration: 'underline' }}>Etherscan</span>
+            <Link
+              href={`https://etherscan.io/token/${collectionAddress}`}
+              target="_blank"
+            >
+              Etherscan
+            </Link>
           </Flex>
           <Flex>
             <Icon name="os" size={23} mr="3px" />
-            <span style={{ textDecoration: 'underline' }}>Opensea</span>
+            <Link
+              href={`https://opensea.io/assets?search[query]=${collectionAddress}`}
+              target="_blank"
+            >
+              OpenSea
+            </Link>
           </Flex>
         </Flex>
       </Flex>
-=======
-            <Flex alignItems="center">
-                <Flex
-                    as="button"
-                    onClick={onOpen}
-                    alignItems="center"
-                    background="#FAF5FF"
-                    padding=".45rem .85rem"
-                    borderRadius={'48px'}
-                    mr="1rem"
-                    _after={{content: '"↓"', ml: '.75rem'}}
-                >
-                    <Image
-                        borderRadius="full"
-                        style={{height: '3.5rem', width: '3.5rem'}}
-                        mr=".75rem"
-                        alt={name}
-                        src={image}
-                    />
-                    <Text maxWidth="20ch" noOfLines={1} fontSize="xl" fontWeight="bold">
-                        {name}
-                    </Text>
-                </Flex>
-                <Flex flexDirection="column">
-                    <Flex>
-                        <Icon name="etherscan" mr="5px" ml="3px"/>
-                        <Link href={`https://etherscan.io/token/${collectionAddress}`} target="_blank">Etherscan</Link>
-                    </Flex>
-                    <Flex>
-                        <Icon name="os" size={23} mr="3px"/>
-                        <Link href={`https://opensea.io/assets?search[query]=${collectionAddress}`}
-                              target="_blank">OpenSea</Link>
-                    </Flex>
-                </Flex>
-            </Flex>
->>>>>>> master
 
       <Flex alignItems="center" flexDirection="column">
         <Text fontSize="xl" fontWeight="bold" mr="8px">

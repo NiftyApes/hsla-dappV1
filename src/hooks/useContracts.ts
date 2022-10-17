@@ -10,16 +10,7 @@ import {
 import { useChainId } from './useChainId';
 import { useWalletProvider } from './useWalletProvider';
 
-<<<<<<< HEAD
-const isLocalChain = (cid: string | undefined): boolean | undefined => {
-=======
-const i18n = {
-  noContract: (cid: string | undefined) =>
-    `App not currently configured to connect to NiftyApes contract on current chain id: ${cid}`,
-};
-
 export const isLocalChain = (cid: string | undefined): boolean | undefined => {
->>>>>>> master
   return cid === '0x7a69';
 };
 
@@ -28,7 +19,7 @@ export const isGoerli = (cid: string | undefined): boolean | undefined => {
 };
 
 export const useLiquidityContract = () => {
-  const provider: any = useWalletProvider();
+  const provider = useWalletProvider();
   const chainId = useChainId();
 
   if (provider && isLocalChain(chainId)) {
@@ -41,7 +32,7 @@ export const useLiquidityContract = () => {
 };
 
 export const useOffersContract = () => {
-  const provider: any = useWalletProvider();
+  const provider = useWalletProvider();
   const chainId = useChainId();
 
   if (provider && isLocalChain(chainId)) {
@@ -54,7 +45,7 @@ export const useOffersContract = () => {
 };
 
 export const useLendingContract = () => {
-  const provider: any = useWalletProvider();
+  const provider = useWalletProvider();
   const chainId = useChainId();
 
   if (provider && isLocalChain(chainId)) {
