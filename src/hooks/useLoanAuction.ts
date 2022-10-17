@@ -17,21 +17,24 @@ export const useLoanAuction = ({
   const [loanAuction, setLoanAuction] = useState<any>();
 
   useEffect(() => {
-    if (niftyApesContract && nftContractAddress) {
-      getLoanOffer();
-    }
-
     async function getLoanOffer() {
       if (!niftyApesContract || !nftContractAddress) {
         return;
       }
 
-      const result: any = await niftyApesContract.getLoanAuction(nftContractAddress, nftId);
+      const result: any = await niftyApesContract.getLoanAuction(
+        nftContractAddress,
+        nftId,
+      );
       setLoanAuction({
-        nftContractAddress: nftContractAddress,
-        nftId: nftId,
+        nftContractAddress,
+        nftId,
         ...result,
       });
+    }
+
+    if (niftyApesContract && nftContractAddress) {
+      getLoanOffer();
     }
   }, [niftyApesContract, nftContractAddress, nftId, cacheCounter]);
 

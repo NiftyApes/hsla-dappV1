@@ -29,8 +29,11 @@ export const useWalletBalance = () => {
       const balanceInWeiAsBigNum = await ethersProvider.getBalance(address);
       const balanceInEthAsStr = formatEther(balanceInWeiAsBigNum);
       const balanceInEthAsNum = Number(balanceInEthAsStr);
-      const balanceInEthWithTrimmedDecimalsAsStr = balanceInEthAsNum.toFixed(DEFAULT_DECIMALS);
-      const balanceInEthWithTrimmedDecimalsAsNum = Number(balanceInEthWithTrimmedDecimalsAsStr);
+      const balanceInEthWithTrimmedDecimalsAsStr =
+        balanceInEthAsNum.toFixed(DEFAULT_DECIMALS);
+      const balanceInEthWithTrimmedDecimalsAsNum = Number(
+        balanceInEthWithTrimmedDecimalsAsStr,
+      );
 
       setBalance(balanceInEthWithTrimmedDecimalsAsNum);
     }

@@ -36,13 +36,21 @@ const PlatformInfo: React.FC = () => {
             <Th textAlign="center">
               <Flex alignItems="center">
                 <Text mx="5px">Passive APY</Text>
-                <Icon name="circle-question-mark" color="solid.gray2" size={16} />
+                <Icon
+                  name="circle-question-mark"
+                  color="solid.gray2"
+                  size={16}
+                />
               </Flex>
             </Th>
             <Th textAlign="center">
               <Flex alignItems="center">
                 <Text mx="5px">Loans Orign.</Text>
-                <Icon name="circle-question-mark" color="solid.gray2" size={16} />
+                <Icon
+                  name="circle-question-mark"
+                  color="solid.gray2"
+                  size={16}
+                />
               </Flex>
             </Th>
           </Tr>

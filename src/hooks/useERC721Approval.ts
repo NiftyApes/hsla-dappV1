@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { RootState } from 'app/store';
 import { getEthersContractWithEIP1193Provider } from 'helpers/getEthersContractWithEIP1193Provider';
 import { useEffect, useState } from 'react';
@@ -24,7 +25,7 @@ export const useERC721Approval = ({
 
   const cacheCounter = useAppSelector((state: RootState) => state.counter);
 
-  const provider = useWalletProvider();
+  const provider: any = useWalletProvider();
 
   const minimumAbi = [
     {
@@ -53,8 +54,6 @@ export const useERC721Approval = ({
   });
 
   useEffect(() => {
-    checkWhetherHasApproval();
-
     async function checkWhetherHasApproval() {
       if (!contract || !tokenId) {
         return;
@@ -65,6 +64,8 @@ export const useERC721Approval = ({
       setHasApproval(result === operator);
       setHasCheckedApproval(true);
     }
+
+    checkWhetherHasApproval();
   }, [owner, contract, tokenId, cacheCounter]);
 
   return {

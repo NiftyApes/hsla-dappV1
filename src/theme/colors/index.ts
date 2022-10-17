@@ -49,7 +49,9 @@ export const colorNames = () => {
   const results: string[] = [];
   Object.keys(colors).forEach((category) => {
     results.push(
-      ...Object.keys(colors[category as keyof typeof colors]).map((key) => `${category}.${key}`),
+      ...Object.keys(colors[category as keyof typeof colors]).map(
+        (key) => `${category}.${key}`,
+      ),
     );
   });
   return [...results] as const;

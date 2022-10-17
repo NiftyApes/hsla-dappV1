@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import React, { useState } from 'react';
 import {
   Alert,
@@ -16,19 +17,18 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
-import LoanTable from './LoanTable';
-import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
-import NFTCardHeader from '../../../components/cards/NFTCardHeader';
 import TopCard from 'components/molecules/DashboardTopCard';
 import { formatEther } from 'ethers/lib/utils';
 import _ from 'lodash';
 import { BigNumber } from 'ethers';
+import { useNavigate } from 'react-router-dom';
+import LoanTable from './LoanTable';
+import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
+import NFTCardHeader from '../../../components/cards/NFTCardHeader';
 import { LoanAuction } from '../../../loan';
 import { useActiveLoansForBorrower } from '../../../hooks/useActiveLoansForBorrower';
 import BorrowLoanRepayCard from '../../../components/molecules/BorrowLoanRepayCard';
-import { NFT } from '../../../nft';
 
-import { useNavigate } from 'react-router-dom';
 import { useWalletAddress } from '../../../hooks/useWalletAddress';
 
 const i18n = {
@@ -63,7 +63,9 @@ const Dashboard: React.FC = () => {
   );
   const interestTotal = activeLoans.reduce(
     (acc: BigNumber, loan: LoanAuction) =>
-      loan.accumulatedLenderInterest.add(loan.accumulatedPaidProtocolInterest).add(acc),
+      loan.accumulatedLenderInterest
+        .add(loan.accumulatedPaidProtocolInterest)
+        .add(acc),
     0,
   );
 
@@ -82,7 +84,8 @@ const Dashboard: React.FC = () => {
         alignItems="center"
         justifyContent="center"
         textAlign="center"
-        height="200px">
+        height="200px"
+      >
         <AlertIcon boxSize="40px" mr={0} />
         <AlertTitle mt={4} mb={1} fontSize="lg">
           No Active Loans
@@ -90,7 +93,9 @@ const Dashboard: React.FC = () => {
         <AlertDescription maxWidth="sm">
           Go ahead and{' '}
           <Text as="u">
-            <Link onClick={() => navigate(`/borrowers/${walletAddress}`)}>borrow</Link>
+            <Link onClick={() => navigate(`/borrowers/${walletAddress}`)}>
+              borrow
+            </Link>
           </Text>{' '}
           some ETH against your NFTs
         </AlertDescription>
@@ -118,7 +123,7 @@ const Dashboard: React.FC = () => {
       <LoanTable loans={activeLoans} onClick={onRepayLoan} />
 
       {isRepayLoanOpen && loan && (
-        <Modal isOpen={true} onClose={onRepayLoanClose} size="xl">
+        <Modal isOpen onClose={onRepayLoanClose} size="xl">
           <ModalOverlay />
           <ModalContent p="5px">
             <NFTCardHeader

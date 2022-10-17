@@ -1,16 +1,17 @@
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import { Box, Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 
 import { LoanAuction } from '../../../loan';
 import LoanTableRow from './LoanTableRow';
 
-interface callbackType {
+interface CallbackType {
   (loan: LoanAuction): void;
 }
 
 interface Props {
   loans: Array<LoanAuction>;
-  onClick: callbackType;
+  onClick: CallbackType;
 }
 
 const LoanTable: React.FC<Props> = ({ loans, onClick }) => {

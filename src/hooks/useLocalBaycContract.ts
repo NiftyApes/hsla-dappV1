@@ -2,7 +2,7 @@ import { getForkedBaycContract } from 'helpers/getForkedBaycContract';
 import { useWalletProvider } from './useWalletProvider';
 
 export const useLocalBaycContract = () => {
-  const provider = useWalletProvider();
+  const provider: any = useWalletProvider();
 
   if (!provider) {
     return undefined;

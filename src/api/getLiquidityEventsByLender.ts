@@ -10,7 +10,10 @@ export const getLiquidityEventsByLender = async ({
   lenderAddress: string;
 }) => {
   const result = await fetch(
-    getApiUrl(chainId, `events?lender=${ethers.utils.getAddress(lenderAddress)}&liquidity=true`),
+    getApiUrl(
+      chainId,
+      `events?lender=${ethers.utils.getAddress(lenderAddress)}&liquidity=true`,
+    ),
   );
 
   const json = await result.json();

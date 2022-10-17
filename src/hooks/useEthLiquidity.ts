@@ -30,14 +30,19 @@ export const useAvailableEthLiquidity = () => {
       // This is address's balance in cEth
       const result = await liquidityContract.getCAssetBalance(
         address,
-        chainId === '0x7a69' ? LOCAL.CETH.ADDRESS : chainId === '0x5' ? GOERLI.CETH.ADDRESS : '',
+        chainId === '0x7a69'
+          ? LOCAL.CETH.ADDRESS
+          : chainId === '0x5'
+          ? GOERLI.CETH.ADDRESS
+          : '',
       );
 
       const exchangeRate = await cETHContract.exchangeRateStored();
 
       // We need to multiply by exchangeRate to get balance in Eth
       const liquidityInEth =
-        Number(ethers.utils.formatEther(result)) * Number(ethers.utils.formatEther(exchangeRate));
+        Number(ethers.utils.formatEther(result)) *
+        Number(ethers.utils.formatEther(exchangeRate));
 
       setAvailableEthLiquidity(Number(liquidityInEth.toFixed(5)));
     }

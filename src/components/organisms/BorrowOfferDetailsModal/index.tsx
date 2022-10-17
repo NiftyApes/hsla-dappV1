@@ -4,14 +4,27 @@ import { Button, Flex, ModalProps, Text } from '@chakra-ui/react';
 import Modal from 'components/atoms/Modal/Modal';
 import Icon from 'components/atoms/Icon';
 import WalletInfo from 'components/molecules/WalletInfo';
-import BorrowOfferDetailsCard from 'components/molecules/BorrowOfferDetailsCard';
 
-const BorrowOfferDetailsModal: React.FC<ModalProps> = ({ onClose, ...restProps }) => {
+const BorrowOfferDetailsModal: React.FC<ModalProps> = ({
+  onClose,
+  ...restProps
+}) => {
   return (
     <Modal size="full" {...restProps}>
-      <Flex alignItems="center" justifyContent="space-between" mt="15px" px="15px">
+      <Flex
+        alignItems="center"
+        justifyContent="space-between"
+        mt="15px"
+        px="15px"
+      >
         <Flex alignItems="center">
-          <Button variant="circle" bg="gray.100" mr="13px" p="8px" onClick={onClose}>
+          <Button
+            variant="circle"
+            bg="gray.100"
+            mr="13px"
+            p="8px"
+            onClick={onClose}
+          >
             <Icon name="arrow-left" size={16} />
           </Button>
           <Text fontSize="xl" fontWeight="bold">
@@ -23,30 +36,30 @@ const BorrowOfferDetailsModal: React.FC<ModalProps> = ({ onClose, ...restProps }
       </Flex>
 
       <Flex flexDir="column" alignItems="center" mt="40px" textAlign="center">
-        {/*<BorrowOfferDetailsCard*/}
-        {/*    contract={{}}*/}
-        {/*    floorTerm={false}*/}
-        {/*    offerHash='xxxxxx'*/}
-        {/*    contractAddress={"0xABC"}*/}
-        {/*    tokenId="12345"*/}
-        {/*    img="/assets/mocks/bored_ape.png"*/}
-        {/*    offer={{*/}
-        {/*        aprPercentage: 25,*/}
-        {/*        durationDays: 30,*/}
-        {/*        expirationDays: 120,*/}
-        {/*        price: 42.167,*/}
-        {/*        symbol: 'eth',*/}
-        {/*        totalInterest: 1234,*/}
-        {/*        type: 'floor',*/}
-        {/*    }}*/}
-        {/*    tokenName="Bored Ape Yacht Club"*/}
-        {/*/>*/}
+        {/* <BorrowOfferDetailsCard */}
+        {/*    contract={{}} */}
+        {/*    floorTerm={false} */}
+        {/*    offerHash='xxxxxx' */}
+        {/*    contractAddress={"0xABC"} */}
+        {/*    tokenId="12345" */}
+        {/*    img="/assets/mocks/bored_ape.png" */}
+        {/*    offer={{ */}
+        {/*        aprPercentage: 25, */}
+        {/*        durationDays: 30, */}
+        {/*        expirationDays: 120, */}
+        {/*        price: 42.167, */}
+        {/*        symbol: 'eth', */}
+        {/*        totalInterest: 1234, */}
+        {/*        type: 'floor', */}
+        {/*    }} */}
+        {/*    tokenName="Bored Ape Yacht Club" */}
+        {/* /> */}
         <Text textTransform="uppercase" mt="30px" fontSize="xl">
           Liquidity awaits!
         </Text>
         <Text fontSize="lg" color="solid.gray0" mt="10px" maxW="530px">
-          Approve and transfer Bored Ape Yatch Club asset, #3368 to the NiftyApes smart contract to
-          borrow 37.5Ξ for 120 days.
+          Approve and transfer Bored Ape Yatch Club asset, #3368 to the
+          NiftyApes smart contract to borrow 37.5Ξ for 120 days.
         </Text>
         <Button variant="neutral" size="md" p="26px 90px" mt="10px">
           APPROVE TRANSFER

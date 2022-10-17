@@ -13,7 +13,9 @@ export const getOffersByNft = async ({
   const result = await fetch(
     getApiUrl(
       chainId,
-      `offers?collection=${ethers.utils.getAddress(nftContractAddress)}&nftId=${nftId}`,
+      `offers?collection=${ethers.utils.getAddress(
+        nftContractAddress,
+      )}&nftId=${nftId}`,
     ),
   );
 

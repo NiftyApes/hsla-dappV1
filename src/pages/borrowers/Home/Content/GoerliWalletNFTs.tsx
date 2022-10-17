@@ -9,7 +9,7 @@ import { WalletNFTs } from './WalletNFTs';
 
 interface Props extends BoxProps {}
 
-export const GoerliWalletNFTs: React.FC<Props> = ({ ...restProps }) => {
+export const GoerliWalletNFTs: React.FC<Props> = () => {
   const dispatch = useAppDispatch();
 
   const walletAddress = useWalletAddress();
@@ -46,7 +46,8 @@ export const GoerliWalletNFTs: React.FC<Props> = ({ ...restProps }) => {
             String(Number(nft.id.tokenId)),
           );
 
-          const isOwnedByWallet = owner.toLowerCase() === walletAddress.toLowerCase();
+          const isOwnedByWallet =
+            owner.toLowerCase() === walletAddress.toLowerCase();
 
           escrowedNfts[i] = { ...nft, isOwnedByWallet };
         }),

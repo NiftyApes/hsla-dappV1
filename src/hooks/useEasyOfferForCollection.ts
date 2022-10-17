@@ -18,7 +18,10 @@ export const useEasyOfferForCollection = ({
   const bestOffer =
     offers.length > 0 &&
     _.sortBy(offers, (o) =>
-      getAPR({ amount: o.amount, interestRatePerSecond: o.interestRatePerSecond }),
+      getAPR({
+        amount: o.amount,
+        interestRatePerSecond: o.interestRatePerSecond,
+      }),
     )[0];
 
   if (!bestOffer) {

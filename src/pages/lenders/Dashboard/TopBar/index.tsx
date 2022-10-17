@@ -13,7 +13,13 @@ const TopBar: React.FC = () => {
   const { availableEthLiquidity } = useAvailableEthLiquidity();
 
   return (
-    <Flex justifyContent="space-evenly" mb="2.5rem" borderRadius="25px" flexDir="row" p="23px">
+    <Flex
+      justifyContent="space-evenly"
+      mb="2.5rem"
+      borderRadius="25px"
+      flexDir="row"
+      p="23px"
+    >
       <Flex flexDir="column" alignItems="center">
         <Text fontSize="7xl">{activeLoans?.length}</Text>
         <Text fontSize="2xs" color="solid.darkGray">
@@ -22,7 +28,11 @@ const TopBar: React.FC = () => {
       </Flex>
       <Flex flexDir="column" alignItems="center">
         <Text fontSize="7xl">
-          {activeLoans?.filter((loan: any) => loan.loanEndTimestamp * 1000 < Date.now()).length}
+          {
+            activeLoans?.filter(
+              (loan: any) => loan.loanEndTimestamp * 1000 < Date.now(),
+            ).length
+          }
         </Text>
         <Text fontSize="2xs" color="solid.darkGray">
           DEFAULTED LOANS
@@ -43,9 +53,12 @@ const TopBar: React.FC = () => {
           <Text fontSize="7xl" ml="8px">
             {activeLoans &&
               roundForDisplay(
-                activeLoans.reduce((acc: number, val: { accruedInterest: number }) => {
-                  return acc + val.accruedInterest;
-                }, 0),
+                activeLoans.reduce(
+                  (acc: number, val: { accruedInterest: number }) => {
+                    return acc + val.accruedInterest;
+                  },
+                  0,
+                ),
               )}
             Ξ
           </Text>
@@ -59,7 +72,9 @@ const TopBar: React.FC = () => {
         <Text fontSize="7xl" ml="8px">
           {availableEthLiquidity &&
             roundForDisplay(
-              (totalEthLoanedOut / (totalEthLoanedOut + availableEthLiquidity)) * 100,
+              (totalEthLoanedOut /
+                (totalEthLoanedOut + availableEthLiquidity)) *
+                100,
             )}
           %
         </Text>

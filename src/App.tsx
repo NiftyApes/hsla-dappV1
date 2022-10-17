@@ -32,7 +32,7 @@ const App: React.FC = () => {
   const liquidityContract = useLiquidityContract();
   const cEthContract = useCEthContract();
 
-  setStoreWallet(wallet);
+  setStoreWallet(wallet as any);
 
   setStoreLendingContract(lendingContract);
   setStoreOffersContract(offersContract);
@@ -50,8 +50,8 @@ const App: React.FC = () => {
   if (!chainId || (!isGoerli(chainId) && !isLocalChain(chainId))) {
     return (
       <div>
-        NiftyApes currently doesn't support this chain. Please switch to Goerli to explore the
-        testnet version.
+        NiftyApes currently doesn't support this chain. Please switch to Goerli
+        to explore the testnet version.
       </div>
     );
   }

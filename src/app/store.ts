@@ -1,3 +1,5 @@
+/* eslint-disable import/no-cycle */
+/* eslint-disable no-return-assign */
 // Zak: Copy-pasted from Redux Toolkit
 import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit';
 import {
@@ -58,15 +60,17 @@ export const setStoreOffersContract = (newContract?: OffersContract | null) =>
   (offersContract = newContract || null);
 export const getStoreOffersContract = () => offersContract;
 
-export const setStoreLiquidityContract = (newContract?: LiquidityContract | null) =>
-  (liquidityContract = newContract || null);
+export const setStoreLiquidityContract = (
+  newContract?: LiquidityContract | null,
+) => (liquidityContract = newContract || null);
 export const getStoreLiquidityContract = () => liquidityContract;
 
 export const setStoreCEthContract = (newContract?: CEthContract | null) =>
   (cEthContract = newContract || null);
 export const getStoreCEthContract = () => cEthContract;
 
-export const setStoreWallet = (newWallet: Wallet | null) => (wallet = newWallet);
+export const setStoreWallet = (newWallet: Wallet | null) =>
+  (wallet = newWallet);
 export const getStoreWallet = () => wallet;
 
 export type AppDispatch = typeof store.dispatch;

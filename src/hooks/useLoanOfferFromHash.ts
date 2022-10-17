@@ -17,10 +17,6 @@ export const useLoanOfferFromHash = ({
   const [loanOffer, setLoanOffer] = useState<any>();
 
   useEffect(() => {
-    if (offersContract && nftContractAddress) {
-      getLoanOffer();
-    }
-
     async function getLoanOffer() {
       if (!offersContract) {
         return;
@@ -30,9 +26,18 @@ export const useLoanOfferFromHash = ({
         throw new Error('NFT Contract Address not specified');
       }
 
-      const result = await offersContract.getOffer(nftContractAddress, nftId, offerHash, floorTerm);
+      const result = await offersContract.getOffer(
+        nftContractAddress,
+        nftId,
+        offerHash,
+        floorTerm,
+      );
 
       setLoanOffer(result);
+    }
+
+    if (offersContract && nftContractAddress) {
+      getLoanOffer();
     }
   }, [offersContract, nftContractAddress]);
 

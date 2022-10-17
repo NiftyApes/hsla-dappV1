@@ -2,7 +2,7 @@ import { getLocalScaffoldEthMintingContract } from 'helpers/getLocalScaffoldEthM
 import { useWalletProvider } from './useWalletProvider';
 
 export const useLocalScaffoldEthNFTContract = () => {
-  const provider = useWalletProvider();
+  const provider: any = useWalletProvider();
 
   if (!provider) {
     return undefined;

@@ -49,7 +49,12 @@ interface Props extends BoxProps {
   color?: string;
 }
 
-const Icon: React.FC<Props> = ({ name, color = 'solid.black', size = 18, ...restProps }) => {
+const Icon: React.FC<Props> = ({
+  name,
+  color = 'solid.black',
+  size = 18,
+  ...restProps
+}) => {
   const Component = IconMap[name];
 
   return (

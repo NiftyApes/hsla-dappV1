@@ -7,9 +7,21 @@ export const nounsAbi = [
     inputs: [
       { internalType: 'address', name: '_noundersDAO', type: 'address' },
       { internalType: 'address', name: '_minter', type: 'address' },
-      { internalType: 'contract INounsDescriptor', name: '_descriptor', type: 'address' },
-      { internalType: 'contract INounsSeeder', name: '_seeder', type: 'address' },
-      { internalType: 'contract IProxyRegistry', name: '_proxyRegistry', type: 'address' },
+      {
+        internalType: 'contract INounsDescriptor',
+        name: '_descriptor',
+        type: 'address',
+      },
+      {
+        internalType: 'contract INounsSeeder',
+        name: '_seeder',
+        type: 'address',
+      },
+      {
+        internalType: 'contract IProxyRegistry',
+        name: '_proxyRegistry',
+        type: 'address',
+      },
     ],
     stateMutability: 'nonpayable',
     type: 'constructor',
@@ -17,9 +29,24 @@ export const nounsAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'approved', type: 'address' },
-      { indexed: true, internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'approved',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
     ],
     name: 'Approval',
     type: 'event',
@@ -27,8 +54,18 @@ export const nounsAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'operator', type: 'address' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'operator',
+        type: 'address',
+      },
       { indexed: false, internalType: 'bool', name: 'approved', type: 'bool' },
     ],
     name: 'ApprovalForAll',
@@ -37,9 +74,24 @@ export const nounsAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'delegator', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'fromDelegate', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'toDelegate', type: 'address' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'delegator',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'fromDelegate',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'toDelegate',
+        type: 'address',
+      },
     ],
     name: 'DelegateChanged',
     type: 'event',
@@ -47,9 +99,24 @@ export const nounsAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'delegate', type: 'address' },
-      { indexed: false, internalType: 'uint256', name: 'previousBalance', type: 'uint256' },
-      { indexed: false, internalType: 'uint256', name: 'newBalance', type: 'uint256' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'delegate',
+        type: 'address',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'previousBalance',
+        type: 'uint256',
+      },
+      {
+        indexed: false,
+        internalType: 'uint256',
+        name: 'newBalance',
+        type: 'uint256',
+      },
     ],
     name: 'DelegateVotesChanged',
     type: 'event',
@@ -71,20 +138,39 @@ export const nounsAbi = [
   { anonymous: false, inputs: [], name: 'MinterLocked', type: 'event' },
   {
     anonymous: false,
-    inputs: [{ indexed: false, internalType: 'address', name: 'minter', type: 'address' }],
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'minter',
+        type: 'address',
+      },
+    ],
     name: 'MinterUpdated',
     type: 'event',
   },
   {
     anonymous: false,
-    inputs: [{ indexed: true, internalType: 'uint256', name: 'tokenId', type: 'uint256' }],
+    inputs: [
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
+    ],
     name: 'NounBurned',
     type: 'event',
   },
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
       {
         components: [
           { internalType: 'uint48', name: 'background', type: 'uint48' },
@@ -104,15 +190,32 @@ export const nounsAbi = [
   },
   {
     anonymous: false,
-    inputs: [{ indexed: false, internalType: 'address', name: 'noundersDAO', type: 'address' }],
+    inputs: [
+      {
+        indexed: false,
+        internalType: 'address',
+        name: 'noundersDAO',
+        type: 'address',
+      },
+    ],
     name: 'NoundersDAOUpdated',
     type: 'event',
   },
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'previousOwner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'newOwner', type: 'address' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'previousOwner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
     ],
     name: 'OwnershipTransferred',
     type: 'event',
@@ -121,7 +224,12 @@ export const nounsAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: false, internalType: 'contract INounsSeeder', name: 'seeder', type: 'address' },
+      {
+        indexed: false,
+        internalType: 'contract INounsSeeder',
+        name: 'seeder',
+        type: 'address',
+      },
     ],
     name: 'SeederUpdated',
     type: 'event',
@@ -131,7 +239,12 @@ export const nounsAbi = [
     inputs: [
       { indexed: true, internalType: 'address', name: 'from', type: 'address' },
       { indexed: true, internalType: 'address', name: 'to', type: 'address' },
-      { indexed: true, internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
     ],
     name: 'Transfer',
     type: 'event',
@@ -239,7 +352,9 @@ export const nounsAbi = [
   {
     inputs: [],
     name: 'descriptor',
-    outputs: [{ internalType: 'contract INounsDescriptor', name: '', type: 'address' }],
+    outputs: [
+      { internalType: 'contract INounsDescriptor', name: '', type: 'address' },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
@@ -305,8 +420,20 @@ export const nounsAbi = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
-  { inputs: [], name: 'lockMinter', outputs: [], stateMutability: 'nonpayable', type: 'function' },
-  { inputs: [], name: 'lockSeeder', outputs: [], stateMutability: 'nonpayable', type: 'function' },
+  {
+    inputs: [],
+    name: 'lockMinter',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
+  {
+    inputs: [],
+    name: 'lockSeeder',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
   {
     inputs: [],
     name: 'mint',
@@ -366,7 +493,9 @@ export const nounsAbi = [
   {
     inputs: [],
     name: 'proxyRegistry',
-    outputs: [{ internalType: 'contract IProxyRegistry', name: '', type: 'address' }],
+    outputs: [
+      { internalType: 'contract IProxyRegistry', name: '', type: 'address' },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
@@ -403,7 +532,9 @@ export const nounsAbi = [
   {
     inputs: [],
     name: 'seeder',
-    outputs: [{ internalType: 'contract INounsSeeder', name: '', type: 'address' }],
+    outputs: [
+      { internalType: 'contract INounsSeeder', name: '', type: 'address' },
+    ],
     stateMutability: 'view',
     type: 'function',
   },
@@ -431,14 +562,22 @@ export const nounsAbi = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'string', name: 'newContractURIHash', type: 'string' }],
+    inputs: [
+      { internalType: 'string', name: 'newContractURIHash', type: 'string' },
+    ],
     name: 'setContractURIHash',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'contract INounsDescriptor', name: '_descriptor', type: 'address' }],
+    inputs: [
+      {
+        internalType: 'contract INounsDescriptor',
+        name: '_descriptor',
+        type: 'address',
+      },
+    ],
     name: 'setDescriptor',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -452,14 +591,22 @@ export const nounsAbi = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'address', name: '_noundersDAO', type: 'address' }],
+    inputs: [
+      { internalType: 'address', name: '_noundersDAO', type: 'address' },
+    ],
     name: 'setNoundersDAO',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'contract INounsSeeder', name: '_seeder', type: 'address' }],
+    inputs: [
+      {
+        internalType: 'contract INounsSeeder',
+        name: '_seeder',
+        type: 'address',
+      },
+    ],
     name: 'setSeeder',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -537,7 +684,11 @@ export const nounsAbi = [
   },
 ];
 
-export function getForkedNounsContract({ provider }: { provider: EIP1193Provider }) {
+export function getForkedNounsContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
   return getEthersContractWithEIP1193Provider({
     abi: nounsAbi,
     address: NOUNS_CONTRACT_ADDRESS,

@@ -16,9 +16,24 @@ const baycAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'approved', type: 'address' },
-      { indexed: true, internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'approved',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
     ],
     name: 'Approval',
     type: 'event',
@@ -26,8 +41,18 @@ const baycAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'owner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'operator', type: 'address' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'owner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'operator',
+        type: 'address',
+      },
       { indexed: false, internalType: 'bool', name: 'approved', type: 'bool' },
     ],
     name: 'ApprovalForAll',
@@ -36,8 +61,18 @@ const baycAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: 'address', name: 'previousOwner', type: 'address' },
-      { indexed: true, internalType: 'address', name: 'newOwner', type: 'address' },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'previousOwner',
+        type: 'address',
+      },
+      {
+        indexed: true,
+        internalType: 'address',
+        name: 'newOwner',
+        type: 'address',
+      },
     ],
     name: 'OwnershipTransferred',
     type: 'event',
@@ -47,7 +82,12 @@ const baycAbi = [
     inputs: [
       { indexed: true, internalType: 'address', name: 'from', type: 'address' },
       { indexed: true, internalType: 'address', name: 'to', type: 'address' },
-      { indexed: true, internalType: 'uint256', name: 'tokenId', type: 'uint256' },
+      {
+        indexed: true,
+        internalType: 'uint256',
+        name: 'tokenId',
+        type: 'uint256',
+      },
     ],
     name: 'Transfer',
     type: 'event',
@@ -143,7 +183,9 @@ const baycAbi = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'numberOfTokens', type: 'uint256' }],
+    inputs: [
+      { internalType: 'uint256', name: 'numberOfTokens', type: 'uint256' },
+    ],
     name: 'mintApe',
     outputs: [],
     stateMutability: 'payable',
@@ -177,7 +219,13 @@ const baycAbi = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
-  { inputs: [], name: 'reserveApes', outputs: [], stateMutability: 'nonpayable', type: 'function' },
+  {
+    inputs: [],
+    name: 'reserveApes',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
   {
     inputs: [
       { internalType: 'address', name: 'from', type: 'address' },
@@ -226,14 +274,18 @@ const baycAbi = [
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'string', name: 'provenanceHash', type: 'string' }],
+    inputs: [
+      { internalType: 'string', name: 'provenanceHash', type: 'string' },
+    ],
     name: 'setProvenanceHash',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [{ internalType: 'uint256', name: 'revealTimeStamp', type: 'uint256' }],
+    inputs: [
+      { internalType: 'uint256', name: 'revealTimeStamp', type: 'uint256' },
+    ],
     name: 'setRevealTimestamp',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -323,10 +375,20 @@ const baycAbi = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
-  { inputs: [], name: 'withdraw', outputs: [], stateMutability: 'nonpayable', type: 'function' },
+  {
+    inputs: [],
+    name: 'withdraw',
+    outputs: [],
+    stateMutability: 'nonpayable',
+    type: 'function',
+  },
 ];
 
-export function getForkedBaycContract({ provider }: { provider: EIP1193Provider }) {
+export function getForkedBaycContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
   return getEthersContractWithEIP1193Provider({
     abi: baycAbi,
     address: BAYC_CONTRACT_ADDRESS,

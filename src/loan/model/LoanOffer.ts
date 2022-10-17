@@ -1,6 +1,6 @@
-import { CoinSymbol } from '../../lib/constants/coinSymbols';
 import { getAPR } from 'helpers/getAPR';
 import { roundForDisplay } from 'helpers/roundForDisplay';
+import { CoinSymbol } from '../../lib/constants/coinSymbols';
 
 export type OfferTerms = {
   NftId: string;
@@ -46,19 +46,22 @@ const loanOffer = (json: any): LoanOffer => {
   const offerStatus: keyof typeof OfferStatus = json.OfferStatus;
 
   const secondsInDay = 86400;
-  const secondsInYear = 3.154e7;
 
   return {
     ...json,
     OfferStatusEnum:
-      json.OfferStatus && OfferStatus[offerStatus] ? OfferStatus[offerStatus] : undefined,
+      json.OfferStatus && OfferStatus[offerStatus]
+        ? OfferStatus[offerStatus]
+        : undefined,
     // TODO: double check
     amount,
     aprPercentage: roundForDisplay(getAPR({ amount, interestRatePerSecond })),
     duration,
     durationDays: duration / secondsInDay,
     expiration,
-    expirationDays: Number(((Number(expiration) - Date.now() / 1000) / secondsInDay).toFixed(2)),
+    expirationDays: Number(
+      ((Number(expiration) - Date.now() / 1000) / secondsInDay).toFixed(2),
+    ),
     interestRatePerSecond,
     // Actual interest over the period of a loan
     totalInterest: ((interestRatePerSecond * duration) / amount) * 100,
@@ -75,6 +78,7 @@ export const getBestLoanOffer = (offers: Array<LoanOffer>): LoanOffer => {
   }
 
   return Array.from(offers).sort(
-    (a: LoanOffer, b: LoanOffer) => a.interestRatePerSecond - b.interestRatePerSecond,
+    (a: LoanOffer, b: LoanOffer) =>
+      a.interestRatePerSecond - b.interestRatePerSecond,
   )[0];
 };

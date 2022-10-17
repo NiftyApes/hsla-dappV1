@@ -1,4 +1,16 @@
-import { Box, Flex, Grid, Image, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Grid,
+  Image,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import Icon from 'components/atoms/Icon';
 import React from 'react';
@@ -6,7 +18,12 @@ import React from 'react';
 const RecentLoans: React.FC = () => {
   return (
     <Box>
-      <Flex justifyContent="space-between" alignItems="center" mb="36px" mt="6px">
+      <Flex
+        justifyContent="space-between"
+        alignItems="center"
+        mb="36px"
+        mt="6px"
+      >
         <Text color="solid.gray0" fontSize="lg" fontWeight="bold">
           RECENT LOANS ON PLATFORMS
         </Text>
@@ -44,7 +61,12 @@ const RecentLoans: React.FC = () => {
               },
             }}
           >
-            <Td display="flex" flexDir="column" textAlign="center" alignItems="center">
+            <Td
+              display="flex"
+              flexDir="column"
+              textAlign="center"
+              alignItems="center"
+            >
               <Flex>
                 <Image src="/assets/mocks/bored_ape_square.png" />
                 <Grid gap="3px">

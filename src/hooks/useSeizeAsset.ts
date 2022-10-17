@@ -23,13 +23,17 @@ export const useSeizeAsset = ({
 
   const { getTransactionTimestamp } = useGetTransactionTimestamp();
 
-  const [seizeStatus, setSeizeStatus] = useState<'PENDING' | 'SUCCESS' | 'ERROR' | 'READY'>(
-    'READY',
+  const [seizeStatus, setSeizeStatus] = useState<
+    'PENDING' | 'SUCCESS' | 'ERROR' | 'READY'
+  >('READY');
+
+  const [txObject, setTxObject] = useState<ethers.ContractTransaction | null>(
+    null,
   );
 
-  const [txObject, setTxObject] = useState<ethers.ContractTransaction | null>(null);
-
-  const [txReceipt, setTxReceipt] = useState<ethers.ContractReceipt | null>(null);
+  const [txReceipt, setTxReceipt] = useState<ethers.ContractReceipt | null>(
+    null,
+  );
 
   const toast = useToast();
 
@@ -50,7 +54,10 @@ export const useSeizeAsset = ({
       setSeizeStatus('PENDING');
 
       try {
-        const tx = await niftyApesContract.seizeAsset(nftContractAddress, nftId);
+        const tx = await niftyApesContract.seizeAsset(
+          nftContractAddress,
+          nftId,
+        );
 
         const receipt = await tx.wait();
 

@@ -14,7 +14,9 @@ const CollectionDetailsModal: React.FC = () => {
   const [duration, setDuration] = useState<string>('');
   const [expiration, setExpiration] = useState<string>('30');
   const [floorTermLimit, setFloorTermLimit] = useState('5');
-  const [newlyAddedOfferHashes, setNewlyAddedOfferHashes] = useState<string[]>([]);
+  const [newlyAddedOfferHashes, setNewlyAddedOfferHashes] = useState<string[]>(
+    [],
+  );
 
   if (!collectionAddress) {
     return null;
@@ -22,13 +24,12 @@ const CollectionDetailsModal: React.FC = () => {
 
   return (
     <Center>
-      <Box minW="1120px" maxW="1600px" >
+      <Box minW="1120px" maxW="1600px">
         <CollectionHeader />
         <Grid
           mt="16px"
           gridTemplateColumns="max(1160*0.60px, min(60vw, 1600*0.60px)) 1fr"
         >
-
           <GridItem>
             <OfferBook
               collectionOfferAmt={collectionOfferAmt}

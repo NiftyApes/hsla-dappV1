@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import NFTNoOfferCard from '../../../../components/molecules/NFTNoOfferCard/index';
 import { useWallets } from '@web3-onboard/react';
 import { SimpleGrid } from '@chakra-ui/react';
+import NFTNoOfferCard from '../../../../components/molecules/NFTNoOfferCard/index';
 
 interface WalletNft {
   blockhash: string;
