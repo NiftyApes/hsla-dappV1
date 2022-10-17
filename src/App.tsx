@@ -1,5 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import { useConnectWallet } from '@web3-onboard/react';
+import { useConnectWallet, useSetChain } from '@web3-onboard/react';
 import {
   setStoreCEthContract,
   setStoreLendingContract,
@@ -16,11 +16,11 @@ import { BrowserRouter as Router, Routes } from 'react-router-dom';
 import Borrowers from 'routes/Borrowers';
 import Lenders from 'routes/Lenders';
 import Marketing from 'routes/Marketing';
-import { initWeb3Onboard } from 'services/wallet';
 import theme from './theme';
 
 const App: React.FC = () => {
   const [{ wallet }] = useConnectWallet();
+  const [, setChain] = useSetChain();
   const lendingContract = useLendingContract();
   const offersContract = useOffersContract();
   const liquidityContract = useLiquidityContract();
@@ -36,14 +36,12 @@ const App: React.FC = () => {
   const chainId = useChainId();
 
   useEffect(() => {
-    if (wallet) {
-      if (!chainId || (chainId !== '0x7a69' && chainId !== '0x5')) {
-        initWeb3Onboard.setChain({ chainId: '0x5' });
-      }
+    if (!chainId || (chainId !== '0x7a69' && chainId !== '0x5')) {
+      setChain({ chainId: '0x5' });
     }
-  }, [chainId, wallet]);
+  }, [chainId]);
 
-  if (wallet && (!chainId || (chainId !== '0x7a69' && chainId !== '0x5'))) {
+  if (!chainId || (chainId !== '0x7a69' && chainId !== '0x5')) {
     return (
       <div>
         NiftyApes currently doesn't support this chain. Please switch to Goerli to explore the
