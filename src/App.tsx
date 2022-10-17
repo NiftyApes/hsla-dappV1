@@ -10,7 +10,13 @@ import {
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { useCEthContract } from 'hooks/useCEthContract';
 import { useChainId } from 'hooks/useChainId';
-import { useLendingContract, useLiquidityContract, useOffersContract } from 'hooks/useContracts';
+import {
+  isGoerli,
+  isLocalChain,
+  useLendingContract,
+  useLiquidityContract,
+  useOffersContract,
+} from 'hooks/useContracts';
 import React, { Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes } from 'react-router-dom';
 import Borrowers from 'routes/Borrowers';
@@ -36,12 +42,12 @@ const App: React.FC = () => {
   const chainId = useChainId();
 
   useEffect(() => {
-    if (!chainId || (chainId !== '0x7a69' && chainId !== '0x5')) {
+    if (!chainId || (!isGoerli(chainId) && !isLocalChain(chainId))) {
       setChain({ chainId: '0x5' });
     }
   }, [chainId]);
 
-  if (!chainId || (chainId !== '0x7a69' && chainId !== '0x5')) {
+  if (!chainId || (!isGoerli(chainId) && !isLocalChain(chainId))) {
     return (
       <div>
         NiftyApes currently doesn't support this chain. Please switch to Goerli to explore the
