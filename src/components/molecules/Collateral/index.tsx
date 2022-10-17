@@ -10,7 +10,8 @@ interface Props extends FlexProps {
 const i18n = {
   collateralLabel: 'your collateral',
   assetDetails: 'asset details',
-  collateralDescription: 'Your collateral will be locked in escrow over the lifespan of your loan.',
+  collateralDescription:
+    'Your collateral will be locked in escrow over the lifespan of your loan.',
 };
 
 const Collateral: React.FC<Props> = ({ nft }) => {
@@ -19,7 +20,13 @@ const Collateral: React.FC<Props> = ({ nft }) => {
 
   return (
     <>
-      <Text mt="24px" fontWeight="bold" textTransform="uppercase" fontSize="sm" color="solid.gray0">
+      <Text
+        mt="24px"
+        fontWeight="bold"
+        textTransform="uppercase"
+        fontSize="sm"
+        color="solid.gray0"
+      >
         {i18n.collateralLabel}
       </Text>
       <Image
@@ -36,10 +43,21 @@ const Collateral: React.FC<Props> = ({ nft }) => {
       <Text mt="8px" fontSize="sm" color="solid.black">
         {nft.name}
       </Text>
-      <Text mt="1px" fontSize="2xl" color="solid.black" fontWeight="bold" lineHeight="28px">
+      <Text
+        mt="1px"
+        fontSize="2xl"
+        color="solid.black"
+        fontWeight="bold"
+        lineHeight="28px"
+      >
         #{nft.id}
       </Text>
-      <Text mt="27px" color="solid.gray0" textTransform="uppercase" fontSize="2xs">
+      <Text
+        mt="27px"
+        color="solid.gray0"
+        textTransform="uppercase"
+        fontSize="2xs"
+      >
         {i18n.assetDetails}
       </Text>
       <Flex alignItems="center" mt="10px">

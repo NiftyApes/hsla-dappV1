@@ -13,16 +13,19 @@ export const useCalculateInterestAccrued = ({
   const [accruedInterest, setAccruedInterest] = useState<any>();
 
   useEffect(() => {
-    getAccruedInterest();
-
     async function getAccruedInterest() {
       if (!niftyApesContract || !nftContractAddress || !nftId) {
         return;
       }
 
-      const result = await niftyApesContract.calculateInterestAccrued(nftContractAddress, nftId);
+      const result = await niftyApesContract.calculateInterestAccrued(
+        nftContractAddress,
+        nftId,
+      );
       setAccruedInterest(result);
     }
+
+    getAccruedInterest();
   }, [nftContractAddress, nftId]);
 
   return accruedInterest;

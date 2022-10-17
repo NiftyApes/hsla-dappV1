@@ -1,4 +1,15 @@
-import { Box, Flex, Grid, GridItem, Table, Tbody, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Grid,
+  GridItem,
+  Table,
+  Tbody,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
 import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
 import React from 'react';
@@ -63,7 +74,11 @@ const LockedLiquidity: React.FC = () => {
                     <Text mx="5px" style={{ whiteSpace: 'nowrap' }}>
                       In Use
                     </Text>
-                    <Icon name="circle-question-mark" color="solid.gray2" size={16} />
+                    <Icon
+                      name="circle-question-mark"
+                      color="solid.gray2"
+                      size={16}
+                    />
                   </Flex>
                 </Th>
                 <Th />

@@ -62,7 +62,12 @@ export const useRepayLoanByBorrower = ({
           ? receipt.events[5].args.loanAuction
           : null;
 
-      dispatch(fetchLoanAuctionByNFT({ id: nftId, contractAddress: nftContractAddress } as NFT));
+      dispatch(
+        fetchLoanAuctionByNFT({
+          id: nftId,
+          contractAddress: nftContractAddress,
+        } as NFT),
+      );
 
       await saveTransactionInDb({
         chainId,

@@ -33,17 +33,16 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
   floorTermLimit,
   setFloorTermLimit,
 }) => {
-
-  const { easyOfferAmount, easyOfferApr, easyOfferDuration } = useEasyOfferForCollection({
-    nftContractAddress,
-  });
+  const { easyOfferAmount, easyOfferApr, easyOfferDuration } =
+    useEasyOfferForCollection({
+      nftContractAddress,
+    });
 
   const onDraftTopOffer = useCallback(() => {
     setCollectionOfferAmt(String(easyOfferAmount));
     setApr(String(easyOfferApr));
     setDuration(String(easyOfferDuration));
   }, [easyOfferAmount, easyOfferApr, easyOfferDuration]);
-
 
   return (
     <Box maxW="600px" sx={{ position: 'relative', top: '-16px' }}>

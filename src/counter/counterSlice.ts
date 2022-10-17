@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable import/no-cycle */
 // Zak: Copy-pasted from Redux Toolkit
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppThunk, RootState } from '../app/store';

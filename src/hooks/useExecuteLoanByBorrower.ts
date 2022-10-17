@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-shadow */
 import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { transactionTypes } from 'constants/transactionTypes';
@@ -41,7 +42,8 @@ export const useExecuteLoanByBorrower = ({
     (state: RootState) =>
       walletAddress &&
       state.nfts.nftsByWalletAddress[walletAddress].content?.find(
-        (nft: NFT) => nft.id === nftId && nft.contractAddress === nftContractAddress,
+        (nft: NFT) =>
+          nft.id === nftId && nft.contractAddress === nftContractAddress,
       ),
   );
 
@@ -74,7 +76,12 @@ export const useExecuteLoanByBorrower = ({
 
       const receipt: any = await tx.wait();
 
-      const offer = await offersContract.getOffer(nftContractAddress, nftId, offerHash, true);
+      const offer = await offersContract.getOffer(
+        nftContractAddress,
+        nftId,
+        offerHash,
+        true,
+      );
 
       const loan =
         chainId === '0x7a69'

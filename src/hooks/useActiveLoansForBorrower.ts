@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { getLoanForNft } from 'helpers/getLoanForNft';
@@ -36,7 +37,10 @@ export const useActiveLoansForBorrower = () => {
           lendingContract,
         });
 
-        if (chainLoan && chainLoan[0] !== '0x0000000000000000000000000000000000000000') {
+        if (
+          chainLoan &&
+          chainLoan[0] !== '0x0000000000000000000000000000000000000000'
+        ) {
           const la: LoanAuction = loanAuction(chainLoan, loan.transactionHash);
 
           // Amend loan auction with NFT props that are not included in the LoanAuctionStructOutput struct

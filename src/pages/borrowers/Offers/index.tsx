@@ -1,17 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import { Box, Flex } from '@chakra-ui/react';
 import OffersTable from '../../../components/molecules/OffersTable';
 import { NFT } from '../../../nft';
 import { LoanOffer } from '../../../loan/model/LoanOffer';
 
-interface callbackType {
+interface CallbackType {
   (offer: LoanOffer): void;
 }
 
 interface Props {
   nft: NFT;
   offers: Array<LoanOffer>;
-  onOfferSelect: callbackType;
+  onOfferSelect: CallbackType;
 }
 
 const Offers: React.FC<Props> = ({ offers, nft, onOfferSelect }) => {
@@ -20,7 +21,8 @@ const Offers: React.FC<Props> = ({ offers, nft, onOfferSelect }) => {
       <Flex flexDir="column" alignItems="center">
         <OffersTable
           offers={Array.from(offers).sort(
-            (a: LoanOffer, b: LoanOffer) => b.interestRatePerSecond - a.interestRatePerSecond,
+            (a: LoanOffer, b: LoanOffer) =>
+              b.interestRatePerSecond - a.interestRatePerSecond,
           )}
           onClick={onOfferSelect}
         />

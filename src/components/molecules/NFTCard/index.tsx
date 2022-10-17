@@ -80,7 +80,8 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
         fontSize="md"
         fontWeight="bold"
         textAlign="center"
-        textTransform="uppercase">
+        textTransform="uppercase"
+      >
         {i18n.offerLabel(bestOffer.type)}
       </Container>
     );
@@ -92,7 +93,8 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
         img={nft.image}
         tokenId={nft.id}
         tokenName={nft.name}
-        collectionName={nft.collectionName || ''}>
+        collectionName={nft.collectionName || ''}
+      >
         <>
           <Flex
             flexDir="column"
@@ -104,7 +106,8 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
             bg="#C4C4C41A"
             w="100%"
             mt="8px"
-            mb="8px">
+            mb="8px"
+          >
             {renderBestOffer()}
 
             <Flex alignItems="center">
@@ -132,16 +135,19 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
             textTransform="uppercase"
             variant="outline"
             w="100%"
-            borderRadius="8px">
+            borderRadius="8px"
+          >
             {i18n.initLoanButtonLabel}
           </Button>
 
           <Center mt="8px" mb="8px">
-            <Link onClick={onAllOffersOpen}>{i18n.viewAllOffers(offers.length)}</Link>
+            <Link onClick={onAllOffersOpen}>
+              {i18n.viewAllOffers(offers.length)}
+            </Link>
           </Center>
 
           {isAllOffersOpen && (
-            <Modal isOpen={true} onClose={onAllOffersClose} size="xl">
+            <Modal isOpen onClose={onAllOffersClose} size="xl">
               <ModalOverlay />
               <ModalContent p="5px">
                 <NFTCardHeader
@@ -151,13 +157,17 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
                   nft={nft}
                 />
                 <ModalCloseButton />
-                <Offers nft={nft} offers={offers} onOfferSelect={onSecondaryOffer} />
+                <Offers
+                  nft={nft}
+                  offers={offers}
+                  onOfferSelect={onSecondaryOffer}
+                />
               </ModalContent>
             </Modal>
           )}
 
           {isOfferDetailsOpen && (
-            <Modal isOpen={true} onClose={onOfferDetailsClose} size="xl">
+            <Modal isOpen onClose={onOfferDetailsClose} size="xl">
               <ModalOverlay />
               <ModalContent p="5px">
                 <NFTCardHeader

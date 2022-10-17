@@ -6,7 +6,12 @@ import Row from './Row';
 const Offers: React.FC = () => {
   return (
     <Box>
-      <Text fontSize="lg" fontWeight="bold" color="solid.gray0" textAlign="center">
+      <Text
+        fontSize="lg"
+        fontWeight="bold"
+        color="solid.gray0"
+        textAlign="center"
+      >
         Offers
       </Text>
       <Box px="128px">

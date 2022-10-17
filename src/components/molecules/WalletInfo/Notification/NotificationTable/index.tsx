@@ -13,11 +13,11 @@ const NotificationTable: React.FC = () => {
             },
           }}
         >
-          <Th w="50px" p="0px"></Th>
-          <Th></Th>
-          <Th></Th>
-          <Th></Th>
-          <Th></Th>
+          <Th w="50px" p="0px" />
+          <Th />
+          <Th />
+          <Th />
+          <Th />
         </Tr>
       </Thead>
       <Tbody

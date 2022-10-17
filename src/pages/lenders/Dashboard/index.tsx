@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 import { Box, Center, Grid, GridItem, Text } from '@chakra-ui/react';
 import React from 'react';
 
@@ -16,7 +17,10 @@ const i18n = {
 
 const Dashboard: React.FC = () => {
   const address = useWalletAddress();
-  const offers = useOffersForLender({ lenderAddress: address, onlyActive: false });
+  const offers = useOffersForLender({
+    lenderAddress: address,
+    onlyActive: false,
+  });
 
   const activeLoans = useActiveLoansForLender();
 
@@ -25,8 +29,11 @@ const Dashboard: React.FC = () => {
       <TopBar />
 
       <Center px="36px">
-        <Grid templateColumns={{ base: 'repeat(1)', xl: 'repeat(2, 1fr)'}} gap={6}>
-          <GridItem w='100%'>
+        <Grid
+          templateColumns={{ base: 'repeat(1)', xl: 'repeat(2, 1fr)' }}
+          gap={6}
+        >
+          <GridItem w="100%">
             {offers && offers.length === 0 && (
               <EmptyPlaceholder>
                 <>{i18n.noOffers}</>
@@ -43,7 +50,7 @@ const Dashboard: React.FC = () => {
             )}
           </GridItem>
 
-          <GridItem w='100%'>
+          <GridItem w="100%">
             {activeLoans && activeLoans.length === 0 && (
               <EmptyPlaceholder>
                 <>{i18n.noLoans}</>

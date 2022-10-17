@@ -22,7 +22,7 @@ export async function saveTransactionInDb({
   refinancedLender?: string;
   data: any;
 }) {
-  const result = await fetch(getApiUrl(chainId, 'events'), {
+  await fetch(getApiUrl(chainId, 'events'), {
     method: 'POST',
     body: JSON.stringify({
       eventType: transactionType,

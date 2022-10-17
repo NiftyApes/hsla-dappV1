@@ -2,7 +2,7 @@ import { getForkedDoodlesContract } from 'helpers/getForkedDoodlesContract';
 import { useWalletProvider } from './useWalletProvider';
 
 export const useLocalDoodlesContract = () => {
-  const provider = useWalletProvider();
+  const provider: any = useWalletProvider();
 
   if (!provider) {
     return undefined;

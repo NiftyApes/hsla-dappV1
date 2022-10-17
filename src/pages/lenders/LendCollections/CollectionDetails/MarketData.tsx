@@ -1,7 +1,19 @@
 // Currently not used or hooked up to real data
 // Keeping in here as reference after we've implemented fetching collection stats
 
-import { Box, Flex, Grid, Image, Table, Tbody, Td, Text, Th, Thead, Tr } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Grid,
+  Image,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react';
 import React from 'react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
@@ -118,7 +130,12 @@ const MarketData: React.FC = () => {
               },
             }}
           >
-            <Td display="flex" flexDir="column" textAlign="center" alignItems="center">
+            <Td
+              display="flex"
+              flexDir="column"
+              textAlign="center"
+              alignItems="center"
+            >
               <Flex>
                 <Image src="/assets/mocks/bored_ape_square.png" />
                 <Grid gap="3px">
@@ -126,7 +143,12 @@ const MarketData: React.FC = () => {
                   <CryptoIcon symbol="eth" size={20} />
                 </Grid>
               </Flex>
-              <Text fontWeight="bold" fontSize="sm" color="solid.gray0" mt="8px">
+              <Text
+                fontWeight="bold"
+                fontSize="sm"
+                color="solid.gray0"
+                mt="8px"
+              >
                 BAYC&nbsp;
                 <Text as="span" color="solid.black">
                   #3369

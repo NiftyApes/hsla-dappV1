@@ -12,17 +12,17 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 
+import { formatEther } from 'ethers/lib/utils';
+import CryptoIcon from 'components/atoms/CryptoIcon';
 import { LoanAuction } from '../../../loan';
 import { NFT } from '../../../nft';
 
 import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
 
-import { formatEther } from 'ethers/lib/utils';
 import { getAPR } from '../../../helpers/getAPR';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
 import { NFTCardContainerHeader } from '../NFTCard/components/NFTCardContainerHeader';
 
-import CryptoIcon from 'components/atoms/CryptoIcon';
 import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
 import {
   getLoanDurationDays,
@@ -86,7 +86,12 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
             textAlign="center"
             w="100%"
           >
-            <Text textTransform="uppercase" fontWeight="bold" fontSize="md" color="white">
+            <Text
+              textTransform="uppercase"
+              fontWeight="bold"
+              fontSize="md"
+              color="white"
+            >
               {i18n.defaultedLoan}
             </Text>
           </Box>
@@ -145,12 +150,17 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
             textAlign="center"
             w="100%"
           >
-            <Text textTransform="uppercase" fontWeight="bold" fontSize="md" color="orange.400">
+            <Text
+              textTransform="uppercase"
+              fontWeight="bold"
+              fontSize="md"
+              color="orange.400"
+            >
               {i18n.activeLoan}
             </Text>
           </Box>
           <Flex alignItems="center">
-            <CryptoIcon symbol={'eth'} size={25} />
+            <CryptoIcon symbol="eth" size={25} />
             <Text ml="6px" fontSize="3.5xl" fontWeight="bold">
               {formatEther(loan.amount)}Ξ
             </Text>
@@ -202,7 +212,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
           {isLoanDefaulted(loan) ? renderDefaultedLoan() : renderActiveLoan()}
 
           {isRepayLoanOpen && (
-            <Modal isOpen={true} onClose={onRepayLoanClose} size="xl">
+            <Modal isOpen onClose={onRepayLoanClose} size="xl">
               <ModalOverlay />
               <ModalContent p="5px">
                 <NFTCardHeader

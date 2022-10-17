@@ -27,7 +27,7 @@ const Lenders = (
     <Route path={`${ROUTE_LENDERS_LIQUIDITY}`} element={<Liquidity />} />
     <Route path={`${ROUTE_LENDERS_OFFERS}`} element={<Offers />} />
     <Route
-      path={`create-collection-offer/:collectionAddress`}
+      path="create-collection-offer/:collectionAddress"
       element={<CollectionDetailsModal />}
     />
   </Route>

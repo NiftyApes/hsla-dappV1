@@ -23,7 +23,8 @@ const SectionHeader: React.FC<Props> = ({ headerText }) => {
         padding: '1px',
         mt: '1ch', // feels more natural to center on non-ascenders
         mr: '1rem',
-        background: 'linear-gradient(-90deg, #E0D5EC -1.32%, rgba(224, 213, 236, 0) 100.99%)',
+        background:
+          'linear-gradient(-90deg, #E0D5EC -1.32%, rgba(224, 213, 236, 0) 100.99%)',
         height: '1px',
       }}
       _after={{
@@ -32,7 +33,8 @@ const SectionHeader: React.FC<Props> = ({ headerText }) => {
         padding: '1px',
         mt: '1ch', // feels more natural to center on non-ascenders
         ml: '1rem',
-        background: 'linear-gradient(90deg, #E0D5EC -1.32%, rgba(224, 213, 236, 0) 100.99%)',
+        background:
+          'linear-gradient(90deg, #E0D5EC -1.32%, rgba(224, 213, 236, 0) 100.99%)',
         height: '1px',
       }}
     >

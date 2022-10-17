@@ -28,11 +28,16 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
     >
       <Td width="1rem" textAlign="center">
         <Flex justifyContent="center">
-          {tx.EventData.Asset === 'ETH' && <CryptoIcon symbol="eth" size={25} />}
+          {tx.EventData.Asset === 'ETH' && (
+            <CryptoIcon symbol="eth" size={25} />
+          )}
         </Flex>
       </Td>
       <Td textAlign="center">
-        <Link textDecoration={'underline'} href={`https://etherscan.io/tx/${tx.TransactionHash}`}>
+        <Link
+          textDecoration="underline"
+          href={`https://etherscan.io/tx/${tx.TransactionHash}`}
+        >
           <Icon display="inline-block" name="etherscan" />{' '}
           {moment(tx.Timestamp * 1000).format('h:mma, MMM D YYYY')}
         </Link>
@@ -62,7 +67,8 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
                 ? 'red.500'
                 : tx.EventType === transactionTypes.LOAN_CREATED
                 ? 'blue.500'
-                : tx.EventType === transactionTypes.LOAN_FULLY_REPAID_BY_BORROWER
+                : tx.EventType ===
+                  transactionTypes.LOAN_FULLY_REPAID_BY_BORROWER
                 ? 'green.500'
                 : tx.EventType === transactionTypes.ASSET_SEIZED
                 ? 'red.500'
@@ -95,7 +101,7 @@ export const LenderTransaction = ({ tx }: { tx: any }) => {
               )}
               % APR on all{' '}
               <Link
-                textDecoration={'underline'}
+                textDecoration="underline"
                 href={`https://etherscan.io/address/${tx.EventData.NftContractAddress}`}
                 maxWidth="20ch"
                 noOfLines={1}

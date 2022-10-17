@@ -1,3 +1,6 @@
+/* eslint-disable no-continue */
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 import { BigNumber } from 'ethers';
 import { getJson } from 'helpers';
 import _ from 'lodash';
@@ -32,9 +35,13 @@ export const getLocalNFTsOfAddress = async ({
 
     const owner = await contract.ownerOf(tokenId);
 
-    const isOwnedDirectlyByWallet = owner.toUpperCase() === walletAddress.toUpperCase();
+    const isOwnedDirectlyByWallet =
+      owner.toUpperCase() === walletAddress.toUpperCase();
 
-    const niftyApesOwner = await lendingContract.ownerOf(contract.address, tokenId);
+    const niftyApesOwner = await lendingContract.ownerOf(
+      contract.address,
+      tokenId,
+    );
 
     const isOwnedByWalletButInNiftyApesEscrow =
       niftyApesOwner.toUpperCase() === walletAddress.toUpperCase();
@@ -46,7 +53,10 @@ export const getLocalNFTsOfAddress = async ({
     // If not Scaffold ETH NFT contract
     // Use Alchemy to get metadata
     let nftMetadata;
-    if (contract.address.toUpperCase() !== YourCollectibleDeploymentJSON.address.toUpperCase()) {
+    if (
+      contract.address.toUpperCase() !==
+      YourCollectibleDeploymentJSON.address.toUpperCase()
+    ) {
       nftMetadata = await getNFTMetadataUsingAlchemy({
         nftContractAddress: contract.address,
         nftTokenId: tokenId.toNumber(),
