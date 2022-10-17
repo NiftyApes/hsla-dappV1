@@ -1,8 +1,7 @@
-import React from 'react';
 import { Flex } from '@chakra-ui/react';
+import React from 'react';
 import { Outlet } from 'react-router-dom';
 
-import { WalletProvider } from 'lib/contexts/WalletProvider';
 import Header from './Header';
 
 const LendersLayout: React.FC = () => {
