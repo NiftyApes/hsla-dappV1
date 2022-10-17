@@ -1,4 +1,4 @@
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, Link } from '@chakra-ui/react';
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
 import {
   setStoreCEthContract,
@@ -8,6 +8,7 @@ import {
   setStoreWallet,
 } from 'app/store';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
+import GlobalModal from 'components/organisms/GlobalModal';
 import { useCEthContract } from 'hooks/useCEthContract';
 import { useChainId } from 'hooks/useChainId';
 import {
@@ -60,6 +61,37 @@ const App: React.FC = () => {
     <ChakraProvider theme={theme}>
       <Router>
         <Suspense fallback={<LoadingIndicator fullScreen />}>
+          <GlobalModal
+            storageKey="TOS"
+            actionText="Accept"
+            title="Terms of Services"
+            description={
+              <div>
+                Your use of the NiftyApes App is expressly conditioned on your
+                acceptance of NiftyApes’
+                <Link
+                  color="purple"
+                  target="_blank"
+                  href="https://blog.niftyapes.money/legal-privacy-tos/"
+                >
+                  &nbsp;Terms of Service&nbsp;
+                </Link>
+                and
+                <Link
+                  color="purple"
+                  target="_blank"
+                  href="https://blog.niftyapes.money/legal-privacy-tos/"
+                >
+                  &nbsp;Privacy Policy&nbsp;
+                </Link>
+                . By clicking accept and close, you indicate that you have read
+                and agree to the NiftyApes Terms of Service and Privacy Policy,
+                and that you consent to collection, storage and use of your
+                personal information for the purposes set forth in the Privacy
+                Policy.
+              </div>
+            }
+          />
           <Routes>
             {Marketing}
             {Borrowers}
