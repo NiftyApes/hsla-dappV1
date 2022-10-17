@@ -1,4 +1,4 @@
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, Link } from '@chakra-ui/react';
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
 import {
   setStoreCEthContract,
@@ -65,7 +65,32 @@ const App: React.FC = () => {
             storageKey="TOS"
             actionText="Accept"
             title="Terms of Services"
-            description="Lorem Ipsum Bipsum Tipsum"
+            description={
+              <div>
+                Your use of the NiftyApes App is expressly conditioned on your
+                acceptance of NiftyApes’
+                <Link
+                  color="purple"
+                  target="_blank"
+                  href="https://blog.niftyapes.money/legal-privacy-tos/"
+                >
+                  &nbsp;Terms of Service&nbsp;
+                </Link>
+                and
+                <Link
+                  color="purple"
+                  target="_blank"
+                  href="https://blog.niftyapes.money/legal-privacy-tos/"
+                >
+                  &nbsp;Privacy Policy&nbsp;
+                </Link>
+                . By clicking accept and close, you indicate that you have read
+                and agree to the NiftyApes Terms of Service and Privacy Policy,
+                and that you consent to collection, storage and use of your
+                personal information for the purposes set forth in the Privacy
+                Policy.
+              </div>
+            }
           />
           <Routes>
             {Marketing}

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { 
+import {
   Button,
   Modal,
   ModalBody,
@@ -7,18 +7,23 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  useDisclosure
+  useDisclosure,
 } from '@chakra-ui/react';
 import { useLocalStorage } from 'hooks/useLocalStorage';
 
 interface GlobalModalProps {
   storageKey: string;
   title: string;
-  description: string;
+  description: string | JSX.Element;
   actionText: string;
 }
 
-const GlobalModal: React.FC<GlobalModalProps> = ({ storageKey, title, description, actionText }) => {
+const GlobalModal: React.FC<GlobalModalProps> = ({
+  storageKey,
+  title,
+  description,
+  actionText,
+}) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [value, setValue] = useLocalStorage(storageKey, false);
 
@@ -42,19 +47,17 @@ const GlobalModal: React.FC<GlobalModalProps> = ({ storageKey, title, descriptio
   }, [setValue, onClose]);
 
   return (
-      <Modal isOpen={isOpen} onClose={handleClose}>
-        <ModalOverlay backdropFilter="blur(10px)" />
-        <ModalContent>
-          <ModalHeader>{title}</ModalHeader>
-          <ModalBody>
-            {description}
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={handleAction}>{actionText}</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-  )
-}
+    <Modal size="xl" isOpen={isOpen} onClose={handleClose}>
+      <ModalOverlay backdropFilter="blur(10px)" />
+      <ModalContent>
+        <ModalHeader>{title}</ModalHeader>
+        <ModalBody>{description}</ModalBody>
+        <ModalFooter>
+          <Button onClick={handleAction}>{actionText}</Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+};
 
 export default GlobalModal;
