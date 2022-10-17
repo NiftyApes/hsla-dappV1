@@ -21,6 +21,10 @@ export const GOERLI = {
   CETH: { ADDRESS: '0x20572e4c090f15667cf7378e16fad2ea0e2f3eff', ABI: cEthJSON.abi },
 } as const;
 
+export const MAINNET = {
+  CETH: { ADDRESS: '0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5', ABI: cEthJSON.abi },
+} as const;
+
 export const LOCAL = {
   LENDING: { ADDRESS: LendingDeploymentJSON.address, ABI: LendingDeploymentJSON.abi },
   LIQUIDITY: { ADDRESS: LiquidityDeploymentJSON.address, ABI: LiquidityDeploymentJSON.abi },
