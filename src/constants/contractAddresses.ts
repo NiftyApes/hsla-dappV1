@@ -2,6 +2,7 @@ import cEthJSON from '../external/cEth/cEth.json';
 import LendingDeploymentJSON from '../generated/deployments/localhost/NiftyApesLending.json';
 import LiquidityDeploymentJSON from '../generated/deployments/localhost/NiftyApesLiquidity.json';
 import OffersDeploymentJSON from '../generated/deployments/localhost/NiftyApesOffers.json';
+import YourCollectibleDeploymentJSON from '../generated/deployments/localhost/YourCollectible.json';
 
 export const BAYC_CONTRACT_ADDRESS =
   '0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d';
@@ -40,16 +41,23 @@ export const MAINNET = {
 
 export const LOCAL = {
   LENDING: {
-    ADDRESS: LendingDeploymentJSON.address,
+    ADDRESS: '0x05d4c15d505359A3647B714AfBfD60F3BB526953',
     ABI: LendingDeploymentJSON.abi,
   },
   LIQUIDITY: {
-    ADDRESS: LiquidityDeploymentJSON.address,
+    ADDRESS: '0x5106562923f74D8F2661a24557aCa6B471eb500a',
     ABI: LiquidityDeploymentJSON.abi,
   },
   OFFERS: {
-    ADDRESS: OffersDeploymentJSON.address,
+    ADDRESS: '0x456F57E2F5f84066c73e1223Ec08c898397108c2',
     ABI: OffersDeploymentJSON.abi,
   },
-  CETH: { ADDRESS: cEthJSON.address, ABI: cEthJSON.abi },
+  CETH: {
+    ADDRESS: '0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5',
+    ABI: cEthJSON.abi,
+  },
+  YOUR_COLLECTIBLE: {
+    ADDRESS: YourCollectibleDeploymentJSON.address,
+    ABI: YourCollectibleDeploymentJSON.abi,
+  },
 } as const;

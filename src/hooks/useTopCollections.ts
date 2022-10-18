@@ -1,3 +1,4 @@
+import { LOCAL } from 'constants/contractAddresses';
 import { useChainId } from './useChainId';
 import { isGoerli, isLocalChain } from './useContracts';
 
@@ -61,7 +62,7 @@ export const useTopCollections = () => {
 
   if (isLocalChain(chainId)) {
     collections.unshift({
-      address: '0xb007167714e2940013EC3bb551584130B7497E22',
+      address: LOCAL.YOUR_COLLECTIBLE.ADDRESS,
       image: '/assets/images/NA-BLACK.png',
       name: 'Dev Contract (Local)',
     });
