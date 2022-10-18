@@ -5,6 +5,7 @@ import {
   Box,
   Center,
   Flex,
+  HStack,
   Table,
   Tag,
   Tbody,
@@ -24,7 +25,7 @@ import { useWalletAddress } from 'hooks/useWalletAddress';
 import _ from 'lodash';
 import moment from 'moment';
 import React, { useState } from 'react';
-import { FaSort } from 'react-icons/fa';
+import { FaSortDown, FaSortUp } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 import { DraftOffer } from './DraftOffer';
 
@@ -196,7 +197,6 @@ const OfferBook: React.FC<OfferBookProps> = ({
           >
             <Th>
               <Flex alignItems="center" justifyContent="center">
-                Amount{' '}
                 <span
                   style={{ cursor: 'pointer', marginLeft: '2px' }}
                   onClick={() => {
@@ -207,13 +207,16 @@ const OfferBook: React.FC<OfferBookProps> = ({
                     }
                   }}
                 >
-                  <FaSort size="18px" />
+                  <HStack spacing="2px">
+                    <Box>Amount</Box>
+                    {sortOrder === 'AMOUNT_ASC' && <FaSortUp size="18px" />}
+                    {sortOrder === 'AMOUNT_DESC' && <FaSortDown size="18px" />}
+                  </HStack>
                 </span>
               </Flex>
             </Th>
             <Th>
               <Flex alignItems="center" justifyContent="center">
-                APR{' '}
                 <span
                   style={{ cursor: 'pointer', marginLeft: '2px' }}
                   onClick={() => {
@@ -224,13 +227,16 @@ const OfferBook: React.FC<OfferBookProps> = ({
                     }
                   }}
                 >
-                  <FaSort size="18px" />
+                  <HStack spacing="2px">
+                    <Box>APR</Box>
+                    {sortOrder === 'APR_ASC' && <FaSortUp size="18px" />}
+                    {sortOrder === 'APR_DESC' && <FaSortDown size="18px" />}
+                  </HStack>
                 </span>
               </Flex>
             </Th>
             <Th>
               <Flex alignItems="center" justifyContent="center">
-                Loan Duration{' '}
                 <span
                   style={{ cursor: 'pointer', marginLeft: '2px' }}
                   onClick={() => {
@@ -241,13 +247,18 @@ const OfferBook: React.FC<OfferBookProps> = ({
                     }
                   }}
                 >
-                  <FaSort size="18px" />
+                  <HStack spacing="2px">
+                    <Box>Loan Duration</Box>
+                    {sortOrder === 'DURATION_ASC' && <FaSortUp size="18px" />}
+                    {sortOrder === 'DURATION_DESC' && (
+                      <FaSortDown size="18px" />
+                    )}
+                  </HStack>
                 </span>
               </Flex>
             </Th>
             <Th minW="15rem">
               <Flex alignItems="center" justifyContent="center">
-                Offer Expires{' '}
                 <span
                   style={{ cursor: 'pointer', marginLeft: '2px' }}
                   onClick={() => {
@@ -258,7 +269,13 @@ const OfferBook: React.FC<OfferBookProps> = ({
                     }
                   }}
                 >
-                  <FaSort size="18px" />
+                  <HStack spacing="2px">
+                    <Box> Offer Expires</Box>
+                    {sortOrder === 'EXPIRATION_ASC' && <FaSortUp size="18px" />}
+                    {sortOrder === 'EXPIRATION_DESC' && (
+                      <FaSortDown size="18px" />
+                    )}
+                  </HStack>
                 </span>
               </Flex>
             </Th>
