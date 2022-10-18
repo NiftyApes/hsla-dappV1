@@ -17,7 +17,7 @@ import { useTopCollections } from '../../../hooks/useTopCollections';
 
 const i18n = {
   inputHeader: 'NiftyApes Top Collections',
-  inputPlaceholder: 'Collection Contract Address',
+  inputPlaceholder: 'Paste Collection Address',
   inputButton: 'Go',
 };
 
