@@ -16,8 +16,8 @@ import WalletInfo from 'components/molecules/WalletInfo';
 import {
   borrowers,
   borrowersDashboard,
+  lenders,
   lendersDashboard,
-  lendersLend,
   lendersLiquidity,
 } from 'routes/router';
 
@@ -33,7 +33,7 @@ const Header: React.FC = () => {
   }, [navigate]);
 
   const navigateToLendersIdLend = useCallback(() => {
-    navigate(lendersLend());
+    navigate(lenders());
   }, [navigate]);
 
   return (

@@ -17,8 +17,8 @@ import WalletInfo from 'components/molecules/WalletInfo';
 import {
   borrowers,
   borrowersDashboard,
+  lenders,
   lendersDashboard,
-  lendersLend,
   lendersLiquidity,
 } from 'routes/router';
 
@@ -34,7 +34,7 @@ const Header: React.FC = () => {
   }, [navigate]);
 
   const navigateToLendersIdLend = useCallback(() => {
-    navigate(lendersLend());
+    navigate(lenders());
   }, [navigate]);
 
   const navigateToBorrowersDashboard = useCallback(() => {
@@ -91,7 +91,7 @@ const Header: React.FC = () => {
               <Link to={lendersLiquidity()}>💧 Manage Liquidity </Link>
             </Text>
             <Text whiteSpace="nowrap">
-              <Link to={lendersLend()}>📃 Create Offers</Link>
+              <Link to={lenders()}>📃 Create Offers</Link>
             </Text>
           </Flex>
         </Hide>
