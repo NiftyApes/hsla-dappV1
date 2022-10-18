@@ -19,7 +19,7 @@ export const useTopCollections = () => {
     },
     {
       address: '0xb7f7f6c52f2e2fdb1963eab30438024864c313f6',
-      image: '/assets/images/collections/collection_cpw.png',
+      image: '/assets/images/collections/collection_wrappedpunks.png',
       name: 'Wrapped Cryptopunks',
     },
     {
