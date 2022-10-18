@@ -10,6 +10,7 @@ import { ReactComponent as CornerDownLeft } from './assets/corner-down-left.svg'
 import { ReactComponent as MoreVertical } from './assets/more-vertical.svg';
 import { ReactComponent as Close } from './assets/close.svg';
 import { ReactComponent as Etherscan } from './assets/etherscan.svg';
+import { ReactComponent as LooksRare } from './assets/looks.svg';
 import { ReactComponent as HelpCircle } from './assets/help-circle.svg';
 import { ReactComponent as Filter } from './assets/filter.svg';
 import { ReactComponent as Search } from './assets/search.svg';
@@ -32,6 +33,7 @@ export const IconMap = {
   'corner-down-left': CornerDownLeft,
   close: Close,
   etherscan: Etherscan,
+  looks: LooksRare,
   'help-circle': HelpCircle,
   filter: Filter,
   search: Search,

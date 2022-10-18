@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
 import {
+  Button,
   Center,
-  Flex,
   Input,
   InputGroup,
-  Stack,
-  Text,
-  Button,
   InputRightElement,
+  Stack,
+  Table,
+  TableContainer,
+  Tbody,
+  Text,
+  Th,
+  Thead,
+  Tr,
 } from '@chakra-ui/react';
 
 import { ethers } from 'ethers';
 import { useNavigate } from 'react-router-dom';
-import NFTCollectionCard from '../../../components/cards/NFTCollectionCard';
 import { useTopCollections } from '../../../hooks/useTopCollections';
+import NFTCollectionRow from './components/NFTCollectionRow';
 
 const i18n = {
   inputHeader: 'NiftyApes Top Collections',
@@ -52,39 +57,62 @@ const LendCollections: React.FC<Props> = ({ onClick }) => {
       >
         <InputGroup size="lg">
           <Input
-            variant="filled"
             placeholder={i18n.inputPlaceholder}
             size="lg"
+            bg="#F9F3FF"
+            p="15px 25px"
+            borderRadius="15px"
+            h="auto"
+            border="none"
             onChange={(event) => {
               setCollectionAddress(event.target.value);
             }}
           />
-          <InputRightElement width="4.5rem">
-            <Button size="sm" disabled={!isValidAddress} type="submit">
+          <InputRightElement width="4.5rem" mt="5px">
+            <Button
+              size="sm"
+              disabled={!isValidAddress}
+              type="submit"
+              variant="neutralReverse"
+            >
               {i18n.inputButton}
             </Button>
           </InputRightElement>
         </InputGroup>
       </form>
 
-      <Flex direction="column">
-        {collections.map((collection, index) => {
-          return (
-            <NFTCollectionCard
-              collection={collection}
-              throttle={100 * index}
-              onClick={() => {
-                navigate(
-                  `/lenders/create-collection-offer/${collection.address}`,
-                );
-                if (onClick) {
-                  onClick();
-                }
-              }}
-            />
-          );
-        })}
-      </Flex>
+      <TableContainer>
+        <Table variant="simple">
+          <Thead>
+            <Tr>
+              <Th>Collection</Th>
+              <Th>Floor</Th>
+              <Th>Total Vol</Th>
+              <Th>Owners</Th>
+              <Th>Items</Th>
+            </Tr>
+          </Thead>
+
+          <Tbody>
+            {collections.map((collection, index) => {
+              return (
+                <NFTCollectionRow
+                  collection={collection}
+                  throttle={100 * index}
+                  onClick={() => {
+                    navigate(
+                      `/lenders/create-collection-offer/${collection.address}`,
+                    );
+                    if (onClick) {
+                      onClick();
+                    }
+                  }}
+                />
+              );
+            })}
+          </Tbody>
+        </Table>
+      </TableContainer>
     </Stack>
   );
 };
