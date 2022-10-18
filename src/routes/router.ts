@@ -13,7 +13,6 @@ export const borrowersDashboard = () => {
 };
 
 // lenders
-
 export const ROUTE_LENDERS = 'lenders';
 export const ROUTE_LENDERS_DASHBOARD = 'dashboard';
 export const ROUTE_LENDERS_LIQUIDITY = 'liquidity';

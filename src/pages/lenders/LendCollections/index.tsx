@@ -16,7 +16,7 @@ import NFTCollectionCard from '../../../components/cards/NFTCollectionCard';
 import { useTopCollections } from '../../../hooks/useTopCollections';
 
 const i18n = {
-  inputHeader: 'select a collection',
+  inputHeader: 'NiftyApes Top Collections',
   inputPlaceholder: 'Collection Contract Address',
   inputButton: 'Go',
 };
@@ -40,7 +40,7 @@ const LendCollections: React.FC<Props> = ({ onClick }) => {
   return (
     <Stack direction="column" spacing="24px" p="15px">
       <Center>
-        <Text textTransform="uppercase" fontSize="lg" fontWeight="bold">
+        <Text fontSize="lg" fontWeight="bold">
           {i18n.inputHeader}
         </Text>
       </Center>
