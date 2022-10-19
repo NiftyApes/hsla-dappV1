@@ -6,6 +6,7 @@ import { ReactComponent as Notification } from './assets/notification.svg';
 import { ReactComponent as Sliders } from './assets/sliders.svg';
 import { ReactComponent as ArrowLeft } from './assets/arrow-left.svg';
 import { ReactComponent as ChevronUp } from './assets/chevron-up.svg';
+import { ReactComponent as ChevronDown } from './assets/chevron-down.svg';
 import { ReactComponent as CornerDownLeft } from './assets/corner-down-left.svg';
 import { ReactComponent as MoreVertical } from './assets/more-vertical.svg';
 import { ReactComponent as Close } from './assets/close.svg';
@@ -29,6 +30,7 @@ export const IconMap = {
   'arrow-left': ArrowLeft,
   'arrow-right': ArrowRight,
   'chevron-up': ChevronUp,
+  'chevron-down': ChevronDown,
   'more-vertical': MoreVertical,
   'corner-down-left': CornerDownLeft,
   close: Close,

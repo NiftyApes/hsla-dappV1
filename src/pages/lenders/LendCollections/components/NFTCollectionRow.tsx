@@ -1,4 +1,6 @@
 import React from 'react';
+import Humanize from 'humanize-plus';
+
 import { Flex, Image, Link, Td, Text, Tr } from '@chakra-ui/react';
 import { useRaribleCollectionStats } from '../../../../hooks/useRaribleColectionStats';
 import { NFTCollection } from '../../../../hooks/useTopCollections';
@@ -21,7 +23,7 @@ const NFTCollectionRow: React.FC<Props> = ({
     throttle,
   });
 
-  const lrLink: string = `https://looksrare.org/collections/${collection.address}`;
+  const osLink: string = `https://opensea.io/assets?search[query]=${collection.address}`;
   const esLink: string = `https://etherscan.io/token/${collection.address}`;
 
   return (
@@ -29,6 +31,8 @@ const NFTCollectionRow: React.FC<Props> = ({
       <Td>
         <Flex flexDir="row">
           <Image
+            cursor="pointer"
+            onClick={onClick}
             src={collection.image}
             w="55px"
             h="55px"
@@ -40,29 +44,31 @@ const NFTCollectionRow: React.FC<Props> = ({
               {collection.name}
             </Text>
 
-            <Flex flexDir="row" mt="5px" gap="2">
+            <Flex flexDir="row" mt="5px" gap="1">
               <Link href={esLink} target="_blank">
-                <Icon name="etherscan" />
+                <Icon name="etherscan" mt="1px" />
               </Link>
 
-              <Link href={lrLink} target="_blank">
-                <Icon name="looks" />
+              <Link href={osLink} target="_blank">
+                <Icon name="os" size={22} />
               </Link>
             </Flex>
           </Flex>
         </Flex>
       </Td>
       <Td>
-        <Text fontWeight="bold">{floorPrice}Ξ</Text>
+        <Text fontWeight="bold">
+          {Humanize.formatNumber(Number(floorPrice))}Ξ
+        </Text>
       </Td>
       <Td>
-        <Text fontWeight="bold">{volume}Ξ</Text>
+        <Text fontWeight="bold">{Humanize.formatNumber(Number(volume))}Ξ</Text>
       </Td>
       <Td>
-        <Text fontWeight="bold">{owners}</Text>
+        <Text fontWeight="bold">{Humanize.formatNumber(Number(owners))}</Text>
       </Td>
       <Td>
-        <Text fontWeight="bold">{items}</Text>
+        <Text fontWeight="bold">{Humanize.formatNumber(Number(items))}</Text>
       </Td>
     </Tr>
   );

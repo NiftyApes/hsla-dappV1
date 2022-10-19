@@ -1,3 +1,6 @@
+import React from 'react';
+import Humanize from 'humanize-plus';
+
 import {
   Flex,
   Image,
@@ -9,13 +12,12 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import React from 'react';
 
 import Icon from 'components/atoms/Icon';
 import { useParams } from 'react-router-dom';
 import { useRaribleCollectionMetadata } from '../../../../../hooks/useRaribleCollectionMetadata';
 import { useRaribleCollectionStats } from '../../../../../hooks/useRaribleColectionStats';
-import LendCollections from '../../index';
+import NFTCollectionList from '../../components/NFTCollectionList';
 
 const CollectionHeader: React.FC = () => {
   const { collectionAddress } = useParams();
@@ -51,8 +53,7 @@ const CollectionHeader: React.FC = () => {
           background="#FAF5FF"
           padding=".45rem .85rem"
           borderRadius="48px"
-          mr="1rem"
-          _after={{ content: '"↓"', ml: '.75rem' }}
+          mr={3}
         >
           <Image
             borderRadius="full"
@@ -64,6 +65,7 @@ const CollectionHeader: React.FC = () => {
           <Text maxWidth="20ch" noOfLines={1} fontSize="xl" fontWeight="bold">
             {name}
           </Text>
+          <Icon name="chevron-down" ml={2} size={30} />
         </Flex>
         <Flex flexDirection="column">
           <Flex>
@@ -89,7 +91,7 @@ const CollectionHeader: React.FC = () => {
 
       <Flex alignItems="center" flexDirection="column">
         <Text fontSize="xl" fontWeight="bold" mr="8px">
-          {items}
+          {Humanize.formatNumber(Number(items))}
         </Text>
         <Text color="solid.gray0" fontSize="sm" fontWeight="bold" mr="8px">
           Items
@@ -98,7 +100,7 @@ const CollectionHeader: React.FC = () => {
 
       <Flex alignItems="center" flexDirection="column">
         <Text fontSize="xl" fontWeight="bold" mr="8px">
-          {owners}
+          {Humanize.formatNumber(Number(owners))}
         </Text>
         <Text color="solid.gray0" fontSize="sm" fontWeight="bold" mr="8px">
           Owners
@@ -107,7 +109,7 @@ const CollectionHeader: React.FC = () => {
 
       <Flex alignItems="center" flexDirection="column">
         <Text fontSize="xl" fontWeight="bold" mr="8px">
-          {floorPrice}Ξ
+          {Humanize.formatNumber(Number(floorPrice))}Ξ
         </Text>
         <Text color="solid.gray0" fontSize="sm" fontWeight="bold" mr="8px">
           Floor
@@ -116,18 +118,18 @@ const CollectionHeader: React.FC = () => {
 
       <Flex alignItems="center" flexDirection="column">
         <Text color="green.gray0" fontSize="xl" fontWeight="bold" mr="8px">
-          {volume}Ξ
+          {Humanize.formatNumber(Number(volume))}Ξ
         </Text>
         <Text color="solid.gray0" fontSize="sm" fontWeight="bold" mr="8px">
           Volume
         </Text>
       </Flex>
 
-      <Modal isOpen={isOpen} onClose={onClose} size="xl">
+      <Modal isOpen={isOpen} onClose={onClose} size="4xl">
         <ModalOverlay />
         <ModalContent p="5px">
           <ModalCloseButton />
-          <LendCollections onClick={onClose} />
+          <NFTCollectionList onClick={onClose} />
         </ModalContent>
       </Modal>
     </Flex>
