@@ -4,10 +4,12 @@ import { RootState } from 'app/store';
 import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
+import { getEventFromReceipt } from 'helpers/getEventFromReceipt';
 import { saveLoanInDb } from 'helpers/saveLoanInDb';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
 import { fetchLoanAuctionByNFT } from 'loan';
 import { NFT } from 'nft';
+import NiftyApesLendingDeploymentJSON from '../generated/deployments/localhost/NiftyApesLending.json';
 import { useChainId } from './useChainId';
 import { useLendingContract, useOffersContract } from './useContracts';
 import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
@@ -83,11 +85,17 @@ export const useExecuteLoanByBorrower = ({
         true,
       );
 
+      const loanExecutedEvent = getEventFromReceipt({
+        eventName: 'LoanExecuted',
+        receipt,
+        abi: NiftyApesLendingDeploymentJSON.abi,
+      });
+
       const loan =
         chainId === '0x7a69'
-          ? receipt.events[6].args[2]
+          ? loanExecutedEvent.args.loanAuction
           : chainId === '0x5'
-          ? receipt.events[5].args.loanAuction
+          ? loanExecutedEvent.args.loanAuction
           : null;
 
       dispatch(fetchLoanAuctionByNFT(nft));

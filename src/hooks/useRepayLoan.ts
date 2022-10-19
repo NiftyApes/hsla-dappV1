@@ -4,9 +4,11 @@ import { transactionTypes } from 'constants/transactionTypes';
 
 import { increment } from 'counter/counterSlice';
 import { BigNumber, ethers } from 'ethers';
+import { getEventFromReceipt } from 'helpers/getEventFromReceipt';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
 import { fetchLoanAuctionByNFT } from 'loan';
 import { NFT } from 'nft';
+import NiftyApesLendingDeploymentJSON from '../generated/deployments/localhost/NiftyApesLending.json';
 import { useChainId } from './useChainId';
 import { useLendingContract } from './useContracts';
 import { useGetTransactionTimestamp } from './useGetTransactionTimestamp';
@@ -48,18 +50,24 @@ export const useRepayLoanByBorrower = ({
 
       const transactionTimestamp = await getTransactionTimestamp(receipt);
 
+      const loanRepaidEvent = getEventFromReceipt({
+        eventName: 'LoanRepaid',
+        receipt,
+        abi: NiftyApesLendingDeploymentJSON.abi,
+      });
+
       const totalPayment =
         chainId === '0x7a69'
-          ? receipt.events[6].args.totalPayment.toString()
+          ? loanRepaidEvent.args.totalPayment.toString()
           : chainId === '0x5'
-          ? receipt.events[5].args.totalPayment.toString()
+          ? loanRepaidEvent.args.totalPayment.toString()
           : null;
 
       const loan =
         chainId === '0x7a69'
-          ? receipt.events[6].args.loanAuction
+          ? loanRepaidEvent.args.loanAuction
           : chainId === '0x5'
-          ? receipt.events[5].args.loanAuction
+          ? loanRepaidEvent.args.loanAuction
           : null;
 
       dispatch(

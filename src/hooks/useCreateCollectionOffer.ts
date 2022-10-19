@@ -4,6 +4,8 @@ import { useAppDispatch } from 'app/hooks';
 import { SECONDS_IN_YEAR } from 'constants/misc';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
+import { getEventFromReceipt } from 'helpers/getEventFromReceipt';
+import NiftyApesOffersDeploymentJSON from '../generated/deployments/localhost/NiftyApesOffers.json';
 import { saveOfferInDb } from '../helpers/saveOfferInDb';
 import { useChainId } from './useChainId';
 import { useOffersContract } from './useContracts';
@@ -84,9 +86,17 @@ export const useCreateCollectionOffer = ({
 
         const receipt: any = await tx.wait();
 
+        console.log('receipt', receipt);
+
         onTxMined && onTxMined(receipt);
 
-        const offer = receipt.events[1].args[3];
+        const newOfferEvent = getEventFromReceipt({
+          eventName: 'NewOffer',
+          receipt,
+          abi: NiftyApesOffersDeploymentJSON.abi,
+        });
+
+        const { offer } = newOfferEvent.args;
 
         const offerObj = {
           creator: offer.creator,
@@ -105,10 +115,10 @@ export const useCreateCollectionOffer = ({
         await saveOfferInDb({
           chainId,
           offerObj,
-          offerHash: receipt.events[1].args.offerHash,
+          offerHash: newOfferEvent.args.offerHash,
         });
 
-        onSuccess && onSuccess(receipt.events[1].args.offerHash);
+        onSuccess && onSuccess(newOfferEvent.args.offerHash);
       } catch (e: any) {
         if (onError) {
           onError(e);
