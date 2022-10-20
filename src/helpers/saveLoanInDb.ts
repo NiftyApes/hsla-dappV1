@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import { getApiUrl } from './getApiUrl';
 
 export async function saveLoanInDb({
@@ -29,13 +30,13 @@ export async function saveLoanInDb({
   await fetch(getApiUrl(chainId, 'loans'), {
     method: 'POST',
     body: JSON.stringify({
-      nftContractAddress,
+      nftContractAddress: ethers.utils.getAddress(nftContractAddress),
       nftId,
       lastUpdatedTimestamp: loanTerms.loanBeginTimestamp,
-      creator,
+      creator: ethers.utils.getAddress(creator),
       loanTerms,
-      borrower,
-      lender,
+      borrower: ethers.utils.getAddress(borrower),
+      lender: ethers.utils.getAddress(lender),
       transactionHash,
     }),
   });

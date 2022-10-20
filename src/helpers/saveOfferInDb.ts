@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import { getApiUrl } from './getApiUrl';
 
 export async function saveOfferInDb({
@@ -33,13 +34,13 @@ export async function saveOfferInDb({
     method: 'POST',
     body: JSON.stringify({
       nftId,
-      creator,
+      creator: ethers.utils.getAddress(creator),
       interestRatePerSecond,
       amount,
       duration,
       expiration,
       floorTerm,
-      nftContractAddress,
+      nftContractAddress: ethers.utils.getAddress(nftContractAddress),
       offerHash,
       // Will complicate this when we introduce borrower offers
       lenderOffer: true,
