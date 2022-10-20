@@ -18,9 +18,9 @@ export const useTopCollections = () => {
       name: 'Bored Ape Yacht Club',
     },
     {
-      address: '0x282bdd42f4eb70e7a9d9f40c8fea0825b7f68c5d',
-      image: '/assets/images/collections/collection_cpw.png',
-      name: 'CryptoPunks (Wrapped)',
+      address: '0xb7f7f6c52f2e2fdb1963eab30438024864c313f6',
+      image: '/assets/images/collections/collection_wrappedpunks.png',
+      name: 'Wrapped Cryptopunks',
     },
     {
       address: '0x60e4d786628fea6478f785a6d7e704777c86a7c6',
