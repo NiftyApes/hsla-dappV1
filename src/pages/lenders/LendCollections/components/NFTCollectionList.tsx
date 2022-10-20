@@ -21,9 +21,14 @@ import { useTopCollections } from '../../../../hooks/useTopCollections';
 import NFTCollectionRow from './NFTCollectionRow';
 
 const i18n = {
+  inputButton: 'Go',
   inputHeader: 'NiftyApes Top Collections',
   inputPlaceholder: 'Paste Collection Address',
-  inputButton: 'Go',
+  thCollection: 'Collection',
+  thFloor: 'Floor',
+  thItems: 'Items',
+  thOwners: 'Owners',
+  thTotal: 'Total Vol',
 };
 
 const NFTCollectionList: React.FC<Props> = ({ onClick }) => {
@@ -81,20 +86,21 @@ const NFTCollectionList: React.FC<Props> = ({ onClick }) => {
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th>Collection</Th>
-              <Th>Floor</Th>
-              <Th>Total Vol</Th>
-              <Th>Owners</Th>
-              <Th>Items</Th>
+              <Th>{i18n.thCollection}</Th>
+              <Th>{i18n.thFloor}</Th>
+              <Th>{i18n.thTotal}</Th>
+              <Th>{i18n.thOwners}</Th>
+              <Th>{i18n.thItems}</Th>
             </Tr>
           </Thead>
 
           <Tbody>
-            {collections.map((collection, index) => {
+            {collections.map((collection, idx) => {
               return (
                 <NFTCollectionRow
+                  key={collection.address}
                   collection={collection}
-                  throttle={100 * index}
+                  throttle={120 * idx}
                   onClick={() => {
                     navigate(
                       `/lenders/create-collection-offer/${collection.address}`,
