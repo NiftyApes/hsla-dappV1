@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import { getApiUrl } from 'helpers';
 
 export async function updateLoanStatus({
@@ -20,7 +21,7 @@ export async function updateLoanStatus({
   await fetch(getApiUrl(chainId, 'loans'), {
     method: 'PATCH',
     body: JSON.stringify({
-      nftContractAddress,
+      nftContractAddress: ethers.utils.getAddress(nftContractAddress),
       nftId,
       loanBeginTimestamp,
       transactionTimestamp,

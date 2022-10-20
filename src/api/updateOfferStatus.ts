@@ -1,3 +1,4 @@
+import { ethers } from 'ethers';
 import { getApiUrl } from 'helpers';
 
 export async function updateOfferStatus({
@@ -22,7 +23,7 @@ export async function updateOfferStatus({
   await fetch(getApiUrl(chainId, 'offers'), {
     method: 'PATCH',
     body: JSON.stringify({
-      nftContractAddress,
+      nftContractAddress: ethers.utils.getAddress(nftContractAddress),
       nftId,
       offerExpiration,
       offerHash,
