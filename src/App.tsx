@@ -14,6 +14,7 @@ import { useChainId } from 'hooks/useChainId';
 import {
   isGoerli,
   isLocalChain,
+  isMainnet,
   useLendingContract,
   useLiquidityContract,
   useOffersContract,
@@ -43,12 +44,18 @@ const App: React.FC = () => {
   const chainId = useChainId();
 
   useEffect(() => {
-    if (!chainId || (!isGoerli(chainId) && !isLocalChain(chainId))) {
+    if (
+      !chainId ||
+      (!isGoerli(chainId) && !isLocalChain(chainId) && !isMainnet(chainId))
+    ) {
       setChain({ chainId: '0x5' });
     }
   }, [chainId]);
 
-  if (!chainId || (!isGoerli(chainId) && !isLocalChain(chainId))) {
+  if (
+    !chainId ||
+    (!isGoerli(chainId) && !isLocalChain(chainId) && !isMainnet(chainId))
+  ) {
     return (
       <div>
         NiftyApes currently doesn't support this chain. Please switch to Goerli

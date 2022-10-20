@@ -2,7 +2,7 @@ import { EIP1193Provider } from '@web3-onboard/core';
 
 import { LendingContract, LiquidityContract, OffersContract } from 'nft/model';
 
-import { GOERLI, LOCAL } from 'constants/contractAddresses';
+import { GOERLI, LOCAL, MAINNET } from 'constants/contractAddresses';
 
 import { Contract } from 'ethers';
 import { getEthersContractWithEIP1193Provider } from './getEthersContractWithEIP1193Provider';
@@ -70,6 +70,26 @@ export function getGoerliLendingContract({
   return getStoreLendingContract();
 }
 
+export function getMainnetLendingContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
+  let contract = getStoreLendingContract();
+
+  if (!contract || doesProviderMismatchContract({ provider, contract })) {
+    contract = getEthersContractWithEIP1193Provider({
+      abi: MAINNET.LENDING.ABI,
+      address: MAINNET.LENDING.ADDRESS,
+      provider,
+    }) as LendingContract;
+
+    setStoreLendingContract(contract);
+  }
+
+  return getStoreLendingContract();
+}
+
 export function getLocalLiquidityContract({
   provider,
 }: {
@@ -110,6 +130,26 @@ export function getGoerliLiquidityContract({
   return contract;
 }
 
+export function getMainnetLiquidityContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
+  let contract = getStoreLiquidityContract();
+
+  if (!contract || doesProviderMismatchContract({ provider, contract })) {
+    contract = getEthersContractWithEIP1193Provider({
+      abi: MAINNET.LIQUIDITY.ABI,
+      address: MAINNET.LIQUIDITY.ADDRESS,
+      provider,
+    }) as LiquidityContract;
+
+    setStoreLiquidityContract(contract);
+  }
+
+  return contract;
+}
+
 export function getLocalOffersContract({
   provider,
 }: {
@@ -141,6 +181,26 @@ export function getGoerliOffersContract({
     contract = getEthersContractWithEIP1193Provider({
       abi: GOERLI.OFFERS.ABI,
       address: GOERLI.OFFERS.ADDRESS,
+      provider,
+    }) as OffersContract;
+
+    setStoreOffersContract(contract);
+  }
+
+  return contract;
+}
+
+export function getMainnetOffersContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
+  let contract = getStoreOffersContract();
+
+  if (!contract || doesProviderMismatchContract({ provider, contract })) {
+    contract = getEthersContractWithEIP1193Provider({
+      abi: MAINNET.OFFERS.ABI,
+      address: MAINNET.OFFERS.ADDRESS,
       provider,
     }) as OffersContract;
 
