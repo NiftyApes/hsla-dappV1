@@ -19,6 +19,7 @@ import {
   useLiquidityContract,
   useOffersContract,
 } from 'hooks/useContracts';
+import { useLocalStorage } from 'hooks/useLocalStorage';
 import React, { Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes } from 'react-router-dom';
 import Borrowers from 'routes/Borrowers';
@@ -43,18 +44,24 @@ const App: React.FC = () => {
 
   const chainId = useChainId();
 
+  const [mainnetEnabled] = useLocalStorage('mainnet-enabled', null);
+
   useEffect(() => {
     if (
       !chainId ||
-      (!isGoerli(chainId) && !isLocalChain(chainId) && !isMainnet(chainId))
+      (!isGoerli(chainId) &&
+        !isLocalChain(chainId) &&
+        !(isMainnet(chainId) && mainnetEnabled))
     ) {
       setChain({ chainId: '0x5' });
     }
-  }, [chainId]);
+  }, [chainId, mainnetEnabled]);
 
   if (
     !chainId ||
-    (!isGoerli(chainId) && !isLocalChain(chainId) && !isMainnet(chainId))
+    (!isGoerli(chainId) &&
+      !isLocalChain(chainId) &&
+      !(isMainnet(chainId) && mainnetEnabled))
   ) {
     return (
       <div>
