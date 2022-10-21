@@ -16,6 +16,10 @@ import { LoanRow } from './LoanRow';
 
 const LoansTable: React.FC<any> = ({ activeLoans }) => {
   const renderEmptyState = () => {
+    if (activeLoans && activeLoans.length > 0) {
+      return '';
+    }
+
     return (
       <Center>
         <Flex h="200px">

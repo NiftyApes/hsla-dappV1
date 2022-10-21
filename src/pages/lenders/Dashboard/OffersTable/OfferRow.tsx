@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { Box, Button, Flex, Td, Text, Tr, useToast } from '@chakra-ui/react';
 
-import Icon from 'components/atoms/Icon';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { ethers } from 'ethers';
 import { getAPR } from 'helpers/getAPR';
@@ -9,9 +8,11 @@ import { roundForDisplay } from 'helpers/roundForDisplay';
 import { useCancelOffer } from 'hooks/useCancelOffer';
 import moment from 'moment';
 import { ToastSuccessCard } from '../../../../components/cards/ToastSuccessCard';
+import NFTCollectionCardSmall from '../../../../components/cards/NFTCollectionCardSmall';
 
-export const OfferRow = ({ offer, offerHash }: any) => {
+export const OfferRow = ({ offer, offerHash, index }: any) => {
   const toast = useToast();
+
   const { cancelOffer, cancelStatus, txReceipt } = useCancelOffer({
     nftContractAddress: offer.nftContractAddress,
     nftId: offer.nftId,
@@ -54,37 +55,10 @@ export const OfferRow = ({ offer, offerHash }: any) => {
       }}
     >
       <Td>
-        <Flex flexDir="column" alignItems="center" justifyContent="center">
-          <Text fontWeight="bold" fontSize="xs" color="solid.gray0" mt="4px">
-            <span
-              style={{
-                display: 'inline-block',
-                textOverflow: 'ellipsis',
-                overflow: 'hidden',
-                whiteSpace: 'nowrap',
-                width: '80px',
-              }}
-            >
-              {offer.nftContractAddress}
-            </span>
-          </Text>
-          <Flex>
-            <Icon name="os" size={25} />
-            <Box
-              border="2px solid"
-              borderRadius="50%"
-              borderColor="solid.white"
-              bgColor="white"
-            >
-              <Icon name="etherscan" size={20} />
-            </Box>
-          </Flex>
-          {!(offer.nftId === 0) && (
-            <Text fontWeight="bold" fontSize="sm">
-              #{offer.nftId}
-            </Text>
-          )}
-        </Flex>
+        <NFTCollectionCardSmall
+          throttle={120 * (index + 1)}
+          contractAddress={offer.nftContractAddress}
+        />
       </Td>
       <Td>
         <Flex>

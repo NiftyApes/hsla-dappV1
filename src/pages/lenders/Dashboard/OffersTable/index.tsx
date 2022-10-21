@@ -91,8 +91,9 @@ const OffersTable: React.FC<any> = ({ offers }) => {
             },
           }}
         >
-          {sortedOffers?.map((offer: any) => (
+          {sortedOffers?.map((offer: any, index) => (
             <OfferRow
+              index={index}
               key={offer.offerHash}
               offer={offer.offer}
               offerHash={offer.offerHash}

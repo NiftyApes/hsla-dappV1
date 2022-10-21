@@ -61,7 +61,7 @@ export const useTopCollections = () => {
 
   if (isLocalChain(chainId)) {
     collections.unshift({
-      address: '0x3f9A1B67F3a3548e0ea5c9eaf43A402d12b6a273',
+      address: '0x1D13fF25b10C9a6741DFdce229073bed652197c7',
       image: '/assets/images/NA-BLACK.png',
       name: 'Dev Contract (Local)',
     });
