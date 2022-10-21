@@ -5,7 +5,6 @@ import React from 'react';
 import { useActiveLoansForLender } from 'hooks/useActiveLoansForLender';
 import { useOffersForLender } from 'hooks/useOffersOfLender';
 import { useWalletAddress } from 'hooks/useWalletAddress';
-import { EmptyPlaceholder } from '../../../components/cards/EmptyPlaceholder';
 import LoansTable from './LoansTable';
 import OffersTable from './OffersTable';
 import TopBar from './TopBar';
@@ -13,6 +12,8 @@ import TopBar from './TopBar';
 const i18n = {
   noLoans: "You don't have any active loans...",
   noOffers: "You don't have any active offers...",
+  offers: (count: number = 0) => `Your Offers (${count})`,
+  loans: (count: number = 0) => `Your Active Loans (${count})`,
 };
 
 const Dashboard: React.FC = () => {
@@ -34,37 +35,19 @@ const Dashboard: React.FC = () => {
           gap={6}
         >
           <GridItem w="100%">
-            {offers && offers.length === 0 && (
-              <EmptyPlaceholder>
-                <>{i18n.noOffers}</>
-              </EmptyPlaceholder>
-            )}
+            <Text fontWeight="bold" fontSize="lg" mb="8px">
+              {i18n.offers(offers?.length)}
+            </Text>
 
-            {offers && offers.length > 0 && (
-              <>
-                <Text fontWeight="bold" fontSize="lg" mb="8px">
-                  Your Offers ({offers?.length})
-                </Text>
-                <OffersTable offers={offers} />
-              </>
-            )}
+            <OffersTable offers={offers} />
           </GridItem>
 
           <GridItem w="100%">
-            {activeLoans && activeLoans.length === 0 && (
-              <EmptyPlaceholder>
-                <>{i18n.noLoans}</>
-              </EmptyPlaceholder>
-            )}
+            <Text fontWeight="bold" fontSize="lg" mb="8px">
+              {i18n.loans(activeLoans?.length)}
+            </Text>
 
-            {activeLoans && activeLoans.length > 0 && (
-              <>
-                <Text fontWeight="bold" fontSize="lg" mb="8px">
-                  Your Loans ({activeLoans?.length})
-                </Text>
-                <LoansTable activeLoans={activeLoans} />
-              </>
-            )}
+            <LoansTable activeLoans={activeLoans} />
           </GridItem>
         </Grid>
       </Center>

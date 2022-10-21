@@ -1,11 +1,38 @@
-import { Box, Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  Flex,
+  Table,
+  Tbody,
+  Text,
+  Th,
+  Thead,
+  Tr,
+  VStack,
+} from '@chakra-ui/react';
 import React from 'react';
 
 import { LoanRow } from './LoanRow';
 
 const LoansTable: React.FC<any> = ({ activeLoans }) => {
+  const renderEmptyState = () => {
+    return (
+      <Center>
+        <Flex h="200px">
+          <Center>
+            <VStack>
+              <Text color="gray.500" as="i">
+                No Active Loans Found
+              </Text>
+            </VStack>
+          </Center>
+        </Flex>
+      </Center>
+    );
+  };
+
   return (
-    <Box>
+    <Box minW="800px" border="1px solid" borderColor="accents.100">
       <Table>
         <Thead>
           <Tr
@@ -50,6 +77,8 @@ const LoansTable: React.FC<any> = ({ activeLoans }) => {
           ))}
         </Tbody>
       </Table>
+
+      {renderEmptyState()}
     </Box>
   );
 };
