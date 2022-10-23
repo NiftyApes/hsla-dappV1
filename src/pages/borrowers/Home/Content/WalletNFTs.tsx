@@ -52,7 +52,7 @@ export const WalletNFTs: React.FC = () => {
       </Box>
 
       <SimpleGrid
-        minChildWidth="240px"
+        columns={{ xl: 5, lg: 4, md: 3, sm: 2, xs: 1 }}
         spacing={10}
         style={{ padding: '16px' }}
       >
@@ -65,7 +65,7 @@ export const WalletNFTs: React.FC = () => {
         <SectionHeader headerText="NFTs With Offers" />
       </Box>
       <SimpleGrid
-        minChildWidth="240px"
+        columns={{ xl: 5, lg: 4, md: 3, sm: 2, xs: 1 }}
         spacing={10}
         style={{ padding: '16px' }}
       >
@@ -80,7 +80,7 @@ export const WalletNFTs: React.FC = () => {
         <SectionHeader headerText="NFTs With No Offers" />
       </Box>
       <SimpleGrid
-        minChildWidth="240px"
+        columns={{ xl: 5, lg: 4, md: 3, sm: 2, xs: 1 }}
         spacing={10}
         style={{ padding: '16px' }}
       >

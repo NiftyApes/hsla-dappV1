@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 import { Box, Button, Flex, Grid, Text, useToast } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
+import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
 import { GOERLI, LOCAL } from 'constants/contractAddresses';
 import { BigNumber, ethers } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
@@ -77,11 +78,17 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
     if (executeLoanByBorrower) {
       setExecuting(true);
       await executeLoanByBorrower()
-        .then(() => {
+        .then(({ receipt }) => {
           toast({
-            title: i18n.toastLoanSuccess,
-            status: 'success',
+            render: (props) => (
+              <ToastSuccessCard
+                title={i18n.toastLoanSuccess}
+                txn={receipt}
+                {...props}
+              />
+            ),
             position: 'top-right',
+            duration: 9000,
             isClosable: true,
           });
 
