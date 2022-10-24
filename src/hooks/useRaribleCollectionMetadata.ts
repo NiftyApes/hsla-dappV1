@@ -35,9 +35,9 @@ export const useRaribleCollectionMetadata = ({
   };
 
   const collectionMixin = (obj: any) => {
-    const existing = collections.find(
-      (item) => item.address === contractAddress,
-    );
+    const existing = collections.find((item) => {
+      return item.address.toLowerCase() === contractAddress.toLowerCase();
+    });
     return existing || obj;
   };
 
@@ -63,7 +63,7 @@ export const useRaribleCollectionMetadata = ({
 
           const result: any = collectionMixin({ name, symbol, image });
           setCache(result);
-          setMeta(result);
+          setMeta({ ...result });
         })
         .catch(() => {
           setMeta(
@@ -80,7 +80,6 @@ export const useRaribleCollectionMetadata = ({
       setMeta({ ...localCache[contractAddress] });
     } else {
       // Throttle Rarible API requests to avoid 429
-      console.log(throttle);
       setTimeout(fetchData, throttle);
     }
   }, [contractAddress]);

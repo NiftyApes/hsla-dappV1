@@ -100,7 +100,7 @@ const NFTCollectionList: React.FC<Props> = ({ onClick }) => {
                 <NFTCollectionRow
                   key={collection.address}
                   collection={collection}
-                  throttle={120 * idx}
+                  throttle={250 * idx}
                   onClick={() => {
                     navigate(
                       `/lenders/create-collection-offer/${collection.address}`,
