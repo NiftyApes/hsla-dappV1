@@ -14,10 +14,12 @@ import { useChainId } from 'hooks/useChainId';
 import {
   isGoerli,
   isLocalChain,
+  isMainnet,
   useLendingContract,
   useLiquidityContract,
   useOffersContract,
 } from 'hooks/useContracts';
+import { useLocalStorage } from 'hooks/useLocalStorage';
 import React, { Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes } from 'react-router-dom';
 import Borrowers from 'routes/Borrowers';
@@ -42,13 +44,25 @@ const App: React.FC = () => {
 
   const chainId = useChainId();
 
+  const [mainnetEnabled] = useLocalStorage('mainnet-enabled', null);
+
   useEffect(() => {
-    if (!chainId || (!isGoerli(chainId) && !isLocalChain(chainId))) {
+    if (
+      !chainId ||
+      (!isGoerli(chainId) &&
+        !isLocalChain(chainId) &&
+        !(isMainnet(chainId) && mainnetEnabled))
+    ) {
       setChain({ chainId: '0x5' });
     }
-  }, [chainId]);
+  }, [chainId, mainnetEnabled]);
 
-  if (!chainId || (!isGoerli(chainId) && !isLocalChain(chainId))) {
+  if (
+    !chainId ||
+    (!isGoerli(chainId) &&
+      !isLocalChain(chainId) &&
+      !(isMainnet(chainId) && mainnetEnabled))
+  ) {
     return (
       <div>
         NiftyApes currently doesn't support this chain. Please switch to Goerli
