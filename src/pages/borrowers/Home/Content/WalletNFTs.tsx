@@ -57,7 +57,12 @@ export const WalletNFTs: React.FC = () => {
         style={{ padding: '16px' }}
       >
         {nftsWithLoans?.map((item: any) => {
-          return <NFTCardContainer item={item} key={item.id} />;
+          return (
+            <NFTCardContainer
+              item={item}
+              key={`${item.contractAddress}___${item.id}`}
+            />
+          );
         })}
       </SimpleGrid>
 
@@ -72,7 +77,12 @@ export const WalletNFTs: React.FC = () => {
         {nftsWithLoans &&
           nftsWithOffers &&
           _.difference(nftsWithOffers, nftsWithLoans)?.map((item: any) => {
-            return <NFTCardContainer item={item} key={item.id} />;
+            return (
+              <NFTCardContainer
+                item={item}
+                key={`${item.contractAddress}___${item.id}`}
+              />
+            );
           })}
       </SimpleGrid>
 
@@ -89,7 +99,12 @@ export const WalletNFTs: React.FC = () => {
           walletNfts &&
           _.difference(walletNfts, [...nftsWithLoans, ...nftsWithOffers])?.map(
             (item: any) => {
-              return <NFTCardContainer item={item} key={item.id} />;
+              return (
+                <NFTCardContainer
+                  item={item}
+                  key={`${item.contractAddress}___${item.id}`}
+                />
+              );
             },
           )}
       </SimpleGrid>

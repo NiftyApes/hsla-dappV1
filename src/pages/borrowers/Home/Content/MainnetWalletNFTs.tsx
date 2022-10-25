@@ -1,50 +1,77 @@
-import React, { useEffect, useState } from 'react';
-import { useWallets } from '@web3-onboard/react';
-import { SimpleGrid } from '@chakra-ui/react';
-import NFTNoOfferCard from '../../../../components/molecules/NFTNoOfferCard/index';
+import { BoxProps } from '@chakra-ui/react';
+import { useAppDispatch } from 'app/hooks';
+import { MAINNET } from 'constants/contractAddresses';
+import { useLendingContract } from 'hooks/useContracts';
+import { useWalletAddress } from 'hooks/useWalletAddress';
+import { loadMainnetNFTs, resetNFTsByWalletAddress } from 'nft';
+import { useEffect, useState } from 'react';
+import { WalletNFTs } from './WalletNFTs';
 
-interface WalletNft {
-  blockhash: string;
-  ownedNfts: any[];
-  totalCount: number;
-}
+interface Props extends BoxProps {}
 
-export const MainnetContent: React.FC = () => {
-  const connectedWallets = useWallets();
-  const [walletNfts, setWalletNfts] = useState<WalletNft>();
+export const MainnetWalletNFTs: React.FC<Props> = () => {
+  const dispatch = useAppDispatch();
 
-  const getMainnetWalletNFTs = async () => {
-    // make api key an env variable
-    const callWalletNfts = await fetch(
-      `https://eth-mainnet.g.alchemy.com/v2/Of3Km_--Ow1fNnMhaETmwnmWBFFHF3ZY/getNFTs?owner=${connectedWallets[0].accounts[0].address}`,
-    );
-    setWalletNfts(await callWalletNfts.json());
-  };
+  const walletAddress = useWalletAddress();
+
+  const lendingContract = useLendingContract();
+
+  const [hasLoadedNfts, setHasLoadedNfts] = useState(false);
 
   useEffect(() => {
-    getMainnetWalletNFTs();
-  }, [connectedWallets]);
+    const getGoerliWalletNFTs = async () => {
+      if (hasLoadedNfts || !walletAddress || !lendingContract) {
+        return;
+      }
 
-  const getThumbnail = (item: any) => {
-    const media =
-      Array.isArray(item.media) && item.media.length > 0
-        ? item.media[0].thumbnail || item.media[0].gateway
-        : null;
-    return media || item.metadata.image_url;
-  };
+      const ownWalletNftsResult = await fetch(
+        `https://eth-mainnet.g.alchemy.com/v2/Of3Km_--Ow1fNnMhaETmwnmWBFFHF3ZY/getNFTs?owner=${walletAddress}`,
+      );
 
-  return (
-    <SimpleGrid minChildWidth="200px" spacing={10} style={{ padding: '16px' }}>
-      {walletNfts?.ownedNfts.map((item) => {
-        return (
-          <NFTNoOfferCard
-            key={`${item.contract.address}:${item.id.tokenId}`}
-            tokenName={item.title}
-            tokenId={item.id.tokenId}
-            img={getThumbnail(item)}
-          />
-        );
-      })}
-    </SimpleGrid>
-  );
+      const ownWalletNftsJSON = await ownWalletNftsResult.json();
+
+      console.log('ownWalletNftsJSON', ownWalletNftsJSON);
+
+      const escrowedNftsResult = await fetch(
+        `https://eth-mainnet.g.alchemy.com/v2/Of3Km_--Ow1fNnMhaETmwnmWBFFHF3ZY/getNFTs?owner=${MAINNET.LENDING.ADDRESS}`,
+      );
+
+      const escrowedNftsJSON = await escrowedNftsResult.json();
+
+      let escrowedNfts = escrowedNftsJSON.ownedNfts;
+
+      // Keep just the NiftyApes NFTs that are yours
+      await Promise.all(
+        escrowedNfts.map(async (nft: any, i: number) => {
+          const owner = await lendingContract.ownerOf(
+            nft.contract.address,
+            String(Number(nft.id.tokenId)),
+          );
+
+          const isOwnedByWallet =
+            owner.toLowerCase() === walletAddress.toLowerCase();
+
+          escrowedNfts[i] = { ...nft, isOwnedByWallet };
+        }),
+      );
+      escrowedNfts = escrowedNfts.filter((nft: any) => nft.isOwnedByWallet);
+
+      dispatch(
+        loadMainnetNFTs({
+          walletAddress,
+          nfts: [...escrowedNfts, ...ownWalletNftsJSON.ownedNfts],
+        }),
+      );
+
+      setHasLoadedNfts(true);
+    };
+
+    getGoerliWalletNFTs();
+
+    return () => {
+      dispatch(resetNFTsByWalletAddress());
+    };
+  }, [walletAddress, lendingContract]);
+
+  return <WalletNFTs />;
 };

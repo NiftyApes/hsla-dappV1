@@ -1,8 +1,11 @@
-/* eslint-disable no-param-reassign */
+/* eslint-disable no-param-reassign, no-await-in-loop */
+/* tslint:disable no-use-before-define */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { AppDispatch, ThunkExtra } from 'app/store';
 import { getLocalNFTsOfAddress } from 'helpers/getLocalNFTsOfAddress';
+import { RARIBLE_API_PATH } from 'hooks/useRaribleColectionStats';
 import { fetchLoanAuctionByNFT, fetchLoanOffersByNFT } from 'loan';
+import _ from 'lodash';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import { Contract, LendingContract, NFT, WalletAddress } from '../model';
 
@@ -35,6 +38,8 @@ export type FetchNFTsResponse = {
   error?: string;
   fetching: boolean;
 };
+
+const cachedCollectionStats: any = {};
 
 export const fetchLocalNFTsByWalletAddress = createAsyncThunk<
   FetchNFTsResponse | undefined,
@@ -86,6 +91,72 @@ export const fetchLocalNFTsByWalletAddress = createAsyncThunk<
     });
   },
 );
+
+export const loadMainnetNFTs = createAsyncThunk<
+  FetchNFTsResponse | undefined,
+  {
+    walletAddress: WalletAddress;
+    nfts: any;
+  },
+  NFTsThunkApi
+>('nfts/loadGoerliNFTs', async ({ nfts }, thunkApi) => {
+  const { lendingContract } = thunkApi.extra();
+
+  for (let i = 0; i < nfts.length; i++) {
+    const nft = nfts[i];
+    if (cachedCollectionStats[nft.contract.address] === undefined) {
+      const response = await fetch(
+        `${RARIBLE_API_PATH}/data/collections/ETHEREUM:${nft.contract.address}/stats?currency=ETH`,
+        {
+          method: 'GET',
+        },
+      );
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, 25);
+      });
+
+      cachedCollectionStats[nft.contract.address] = await response.json();
+    }
+
+    if (cachedCollectionStats[nft.contract.address].volume < 1) {
+      nfts[i] = undefined;
+    } else {
+      nfts[i] = {
+        ...nft,
+        id: String(Number(nft.id.tokenId)),
+        contractAddress: nft.contract.address,
+        image: nft.media?.length && nft.media[0].gateway,
+        name: '',
+        collectionName: nft.contractMetadata.name,
+        chainId: '0x1',
+      };
+    }
+  }
+
+  nfts = _.compact(nfts);
+
+  if (lendingContract) {
+    if (nfts) {
+      nfts.forEach((nft: any) => thunkApi.dispatch(fetchLoanOffersByNFT(nft)));
+      nfts.forEach((nft: any) => thunkApi.dispatch(fetchLoanAuctionByNFT(nft)));
+
+      return {
+        content: nfts,
+        fetching: false,
+        error: undefined,
+      };
+    }
+    return thunkApi.rejectWithValue({
+      type: 'global',
+      message: 'Unable to fetch NFTs',
+    });
+  }
+  return thunkApi.rejectWithValue({
+    type: 'global',
+    message: 'NiftyApes contract is undefined',
+  });
+});
 
 export const loadGoerliNFTs = createAsyncThunk<
   FetchNFTsResponse | undefined,
@@ -182,7 +253,7 @@ const slice = createSlice({
         },
       };
     });
-    builder.addCase(loadGoerliNFTs.pending, (state, action) => {
+    builder.addCase(loadMainnetNFTs.pending, (state, action) => {
       state.nftsByWalletAddress = {
         ...state.nftsByWalletAddress,
         [action.meta.arg.walletAddress]: {
@@ -192,7 +263,7 @@ const slice = createSlice({
         },
       };
     });
-    builder.addCase(loadGoerliNFTs.fulfilled, (state, action) => {
+    builder.addCase(loadMainnetNFTs.fulfilled, (state, action) => {
       if (action.payload && action.meta.arg.walletAddress) {
         if (!state.nftsByWalletAddress[action.meta.arg.walletAddress].content) {
           state.nftsByWalletAddress[action.meta.arg.walletAddress].content = [];
@@ -209,7 +280,7 @@ const slice = createSlice({
           undefined;
       }
     });
-    builder.addCase(loadGoerliNFTs.rejected, (state, action) => {
+    builder.addCase(loadMainnetNFTs.rejected, (state, action) => {
       state.nftsByWalletAddress = {
         ...state.nftsByWalletAddress,
         [action.meta.arg.walletAddress]: {
