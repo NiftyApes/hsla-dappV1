@@ -1,8 +1,8 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-prototype-builtins */
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-const RARIBLE_API_PATH = 'https://api.rarible.org/v0.1';
+export const RARIBLE_API_PATH = 'https://api.rarible.org/v0.1';
 
 const localCache: any = {};
 

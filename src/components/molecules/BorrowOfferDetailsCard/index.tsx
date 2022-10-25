@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import { Box, Button, Flex, Grid, Text, useToast } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
-import { GOERLI, LOCAL } from 'constants/contractAddresses';
+import { GOERLI, LOCAL, MAINNET } from 'constants/contractAddresses';
 import { BigNumber, ethers } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 import { useChainId } from 'hooks/useChainId';
@@ -47,6 +47,8 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
       ? LOCAL.LENDING.ADDRESS
       : chainId === '0x5'
       ? GOERLI.LENDING.ADDRESS
+      : chainId === '0x1'
+      ? MAINNET.LENDING.ADDRESS
       : '0x0';
 
   const totalAmount: BigNumber = BigNumber.from(String(offer.amount));
