@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import { useState, useEffect } from 'react';
+import { logError } from 'logging/logError';
+import { useEffect, useState } from 'react';
 import { useTopCollections } from './useTopCollections';
 
 const RARIBLE_API_PATH = 'https://api.rarible.org/v0.1';
@@ -46,7 +47,8 @@ export const useRaribleCollectionMetadata = ({
           }
           setMeta(collectionMixin({ name, symbol, image }));
         })
-        .catch(() => {
+        .catch((e) => {
+          logError(e);
           setMeta(
             collectionMixin({
               name: 'NOT FOUND',

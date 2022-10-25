@@ -5,6 +5,7 @@ import { SECONDS_IN_YEAR } from 'constants/misc';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
 import { getEventFromReceipt } from 'helpers/getEventFromReceipt';
+import { logError } from 'logging/logError';
 import NiftyApesOffersDeploymentJSON from '../generated/deployments/localhost/NiftyApesOffers.json';
 import { saveOfferInDb } from '../helpers/saveOfferInDb';
 import { useChainId } from './useChainId';
@@ -120,6 +121,7 @@ export const useCreateCollectionOffer = ({
 
         onSuccess && onSuccess(newOfferEvent.args.offerHash);
       } catch (e: any) {
+        logError(e);
         if (onError) {
           onError(e);
         } else {

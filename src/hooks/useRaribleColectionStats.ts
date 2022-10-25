@@ -1,5 +1,6 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-prototype-builtins */
+import { logError } from 'logging/logError';
 import { useEffect, useState } from 'react';
 
 export const RARIBLE_API_PATH = 'https://api.rarible.org/v0.1';
@@ -51,6 +52,7 @@ export const useRaribleCollectionStats = ({
           setCache(result);
         })
         .catch((err) => {
+          logError(err);
           throw err;
         });
     };

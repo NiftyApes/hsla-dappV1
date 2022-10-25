@@ -5,6 +5,7 @@ import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
+import { logError } from 'logging/logError';
 import { useState } from 'react';
 import { useChainId } from './useChainId';
 import { useLendingContract } from './useContracts';
@@ -108,6 +109,7 @@ export const useSeizeAsset = ({
           setTxReceipt(null);
         }, 3000);
       } catch (e) {
+        logError(e);
         setSeizeStatus('ERROR');
 
         setTimeout(() => {

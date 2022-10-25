@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -10,24 +9,26 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
+import React, { useState } from 'react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import { formatEther } from 'ethers/lib/utils';
 import { BigNumber } from 'ethers';
-import { useRepayLoanByBorrower } from '../../../hooks/useRepayLoan';
-import { LoanAuction } from '../../../loan';
+import { formatEther } from 'ethers/lib/utils';
+import { logError } from 'logging/logError';
 import { humanizeContractError } from '../../../helpers/errorsMap';
-import LoadingIndicator from '../../atoms/LoadingIndicator';
-import { useCalculateInterestAccrued } from '../../../hooks/useCalculateInterestAccrued';
 import { getAPR } from '../../../helpers/getAPR';
-import {
-  concatForDisplay,
-  roundForDisplay,
-} from '../../../helpers/roundForDisplay';
 import {
   getLoanTimeRemaining,
   isLoanDefaulted,
 } from '../../../helpers/getDuration';
+import {
+  concatForDisplay,
+  roundForDisplay,
+} from '../../../helpers/roundForDisplay';
+import { useCalculateInterestAccrued } from '../../../hooks/useCalculateInterestAccrued';
+import { useRepayLoanByBorrower } from '../../../hooks/useRepayLoan';
+import { LoanAuction } from '../../../loan';
+import LoadingIndicator from '../../atoms/LoadingIndicator';
 
 interface CallbackType {
   (): void;
@@ -109,6 +110,7 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
           onRepay();
         })
         .catch((error) => {
+          logError(error);
           toast({
             title: `Error: ${humanizeContractError(error.reason)}`,
             status: 'error',

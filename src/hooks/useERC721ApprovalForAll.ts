@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import { useEffect, useState } from 'react';
-import { Contract } from 'ethers';
 import { RootState } from 'app/store';
-import { useWalletAddress } from './useWalletAddress';
+import { Contract } from 'ethers';
+import { logError } from 'logging/logError';
+import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { increment } from '../counter/counterSlice';
+import { useWalletAddress } from './useWalletAddress';
 
 export const useERC721ApprovalForAll = ({
   contract,
@@ -61,6 +62,7 @@ export const useERC721ApprovalForAll = ({
         onTxMined && onTxMined(receipt);
         onSuccess && onSuccess();
       } catch (e: any) {
+        logError(e);
         if (onError) {
           onError(e);
         } else {
@@ -91,6 +93,7 @@ export const useERC721ApprovalForAll = ({
         onTxMined && onTxMined(receipt);
         onSuccess && onSuccess();
       } catch (e: any) {
+        logError(e);
         if (onError) {
           onError(e);
         } else {
