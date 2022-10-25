@@ -20,7 +20,8 @@ import {
   useOffersContract,
 } from 'hooks/useContracts';
 import { useLocalStorage } from 'hooks/useLocalStorage';
-import React, { Suspense, useEffect } from 'react';
+import { WalletContext } from 'lib/contexts/WalletProvider';
+import React, { Suspense, useContext, useEffect } from 'react';
 import { BrowserRouter as Router, Routes } from 'react-router-dom';
 import Borrowers from 'routes/Borrowers';
 import Lenders from 'routes/Lenders';
@@ -41,6 +42,8 @@ const App: React.FC = () => {
   setStoreOffersContract(offersContract);
   setStoreLiquidityContract(liquidityContract);
   setStoreCEthContract(cEthContract);
+
+  const { connectWallet } = useContext(WalletContext);
 
   const chainId = useChainId();
 
@@ -65,8 +68,11 @@ const App: React.FC = () => {
   ) {
     return (
       <div>
-        NiftyApes currently doesn't support this chain. Please switch to Goerli
-        to explore the testnet version.
+        NiftyApes currently doesn't support this chain (${chainId}). Please
+        switch to Goerli to explore the testnet version.
+        <div style={{ marginTop: '32px' }}>
+          <button onClick={connectWallet}>Connect Wallet</button>
+        </div>
       </div>
     );
   }
