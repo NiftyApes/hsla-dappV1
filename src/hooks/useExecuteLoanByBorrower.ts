@@ -140,6 +140,8 @@ export const useExecuteLoanByBorrower = ({
       });
 
       dispatch(increment());
+
+      return { receipt };
     },
   };
 };

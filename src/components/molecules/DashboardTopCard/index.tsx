@@ -10,10 +10,8 @@ const TopCard: React.FC<Props> = ({ desc, children, ...restProps }) => {
     <Flex
       flexDir="column"
       alignItems="center"
-      bg="solid.white"
       p="23px"
       borderRadius="25px"
-      boxShadow="0px 4px 24px 0px #4910921A"
       {...restProps}
     >
       <Flex alignItems="center" justifyContent="center">

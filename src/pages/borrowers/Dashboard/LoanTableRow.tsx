@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Td, Text, Tr } from '@chakra-ui/react';
+import { Button, Link, Td, Text, Tr } from '@chakra-ui/react';
 import { formatEther } from 'ethers/lib/utils';
 import moment from 'moment';
 import { BigNumber } from 'ethers';
@@ -63,13 +63,14 @@ const LoanTableRow: React.FC<Props> = ({ loan, onClick }) => {
         />
       </Td>
       <Td>
-        <a
+        <Link
+          textDecoration="underline"
           href={`https://etherscan.io/tx/${loan.loanTxnHash}`}
           target="_blank"
           rel="noreferrer"
         >
           {startMoment.format('MMMM Do YYYY, h:mm:ss')}
-        </a>
+        </Link>
       </Td>
       <Td>
         <Text fontSize="xl" fontWeight="bold">
