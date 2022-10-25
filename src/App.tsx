@@ -1,4 +1,4 @@
-import { ChakraProvider, Link } from '@chakra-ui/react';
+import { Button, ChakraProvider, Link } from '@chakra-ui/react';
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
 import {
   setStoreCEthContract,
@@ -71,7 +71,7 @@ const App: React.FC = () => {
         NiftyApes currently doesn't support this chain (${chainId}). Please
         switch to Goerli to explore the testnet version.
         <div style={{ marginTop: '32px' }}>
-          <button onClick={connectWallet}>Connect Wallet</button>
+          <Button onClick={connectWallet}>Connect Wallet</Button>
         </div>
       </div>
     );
