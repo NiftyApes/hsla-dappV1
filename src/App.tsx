@@ -1,5 +1,5 @@
-import { ChakraProvider } from '@chakra-ui/react';
-import { useConnectWallet } from '@web3-onboard/react';
+import { ChakraProvider, Link } from '@chakra-ui/react';
+import { useConnectWallet, useSetChain } from '@web3-onboard/react';
 import {
   setStoreCEthContract,
   setStoreLendingContract,
@@ -8,13 +8,17 @@ import {
   setStoreWallet,
 } from 'app/store';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
+import GlobalModal from 'components/organisms/GlobalModal';
 import { useCEthContract } from 'hooks/useCEthContract';
+import { useChainId } from 'hooks/useChainId';
 import {
+  isGoerli,
+  isLocalChain,
   useLendingContract,
   useLiquidityContract,
   useOffersContract,
 } from 'hooks/useContracts';
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { BrowserRouter as Router, Routes } from 'react-router-dom';
 import Borrowers from 'routes/Borrowers';
 import Lenders from 'routes/Lenders';
@@ -23,6 +27,7 @@ import theme from './theme';
 
 const App: React.FC = () => {
   const [{ wallet }] = useConnectWallet();
+  const [, setChain] = useSetChain();
   const lendingContract = useLendingContract();
   const offersContract = useOffersContract();
   const liquidityContract = useLiquidityContract();
@@ -35,10 +40,58 @@ const App: React.FC = () => {
   setStoreLiquidityContract(liquidityContract);
   setStoreCEthContract(cEthContract);
 
+  const chainId = useChainId();
+
+  useEffect(() => {
+    if (!chainId || (!isGoerli(chainId) && !isLocalChain(chainId))) {
+      setChain({ chainId: '0x5' });
+    }
+  }, [chainId]);
+
+  if (!chainId || (!isGoerli(chainId) && !isLocalChain(chainId))) {
+    return (
+      <div>
+        NiftyApes currently doesn't support this chain. Please switch to Goerli
+        to explore the testnet version.
+      </div>
+    );
+  }
+
   return (
     <ChakraProvider theme={theme}>
       <Router>
         <Suspense fallback={<LoadingIndicator fullScreen />}>
+          <GlobalModal
+            storageKey="TOS"
+            actionText="Accept"
+            title="Terms of Services"
+            description={
+              <div>
+                Your use of the NiftyApes App is expressly conditioned on your
+                acceptance of NiftyApes’
+                <Link
+                  color="purple"
+                  target="_blank"
+                  href="https://blog.niftyapes.money/legal-privacy-tos/"
+                >
+                  &nbsp;Terms of Service&nbsp;
+                </Link>
+                and
+                <Link
+                  color="purple"
+                  target="_blank"
+                  href="https://blog.niftyapes.money/legal-privacy-tos/"
+                >
+                  &nbsp;Privacy Policy&nbsp;
+                </Link>
+                . By clicking accept and close, you indicate that you have read
+                and agree to the NiftyApes Terms of Service and Privacy Policy,
+                and that you consent to collection, storage and use of your
+                personal information for the purposes set forth in the Privacy
+                Policy.
+              </div>
+            }
+          />
           <Routes>
             {Marketing}
             {Borrowers}
