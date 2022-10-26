@@ -20,17 +20,21 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
+function FallbackComponent() {
+  return <div>An error has occurred. We are investigating 🍌</div>;
+}
+
 const container: HTMLElement | any = document.getElementById('root');
 const root = createRoot(container);
 root.render(
-  <>
+  <Sentry.ErrorBoundary fallback={FallbackComponent} showDialog>
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />
     <Provider store={store}>
       <WalletProvider>
         <App />
       </WalletProvider>
     </Provider>
-  </>,
+  </Sentry.ErrorBoundary>,
 );
 
 // If you want your app to work offline and load faster, you can change
