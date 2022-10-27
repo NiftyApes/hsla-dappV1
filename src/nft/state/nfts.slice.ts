@@ -99,7 +99,7 @@ export const loadMainnetNFTs = createAsyncThunk<
     nfts: any;
   },
   NFTsThunkApi
->('nfts/loadGoerliNFTs', async ({ nfts }, thunkApi) => {
+>('nfts/loadMainnetNFTs', async ({ walletAddress, nfts }, thunkApi) => {
   const { lendingContract } = thunkApi.extra();
 
   for (let i = 0; i < nfts.length; i++) {
@@ -131,6 +131,10 @@ export const loadMainnetNFTs = createAsyncThunk<
         collectionName: nft.contractMetadata.name,
         chainId: '0x1',
       };
+      // eslint-disable-next-line
+      thunkApi.dispatch(addNft({ nft: nfts[i], walletAddress }));
+      thunkApi.dispatch(fetchLoanOffersByNFT(nfts[i]));
+      thunkApi.dispatch(fetchLoanAuctionByNFT(nfts[i]));
     }
   }
 
@@ -138,11 +142,8 @@ export const loadMainnetNFTs = createAsyncThunk<
 
   if (lendingContract) {
     if (nfts) {
-      nfts.forEach((nft: any) => thunkApi.dispatch(fetchLoanOffersByNFT(nft)));
-      nfts.forEach((nft: any) => thunkApi.dispatch(fetchLoanAuctionByNFT(nft)));
-
       return {
-        content: nfts,
+        content: undefined,
         fetching: false,
         error: undefined,
       };
@@ -207,6 +208,15 @@ const slice = createSlice({
     resetNFTsByWalletAddress(state) {
       state.nftsByWalletAddress = {};
     },
+    addNft(state, action) {
+      if (!state.nftsByWalletAddress[action.payload.walletAddress].content) {
+        state.nftsByWalletAddress[action.payload.walletAddress].content = [];
+      }
+
+      state.nftsByWalletAddress[action.payload.walletAddress].content?.push(
+        action.payload.nft,
+      );
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchLocalNFTsByWalletAddress.pending, (state, action) => {
@@ -258,7 +268,7 @@ const slice = createSlice({
         ...state.nftsByWalletAddress,
         [action.meta.arg.walletAddress]: {
           ...state.nftsByWalletAddress[action.meta.arg.walletAddress],
-          fetching: true,
+          fetching: false,
           error: undefined,
         },
       };
@@ -303,6 +313,6 @@ export const useNFTsByWalletAddress = (walletAddress: WalletAddress) => {
   return useNFTsSelector(selectors.nftsByWalletAddress)[walletAddress];
 };
 
-export const { resetNFTsByWalletAddress } = slice.actions;
+export const { resetNFTsByWalletAddress, addNft } = slice.actions;
 
 export default slice.reducer;
