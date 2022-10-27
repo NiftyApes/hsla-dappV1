@@ -37,77 +37,99 @@ export const WalletNFTs: React.FC = () => {
 
   const walletNfts = nfts?.content || [];
 
-  if (nfts?.fetching) {
-    return (
-      <Center>
-        <LoadingIndicator />
-      </Center>
-    );
-  }
-
   return (
     <>
-      <Box my="16px">
-        <SectionHeader headerText="NFTs With Active Loans" />
-      </Box>
+      {nfts?.fetching && (
+        <Center fontSize="24px" my="5rem">
+          Loading NFTs, offers, and loans
+          <Box ml="2rem">
+            <LoadingIndicator />
+          </Box>
+        </Center>
+      )}
 
-      <SimpleGrid
-        columns={{ xl: 5, lg: 4, md: 3, sm: 2, xs: 1 }}
-        spacing={10}
-        style={{ padding: '16px' }}
-      >
-        {nftsWithLoans?.map((item: any) => {
-          return (
-            <NFTCardContainer
-              item={item}
-              key={`${item.contractAddress}___${item.id}`}
-            />
-          );
-        })}
-      </SimpleGrid>
+      {nftsWithLoans && nftsWithLoans.length > 0 && (
+        <>
+          <Box my="16px">
+            <SectionHeader headerText="NFTs With Active Loans" />
+          </Box>
 
-      <Box my="16px">
-        <SectionHeader headerText="NFTs With Offers" />
-      </Box>
-      <SimpleGrid
-        columns={{ xl: 5, lg: 4, md: 3, sm: 2, xs: 1 }}
-        spacing={10}
-        style={{ padding: '16px' }}
-      >
-        {nftsWithLoans &&
-          nftsWithOffers &&
-          _.difference(nftsWithOffers, nftsWithLoans)?.map((item: any) => {
-            return (
-              <NFTCardContainer
-                item={item}
-                key={`${item.contractAddress}___${item.id}`}
-              />
-            );
-          })}
-      </SimpleGrid>
-
-      <Box my="16px">
-        <SectionHeader headerText="NFTs With No Offers" />
-      </Box>
-      <SimpleGrid
-        columns={{ xl: 5, lg: 4, md: 3, sm: 2, xs: 1 }}
-        spacing={10}
-        style={{ padding: '16px' }}
-      >
-        {nftsWithLoans &&
-          nftsWithOffers &&
-          walletNfts &&
-          _.difference(walletNfts, [...nftsWithLoans, ...nftsWithOffers])?.map(
-            (item: any) => {
+          <SimpleGrid
+            columns={{ xl: 5, lg: 4, md: 3, sm: 2, xs: 1 }}
+            spacing={10}
+            style={{ padding: '16px' }}
+          >
+            {nftsWithLoans?.map((item: any) => {
               return (
                 <NFTCardContainer
                   item={item}
                   key={`${item.contractAddress}___${item.id}`}
                 />
               );
-            },
-          )}
-      </SimpleGrid>
+            })}
+          </SimpleGrid>
+        </>
+      )}
+
+      {nftsWithLoans &&
+        nftsWithOffers &&
+        _.difference(nftsWithOffers, nftsWithLoans).length > 0 && (
+          <>
+            <Box my="16px">
+              <SectionHeader headerText="NFTs With Offers" />
+            </Box>
+            <SimpleGrid
+              columns={{ xl: 5, lg: 4, md: 3, sm: 2, xs: 1 }}
+              spacing={10}
+              style={{ padding: '16px' }}
+            >
+              {nftsWithLoans &&
+                nftsWithOffers &&
+                _.difference(nftsWithOffers, nftsWithLoans)?.map(
+                  (item: any) => {
+                    return (
+                      <NFTCardContainer
+                        item={item}
+                        key={`${item.contractAddress}___${item.id}`}
+                      />
+                    );
+                  },
+                )}
+            </SimpleGrid>
+          </>
+        )}
+
+      {nftsWithLoans &&
+        nftsWithOffers &&
+        walletNfts &&
+        _.difference(walletNfts, [...nftsWithLoans, ...nftsWithOffers]).length >
+          0 && (
+          <>
+            <Box my="16px">
+              <SectionHeader headerText="NFTs With No Offers" />
+            </Box>
+            <SimpleGrid
+              columns={{ xl: 5, lg: 4, md: 3, sm: 2, xs: 1 }}
+              spacing={10}
+              style={{ padding: '16px' }}
+            >
+              {nftsWithLoans &&
+                nftsWithOffers &&
+                walletNfts &&
+                _.difference(walletNfts, [
+                  ...nftsWithLoans,
+                  ...nftsWithOffers,
+                ])?.map((item: any) => {
+                  return (
+                    <NFTCardContainer
+                      item={item}
+                      key={`${item.contractAddress}___${item.id}`}
+                    />
+                  );
+                })}
+            </SimpleGrid>
+          </>
+        )}
     </>
   );
 };

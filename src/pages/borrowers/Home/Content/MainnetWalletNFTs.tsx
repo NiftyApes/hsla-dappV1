@@ -1,5 +1,6 @@
-import { BoxProps } from '@chakra-ui/react';
+import { Box, BoxProps, Center } from '@chakra-ui/react';
 import { useAppDispatch } from 'app/hooks';
+import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { MAINNET } from 'constants/contractAddresses';
 import { useLendingContract } from 'hooks/useContracts';
 import { useWalletAddress } from 'hooks/useWalletAddress';
@@ -73,5 +74,17 @@ export const MainnetWalletNFTs: React.FC<Props> = () => {
     };
   }, [walletAddress, lendingContract]);
 
-  return <WalletNFTs />;
+  return (
+    <>
+      {!hasLoadedNfts && (
+        <Center fontSize="24px" my="5rem">
+          Fetching a list of your NFTs
+          <Box ml="2rem">
+            <LoadingIndicator />
+          </Box>
+        </Center>
+      )}
+      <WalletNFTs />
+    </>
+  );
 };
