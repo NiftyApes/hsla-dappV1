@@ -48,8 +48,6 @@ export const WalletNFTs: React.FC = () => {
     ...nftsWithOffers,
   ]);
 
-  console.log({ NFTsWithNoOffers });
-
   if (nfts?.fetching) {
     return (
       <Center>
