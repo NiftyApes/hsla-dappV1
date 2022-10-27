@@ -2,6 +2,7 @@ import { useAppDispatch } from 'app/hooks';
 import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
+import { logError } from 'logging/logError';
 import { useState } from 'react';
 import { saveTransactionInDb } from '../helpers/saveTransactionInDb';
 import { useChainId } from './useChainId';
@@ -79,6 +80,7 @@ export const useDepositEthLiquidity = () => {
           cleanup();
         }, 3000);
       } catch (e: any) {
+        logError(e);
         setDepositStatus('ERROR');
         setTimeout(() => {
           setDepositStatus('READY');

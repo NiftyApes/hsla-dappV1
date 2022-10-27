@@ -46,9 +46,7 @@ export const store = configureStore({
       thunk: {
         extraArgument: getExtraArgs,
       },
-      serializableCheck: {
-        ignoredActionPaths: ['payload.error', 'meta.arg.contract'],
-      },
+      serializableCheck: false,
     }),
 });
 

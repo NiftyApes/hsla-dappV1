@@ -3,6 +3,7 @@ import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
+import { logError } from 'logging/logError';
 import { useState } from 'react';
 import { useChainId } from './useChainId';
 import { useLiquidityContract } from './useContracts';
@@ -81,6 +82,7 @@ export const useWithdrawEthLiquidity = () => {
           cleanup();
         }, 3000);
       } catch (e: any) {
+        logError(e);
         setWithdrawStatus('ERROR');
         setTimeout(() => {
           setWithdrawStatus('READY');

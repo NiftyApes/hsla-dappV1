@@ -2,6 +2,7 @@ import { updateOfferStatus } from 'api/updateOfferStatus';
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
 import { ethers } from 'ethers';
+import { logError } from 'logging/logError';
 import { useState } from 'react';
 import { useChainId } from './useChainId';
 import { useOffersContract } from './useContracts';
@@ -94,6 +95,7 @@ export const useCancelOffer = ({
           setTxReceipt(null);
         }, 3000);
       } catch (e) {
+        logError(e);
         setCancelStatus('ERROR');
 
         setTimeout(() => {

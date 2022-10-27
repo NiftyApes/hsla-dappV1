@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { RootState } from 'app/store';
 import { getEthersContractWithEIP1193Provider } from 'helpers/getEthersContractWithEIP1193Provider';
+import { logError } from 'logging/logError';
 import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { increment } from '../counter/counterSlice';
@@ -93,6 +94,7 @@ export const useERC721Approval = ({
         onTxMined && onTxMined(receipt);
         onSuccess && onSuccess();
       } catch (e: any) {
+        logError(e);
         if (onError) {
           onError(e);
         } else {

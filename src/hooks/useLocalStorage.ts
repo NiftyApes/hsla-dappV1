@@ -1,3 +1,4 @@
+import { logError } from 'logging/logError';
 import { useState } from 'react';
 
 export const useLocalStorage = <T>(key: string, initialValue: T) => {
@@ -9,7 +10,7 @@ export const useLocalStorage = <T>(key: string, initialValue: T) => {
       const item = window.localStorage.getItem(key);
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
-      console.log(error);
+      logError(error);
       return initialValue;
     }
   });
@@ -23,6 +24,7 @@ export const useLocalStorage = <T>(key: string, initialValue: T) => {
         window.localStorage.setItem(key, JSON.stringify(valueToStore));
       }
     } catch (error) {
+      logError(error);
       console.log(error);
     }
   };

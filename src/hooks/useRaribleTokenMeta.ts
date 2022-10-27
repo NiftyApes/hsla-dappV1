@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { logError } from 'logging/logError';
+import { useEffect, useState } from 'react';
 import { NFT } from '../nft';
 
 const RARIBLE_API_PATH = 'https://api.rarible.org/v0.1';
@@ -52,7 +53,8 @@ export const useRaribleTokenMeta = ({
                 : '',
           });
         })
-        .catch(() => {
+        .catch((e) => {
+          logError(e);
           setMeta({
             ...container,
             image: '/assets/images/NA-BLACK.png',
