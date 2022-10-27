@@ -12,6 +12,7 @@ import {
 import React, { useState } from 'react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
+import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
 import { BigNumber } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 import { logError } from 'logging/logError';
@@ -99,11 +100,17 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
       setExecuting(true);
 
       await repayLoanByBorrower()
-        .then(() => {
+        .then(({ receipt }: any) => {
           toast({
-            title: i18n.toastSuccess,
-            status: 'success',
+            render: (props) => (
+              <ToastSuccessCard
+                title={i18n.toastSuccess}
+                txn={receipt}
+                {...props}
+              />
+            ),
             position: 'top-right',
+            duration: 9000,
             isClosable: true,
           });
           setExecuting(false);

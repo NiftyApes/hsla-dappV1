@@ -29,7 +29,7 @@ export const useRaribleCollectionStats = ({
     throw new Error('Contract address is required');
   }
   const hasCache = () => {
-    return localCache.hasOwnProperty(contractAddress);
+    return Object.prototype.hasOwnProperty.call(localCache, contractAddress);
   };
 
   const setCache = (val: any) => {
@@ -59,11 +59,11 @@ export const useRaribleCollectionStats = ({
 
     if (enabled) {
       if (hasCache()) {
-        return setMeta({ ...localCache[contractAddress] });
+        setMeta({ ...localCache[contractAddress] });
+      } else {
+        // Throttle Rarible API requests to avoid 429
+        setTimeout(fetchData, throttle);
       }
-
-      // Throttle Rarible API requests to avoid 429
-      setTimeout(() => fetchData(), throttle);
     }
   }, [contractAddress]);
 

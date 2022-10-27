@@ -22,6 +22,7 @@ import { formatEther } from 'ethers/lib/utils';
 import _ from 'lodash';
 import { BigNumber } from 'ethers';
 import { useNavigate } from 'react-router-dom';
+import { borrowers } from 'routes/router';
 import LoanTable from './LoanTable';
 import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
 import NFTCardHeader from '../../../components/cards/NFTCardHeader';
@@ -29,14 +30,11 @@ import { LoanAuction } from '../../../loan';
 import { useActiveLoansForBorrower } from '../../../hooks/useActiveLoansForBorrower';
 import BorrowLoanRepayCard from '../../../components/molecules/BorrowLoanRepayCard';
 
-import { useWalletAddress } from '../../../hooks/useWalletAddress';
-
 const i18n = {
   repayLoanHeader: 'repay loan on ',
 };
 
 const Dashboard: React.FC = () => {
-  const walletAddress = useWalletAddress();
   const activeLoans = useActiveLoansForBorrower();
   const navigate = useNavigate();
 
@@ -93,9 +91,7 @@ const Dashboard: React.FC = () => {
         <AlertDescription maxWidth="sm">
           Go ahead and{' '}
           <Text as="u">
-            <Link onClick={() => navigate(`/borrowers/${walletAddress}`)}>
-              borrow
-            </Link>
+            <Link onClick={() => navigate(borrowers())}>borrow</Link>
           </Text>{' '}
           some ETH against your NFTs
         </AlertDescription>
