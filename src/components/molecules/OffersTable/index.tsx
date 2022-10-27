@@ -1,8 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/no-array-index-key */
-import React from 'react';
+import React, { useState } from 'react';
 import {
+  Box,
   Button,
   Flex,
+  HStack,
   Table,
   Tbody,
   Td,
@@ -13,6 +18,9 @@ import {
 } from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { BigNumber, ethers } from 'ethers';
+import { getAPR } from 'helpers/getAPR';
+import _ from 'lodash';
+import { FaSortDown, FaSortUp } from 'react-icons/fa';
 import { LoanOffer } from '../../../loan';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
 
@@ -33,6 +41,42 @@ const i18n = {
 };
 
 const OffersTable: React.FC<Props> = ({ offers, onClick }) => {
+  const [sortOrder, setSortOrder] = useState<string>('APR_ASC');
+
+  const sortedOffers: any =
+    offers &&
+    (!sortOrder
+      ? offers
+      : sortOrder === 'AMOUNT_ASC'
+      ? _.sortBy(offers, (o) => o.amount)
+      : sortOrder === 'AMOUNT_DESC'
+      ? _.sortBy(offers, (o) => -o.amount)
+      : sortOrder === 'APR_ASC'
+      ? _.sortBy(offers, (o) =>
+          getAPR({
+            amount: o.amount,
+            interestRatePerSecond: o.interestRatePerSecond,
+          }),
+        )
+      : sortOrder === 'APR_DESC'
+      ? _.sortBy(
+          offers,
+          (o) =>
+            -getAPR({
+              amount: o.amount,
+              interestRatePerSecond: o.interestRatePerSecond,
+            }),
+        )
+      : sortOrder === 'DURATION_ASC'
+      ? _.sortBy(offers, (o) => o.duration)
+      : sortOrder === 'DURATION_DESC'
+      ? _.sortBy(offers, (o) => -o.duration)
+      : sortOrder === 'EXPIRATION_ASC'
+      ? _.sortBy(offers, (o) => o.expiration)
+      : sortOrder === 'EXPIRATION_DESC'
+      ? _.sortBy(offers, (o) => -o.expiration)
+      : offers);
+
   return (
     <Table>
       <Thead>
@@ -50,9 +94,66 @@ const OffersTable: React.FC<Props> = ({ offers, onClick }) => {
             },
           }}
         >
-          <Th borderRadius="8px 0px 0px 8px">{i18n.colAmount}</Th>
-          <Th>{i18n.colDuration}</Th>
-          <Th>{i18n.colApr}</Th>
+          <Th borderRadius="8px 0px 0px 8px">
+            <Flex alignItems="center" justifyContent="center">
+              <span
+                style={{ cursor: 'pointer', marginLeft: '2px' }}
+                onClick={() => {
+                  if (sortOrder !== 'AMOUNT_ASC') {
+                    setSortOrder('AMOUNT_ASC');
+                  } else {
+                    setSortOrder('AMOUNT_DESC');
+                  }
+                }}
+              >
+                <HStack align="center" spacing="2px">
+                  <Box>{i18n.colAmount}</Box>
+                  {sortOrder === 'AMOUNT_ASC' && <FaSortUp size="18px" />}
+                  {sortOrder === 'AMOUNT_DESC' && <FaSortDown size="18px" />}
+                </HStack>
+              </span>
+            </Flex>
+          </Th>
+          <Th>
+            <Flex alignItems="center" justifyContent="center">
+              <span
+                style={{ cursor: 'pointer', marginLeft: '2px' }}
+                onClick={() => {
+                  if (sortOrder !== 'DURATION_ASC') {
+                    setSortOrder('DURATION_ASC');
+                  } else {
+                    setSortOrder('DURATION_DESC');
+                  }
+                }}
+              >
+                <HStack align="center" spacing="2px">
+                  <Box>{i18n.colDuration}</Box>
+                  {sortOrder === 'DURATION_ASC' && <FaSortUp size="18px" />}
+                  {sortOrder === 'DURATION_DESC' && <FaSortDown size="18px" />}
+                </HStack>
+              </span>
+            </Flex>
+          </Th>
+          <Th>
+            <Flex alignItems="center" justifyContent="center">
+              <span
+                style={{ cursor: 'pointer', marginLeft: '2px' }}
+                onClick={() => {
+                  if (sortOrder !== 'APR_ASC') {
+                    setSortOrder('APR_ASC');
+                  } else {
+                    setSortOrder('APR_DESC');
+                  }
+                }}
+              >
+                <HStack align="center" spacing="2px">
+                  <Box>{i18n.colApr}</Box>
+                  {sortOrder === 'APR_ASC' && <FaSortUp size="18px" />}
+                  {sortOrder === 'APR_DESC' && <FaSortDown size="18px" />}
+                </HStack>
+              </span>
+            </Flex>
+          </Th>
           <Th borderRadius="0px 8px 8px 0px" />
         </Tr>
       </Thead>
@@ -63,7 +164,7 @@ const OffersTable: React.FC<Props> = ({ offers, onClick }) => {
           },
         }}
       >
-        {offers.map((offer, idx) => {
+        {sortedOffers.map((offer: any, idx: number) => {
           const fmtOfferAmount: string = ethers.utils.formatEther(
             BigNumber.from(String(offer.OfferTerms.Amount)),
           );
