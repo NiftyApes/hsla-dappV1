@@ -1,16 +1,29 @@
-import { Flex, Text } from '@chakra-ui/react';
 import React from 'react';
+
+import { Flex } from '@chakra-ui/react';
 
 import { roundForDisplay } from 'helpers/roundForDisplay';
 import { useActiveLoansForLender } from 'hooks/useActiveLoansForLender';
 import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
 import { useTotalEthLoanedOut } from 'hooks/useTotalEthLoanedOut';
+import { TopBarCard } from './components/TopBarCard';
 
 const TopBar: React.FC = () => {
-  const activeLoans = useActiveLoansForLender();
+  const activeLoans = useActiveLoansForLender() || [];
+  const defaultedLoans: number = activeLoans.filter(
+    (loan: any) => loan.loanEndTimestamp * 1000 < Date.now(),
+  ).length;
+
+  const totalInterest: number = roundForDisplay(
+    activeLoans.reduce((acc: number, val: { accruedInterest: number }) => {
+      return acc + val.accruedInterest;
+    }, 0),
+  );
 
   const { totalEthLoanedOut } = useTotalEthLoanedOut();
   const { availableEthLiquidity } = useAvailableEthLiquidity();
+  const utilizedLiquidity =
+    (totalEthLoanedOut / (totalEthLoanedOut + availableEthLiquidity)) * 100;
 
   return (
     <Flex
@@ -20,68 +33,27 @@ const TopBar: React.FC = () => {
       flexDir="row"
       p="23px"
     >
-      <Flex flexDir="column" alignItems="center">
-        <Text fontSize="7xl">{activeLoans?.length}</Text>
-        <Text fontSize="2xs" color="solid.darkGray">
-          ACTIVE LOANS
-        </Text>
-      </Flex>
-      <Flex flexDir="column" alignItems="center">
-        <Text fontSize="7xl">
-          {
-            activeLoans?.filter(
-              (loan: any) => loan.loanEndTimestamp * 1000 < Date.now(),
-            ).length
-          }
-        </Text>
-        <Text fontSize="2xs" color="solid.darkGray">
-          DEFAULTED LOANS
-        </Text>
-      </Flex>
-      <Flex flexDir="column" alignItems="center">
-        <Flex alignItems="center" justifyContent="center">
-          <Text fontSize="7xl" ml="8px">
-            {totalEthLoanedOut && roundForDisplay(totalEthLoanedOut)}Ξ
-          </Text>
-        </Flex>
-        <Text fontSize="2xs" color="solid.darkGray">
-          TOTAL LENT
-        </Text>
-      </Flex>
-      <Flex flexDir="column" alignItems="center">
-        <Flex alignItems="center" justifyContent="center">
-          <Text fontSize="7xl" ml="8px">
-            {activeLoans &&
-              roundForDisplay(
-                activeLoans.reduce(
-                  (acc: number, val: { accruedInterest: number }) => {
-                    return acc + val.accruedInterest;
-                  },
-                  0,
-                ),
-              )}
-            Ξ
-          </Text>
-        </Flex>
-        <Text fontSize="2xs" color="solid.darkGray">
-          TOTAL INTEREST ACCRUED
-        </Text>
-      </Flex>
+      <TopBarCard title="active loans" value={activeLoans.length.toString()} />
+      <TopBarCard title="defaulted loans" value={defaultedLoans.toString()} />
 
-      <Flex flexDir="column" alignItems="center">
-        <Text fontSize="7xl" ml="8px">
-          {availableEthLiquidity &&
-            roundForDisplay(
-              (totalEthLoanedOut /
-                (totalEthLoanedOut + availableEthLiquidity)) *
-                100,
-            )}
-          %
-        </Text>
-        <Text fontSize="2xs" color="solid.darkGray">
-          LIQUIDITY UTILIZED
-        </Text>
-      </Flex>
+      <TopBarCard
+        title="total lent"
+        value={`${roundForDisplay(totalEthLoanedOut || 0)}Ξ`}
+      />
+
+      <TopBarCard title="total interest accrued" value={`${totalInterest}Ξ`} />
+
+      <TopBarCard
+        title="total liquidty"
+        value={`${availableEthLiquidity || 0}Ξ`}
+      />
+
+      <TopBarCard
+        title="liquidty utilized"
+        value={`${roundForDisplay(
+          Number.isNaN(utilizedLiquidity) ? 0 : utilizedLiquidity,
+        )}Ξ`}
+      />
     </Flex>
   );
 };

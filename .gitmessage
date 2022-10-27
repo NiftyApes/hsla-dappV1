@@ -1,0 +1,13 @@
+Testing / General 
+- [ ] Verify TOS modal appears
+
+Testing / Lender
+- [ ] Cancel Offer
+- [ ] Create Offer
+- [ ] Withdraw Liquidity 
+- [ ] Deposit Liquidity
+
+Testing / Borrower
+- [ ] Replay loan via the Borrow page
+- [ ] Replay loan via Dashboard
+- [ ] Take out a loan 

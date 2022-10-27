@@ -1,10 +1,12 @@
 /* eslint-disable consistent-return */
 import { Box, Button, Flex, Grid, Text, useToast } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
+import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
 import { GOERLI, LOCAL, MAINNET } from 'constants/contractAddresses';
 import { BigNumber, ethers } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 import { useChainId } from 'hooks/useChainId';
+import { logError } from 'logging/logError';
 import React, { useState } from 'react';
 import { humanizeContractError } from '../../../helpers/errorsMap';
 import { concatForDisplay } from '../../../helpers/roundForDisplay';
@@ -79,17 +81,24 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
     if (executeLoanByBorrower) {
       setExecuting(true);
       await executeLoanByBorrower()
-        .then(() => {
+        .then(({ receipt }) => {
           toast({
-            title: i18n.toastLoanSuccess,
-            status: 'success',
+            render: (props) => (
+              <ToastSuccessCard
+                title={i18n.toastLoanSuccess}
+                txn={receipt}
+                {...props}
+              />
+            ),
             position: 'top-right',
+            duration: 9000,
             isClosable: true,
           });
 
           setExecuting(false);
         })
         .catch((error) => {
+          logError(error);
           toast({
             title: `Error: ${humanizeContractError(error.reason)}`,
             status: 'error',
