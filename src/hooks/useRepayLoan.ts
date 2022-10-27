@@ -104,6 +104,8 @@ export const useRepayLoanByBorrower = ({
       });
 
       dispatch(increment());
+
+      return { receipt };
     },
   };
 };

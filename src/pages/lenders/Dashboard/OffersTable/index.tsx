@@ -1,4 +1,16 @@
-import { Box, Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
+import {
+  Button,
+  Box,
+  Center,
+  Table,
+  Tbody,
+  Text,
+  Th,
+  Thead,
+  Flex,
+  Tr,
+  VStack,
+} from '@chakra-ui/react';
 import _ from 'lodash';
 import React from 'react';
 import { OfferRow } from './OfferRow';
@@ -10,8 +22,39 @@ const OffersTable: React.FC<any> = ({ offers }) => {
       : offer.offer.expiration,
   );
 
+  const navigateToQuickStart = () => {
+    window.open(
+      'https://docs.niftyapes.money/lenders-dapp-guide/lender-quick-start-guide',
+      '_blank',
+    );
+  };
+
+  const renderEmptyState = () => {
+    return (
+      <Center>
+        <Flex h="200px">
+          <Center>
+            <VStack>
+              <Text color="gray.500" as="i">
+                No Offers Found
+              </Text>
+              <Button
+                colorScheme="purple"
+                variant="link"
+                textTransform="uppercase"
+                onClick={navigateToQuickStart}
+              >
+                🏃 ‍️Lender Quick Start Guide 💨
+              </Button>
+            </VStack>
+          </Center>
+        </Flex>
+      </Center>
+    );
+  };
+
   return (
-    <Box minW="800px">
+    <Box minW="800px" border="1px solid" borderColor="accents.100">
       <Table>
         <Thead>
           <Tr
@@ -48,8 +91,9 @@ const OffersTable: React.FC<any> = ({ offers }) => {
             },
           }}
         >
-          {sortedOffers?.map((offer: any) => (
+          {sortedOffers?.map((offer: any, index) => (
             <OfferRow
+              index={index}
               key={offer.offerHash}
               offer={offer.offer}
               offerHash={offer.offerHash}
@@ -57,8 +101,9 @@ const OffersTable: React.FC<any> = ({ offers }) => {
           ))}
         </Tbody>
       </Table>
+
+      {sortedOffers.length === 0 && renderEmptyState()}
     </Box>
   );
 };
-
 export default OffersTable;

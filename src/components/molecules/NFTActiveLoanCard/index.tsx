@@ -4,6 +4,7 @@ import {
   Button,
   Center,
   Flex,
+  Link,
   Modal,
   ModalCloseButton,
   ModalContent,
@@ -121,7 +122,12 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
         </Button>
 
         <Center mt="8px" mb="8px">
-          {i18n.actionButtonHelperText}
+          <Link
+            target="_blank"
+            href="https://docs.niftyapes.money/overview/loan-default-faq"
+          >
+            {i18n.actionButtonHelperText}
+          </Link>
         </Center>
       </>
     );
@@ -194,7 +200,12 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
         </Button>
 
         <Center mt="8px" mb="8px">
-          {i18n.actionButtonHelperText}
+          <Link
+            target="_blank"
+            href="https://docs.niftyapes.money/borrowers-dapp-guide/borrow-page/repaying-a-loan"
+          >
+            {i18n.actionButtonHelperText}
+          </Link>
         </Center>
       </>
     );
