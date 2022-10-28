@@ -1,11 +1,17 @@
 import { Button } from '@chakra-ui/react';
+import LoadingIndicator from '../../atoms/LoadingIndicator';
 
 interface Props {
   isDisabled: boolean;
   onClick: () => void;
+  status: string;
 }
 
-export const WithdrawBtn: React.FC<Props> = ({ isDisabled, onClick }) => {
+export const WithdrawBtn: React.FC<Props> = ({
+  isDisabled,
+  onClick,
+  status,
+}) => {
   return (
     <Button
       width="100%"
@@ -14,7 +20,7 @@ export const WithdrawBtn: React.FC<Props> = ({ isDisabled, onClick }) => {
       isDisabled={isDisabled}
       onClick={onClick}
     >
-      Withdraw ETH
+      {status === 'PENDING' ? <LoadingIndicator size="xs" /> : 'Withdraw ETH'}
     </Button>
   );
 };

@@ -9,9 +9,9 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import LoadingIndicator from 'components/atoms/LoadingIndicator';
+
 import { useDepositEthLiquidity } from 'hooks/useDepositEthLiquidity';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useWalletBalance } from 'hooks/useWalletBalance';
 import { DepositBtn } from './DepositBtn';
 import { DepositMsg } from './DepositMsg';
@@ -101,11 +101,6 @@ export const DepositLiquidity: React.FC = () => {
           </InputRightElement>
         </InputGroup>
       </Flex>
-      {depositStatus === 'PENDING' && (
-        <Box ml="0.25rem" mt="0.25rem">
-          Depositing liquidity <LoadingIndicator size="sm" />
-        </Box>
-      )}
 
       {depositStatus === 'READY' &&
         (!isInputConvertibleToNumber || doesInputExceedsMax) && (
@@ -119,6 +114,7 @@ export const DepositLiquidity: React.FC = () => {
         )}
       <Flex>
         <DepositBtn
+          status={depositStatus}
           onClick={() => {
             depositETHLiquidity({
               ethToDeposit: Number(liquidityToDepositStr),
