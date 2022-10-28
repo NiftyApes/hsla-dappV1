@@ -18,18 +18,12 @@ export const TransactionTableRow = ({ tx }: { tx: any }) => {
           fontSize: 'md',
           color: 'solid.gray0',
         },
-        'td:first-of-type': {
-          borderRadius: '30px 0px 0px 30px',
-        },
-        'td:last-of-type': {
-          borderRadius: '0px 30px 30px 0px',
-        },
       }}
     >
       <Td width="1rem" textAlign="center">
         <Flex justifyContent="center">
           {tx.EventData.Asset === 'ETH' && (
-            <CryptoIcon symbol="eth" size={25} />
+            <CryptoIcon symbol="eth" size={18} />
           )}
         </Flex>
       </Td>

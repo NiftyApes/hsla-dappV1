@@ -8,16 +8,32 @@ export const TransactionTable: React.FC = () => {
 
   return (
     <Table>
-      <Thead>
+      <Thead
+        sx={{
+          'tr:first-of-type > th:first-of-type': {
+            borderTopLeftRadius: '8px',
+          },
+          'tr:first-of-type > th:last-child': {
+            borderTopRightRadius: '8px',
+          },
+          'tr:last-child > th:first-of-type': {
+            borderBottomLeftRadius: '8px',
+          },
+          'tr:last-child > th:last-child': {
+            borderBottomRightRadius: '8px',
+          },
+        }}
+      >
         <Tr
-          background="transparent"
+          background="#F7F7F7"
           sx={{
             '& > th': {
               fontWeight: 'bold',
-              fontSize: 'sm',
+              fontSize: '2xs',
               color: 'solid.gray0',
+              textAlign: 'center',
               border: 'none',
-              py: '25px',
+              py: '10px',
             },
           }}
         >
@@ -33,7 +49,7 @@ export const TransactionTable: React.FC = () => {
           td: {
             border: 'none',
           },
-          'tr:nth-of-type(2n+1)': {
+          'tr:nth-of-type(2n)': {
             backgroundColor: 'solid.white',
           },
         }}
