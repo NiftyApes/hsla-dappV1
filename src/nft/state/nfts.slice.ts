@@ -137,7 +137,7 @@ export const loadMainnetNFTs = createAsyncThunk<
         collectionName:
           nft.contractMetadata?.name === 'OpenSea Shared Storefront'
             ? nft.metadata?.name
-            : nft.contractMetadata?.name,
+            : nft.contractMetadata?.name || nft.title,
         chainId: '0x1',
       };
       // eslint-disable-next-line
