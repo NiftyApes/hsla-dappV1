@@ -1,7 +1,7 @@
-import React from 'react';
 import { Flex, FlexProps, HStack, Image, Link, Text } from '@chakra-ui/react';
-import Icon from '../../atoms/Icon';
+import React from 'react';
 import { NFT } from '../../../nft';
+import Icon from '../../atoms/Icon';
 
 interface Props extends FlexProps {
   nft: NFT;
@@ -50,7 +50,8 @@ const Collateral: React.FC<Props> = ({ nft }) => {
         fontWeight="bold"
         lineHeight="28px"
       >
-        #{nft.id}
+        {nft.id && '#'}
+        {nft.id}
       </Text>
       <Text
         mt="27px"

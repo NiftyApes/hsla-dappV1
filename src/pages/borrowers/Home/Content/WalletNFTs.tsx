@@ -3,11 +3,11 @@ import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import SectionHeader from 'components/molecules/SectionHeader';
 import { useWalletAddress } from 'hooks/useWalletAddress';
+import { WalletContext } from 'lib/contexts/WalletProvider';
 import _ from 'lodash';
 import { NFT } from 'nft';
 import { useNFTsByWalletAddress } from 'nft/state/nfts.slice';
 import React, { useContext } from 'react';
-import { WalletContext } from 'lib/contexts/WalletProvider';
 import LoadingIndicator from '../../../../components/atoms/LoadingIndicator';
 import { NFTCardContainer } from './NFTCardContainer';
 
@@ -48,16 +48,16 @@ export const WalletNFTs: React.FC = () => {
     ...nftsWithOffers,
   ]);
 
-  if (nfts?.fetching) {
-    return (
-      <Center>
-        <LoadingIndicator />
-      </Center>
-    );
-  }
-
   return (
     <>
+      {nfts?.fetching && (
+        <Center fontSize="24px" my="5rem">
+          Loading NFTs, offers, and loans
+          <Box ml="2rem">
+            <LoadingIndicator />
+          </Box>
+        </Center>
+      )}
       {_.isEmpty(nftsWithLoans) ? null : (
         <>
           <Box my="16px">

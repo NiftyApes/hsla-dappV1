@@ -65,7 +65,7 @@ export const NFTCardContainerHeader: React.FC<Props> = ({
         )}
 
         <Text
-          color="white"
+          color={tokenId ? 'white' : 'rgba(255,255,255,0)'}
           fontSize="xl"
           fontWeight="semibold"
           noOfLines={1}
