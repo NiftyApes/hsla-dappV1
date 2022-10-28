@@ -8,7 +8,7 @@ import { getAPR } from 'helpers/getAPR';
 import { roundForDisplay } from 'helpers/roundForDisplay';
 import moment from 'moment';
 
-export const LenderTransaction = ({ tx }: { tx: any }) => {
+export const TransactionTableRow = ({ tx }: { tx: any }) => {
   return (
     <Tr
       color="solid.gray0"

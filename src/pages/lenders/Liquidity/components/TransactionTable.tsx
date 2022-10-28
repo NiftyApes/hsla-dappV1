@@ -1,47 +1,37 @@
+import React from 'react';
 import { Table, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import { useTransactionHistory } from 'hooks/useTransactionHistory';
-import React from 'react';
-import { LenderTransaction } from './LenderTransaction';
+import { TransactionTableRow } from './TransactionTableRow';
 
 export const TransactionTable: React.FC = () => {
   const transactions = useTransactionHistory();
 
   return (
-    <Table mt="50px">
+    <Table>
       <Thead>
         <Tr
           background="transparent"
           sx={{
             '& > th': {
               fontWeight: 'bold',
-              fontSize: '2xs',
+              fontSize: 'sm',
               color: 'solid.gray0',
               border: 'none',
-              py: '8px',
+              py: '25px',
             },
           }}
         >
-          <Th textAlign="center" width="1rem">
-            Asset
-          </Th>
-          <Th textAlign="center" width="16rem">
-            Transaction
-          </Th>
-          <Th textAlign="center" minW="16rem">
-            Type
-          </Th>
-          <Th textAlign="center" width="8rem">
-            Amount
-          </Th>
-          <Th textAlign="center" minW="20rem">
-            Loan (if applicable)
-          </Th>
+          <Th textAlign="center">Asset</Th>
+          <Th textAlign="center">Transaction</Th>
+          <Th textAlign="center">Type</Th>
+          <Th textAlign="center">Amount</Th>
+          <Th textAlign="center">Loan (if applicable)</Th>
         </Tr>
       </Thead>
       <Tbody
         sx={{
-          'tr:nth-of-type(2n)': {
-            backgroundColor: 'transparent',
+          td: {
+            border: 'none',
           },
           'tr:nth-of-type(2n+1)': {
             backgroundColor: 'solid.white',
@@ -49,7 +39,7 @@ export const TransactionTable: React.FC = () => {
         }}
       >
         {transactions?.map((tx: any) => (
-          <LenderTransaction tx={tx} key={tx.TransactionHash} />
+          <TransactionTableRow tx={tx} key={tx.TransactionHash} />
         ))}
       </Tbody>
     </Table>
