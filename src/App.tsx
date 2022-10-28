@@ -36,6 +36,8 @@ const App: React.FC = () => {
   const liquidityContract = useLiquidityContract();
   const cEthContract = useCEthContract();
 
+  console.log({ staging: true });
+
   setStoreWallet(wallet as any);
 
   setStoreLendingContract(lendingContract);
