@@ -20,15 +20,13 @@ const App: React.FC = () => {
   const lendingContract = useLendingContract();
   const offersContract = useOffersContract();
   const liquidityContract = useLiquidityContract();
-
-  console.log({ staging: true });
-
+  
   setStoreWallet(wallet);
-
+  
   setStoreLendingContract(lendingContract);
   setStoreOffersContract(offersContract);
   setStoreLiquidityContract(liquidityContract);
-
+  
   return (
     <ChakraProvider theme={theme}>
       <Router>

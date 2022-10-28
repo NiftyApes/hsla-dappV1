@@ -9,6 +9,7 @@ import * as serviceWorker from './serviceWorker';
 
 const container: HTMLElement | any = document.getElementById('root');
 const root = createRoot(container);
+console.log({ staging: true })
 root.render(
   <>
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />
