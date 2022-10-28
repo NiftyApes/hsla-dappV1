@@ -21,6 +21,8 @@ const App: React.FC = () => {
   const offersContract = useOffersContract();
   const liquidityContract = useLiquidityContract();
 
+  console.log({ staging: true });
+
   setStoreWallet(wallet);
 
   setStoreLendingContract(lendingContract);
