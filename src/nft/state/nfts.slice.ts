@@ -124,11 +124,20 @@ export const loadMainnetNFTs = createAsyncThunk<
     } else {
       nfts[i] = {
         ...nft,
-        id: String(Number(nft.id?.tokenId)),
+        id:
+          nft.contractMetadata?.name === 'OpenSea Shared Storefront'
+            ? ''
+            : String(Number(nft.id?.tokenId)),
         contractAddress: nft.contract?.address,
-        image: nft.media?.length && nft.media[0]?.gateway,
+        image:
+          (nft.media?.length && nft.media[0]?.gateway) ||
+          nft.metadata?.image_url ||
+          nft.metadata?.image_data,
         name: '',
-        collectionName: nft.contractMetadata?.name,
+        collectionName:
+          nft.contractMetadata?.name === 'OpenSea Shared Storefront'
+            ? nft.metadata?.name
+            : nft.contractMetadata?.name,
         chainId: '0x1',
       };
       // eslint-disable-next-line

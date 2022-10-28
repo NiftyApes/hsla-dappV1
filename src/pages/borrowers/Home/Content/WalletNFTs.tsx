@@ -63,7 +63,7 @@ export const WalletNFTs: React.FC = () => {
               return (
                 <NFTCardContainer
                   item={item}
-                  key={`${item.contractAddress}___${item.id}`}
+                  key={`${item.contractAddress}___${item.id}___${item.collectionName}`}
                 />
               );
             })}
@@ -90,7 +90,7 @@ export const WalletNFTs: React.FC = () => {
                     return (
                       <NFTCardContainer
                         item={item}
-                        key={`${item.contractAddress}___${item.id}`}
+                        key={`${item.contractAddress}___${item.id}___${item.collectionName}`}
                       />
                     );
                   },
@@ -123,7 +123,7 @@ export const WalletNFTs: React.FC = () => {
                   return (
                     <NFTCardContainer
                       item={item}
-                      key={`${item.contractAddress}___${item.id}`}
+                      key={`${item.contractAddress}___${item.id}___${item.collectionName}`}
                     />
                   );
                 })}
