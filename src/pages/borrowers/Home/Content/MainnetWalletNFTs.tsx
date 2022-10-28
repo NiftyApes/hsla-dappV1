@@ -81,7 +81,7 @@ export const MainnetWalletNFTs: React.FC<Props> = () => {
 
   return (
     <>
-      {!(hasLoadedNftsOfAddress === walletAddress) && (
+      {walletAddress && !(hasLoadedNftsOfAddress === walletAddress) && (
         <Center fontSize="24px" my="5rem">
           Fetching a list of your NFTs
           <Box ml="2rem">
