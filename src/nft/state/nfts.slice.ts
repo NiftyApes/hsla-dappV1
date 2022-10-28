@@ -135,7 +135,8 @@ export const loadMainnetNFTs = createAsyncThunk<
           nft.metadata?.image_data,
         name: '',
         collectionName:
-          nft.contractMetadata?.name === 'OpenSea Shared Storefront'
+          nft.contractMetadata?.name === 'OpenSea Shared Storefront' ||
+          nft.contractMetadata?.name === 'Async Blueprints'
             ? nft.metadata?.name
             : nft.contractMetadata?.name || nft.title,
         chainId: '0x1',
