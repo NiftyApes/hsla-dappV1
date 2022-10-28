@@ -16,14 +16,14 @@ export const GoerliWalletNFTs: React.FC<Props> = () => {
 
   const lendingContract = useLendingContract();
 
-  const [hasLoadedNfts, setHasLoadedNfts] = useState<string>();
+  const [hasLoadedNftsOfAddress, setHasLoadedNftsOfAddress] = useState('');
 
   useEffect(() => {
     const getGoerliWalletNFTs = async () => {
       if (
         !walletAddress ||
         !lendingContract ||
-        hasLoadedNfts === walletAddress
+        hasLoadedNftsOfAddress === walletAddress
       ) {
         return;
       }
@@ -65,15 +65,18 @@ export const GoerliWalletNFTs: React.FC<Props> = () => {
         }),
       );
 
-      setHasLoadedNfts(walletAddress);
+      setHasLoadedNftsOfAddress(walletAddress);
     };
 
     getGoerliWalletNFTs();
+  }, [walletAddress, lendingContract, hasLoadedNftsOfAddress]);
 
+  // reset NFTs on walletAddress change or component unmount
+  useEffect(() => {
     return () => {
       dispatch(resetNFTsByWalletAddress());
     };
-  }, [walletAddress, lendingContract]);
+  }, [walletAddress]);
 
   return <WalletNFTs />;
 };
