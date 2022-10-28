@@ -99,7 +99,7 @@ export const loadMainnetNFTs = createAsyncThunk<
     nfts: any;
   },
   NFTsThunkApi
->('nfts/loadMainnetNFTs', async ({ walletAddress, nfts }, thunkApi) => {
+>('nfts/loadNFTs', async ({ walletAddress, nfts }, thunkApi) => {
   const { lendingContract } = thunkApi.extra();
 
   for (let i = 0; i < nfts.length; i++) {
@@ -124,11 +124,11 @@ export const loadMainnetNFTs = createAsyncThunk<
     } else {
       nfts[i] = {
         ...nft,
-        id: String(Number(nft.id.tokenId)),
-        contractAddress: nft.contract.address,
-        image: nft.media?.length && nft.media[0].gateway,
+        id: String(Number(nft.id?.tokenId)),
+        contractAddress: nft.contract?.address,
+        image: nft.media?.length && nft.media[0]?.gateway,
         name: '',
-        collectionName: nft.contractMetadata.name,
+        collectionName: nft.contractMetadata?.name,
         chainId: '0x1',
       };
       // eslint-disable-next-line
@@ -166,16 +166,16 @@ export const loadGoerliNFTs = createAsyncThunk<
     nfts: any;
   },
   NFTsThunkApi
->('nfts/loadGoerliNFTs', async ({ nfts }, thunkApi) => {
+>('nfts/loadNFTs', async ({ nfts }, thunkApi) => {
   const { lendingContract } = thunkApi.extra();
 
   nfts = nfts.map((nft: any) => ({
     ...nft,
-    id: String(Number(nft.id.tokenId)),
-    contractAddress: nft.contract.address,
-    image: nft.media?.length && nft.media[0].gateway,
+    id: String(Number(nft.id?.tokenId)),
+    contractAddress: nft.contract?.address,
+    image: nft.media?.length && nft.media[0]?.gateway,
     name: '',
-    collectionName: nft.contractMetadata.name,
+    collectionName: nft.contractMetadata?.name,
     chainId: '0x5',
   }));
 
