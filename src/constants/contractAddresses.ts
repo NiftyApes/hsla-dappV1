@@ -34,15 +34,15 @@ export const GOERLI = {
 
 export const MAINNET = {
   LENDING: {
-    ADDRESS: '0x05d4c15d505359A3647B714AfBfD60F3BB526953',
+    ADDRESS: '0xa78362aa9194e74a9ef267377e654dd012c6c584',
     ABI: LendingDeploymentJSON.abi,
   },
   LIQUIDITY: {
-    ADDRESS: '0x5106562923f74D8F2661a24557aCa6B471eb500a',
+    ADDRESS: '0x65d4f08db768d1096aee1f9523758eb5ca60ae9b',
     ABI: LiquidityDeploymentJSON.abi,
   },
   OFFERS: {
-    ADDRESS: '0x456F57E2F5f84066c73e1223Ec08c898397108c2',
+    ADDRESS: '0x540a59ad41a38b1cc2b90d3adadc2f7417f1e451',
     ABI: OffersDeploymentJSON.abi,
   },
   CETH: {
