@@ -42,8 +42,17 @@ export const useRepayLoanByBorrower = ({
         throw new Error('NFT Contract Address not specified');
       }
 
+      const gasEstimate = await niftyApesContract.estimateGas.repayLoan(
+        nftContractAddress,
+        nftId,
+        {
+          value: amount,
+        },
+      );
+
       const tx = await niftyApesContract.repayLoan(nftContractAddress, nftId, {
         value: amount,
+        gasLimit: Math.ceil(1.2 * gasEstimate.toNumber()),
       });
 
       const receipt: any = await tx.wait();
