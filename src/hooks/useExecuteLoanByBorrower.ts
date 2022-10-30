@@ -91,12 +91,7 @@ export const useExecuteLoanByBorrower = ({
         abi: NiftyApesLendingDeploymentJSON.abi,
       });
 
-      const loan =
-        chainId === '0x7a69'
-          ? loanExecutedEvent.args.loanAuction
-          : chainId === '0x5'
-          ? loanExecutedEvent.args.loanAuction
-          : null;
+      const loan = loanExecutedEvent.args.loanAuction;
 
       dispatch(fetchLoanAuctionByNFT(nft));
 
