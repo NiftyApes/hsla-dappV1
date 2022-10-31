@@ -99,7 +99,7 @@ export const loadMainnetNFTs = createAsyncThunk<
     nfts: any;
   },
   NFTsThunkApi
->('nfts/loadGoerliNFTs', async ({ nfts }, thunkApi) => {
+>('nfts/loadNFTs', async ({ walletAddress, nfts }, thunkApi) => {
   const { lendingContract } = thunkApi.extra();
 
   for (let i = 0; i < nfts.length; i++) {
@@ -124,13 +124,27 @@ export const loadMainnetNFTs = createAsyncThunk<
     } else {
       nfts[i] = {
         ...nft,
-        id: String(Number(nft.id.tokenId)),
-        contractAddress: nft.contract.address,
-        image: nft.media?.length && nft.media[0].gateway,
+        id:
+          nft.contractMetadata?.name === 'OpenSea Shared Storefront'
+            ? ''
+            : String(Number(nft.id?.tokenId)),
+        contractAddress: nft.contract?.address,
+        image:
+          (nft.media?.length && nft.media[0]?.gateway) ||
+          nft.metadata?.image_url ||
+          nft.metadata?.image_data,
         name: '',
-        collectionName: nft.contractMetadata.name,
+        collectionName:
+          nft.contractMetadata?.name === 'OpenSea Shared Storefront' ||
+          nft.contractMetadata?.name === 'Async Blueprints'
+            ? nft.metadata?.name
+            : nft.contractMetadata?.name || nft.title,
         chainId: '0x1',
       };
+      // eslint-disable-next-line
+      thunkApi.dispatch(addNft({ nft: nfts[i], walletAddress }));
+      thunkApi.dispatch(fetchLoanOffersByNFT(nfts[i]));
+      thunkApi.dispatch(fetchLoanAuctionByNFT(nfts[i]));
     }
   }
 
@@ -138,11 +152,8 @@ export const loadMainnetNFTs = createAsyncThunk<
 
   if (lendingContract) {
     if (nfts) {
-      nfts.forEach((nft: any) => thunkApi.dispatch(fetchLoanOffersByNFT(nft)));
-      nfts.forEach((nft: any) => thunkApi.dispatch(fetchLoanAuctionByNFT(nft)));
-
       return {
-        content: nfts,
+        content: undefined,
         fetching: false,
         error: undefined,
       };
@@ -165,16 +176,16 @@ export const loadGoerliNFTs = createAsyncThunk<
     nfts: any;
   },
   NFTsThunkApi
->('nfts/loadGoerliNFTs', async ({ nfts }, thunkApi) => {
+>('nfts/loadNFTs', async ({ nfts }, thunkApi) => {
   const { lendingContract } = thunkApi.extra();
 
   nfts = nfts.map((nft: any) => ({
     ...nft,
-    id: String(Number(nft.id.tokenId)),
-    contractAddress: nft.contract.address,
-    image: nft.media?.length && nft.media[0].gateway,
+    id: String(Number(nft.id?.tokenId)),
+    contractAddress: nft.contract?.address,
+    image: nft.media?.length && nft.media[0]?.gateway,
     name: '',
-    collectionName: nft.contractMetadata.name,
+    collectionName: nft.contractMetadata?.name,
     chainId: '0x5',
   }));
 
@@ -206,6 +217,15 @@ const slice = createSlice({
   reducers: {
     resetNFTsByWalletAddress(state) {
       state.nftsByWalletAddress = {};
+    },
+    addNft(state, action) {
+      if (!state.nftsByWalletAddress[action.payload.walletAddress].content) {
+        state.nftsByWalletAddress[action.payload.walletAddress].content = [];
+      }
+
+      state.nftsByWalletAddress[action.payload.walletAddress].content?.push(
+        action.payload.nft,
+      );
     },
   },
   extraReducers: (builder) => {
@@ -303,6 +323,6 @@ export const useNFTsByWalletAddress = (walletAddress: WalletAddress) => {
   return useNFTsSelector(selectors.nftsByWalletAddress)[walletAddress];
 };
 
-export const { resetNFTsByWalletAddress } = slice.actions;
+export const { resetNFTsByWalletAddress, addNft } = slice.actions;
 
 export default slice.reducer;

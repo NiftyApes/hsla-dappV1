@@ -117,7 +117,7 @@ export const humanizeContractError = (error: string): string => {
       return 'The redeemUnderlying function failed on the Compound contract';
 
     case '00039':
-      return 'must be greater';
+      return 'The new Regen Collective revenue share % must greater than the old %';
 
     case '00040':
       return 'This asset does not exist in the asset allow list';
@@ -139,6 +139,9 @@ export const humanizeContractError = (error: string): string => {
 
     case '00046':
       return 'This offer already exists in the NiftyApes offer book';
+
+    case '00051':
+      return 'This floor offer has already exhausted all of its uses';
 
     default:
       return `unknown error code: ${code}`;

@@ -42,8 +42,17 @@ export const useRepayLoanByBorrower = ({
         throw new Error('NFT Contract Address not specified');
       }
 
+      const gasEstimate = await niftyApesContract.estimateGas.repayLoan(
+        nftContractAddress,
+        nftId,
+        {
+          value: amount,
+        },
+      );
+
       const tx = await niftyApesContract.repayLoan(nftContractAddress, nftId, {
         value: amount,
+        gasLimit: Math.ceil(1.2 * gasEstimate.toNumber()),
       });
 
       const receipt: any = await tx.wait();
@@ -56,19 +65,9 @@ export const useRepayLoanByBorrower = ({
         abi: NiftyApesLendingDeploymentJSON.abi,
       });
 
-      const totalPayment =
-        chainId === '0x7a69'
-          ? loanRepaidEvent.args.totalPayment.toString()
-          : chainId === '0x5'
-          ? loanRepaidEvent.args.totalPayment.toString()
-          : null;
+      const totalPayment = loanRepaidEvent.args.totalPayment.toString();
 
-      const loan =
-        chainId === '0x7a69'
-          ? loanRepaidEvent.args.loanAuction
-          : chainId === '0x5'
-          ? loanRepaidEvent.args.loanAuction
-          : null;
+      const loan = loanRepaidEvent.args.loanAuction;
 
       dispatch(
         fetchLoanAuctionByNFT({

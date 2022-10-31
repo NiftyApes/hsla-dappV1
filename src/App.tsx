@@ -63,10 +63,10 @@ const App: React.FC = () => {
   }, [chainId, mainnetEnabled]);
 
   if (
-    !chainId ||
-    (!isGoerli(chainId) &&
-      !isLocalChain(chainId) &&
-      !(isMainnet(chainId) && mainnetEnabled))
+    chainId &&
+    !isGoerli(chainId) &&
+    !isLocalChain(chainId) &&
+    !(isMainnet(chainId) && mainnetEnabled)
   ) {
     return (
       <div>
