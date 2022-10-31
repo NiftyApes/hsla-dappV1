@@ -1,5 +1,5 @@
-import React from 'react';
 import Humanize from 'humanize-plus';
+import React from 'react';
 
 import {
   Flex,
@@ -15,8 +15,8 @@ import {
 
 import Icon from 'components/atoms/Icon';
 import { useParams } from 'react-router-dom';
-import { useRaribleCollectionMetadata } from '../../../../../hooks/useRaribleCollectionMetadata';
 import { useRaribleCollectionStats } from '../../../../../hooks/useRaribleColectionStats';
+import { useRaribleCollectionMetadata } from '../../../../../hooks/useRaribleCollectionMetadata';
 import NFTCollectionList from '../../components/NFTCollectionList';
 
 const CollectionHeader: React.FC = () => {
@@ -109,7 +109,7 @@ const CollectionHeader: React.FC = () => {
 
       <Flex alignItems="center" flexDirection="column">
         <Text fontSize="xl" fontWeight="bold" mr="8px">
-          {Humanize.formatNumber(Number(floorPrice))}Ξ
+          {Humanize.formatNumber(Number(floorPrice), 2)}Ξ
         </Text>
         <Text color="solid.gray0" fontSize="sm" fontWeight="bold" mr="8px">
           Floor
