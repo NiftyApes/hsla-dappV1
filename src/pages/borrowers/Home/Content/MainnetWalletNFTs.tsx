@@ -1,5 +1,6 @@
-import { BoxProps } from '@chakra-ui/react';
+import { Box, BoxProps, Center } from '@chakra-ui/react';
 import { useAppDispatch } from 'app/hooks';
+import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { MAINNET } from 'constants/contractAddresses';
 import { useLendingContract } from 'hooks/useContracts';
 import { useWalletAddress } from 'hooks/useWalletAddress';
@@ -16,11 +17,15 @@ export const MainnetWalletNFTs: React.FC<Props> = () => {
 
   const lendingContract = useLendingContract();
 
-  const [hasLoadedNfts, setHasLoadedNfts] = useState(false);
+  const [hasLoadedNftsOfAddress, setHasLoadedNftsOfAddress] = useState('');
 
   useEffect(() => {
-    const getGoerliWalletNFTs = async () => {
-      if (hasLoadedNfts || !walletAddress || !lendingContract) {
+    const getMainnetWalletNFTs = async () => {
+      if (
+        !walletAddress ||
+        !lendingContract ||
+        hasLoadedNftsOfAddress === walletAddress
+      ) {
         return;
       }
 
@@ -29,8 +34,6 @@ export const MainnetWalletNFTs: React.FC<Props> = () => {
       );
 
       const ownWalletNftsJSON = await ownWalletNftsResult.json();
-
-      console.log('ownWalletNftsJSON', ownWalletNftsJSON);
 
       const escrowedNftsResult = await fetch(
         `https://eth-mainnet.g.alchemy.com/v2/Of3Km_--Ow1fNnMhaETmwnmWBFFHF3ZY/getNFTs?owner=${MAINNET.LENDING.ADDRESS}`,
@@ -63,15 +66,30 @@ export const MainnetWalletNFTs: React.FC<Props> = () => {
         }),
       );
 
-      setHasLoadedNfts(true);
+      setHasLoadedNftsOfAddress(walletAddress);
     };
 
-    getGoerliWalletNFTs();
+    getMainnetWalletNFTs();
+  }, [walletAddress, lendingContract, hasLoadedNftsOfAddress]);
 
+  // reset NFTs on walletAddress change or component unmount
+  useEffect(() => {
     return () => {
       dispatch(resetNFTsByWalletAddress());
     };
-  }, [walletAddress, lendingContract]);
+  }, [walletAddress]);
 
-  return <WalletNFTs />;
+  return (
+    <>
+      {walletAddress && !(hasLoadedNftsOfAddress === walletAddress) && (
+        <Center fontSize="24px" my="5rem">
+          Fetching a list of your NFTs
+          <Box ml="2rem">
+            <LoadingIndicator />
+          </Box>
+        </Center>
+      )}
+      <WalletNFTs />
+    </>
+  );
 };
