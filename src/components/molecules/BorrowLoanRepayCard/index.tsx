@@ -16,6 +16,7 @@ import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
 import { BigNumber } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 import { logError } from 'logging/logError';
+import JSConfetti from 'js-confetti';
 import { humanizeContractError } from '../../../helpers/errorsMap';
 import { getAPR } from '../../../helpers/getAPR';
 import {
@@ -58,6 +59,7 @@ const i18n = {
 const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
   const toast = useToast();
 
+  const jsConfetti = new JSConfetti();
   const [isExecuting, setExecuting] = useState<boolean>(false);
 
   const accruedInterest: Array<BigNumber> = useCalculateInterestAccrued({
@@ -101,6 +103,12 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
 
       await repayLoanByBorrower()
         .then(({ receipt }: any) => {
+          jsConfetti.addConfetti({
+            emojis: ['🍌'],
+            emojiSize: 80,
+            confettiNumber: 50,
+          });
+
           toast({
             render: (props) => (
               <ToastSuccessCard

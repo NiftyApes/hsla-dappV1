@@ -1,19 +1,20 @@
 /* eslint-disable consistent-return */
-import { Box, Button, Flex, Grid, Text, useToast } from '@chakra-ui/react';
-import Icon from 'components/atoms/Icon';
-import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
-import { GOERLI, LOCAL, MAINNET } from 'constants/contractAddresses';
-import { BigNumber, ethers } from 'ethers';
-import { formatEther } from 'ethers/lib/utils';
-import { useChainId } from 'hooks/useChainId';
-import { logError } from 'logging/logError';
 import React, { useState } from 'react';
-import { humanizeContractError } from '../../../helpers/errorsMap';
-import { concatForDisplay } from '../../../helpers/roundForDisplay';
-import { useERC721Approval } from '../../../hooks/useERC721Approval';
-import { useExecuteLoanByBorrower } from '../../../hooks/useExecuteLoanByBorrower';
+import Icon from 'components/atoms/Icon';
+import { BigNumber, ethers } from 'ethers';
+import { Box, Button, Flex, Grid, Text, useToast } from '@chakra-ui/react';
+import { GOERLI, LOCAL, MAINNET } from 'constants/contractAddresses';
+import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
+import { formatEther } from 'ethers/lib/utils';
+import { logError } from 'logging/logError';
+import { useChainId } from 'hooks/useChainId';
+import JSConfetti from 'js-confetti';
 import { LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
+import { concatForDisplay } from '../../../helpers/roundForDisplay';
+import { humanizeContractError } from '../../../helpers/errorsMap';
+import { useERC721Approval } from '../../../hooks/useERC721Approval';
+import { useExecuteLoanByBorrower } from '../../../hooks/useExecuteLoanByBorrower';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
 
 interface Props {
@@ -43,6 +44,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
   const toast = useToast();
 
   const chainId = useChainId();
+  const jsConfetti = new JSConfetti();
 
   const operator =
     chainId === '0x7a69'
@@ -82,6 +84,12 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
       setExecuting(true);
       await executeLoanByBorrower()
         .then(({ receipt }) => {
+          jsConfetti.addConfetti({
+            emojis: ['🍌'],
+            emojiSize: 80,
+            confettiNumber: 50,
+          });
+
           toast({
             render: (props) => (
               <ToastSuccessCard
@@ -94,8 +102,6 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
             duration: 9000,
             isClosable: true,
           });
-
-          setExecuting(false);
         })
         .catch((error) => {
           logError(error);

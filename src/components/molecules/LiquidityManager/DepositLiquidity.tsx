@@ -21,6 +21,8 @@ export const DepositLiquidity: React.FC = () => {
   const balance = useWalletBalance();
   const toast = useToast();
 
+  const MIN_GAS_BALANCE: number = 0.01;
+
   const { depositETHLiquidity, depositStatus, txReceipt } =
     useDepositEthLiquidity();
 
@@ -93,7 +95,11 @@ export const DepositLiquidity: React.FC = () => {
               size="lg"
               pt=".5rem"
               textTransform="uppercase"
-              onClick={() => setLiquidityToDepositStr(String(balance))}
+              onClick={() => {
+                setLiquidityToDepositStr(
+                  String(balance ? balance - MIN_GAS_BALANCE : 0),
+                );
+              }}
               disabled={depositStatus !== 'READY'}
             >
               max
