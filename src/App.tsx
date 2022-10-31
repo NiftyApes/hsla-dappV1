@@ -69,7 +69,7 @@ const App: React.FC = () => {
     return (
       <div>
         NiftyApes currently doesn't support this chain ({chainId}). Please
-        switch to Goerli to explore the testnet version.
+        switch to Mainnet.
         <div style={{ marginTop: '32px' }}>
           <Button onClick={connectWallet}>Connect Wallet</Button>
         </div>
