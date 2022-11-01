@@ -54,11 +54,9 @@ const App: React.FC = () => {
   useEffect(() => {
     if (
       !chainId ||
-      (!isGoerli(chainId) &&
-        !isLocalChain(chainId) &&
-        !(isMainnet(chainId) && mainnetEnabled))
+      (!isGoerli(chainId) && !isLocalChain(chainId) && !isMainnet(chainId))
     ) {
-      setChain({ chainId: '0x5' });
+      setChain({ chainId: '0x1' });
     }
   }, [chainId, mainnetEnabled]);
 
@@ -66,12 +64,12 @@ const App: React.FC = () => {
     chainId &&
     !isGoerli(chainId) &&
     !isLocalChain(chainId) &&
-    !(isMainnet(chainId) && mainnetEnabled)
+    !isMainnet(chainId)
   ) {
     return (
       <div>
         NiftyApes currently doesn't support this chain ({chainId}). Please
-        switch to Goerli to explore the testnet version.
+        switch to Mainnet.
         <div style={{ marginTop: '32px' }}>
           <Button onClick={connectWallet}>Connect Wallet</Button>
         </div>
