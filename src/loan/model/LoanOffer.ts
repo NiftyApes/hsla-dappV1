@@ -36,6 +36,8 @@ export interface LoanOffer {
   interestRatePerSecond: number;
   type: 'top' | 'floor';
   symbol: CoinSymbol;
+  floorOfferCount?: number;
+  floorTermLimit?: number;
 }
 
 const loanOffer = (json: any): LoanOffer => {

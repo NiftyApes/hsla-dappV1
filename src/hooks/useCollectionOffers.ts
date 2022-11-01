@@ -4,11 +4,11 @@ import { getOffersByCollection } from 'api/getOffersByCollection';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
+import { getFloorOfferCountFromHash } from 'helpers/getOfferCountLeftFromHash';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useChainId } from './useChainId';
 import { useOffersContract } from './useContracts';
-import { useWalletAddress } from './useWalletAddress';
 
 export const useCollectionOffers = ({
   nftContractAddress,
@@ -18,14 +18,13 @@ export const useCollectionOffers = ({
   const [offers, setOffers] = useState<any>();
 
   const cacheCounter = useAppSelector((state: RootState) => state.counter);
-  const niftyApesContract = useOffersContract();
+  const offersContract = useOffersContract();
 
-  const walletAddress = useWalletAddress();
   const chainId = useChainId();
 
   useEffect(() => {
     async function fetchLoanOffersForNFT() {
-      if (!niftyApesContract || !nftContractAddress) {
+      if (!offersContract || !nftContractAddress) {
         return;
       }
 
@@ -35,25 +34,46 @@ export const useCollectionOffers = ({
       });
 
       // Don't load on-chain offers for disconnected wallets
-      if (walletAddress) {
-        for (let i = 0; i < offers.length; i++) {
-          const { offerHash } = offers[i];
+      for (let i = 0; i < offers.length; i++) {
+        const { offerHash } = offers[i];
 
-          const offerFromChain = await getLoanOfferFromHash({
-            offersContract: niftyApesContract,
-            nftContractAddress,
-            // all collection offers have nftId 0
-            nftId: '0',
-            offerHash,
-            floorTerm: offers[i].offer.floorTerm,
-          });
+        const floorOfferCount = await getFloorOfferCountFromHash({
+          offersContract,
+          offerHash,
+        });
 
-          if (
-            !offerFromChain ||
-            offerFromChain[0] === '0x0000000000000000000000000000000000000000'
-          ) {
-            offers[i] = undefined;
-          }
+        const offerFromChain = await getLoanOfferFromHash({
+          offersContract,
+          nftContractAddress,
+          // all collection offers have nftId 0
+          nftId: '0',
+          offerHash,
+          floorTerm: offers[i].offer.floorTerm,
+        });
+
+        // Remove offer if any of the following obtains
+        if (!floorOfferCount || !offerFromChain) {
+          offers[i] = undefined;
+        } else if (
+          // This happens when there isn't an offer with this hash
+          offerFromChain.creator ===
+          '0x0000000000000000000000000000000000000000'
+        ) {
+          offers[i] = undefined;
+        } else if (
+          // Ignore offers that are out of punches
+          floorOfferCount.toNumber() >= offerFromChain.floorTermLimit.toNumber()
+        ) {
+          offers[i] = undefined;
+        } else {
+          offers[i] = {
+            ...offers[i],
+            offer: {
+              ...offers[i].offer,
+              floorOfferCount: floorOfferCount.toNumber(),
+              floorTermLimit: offerFromChain.floorTermLimit.toNumber(),
+            },
+          };
         }
       }
 
@@ -63,7 +83,7 @@ export const useCollectionOffers = ({
     }
 
     fetchLoanOffersForNFT();
-  }, [nftContractAddress, niftyApesContract, chainId, cacheCounter]);
+  }, [nftContractAddress, offersContract, chainId, cacheCounter]);
 
   if (!offers) {
     return undefined;

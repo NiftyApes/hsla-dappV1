@@ -5,6 +5,7 @@ import { getAllOffersByLender } from 'api/getAllOffersByLender';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
+import { getFloorOfferCountFromHash } from 'helpers/getOfferCountLeftFromHash';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useChainId } from './useChainId';
@@ -40,6 +41,11 @@ export const useOffersForLender = ({
 
         const { nftId, nftContractAddress, floorTerm } = offer;
 
+        const floorOfferCount = await getFloorOfferCountFromHash({
+          offersContract,
+          offerHash,
+        });
+
         const offerFromChain = await getLoanOfferFromHash({
           offersContract,
           nftContractAddress,
@@ -48,11 +54,29 @@ export const useOffersForLender = ({
           floorTerm,
         });
 
-        if (
-          !offerFromChain ||
-          offerFromChain[0] === '0x0000000000000000000000000000000000000000'
+        // Remove offer if any of the following obtains
+        if (!floorOfferCount || !offerFromChain) {
+          offers[i] = undefined;
+        } else if (
+          // This happens when there isn't an offer with this hash
+          offerFromChain.creator ===
+          '0x0000000000000000000000000000000000000000'
         ) {
           offers[i] = undefined;
+        } else if (
+          // Ignore offers that are out of punches
+          floorOfferCount.toNumber() >= offerFromChain.floorTermLimit.toNumber()
+        ) {
+          offers[i] = undefined;
+        } else {
+          offers[i] = {
+            ...offers[i],
+            offer: {
+              ...offers[i].offer,
+              floorOfferCount: floorOfferCount.toNumber(),
+              floorTermLimit: offerFromChain.floorTermLimit.toNumber(),
+            },
+          };
         }
       }
 

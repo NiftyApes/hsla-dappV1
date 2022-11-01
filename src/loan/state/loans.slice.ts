@@ -5,6 +5,7 @@ import { AppDispatch, ThunkExtra } from 'app/store';
 import { ethers } from 'ethers';
 import { getApiUrl, getData } from 'helpers';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
+import { getFloorOfferCountFromHash } from 'helpers/getOfferCountLeftFromHash';
 import { ContractAddress, getNFTHash, NFT } from 'nft/model';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import { LoanAuction, loanAuction, LoanOffer, loanOffer } from '../model';
@@ -72,12 +73,21 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
     );
 
     const processedOffers = await Promise.all(
-      data.map(async (offer) => {
+      data.map(async (offer, i) => {
         if (!liquidityContract || !cEthContract) {
           return false;
         }
 
         if (offer.OfferTerms.NftId === nftId || offer.OfferTerms.FloorTerm) {
+          const floorOfferCount = await getFloorOfferCountFromHash({
+            offersContract,
+            offerHash: offer.OfferHash,
+          });
+
+          if (!floorOfferCount) {
+            return false;
+          }
+
           const offerFromChain = await getLoanOfferFromHash({
             offersContract,
             nftContractAddress,
@@ -86,10 +96,22 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
             floorTerm: offer.OfferTerms.FloorTerm,
           });
 
+          if (!offerFromChain) {
+            return false;
+          }
+
+          // This happens when there isn't an offer with this hash
           if (
-            !offerFromChain ||
             offerFromChain.creator ===
-              '0x0000000000000000000000000000000000000000'
+            '0x0000000000000000000000000000000000000000'
+          ) {
+            return false;
+          }
+
+          // Ignore offers that are out of punches
+          if (
+            floorOfferCount.toNumber() >=
+            offerFromChain.floorTermLimit.toNumber()
           ) {
             return false;
           }
@@ -110,10 +132,16 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
             return false;
           }
 
+          data[i] = {
+            ...data[i],
+            floorOfferCount: floorOfferCount.toNumber(),
+            floorTermLimit: offerFromChain.floorTermLimit.toNumber(),
+          };
+
           return true;
         }
       }),
-    ).then((results) => data.filter((offer, i) => results[i]));
+    ).then((results) => data.filter((offer, j) => results[j]));
 
     return {
       content: processedOffers,
