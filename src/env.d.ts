@@ -13,6 +13,7 @@ interface ImportMetaEnv {
   readonly ENV_BURNER_FALLBACK_ALLOWED: string;
   readonly ENV_CONNECT_TO_BURNER_AUTOMATICALLY: string;
   readonly REACT_APP_INFURA_ID: string;
+  readonly REACT_APP_GA_ID: string;
 }
 
 interface ImportMeta {
