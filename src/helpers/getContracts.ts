@@ -23,11 +23,15 @@ function doesProviderMismatchContract({
   provider: EIP1193Provider;
   contract: Contract;
 }) {
-  return (
-    !(provider as any).connection &&
-    (contract?.provider as any).provider.connection?.url !==
-      (provider as any).connection?.url
-  );
+  try {
+    return (
+      !(provider as any).connection &&
+      (contract?.provider as any).provider.connection?.url !==
+        (provider as any).connection?.url
+    );
+  } catch (e) {
+    return true;
+  }
 }
 
 export function getLocalLendingContract({
