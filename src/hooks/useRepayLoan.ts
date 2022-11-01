@@ -57,6 +57,10 @@ export const useRepayLoanByBorrower = ({
 
       const receipt: any = await tx.wait();
 
+      if (receipt.status !== 1) {
+        throw Error('Error: transaction reverted');
+      }
+
       const transactionTimestamp = await getTransactionTimestamp(receipt);
 
       const loanRepaidEvent = getEventFromReceipt({

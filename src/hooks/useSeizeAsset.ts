@@ -62,6 +62,10 @@ export const useSeizeAsset = ({
 
         const receipt = await tx.wait();
 
+        if (receipt.status !== 1) {
+          throw Error('Error: transaction reverted');
+        }
+
         const loan = (receipt as any).events[2].args.loanAuction;
 
         const transactionTimestamp = await getTransactionTimestamp(receipt);

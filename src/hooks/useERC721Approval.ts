@@ -91,6 +91,11 @@ export const useERC721Approval = ({
         const tx = await contract?.approve(operator, tokenId);
         onTxSubmitted && onTxSubmitted(tx);
         const receipt = await tx.wait();
+
+        if (receipt.status !== 1) {
+          throw Error('Error: transaction reverted');
+        }
+
         onTxMined && onTxMined(receipt);
         onSuccess && onSuccess();
       } catch (e: any) {

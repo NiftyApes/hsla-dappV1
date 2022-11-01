@@ -58,7 +58,13 @@ export const useERC721ApprovalForAll = ({
       try {
         const tx = await contract?.setApprovalForAll(operator, true);
         onTxSubmitted && onTxSubmitted(tx);
+
         const receipt = await tx.wait();
+
+        if (receipt.status !== 1) {
+          throw Error('Error: transaction reverted');
+        }
+
         onTxMined && onTxMined(receipt);
         onSuccess && onSuccess();
       } catch (e: any) {
@@ -89,7 +95,13 @@ export const useERC721ApprovalForAll = ({
       try {
         const tx = await contract?.setApprovalForAll(operator, false);
         onTxSubmitted && onTxSubmitted(tx);
+
         const receipt = await tx.wait();
+
+        if (receipt.status !== 1) {
+          throw Error('Error: transaction reverted');
+        }
+
         onTxMined && onTxMined(receipt);
         onSuccess && onSuccess();
       } catch (e: any) {

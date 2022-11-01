@@ -87,6 +87,10 @@ export const useCreateCollectionOffer = ({
 
         const receipt: any = await tx.wait();
 
+        if (receipt.status !== 1) {
+          throw Error('Error: transaction reverted');
+        }
+
         console.log('receipt', receipt);
 
         onTxMined && onTxMined(receipt);
