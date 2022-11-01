@@ -1,10 +1,10 @@
-import React from 'react';
 import Humanize from 'humanize-plus';
+import React from 'react';
 
 import { Flex, Image, Link, Td, Text, Tr } from '@chakra-ui/react';
+import Icon from '../../../../components/atoms/Icon';
 import { useRaribleCollectionStats } from '../../../../hooks/useRaribleColectionStats';
 import { NFTCollection } from '../../../../hooks/useTopCollections';
-import Icon from '../../../../components/atoms/Icon';
 
 interface Props {
   collection: NFTCollection;
@@ -58,7 +58,7 @@ const NFTCollectionRow: React.FC<Props> = ({
       </Td>
       <Td>
         <Text fontWeight="bold">
-          {Humanize.formatNumber(Number(floorPrice))}Ξ
+          {Humanize.formatNumber(Number(floorPrice), 2)}Ξ
         </Text>
       </Td>
       <Td>

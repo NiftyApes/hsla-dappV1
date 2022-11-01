@@ -1,4 +1,6 @@
 /* eslint-disable consistent-return */
+import { MAINNET } from 'constants/contractAddresses';
+import { ethers } from 'ethers';
 import {
   getGoerliLendingContract,
   getGoerliLiquidityContract,
@@ -12,6 +14,8 @@ import {
 } from 'helpers/getContracts';
 import { useChainId } from './useChainId';
 import { useWalletProvider } from './useWalletProvider';
+
+let mainnetOffersContract: any;
 
 export const isLocalChain = (cid: string | undefined): boolean | undefined => {
   return cid === '0x7a69';
@@ -56,6 +60,27 @@ export const useOffersContract = () => {
 
   if (provider && isMainnet(chainId)) {
     return getMainnetOffersContract({ provider });
+  }
+
+  if (!provider && isMainnet(chainId)) {
+    if (mainnetOffersContract) {
+      return mainnetOffersContract;
+    }
+
+    const ethersProvider = new ethers.providers.AlchemyProvider(
+      'mainnet',
+      '_8-YJwskeUfHw9RMaQufSFupoqkd_ukD',
+    );
+
+    const contract = new ethers.Contract(
+      MAINNET.OFFERS.ADDRESS,
+      MAINNET.OFFERS.ABI,
+      ethersProvider,
+    );
+
+    mainnetOffersContract = contract;
+
+    return contract;
   }
 };
 

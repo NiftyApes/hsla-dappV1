@@ -1,3 +1,4 @@
+import React, { useMemo, useState } from 'react';
 import {
   Box,
   Button,
@@ -21,7 +22,7 @@ import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
 import { useWalletAddress } from 'hooks/useWalletAddress';
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import _ from 'lodash';
-import React, { useMemo, useState } from 'react';
+import JSConfetti from 'js-confetti';
 import { ToastSuccessCard } from '../../../../../components/cards/ToastSuccessCard';
 
 interface CreateCollectionOfferFormProps {
@@ -69,6 +70,7 @@ export const CreateCollectionOfferForm: React.FC<
     Number(collectionOfferAmt) > availableEthLiquidity;
 
   const toast = useToast();
+  const jsConfetti = new JSConfetti();
 
   const isDurationValid: boolean =
     !_.isEmpty(duration) && Number(duration) >= 1;
@@ -94,6 +96,12 @@ export const CreateCollectionOfferForm: React.FC<
       expirationInDays: Number(expiration),
       floorTermLimit: Number(floorTermLimit),
       onTxMined: (receipt: TransactionReceipt) => {
+        jsConfetti.addConfetti({
+          emojis: ['🍌'],
+          emojiSize: 80,
+          confettiNumber: 50,
+        });
+
         toast({
           render: (props) => (
             <ToastSuccessCard title="Offer Created" txn={receipt} {...props} />
@@ -303,7 +311,7 @@ export const CreateCollectionOfferForm: React.FC<
         mx="30px"
       >
         <Flex alignItems="center">
-          <div>Expires in </div>
+          <div>Expires in</div>
           <Box w="120px" ml="8px">
             <Select
               size="sm"
@@ -317,7 +325,7 @@ export const CreateCollectionOfferForm: React.FC<
           </Box>
         </Flex>
         <Flex alignItems="center">
-          <div>Good for </div>
+          <div>Good for</div>
           <Box w="120px" ml="8px">
             <Select
               size="sm"
