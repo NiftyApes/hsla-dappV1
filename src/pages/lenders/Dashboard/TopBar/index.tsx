@@ -22,7 +22,7 @@ const TopBar: React.FC = () => {
 
   const { totalEthLoanedOut } = useTotalEthLoanedOut();
   const { availableEthLiquidity } = useAvailableEthLiquidity();
-  const utilizedLiquidity =
+  const utilizedLiquidityAsPercentage =
     (totalEthLoanedOut / (totalEthLoanedOut + availableEthLiquidity)) * 100;
 
   return (
@@ -51,8 +51,10 @@ const TopBar: React.FC = () => {
       <TopBarCard
         title="liquidty utilized"
         value={`${roundForDisplay(
-          Number.isNaN(utilizedLiquidity) ? 0 : utilizedLiquidity,
-        )}Ξ`}
+          Number.isNaN(utilizedLiquidityAsPercentage)
+            ? 0
+            : utilizedLiquidityAsPercentage,
+        )}%`}
       />
     </Flex>
   );
