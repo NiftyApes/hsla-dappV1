@@ -11,7 +11,7 @@ export const initWeb3Onboard = init({
       token: 'ETH',
       label: 'Ethereum Mainnet',
       rpcUrl:
-        'https://eth-mainnet.g.alchemy.com/v2/jxUUn2DsYODlc68SEU_7eNGCn2hQ7b63',
+        'https://eth-mainnet.g.alchemy.com/v2/_8-YJwskeUfHw9RMaQufSFupoqkd_ukD',
     },
     {
       id: '0x5',
