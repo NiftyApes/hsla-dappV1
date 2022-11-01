@@ -9,7 +9,6 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import CryptoIcon from 'components/atoms/CryptoIcon';
-import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { useEffect, useState } from 'react';
 import { useWithdrawEthLiquidity } from 'hooks/useWithdrawEthLiquidity';
 import { ToastSuccessCard } from '../../cards/ToastSuccessCard';
@@ -103,11 +102,6 @@ export const WithdrawLiquidity: React.FC = () => {
           </InputRightElement>
         </InputGroup>
       </Flex>
-      {withdrawStatus === 'PENDING' && (
-        <Box ml="0.25rem" mt="0.25rem">
-          Withdrawing liquidity <LoadingIndicator size="sm" />
-        </Box>
-      )}
       {withdrawStatus === 'READY' &&
         (!isInputConvertibleToNumber || doesInputExceedsMax) && (
           <Box fontSize="small" ml="0.25rem" color="red.500">
@@ -120,6 +114,7 @@ export const WithdrawLiquidity: React.FC = () => {
         )}
       <Flex>
         <WithdrawBtn
+          status={withdrawStatus}
           onClick={() => {
             withdrawETHLiquidity({
               ethToWithdraw: Number(liquidityToWithdrawStr),
