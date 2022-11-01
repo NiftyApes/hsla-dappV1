@@ -3,6 +3,7 @@ import { updateLoanStatus } from 'api/updateLoanStatus';
 import { useAppDispatch } from 'app/hooks';
 import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
+import { ErrorWithReason } from 'errors';
 import { ethers } from 'ethers';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
 import { logError } from 'logging/logError';
@@ -63,7 +64,7 @@ export const useSeizeAsset = ({
         const receipt = await tx.wait();
 
         if (receipt.status !== 1) {
-          throw Error('Error: transaction reverted');
+          throw new ErrorWithReason('reason: revert');
         }
 
         const loan = (receipt as any).events[2].args.loanAuction;

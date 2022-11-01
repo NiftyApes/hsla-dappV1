@@ -3,6 +3,7 @@
 import { useAppDispatch } from 'app/hooks';
 import { SECONDS_IN_YEAR } from 'constants/misc';
 import { increment } from 'counter/counterSlice';
+import { ErrorWithReason } from 'errors';
 import { ethers } from 'ethers';
 import { getEventFromReceipt } from 'helpers/getEventFromReceipt';
 import { logError } from 'logging/logError';
@@ -88,7 +89,7 @@ export const useCreateCollectionOffer = ({
         const receipt: any = await tx.wait();
 
         if (receipt.status !== 1) {
-          throw Error('Error: transaction reverted');
+          throw new ErrorWithReason('reason: revert');
         }
 
         console.log('receipt', receipt);

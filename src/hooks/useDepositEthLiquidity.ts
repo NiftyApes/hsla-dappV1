@@ -1,6 +1,7 @@
 import { useAppDispatch } from 'app/hooks';
 import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
+import { ErrorWithReason } from 'errors';
 import { ethers } from 'ethers';
 import { logError } from 'logging/logError';
 import { useState } from 'react';
@@ -57,7 +58,7 @@ export const useDepositEthLiquidity = () => {
         const receipt: any = await tx.wait();
 
         if (receipt.status !== 1) {
-          throw Error('Error: transaction reverted');
+          throw new ErrorWithReason('reason: revert');
         }
 
         const timestamp = await getTransactionTimestamp(receipt);

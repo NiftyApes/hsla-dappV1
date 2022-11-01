@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { transactionTypes } from 'constants/transactionTypes';
 import { increment } from 'counter/counterSlice';
+import { ErrorWithReason } from 'errors';
 import { ethers } from 'ethers';
 import { getEventFromReceipt } from 'helpers/getEventFromReceipt';
 import { saveLoanInDb } from 'helpers/saveLoanInDb';
@@ -79,7 +80,7 @@ export const useExecuteLoanByBorrower = ({
       const receipt: any = await tx.wait();
 
       if (receipt.status !== 1) {
-        throw Error('Error: transaction reverted');
+        throw new ErrorWithReason('reason: revert');
       }
 
       const offer = await offersContract.getOffer(
