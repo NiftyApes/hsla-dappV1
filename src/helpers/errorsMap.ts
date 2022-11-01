@@ -143,6 +143,9 @@ export const humanizeContractError = (error: string): string => {
     case '00051':
       return 'This floor offer has already exhausted all of its uses';
 
+    case 'revert':
+      return 'Transaction reverted';
+
     default:
       return `unknown error code: ${code}`;
   }

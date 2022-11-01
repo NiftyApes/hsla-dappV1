@@ -1,6 +1,7 @@
 import { updateOfferStatus } from 'api/updateOfferStatus';
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
+import { ErrorWithReason } from 'errors';
 import { ethers } from 'ethers';
 import { logError } from 'logging/logError';
 import { useState } from 'react';
@@ -71,6 +72,10 @@ export const useCancelOffer = ({
         setTxObject(tx);
 
         const receipt: any = await tx.wait();
+
+        if (receipt.status !== 1) {
+          throw new ErrorWithReason('reason: revert');
+        }
 
         const transactionTimestamp = await getTransactionTimestamp(receipt);
 
