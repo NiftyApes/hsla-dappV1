@@ -22,6 +22,10 @@ export async function saveTransactionInDb({
   refinancedLender?: string;
   data: any;
 }) {
+  if (chainId === '0x1') {
+    return;
+  }
+
   await fetch(getApiUrl(chainId, 'events'), {
     method: 'POST',
     body: JSON.stringify({

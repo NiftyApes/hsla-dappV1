@@ -19,6 +19,10 @@ export async function saveOfferInDb({
   };
   offerHash: string;
 }) {
+  if (chainId === '0x1') {
+    return;
+  }
+
   const {
     nftId,
     creator,

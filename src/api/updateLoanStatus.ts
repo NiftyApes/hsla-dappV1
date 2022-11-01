@@ -18,6 +18,10 @@ export async function updateLoanStatus({
   transactionTimestamp?: number;
   transactionHash?: string;
 }) {
+  if (chainId === '0x1') {
+    return;
+  }
+
   await fetch(getApiUrl(chainId, 'loans'), {
     method: 'PATCH',
     body: JSON.stringify({

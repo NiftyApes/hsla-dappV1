@@ -20,6 +20,10 @@ export async function updateOfferStatus({
   transactionTimestamp?: number;
   transactionHash?: string;
 }) {
+  if (chainId === '0x1') {
+    return;
+  }
+
   await fetch(getApiUrl(chainId, 'offers'), {
     method: 'PATCH',
     body: JSON.stringify({

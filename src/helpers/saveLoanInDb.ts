@@ -27,6 +27,10 @@ export async function saveLoanInDb({
     loanEndTimestamp: number;
   };
 }) {
+  if (chainId === '0x1') {
+    return;
+  }
+
   await fetch(getApiUrl(chainId, 'loans'), {
     method: 'POST',
     body: JSON.stringify({
