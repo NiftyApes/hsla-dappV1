@@ -1,3 +1,4 @@
+import ReactGA from 'react-ga';
 import { Button, ChakraProvider, Link } from '@chakra-ui/react';
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
 import {
@@ -26,7 +27,11 @@ import { BrowserRouter as Router, Routes } from 'react-router-dom';
 import Borrowers from 'routes/Borrowers';
 import Lenders from 'routes/Lenders';
 import Marketing from 'routes/Marketing';
+import RouteTracker from 'components/organisms/RouteTracker';
 import theme from './theme';
+
+// @ts-ignore
+ReactGA.initialize(process.env.REACT_APP_GA_ID);
 
 const App: React.FC = () => {
   const [{ wallet }] = useConnectWallet();
@@ -35,8 +40,6 @@ const App: React.FC = () => {
   const offersContract = useOffersContract();
   const liquidityContract = useLiquidityContract();
   const cEthContract = useCEthContract();
-
-  console.log({ staging: true });
 
   setStoreWallet(wallet as any);
 
@@ -112,6 +115,7 @@ const App: React.FC = () => {
               </div>
             }
           />
+          <RouteTracker />
           <Routes>
             {Marketing}
             {Borrowers}

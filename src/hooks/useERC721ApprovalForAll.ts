@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { RootState } from 'app/store';
+import { ErrorWithReason } from 'errors';
 import { Contract } from 'ethers';
 import { logError } from 'logging/logError';
 import { useEffect, useState } from 'react';
@@ -58,7 +59,13 @@ export const useERC721ApprovalForAll = ({
       try {
         const tx = await contract?.setApprovalForAll(operator, true);
         onTxSubmitted && onTxSubmitted(tx);
+
         const receipt = await tx.wait();
+
+        if (receipt.status !== 1) {
+          throw new ErrorWithReason('reason: revert');
+        }
+
         onTxMined && onTxMined(receipt);
         onSuccess && onSuccess();
       } catch (e: any) {
@@ -89,7 +96,13 @@ export const useERC721ApprovalForAll = ({
       try {
         const tx = await contract?.setApprovalForAll(operator, false);
         onTxSubmitted && onTxSubmitted(tx);
+
         const receipt = await tx.wait();
+
+        if (receipt.status !== 1) {
+          throw new ErrorWithReason('reason: revert');
+        }
+
         onTxMined && onTxMined(receipt);
         onSuccess && onSuccess();
       } catch (e: any) {
