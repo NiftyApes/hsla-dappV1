@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { RootState } from 'app/store';
+import { ErrorWithReason } from 'errors';
 import { getEthersContractWithEIP1193Provider } from 'helpers/getEthersContractWithEIP1193Provider';
 import { logError } from 'logging/logError';
 import { useEffect, useState } from 'react';
@@ -91,6 +92,11 @@ export const useERC721Approval = ({
         const tx = await contract?.approve(operator, tokenId);
         onTxSubmitted && onTxSubmitted(tx);
         const receipt = await tx.wait();
+
+        if (receipt.status !== 1) {
+          throw new ErrorWithReason('reason: revert');
+        }
+
         onTxMined && onTxMined(receipt);
         onSuccess && onSuccess();
       } catch (e: any) {

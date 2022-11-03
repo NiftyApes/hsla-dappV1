@@ -3,6 +3,7 @@ import { useAppDispatch } from 'app/hooks';
 import { transactionTypes } from 'constants/transactionTypes';
 
 import { increment } from 'counter/counterSlice';
+import { ErrorWithReason } from 'errors';
 import { BigNumber, ethers } from 'ethers';
 import { getEventFromReceipt } from 'helpers/getEventFromReceipt';
 import { saveTransactionInDb } from 'helpers/saveTransactionInDb';
@@ -56,6 +57,10 @@ export const useRepayLoanByBorrower = ({
       });
 
       const receipt: any = await tx.wait();
+
+      if (receipt.status !== 1) {
+        throw new ErrorWithReason('reason: revert');
+      }
 
       const transactionTimestamp = await getTransactionTimestamp(receipt);
 
