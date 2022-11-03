@@ -1,6 +1,5 @@
-import { OnboardAPI } from '@web3-onboard/core';
 import { useConnectWallet, useWallets } from '@web3-onboard/react';
-import { ACTIONS, CATEGORIES, GLOBAL, LABELS } from 'constants/googleAnalytics';
+import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
 import React, { createContext, useEffect } from 'react';
 import { initWeb3Onboard } from 'services/wallet';
@@ -46,7 +45,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode | React.ReactN
   }, [wallet]);
 
   const connectWallet = async () => {
-    connect({}).then(() => { 
+    connect({}).then(() => {
       gaEventTracker(ACTIONS.WALLET, LABELS.CONNECTED);
     })
   };
