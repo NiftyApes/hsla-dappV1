@@ -73,7 +73,7 @@ export const useCreateCollectionOffer = ({
             ((aprInPercent / 100) * (amount * 1e18)) / SECONDS_IN_YEAR,
           ),
           nftId: 0,
-          fixedTerms: true,
+          fixedTerms: false,
           floorTerm: true,
           lenderOffer: true,
           asset: ETH_ADDRESS,

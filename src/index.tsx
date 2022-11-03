@@ -20,6 +20,8 @@ Sentry.init({
   tracesSampleRate: 1.0,
 });
 
+Sentry.setTag('hostname', window?.location?.hostname);
+
 function FallbackComponent() {
   return <div>An error has occurred. We are investigating 🍌</div>;
 }
