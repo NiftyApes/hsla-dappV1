@@ -23,6 +23,8 @@ import { useWalletAddress } from 'hooks/useWalletAddress';
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import _ from 'lodash';
 import JSConfetti from 'js-confetti';
+import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
+import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { ToastSuccessCard } from '../../../../../components/cards/ToastSuccessCard';
 
 interface CreateCollectionOfferFormProps {
@@ -56,6 +58,7 @@ export const CreateCollectionOfferForm: React.FC<
   floorTermLimit,
   setFloorTermLimit,
 }) => {
+  const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.LENDERS);
   const { createCollectionOffer } = useCreateCollectionOffer({
     nftContractAddress,
   });
@@ -114,6 +117,7 @@ export const CreateCollectionOfferForm: React.FC<
 
       onPending: () => setCreateCollectionOfferStatus('PENDING'),
       onSuccess: (offerHash: string) => {
+        gaEventTracker(ACTIONS.OFFER, LABELS.CREATE);
         console.log('Offer hash', offerHash);
 
         setCollectionOfferAmt('');
