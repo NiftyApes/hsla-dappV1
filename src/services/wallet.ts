@@ -1,10 +1,12 @@
 import injectedModule from '@web3-onboard/injected-wallets';
 import { init } from '@web3-onboard/react';
+import ledgerModule from '@web3-onboard/ledger';
 
 const injected = injectedModule();
+const ledger = ledgerModule();
 
 export const initWeb3Onboard = init({
-  wallets: [injected],
+  wallets: [injected, ledger],
   chains: [
     {
       id: '0x1',

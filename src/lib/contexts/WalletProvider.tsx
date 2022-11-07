@@ -1,7 +1,7 @@
-import { OnboardAPI } from '@web3-onboard/core';
 import { useConnectWallet, useWallets } from '@web3-onboard/react';
 import React, { createContext, useEffect } from 'react';
 import { initWeb3Onboard } from 'services/wallet';
+
 
 interface WalletContextProps {
   connectWallet: () => void;
