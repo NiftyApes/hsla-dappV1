@@ -1,0 +1,26 @@
+export const LENDERS = 'LENDERS';
+export const BORROWERS = 'BORROWERS';
+export const GLOBAL = 'GLOBAL';
+
+export const CATEGORIES = {
+  LENDERS: 'LENDERS',
+  BORROWERS: 'BORROWERS',
+  GLOBAL: 'GLOBAL',
+};
+
+export const ACTIONS = {
+  WALLET: 'WALLET',
+  LOAN: 'LOAN',
+  OFFER: 'OFFER',
+  LIQUIDITY: 'LIQUIDITY',
+};
+
+export const LABELS = {
+  REPAY: 'REPAY',
+  INIT: 'INIT',
+  DEPOSIT: 'DEPOSIT',
+  WITHDRAW: 'WITHDRAW',
+  CONNECTED: 'CONNECTED',
+  CANCEL: 'CANCEL',
+  CREATE: 'CREATE',
+};

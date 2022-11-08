@@ -9,6 +9,8 @@ import { formatEther } from 'ethers/lib/utils';
 import { logError } from 'logging/logError';
 import { useChainId } from 'hooks/useChainId';
 import JSConfetti from 'js-confetti';
+import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
+import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
 import { concatForDisplay } from '../../../helpers/roundForDisplay';
@@ -41,6 +43,7 @@ const i18n = {
 };
 
 const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
+  const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.BORROWERS);
   const toast = useToast();
 
   const chainId = useChainId();
@@ -89,6 +92,8 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
             emojiSize: 80,
             confettiNumber: 50,
           });
+
+          gaEventTracker(ACTIONS.LOAN, LABELS.INIT);
 
           toast({
             render: (props) => (
