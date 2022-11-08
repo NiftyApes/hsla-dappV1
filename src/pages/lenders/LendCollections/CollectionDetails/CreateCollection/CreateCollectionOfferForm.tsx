@@ -177,6 +177,7 @@ export const CreateCollectionOfferForm: React.FC<
                   transform: 'translateY(-4px)',
                 }}
                 type="number"
+                onWheel={(e) => e.currentTarget.blur()}
                 textAlign="left"
                 value={collectionOfferAmt}
                 onChange={(e) => setCollectionOfferAmt(e.target.value)}
@@ -216,6 +217,7 @@ export const CreateCollectionOfferForm: React.FC<
           <Box position="relative">
             <Input
               type="number"
+              onWheel={(e) => e.currentTarget.blur()}
               value={apr}
               onChange={(e) => setApr(e.target.value)}
               bg="#F9F3FF"
@@ -247,6 +249,7 @@ export const CreateCollectionOfferForm: React.FC<
               <InputGroup position="relative">
                 <Input
                   type="number"
+                  onWheel={(e) => e.currentTarget.blur()}
                   value={duration}
                   onChange={(e) => setDuration(e.target.value)}
                   bg="#F9F3FF"
