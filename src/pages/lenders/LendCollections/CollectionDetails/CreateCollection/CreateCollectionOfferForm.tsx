@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import {
   Box,
   Button,
+  Center,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -25,6 +26,8 @@ import _ from 'lodash';
 import JSConfetti from 'js-confetti';
 import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
 import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
+import { lendersLiquidity } from 'routes/router';
+import { Link } from 'react-router-dom';
 import { ToastSuccessCard } from '../../../../../components/cards/ToastSuccessCard';
 
 interface CreateCollectionOfferFormProps {
@@ -311,6 +314,23 @@ export const CreateCollectionOfferForm: React.FC<
       >
         CREATE OFFER
       </Button>
+      <FormControl isInvalid={doesOfferAmountExceedAvailableLiquidity}>
+        <Box mt="8px">
+          <Center>
+            {doesOfferAmountExceedAvailableLiquidity && (
+              <FormErrorMessage fontWeight={600} textAlign="center">
+                <Link
+                  style={{ textDecoration: 'underline' }}
+                  to={lendersLiquidity()}
+                >
+                  Desposit more liquidity&nbsp;
+                </Link>
+                to create an offer
+              </FormErrorMessage>
+            )}
+          </Center>
+        </Box>
+      </FormControl>
       <Flex
         alignItems="center"
         justifyContent="space-around"
