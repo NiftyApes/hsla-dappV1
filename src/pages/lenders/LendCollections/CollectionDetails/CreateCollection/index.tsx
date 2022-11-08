@@ -1,7 +1,9 @@
 import React, { useCallback } from 'react';
-import { Box, Button, Flex, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Text, Tooltip } from '@chakra-ui/react';
+import { QuestionOutlineIcon } from '@chakra-ui/icons';
 
 import { useEasyOfferForCollection } from 'hooks/useEasyOfferForCollection';
+import Icon from 'components/atoms/Icon';
 import { CreateCollectionOfferForm } from './CreateCollectionOfferForm';
 
 interface CreateCollectionOfferProps {
@@ -50,15 +52,28 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
         <Text fontWeight="bold" color="solid.gray0">
           CREATE FLOOR OFFER TERMS
         </Text>
-        <Button
-          padding="8px 12px"
-          disabled={easyOfferApr <= 0}
-          onClick={onDraftTopOffer}
-          color="primary.purple"
-          variant="link"
-        >
-          Draft Top Offer ✏️
-        </Button>
+        {easyOfferApr <= 0 ? null : (
+          <Flex alignItems="center">
+            <Button
+              leftIcon={<Icon color="primary.purple" name="edit" />}
+              padding="8px 12px"
+              disabled={easyOfferApr <= 0}
+              onClick={onDraftTopOffer}
+              color="primary.purple"
+              variant="link"
+              fontWeight="450"
+            >
+              Draft Top Offer
+            </Button>
+            <Tooltip
+              size="md"
+              hasArrow
+              label="Auto-drafts a competitive offer based on offerbook data."
+            >
+              <QuestionOutlineIcon color="gray.500" />
+            </Tooltip>
+          </Flex>
+        )}
       </Flex>
       <CreateCollectionOfferForm
         nftContractAddress={nftContractAddress}
