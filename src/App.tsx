@@ -30,7 +30,9 @@ import Marketing from 'routes/Marketing';
 import RouteTracker from 'components/organisms/RouteTracker';
 import theme from './theme';
 
-ReactGA.initialize('G-KG81NEMB42');
+if (window.location.hostname === 'app.niftyapes.money') {
+  ReactGA.initialize('G-KG81NEMB42');
+}
 
 const App: React.FC = () => {
   const [{ wallet }] = useConnectWallet();
