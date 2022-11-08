@@ -66,8 +66,8 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
               Draft Top Offer
             </Button>
             <Tooltip
-              size="md"
               hasArrow
+              textAlign="center"
               label="Auto-drafts a competitive offer based on offerbook data."
             >
               <QuestionOutlineIcon color="gray.500" />
