@@ -7,10 +7,13 @@ import { getAPR } from 'helpers/getAPR';
 import { roundForDisplay } from 'helpers/roundForDisplay';
 import { useCancelOffer } from 'hooks/useCancelOffer';
 import moment from 'moment';
+import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
+import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { ToastSuccessCard } from '../../../../components/cards/ToastSuccessCard';
 import NFTCollectionCardSmall from '../../../../components/cards/NFTCollectionCardSmall';
 
 export const OfferRow = ({ offer, offerHash, index }: any) => {
+  const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.LENDERS);
   const toast = useToast();
 
   const { cancelOffer, cancelStatus, txReceipt } = useCancelOffer({
@@ -21,6 +24,7 @@ export const OfferRow = ({ offer, offerHash, index }: any) => {
 
   useEffect(() => {
     if (cancelStatus === 'SUCCESS' && txReceipt) {
+      gaEventTracker(ACTIONS.OFFER, LABELS.CANCEL);
       toast({
         render: (props) => (
           <ToastSuccessCard

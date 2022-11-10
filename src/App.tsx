@@ -1,4 +1,4 @@
-import ReactGA from 'react-ga';
+import ReactGA from 'react-ga4';
 import { Button, ChakraProvider, Link } from '@chakra-ui/react';
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
 import {
@@ -30,8 +30,9 @@ import Marketing from 'routes/Marketing';
 import RouteTracker from 'components/organisms/RouteTracker';
 import theme from './theme';
 
-// @ts-ignore
-ReactGA.initialize(process.env.REACT_APP_GA_ID);
+if (window.location.hostname === 'app.niftyapes.money') {
+  ReactGA.initialize('G-KG81NEMB42');
+}
 
 const App: React.FC = () => {
   const [{ wallet }] = useConnectWallet();
