@@ -38,6 +38,8 @@ export interface LoanOffer {
   symbol: CoinSymbol;
   floorOfferCount?: number;
   floorTermLimit?: number;
+  signature?: string;
+  OfferAttempt?: any;
 }
 
 const loanOffer = (json: any): LoanOffer => {

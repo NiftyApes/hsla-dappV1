@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
 import { Box, Button, Flex, Td, Text, Tr, useToast } from '@chakra-ui/react';
+import { useEffect } from 'react';
 
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { ethers } from 'ethers';
@@ -7,16 +7,19 @@ import { getAPR } from 'helpers/getAPR';
 import { roundForDisplay } from 'helpers/roundForDisplay';
 import { useCancelOffer } from 'hooks/useCancelOffer';
 import moment from 'moment';
-import { ToastSuccessCard } from '../../../../components/cards/ToastSuccessCard';
 import NFTCollectionCardSmall from '../../../../components/cards/NFTCollectionCardSmall';
+import { ToastSuccessCard } from '../../../../components/cards/ToastSuccessCard';
 
 export const OfferRow = ({ offer, offerHash, index }: any) => {
   const toast = useToast();
+
+  console.log('offer', offer);
 
   const { cancelOffer, cancelStatus, txReceipt } = useCancelOffer({
     nftContractAddress: offer.nftContractAddress,
     nftId: offer.nftId,
     offerHash,
+    offer,
   });
 
   useEffect(() => {

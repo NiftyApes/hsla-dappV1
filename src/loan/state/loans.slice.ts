@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { getSignatureOffersByCollection } from 'api/getSignatureOffersByCollection';
 import { AppDispatch, ThunkExtra } from 'app/store';
 import { ethers } from 'ethers';
 import { getApiUrl, getData } from 'helpers';
@@ -142,6 +143,42 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
         }
       }),
     ).then((results) => data.filter((offer, j) => results[j]));
+
+    const sigOffers = await getSignatureOffersByCollection({
+      chainId,
+      nftContractAddress,
+    });
+
+    console.log('sigOffers', sigOffers);
+
+    for (let i = 0; i < sigOffers.length; i++) {
+      const sigOffer = sigOffers[i];
+
+      const isCancelledOrFinalized =
+        await offersContract.getOfferSignatureStatus(sigOffer.Signature);
+
+      if (isCancelledOrFinalized) {
+        continue;
+      }
+
+      const offerWithAddedFields = loanOffer({
+        offer: sigOffer.Offer,
+        ...sigOffer.Offer,
+        OfferAttempt: sigOffer.Offer,
+        OfferTerms: {
+          Amount: sigOffer.Offer.amount,
+          InterestRatePerSecond: sigOffer.Offer.interestRatePerSecond,
+          Expiration: sigOffer.Offer.expiration,
+          Duration: sigOffer.Offer.duration,
+          OfferStatus: 'ACTIVE',
+          FloorTerm: true,
+        },
+        OfferHash: sigOffer.OfferHash,
+        signature: sigOffer.Signature,
+      });
+
+      processedOffers.push(offerWithAddedFields);
+    }
 
     return {
       content: processedOffers,

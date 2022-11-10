@@ -8,6 +8,8 @@ import "./interfaces/niftyapes/lending/ILending.sol";
 import "./interfaces/niftyapes/sigLending/ISigLending.sol";
 import "./interfaces/niftyapes/offers/IOffers.sol";
 
+import "hardhat/console.sol";
+
 /// @title NiftyApes Signature Lending
 /// @custom:version 1.0
 /// @author captnseagraves (captnseagraves.eth)
@@ -129,7 +131,9 @@ contract NiftyApesSigLending is OwnableUpgradeable, PausableUpgradeable, Reentra
     require(nftId == offer.nftId, "00022");
   }
 
-  function _requireOfferCreator(Offer memory offer, address creator) internal pure {
+  function _requireOfferCreator(Offer memory offer, address creator) internal view {
+    console.log("creator ", creator);
+    console.log("offer.creator ", offer.creator);
     require(creator == offer.creator, "00024");
   }
 

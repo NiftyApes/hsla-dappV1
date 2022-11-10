@@ -15,8 +15,8 @@ import CryptoIcon from 'components/atoms/CryptoIcon';
 import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
 import { BigNumber } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
-import { logError } from 'logging/logError';
 import JSConfetti from 'js-confetti';
+import { logError } from 'logging/logError';
 import { humanizeContractError } from '../../../helpers/errorsMap';
 import { getAPR } from '../../../helpers/getAPR';
 import {

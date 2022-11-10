@@ -1,17 +1,23 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { Web3Provider } from '@ethersproject/providers';
 import { useAppDispatch } from 'app/hooks';
+import { LOCAL } from 'constants/contractAddresses';
 import { SECONDS_IN_YEAR } from 'constants/misc';
 import { increment } from 'counter/counterSlice';
 import { ErrorWithReason } from 'errors';
 import { ethers } from 'ethers';
 import { getEventFromReceipt } from 'helpers/getEventFromReceipt';
+import { saveOfferInDb } from 'helpers/saveOfferInDb';
+import { saveSignatureOfferInDb } from 'helpers/saveSignatureOfferInDb';
 import { logError } from 'logging/logError';
-import NiftyApesOffersDeploymentJSON from '../generated/deployments/localhost/NiftyApesOffers.json';
-import { saveOfferInDb } from '../helpers/saveOfferInDb';
+import { useMemo } from 'react';
 import { useChainId } from './useChainId';
-import { useOffersContract } from './useContracts';
+import { useOffersContract, useSigLendingContract } from './useContracts';
 import { useWalletAddress } from './useWalletAddress';
+import { useWalletProvider } from './useWalletProvider';
+
+const SIG = true;
 
 const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
@@ -22,11 +28,28 @@ export const useCreateCollectionOffer = ({
 }) => {
   const offersContract = useOffersContract();
 
+  (window as any).o = offersContract;
+
   const address = useWalletAddress();
 
   const dispatch = useAppDispatch();
 
   const chainId = useChainId();
+
+  const provider = useWalletProvider();
+
+  const SigLendingContract = useSigLendingContract();
+
+  (window as any).SigLendingContract = SigLendingContract;
+
+  const web3Provider = useMemo(
+    () => (provider ? new Web3Provider(provider) : undefined),
+    [provider],
+  );
+
+  const signer = useMemo(() => {
+    return web3Provider ? web3Provider?.getSigner(address) : undefined;
+  }, [web3Provider]);
 
   return {
     createCollectionOffer: async ({
@@ -65,66 +88,127 @@ export const useCreateCollectionOffer = ({
           throw new Error('Contract is not defined');
         }
 
-        const tx = await offersContract.createOffer({
-          creator: address,
-          nftContractAddress,
-          // TODO make sure this is right
-          interestRatePerSecond: Math.round(
-            ((aprInPercent / 100) * (amount * 1e18)) / SECONDS_IN_YEAR,
-          ),
-          nftId: 0,
-          fixedTerms: false,
-          floorTerm: true,
-          lenderOffer: true,
-          asset: ETH_ADDRESS,
-          amount: ethers.utils.parseUnits(String(amount), 'ether'),
-          duration: Math.floor(durationInDays * 86400),
-          expiration: Math.floor(Date.now() / 1000 + expirationInDays * 86400),
-          // TODO: Allow user to edit this in UI
-          floorTermLimit,
-        });
-
-        onTxSubmitted && onTxSubmitted(tx);
-
-        const receipt: any = await tx.wait();
-
-        if (receipt.status !== 1) {
-          throw new ErrorWithReason('reason: revert');
+        if (!signer) {
+          throw new Error('No signer');
         }
 
-        console.log('receipt', receipt);
+        if (!SigLendingContract) {
+          throw Error();
+        }
 
-        onTxMined && onTxMined(receipt);
+        if (SIG) {
+          const offerAttempt = {
+            creator: address,
+            nftContractAddress,
+            // TODO make sure this is right
+            interestRatePerSecond: Math.round(
+              ((aprInPercent / 100) * (amount * 1e18)) / SECONDS_IN_YEAR,
+            ),
+            nftId: 0,
+            fixedTerms: false,
+            floorTerm: true,
+            lenderOffer: true,
+            asset: ETH_ADDRESS,
+            amount: ethers.utils.parseUnits(String(amount), 'ether'),
+            duration: Math.floor(durationInDays * 86400),
+            expiration: Math.floor(
+              Date.now() / 1000 + expirationInDays * 86400,
+            ),
+            // TODO: Allow user to edit this in UI
+            floorTermLimit,
+          };
 
-        const newOfferEvent = getEventFromReceipt({
-          eventName: 'NewOffer',
-          receipt,
-          abi: NiftyApesOffersDeploymentJSON.abi,
-        });
+          const hash = await offersContract.getOfferHash(offerAttempt);
 
-        const { offer } = newOfferEvent.args;
+          console.log('chainId', chainId);
 
-        const offerObj = {
-          creator: offer.creator,
-          nftContractAddress: offer.nftContractAddress,
-          interestRatePerSecond: offer.interestRatePerSecond.toString(),
-          fixedTerms: offer.fixedTerms,
-          floorTerm: offer.floorTerm,
-          lenderOffer: offer.lenderOffer,
-          nftId: offer.nftId.toNumber(),
-          asset: offer.asset,
-          amount: offer.amount.toString(),
-          duration: offer.duration,
-          expiration: offer.expiration,
-        };
+          console.log('FRONTEND OFFER HASH', hash);
 
-        await saveOfferInDb({
-          chainId,
-          offerObj,
-          offerHash: newOfferEvent.args.offerHash,
-        });
+          console.log(
+            'FRONTEND HASHED MESSAGE',
+            ethers.utils.hashMessage(ethers.utils.arrayify(hash)),
+          );
 
-        onSuccess && onSuccess(newOfferEvent.args.offerHash);
+          const sig = await signer.signMessage(ethers.utils.arrayify(hash));
+
+          await saveSignatureOfferInDb({
+            chainId,
+            nftContractAddress: offerAttempt.nftContractAddress,
+            nftId: offerAttempt.nftId,
+            creator: offerAttempt.creator,
+            offer: {
+              ...offerAttempt,
+              amount: offerAttempt.amount.toString(),
+            },
+            offerHash: hash,
+            signature: sig,
+          });
+
+          onSuccess && onSuccess(hash);
+        } else {
+          const tx = await offersContract.createOffer({
+            creator: address,
+            nftContractAddress,
+            // TODO make sure this is right
+            interestRatePerSecond: Math.round(
+              ((aprInPercent / 100) * (amount * 1e18)) / SECONDS_IN_YEAR,
+            ),
+            nftId: 0,
+            fixedTerms: false,
+            floorTerm: true,
+            lenderOffer: true,
+            asset: ETH_ADDRESS,
+            amount: ethers.utils.parseUnits(String(amount), 'ether'),
+            duration: Math.floor(durationInDays * 86400),
+            expiration: Math.floor(
+              Date.now() / 1000 + expirationInDays * 86400,
+            ),
+            // TODO: Allow user to edit this in UI
+            floorTermLimit,
+          });
+
+          onTxSubmitted && onTxSubmitted(tx);
+
+          const receipt: any = await tx.wait();
+
+          if (receipt.status !== 1) {
+            throw new ErrorWithReason('reason: revert');
+          }
+
+          console.log('receipt', receipt);
+
+          onTxMined && onTxMined(receipt);
+
+          const newOfferEvent = getEventFromReceipt({
+            eventName: 'NewOffer',
+            receipt,
+            abi: LOCAL.OFFERS.ABI,
+          });
+
+          const { offer } = newOfferEvent.args;
+
+          const offerObj = {
+            creator: offer.creator,
+            nftContractAddress: offer.nftContractAddress,
+            interestRatePerSecond: offer.interestRatePerSecond.toString(),
+            fixedTerms: offer.fixedTerms,
+            floorTerm: offer.floorTerm,
+            lenderOffer: offer.lenderOffer,
+            nftId: offer.nftId.toNumber(),
+            asset: offer.asset,
+            amount: offer.amount.toString(),
+            duration: offer.duration,
+            expiration: offer.expiration,
+          };
+
+          await saveOfferInDb({
+            chainId,
+            offerObj,
+            offerHash: newOfferEvent.args.offerHash,
+          });
+
+          onSuccess && onSuccess(newOfferEvent.args.offerHash);
+        }
       } catch (e: any) {
         logError(e);
         if (onError) {
@@ -133,6 +217,7 @@ export const useCreateCollectionOffer = ({
           alert(e.message);
         }
       }
+
       dispatch(increment());
     },
   };

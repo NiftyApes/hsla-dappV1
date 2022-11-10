@@ -66,6 +66,8 @@ export interface NiftyApesOffersInterface extends utils.Interface {
   contractName: "NiftyApesOffers";
   functions: {
     "createOffer((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64))": FunctionFragment;
+    "getBlockId()": FunctionFragment;
+    "getChainId()": FunctionFragment;
     "getFloorOfferCount(bytes32)": FunctionFragment;
     "getOffer(address,uint256,bytes32,bool)": FunctionFragment;
     "getOfferHash((address,uint32,uint32,bool,bool,bool,address,uint256,address,uint128,uint96,uint64))": FunctionFragment;
@@ -98,6 +100,14 @@ export interface NiftyApesOffersInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "createOffer",
     values: [IOffersStructs.OfferStruct]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getBlockId",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getChainId",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "getFloorOfferCount",
@@ -197,6 +207,8 @@ export interface NiftyApesOffersInterface extends utils.Interface {
     functionFragment: "createOffer",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "getBlockId", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getChainId", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getFloorOfferCount",
     data: BytesLike
@@ -423,6 +435,10 @@ export interface NiftyApesOffers extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    getBlockId(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getChainId(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     getFloorOfferCount(
       offerHash: BytesLike,
       overrides?: CallOverrides
@@ -555,6 +571,10 @@ export interface NiftyApesOffers extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  getBlockId(overrides?: CallOverrides): Promise<BigNumber>;
+
+  getChainId(overrides?: CallOverrides): Promise<BigNumber>;
+
   getFloorOfferCount(
     offerHash: BytesLike,
     overrides?: CallOverrides
@@ -686,6 +706,10 @@ export interface NiftyApesOffers extends BaseContract {
       offer: IOffersStructs.OfferStruct,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    getBlockId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getChainId(overrides?: CallOverrides): Promise<BigNumber>;
 
     getFloorOfferCount(
       offerHash: BytesLike,
@@ -895,6 +919,10 @@ export interface NiftyApesOffers extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    getBlockId(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getChainId(overrides?: CallOverrides): Promise<BigNumber>;
+
     getFloorOfferCount(
       offerHash: BytesLike,
       overrides?: CallOverrides
@@ -1027,6 +1055,10 @@ export interface NiftyApesOffers extends BaseContract {
       offer: IOffersStructs.OfferStruct,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
+
+    getBlockId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getChainId(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getFloorOfferCount(
       offerHash: BytesLike,

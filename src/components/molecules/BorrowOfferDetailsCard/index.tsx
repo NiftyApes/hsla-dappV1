@@ -1,20 +1,20 @@
 /* eslint-disable consistent-return */
-import React, { useState } from 'react';
-import Icon from 'components/atoms/Icon';
-import { BigNumber, ethers } from 'ethers';
 import { Box, Button, Flex, Grid, Text, useToast } from '@chakra-ui/react';
-import { GOERLI, LOCAL, MAINNET } from 'constants/contractAddresses';
+import Icon from 'components/atoms/Icon';
 import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
+import { GOERLI, LOCAL, MAINNET } from 'constants/contractAddresses';
+import { BigNumber, ethers } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
-import { logError } from 'logging/logError';
 import { useChainId } from 'hooks/useChainId';
 import JSConfetti from 'js-confetti';
-import { LoanOffer } from '../../../loan';
-import { NFT } from '../../../nft';
-import { concatForDisplay } from '../../../helpers/roundForDisplay';
+import { logError } from 'logging/logError';
+import React, { useState } from 'react';
 import { humanizeContractError } from '../../../helpers/errorsMap';
+import { concatForDisplay } from '../../../helpers/roundForDisplay';
 import { useERC721Approval } from '../../../hooks/useERC721Approval';
 import { useExecuteLoanByBorrower } from '../../../hooks/useExecuteLoanByBorrower';
+import { LoanOffer } from '../../../loan';
+import { NFT } from '../../../nft';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
 
 interface Props {
@@ -76,6 +76,8 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
     nftId: nft.id,
     offerHash: offer.OfferHash,
     floorTerm: offer.OfferTerms.FloorTerm,
+    signature: offer.signature,
+    offerAttempt: offer.OfferAttempt,
   });
   const [isExecuting, setExecuting] = useState<boolean>(false);
 

@@ -5,7 +5,7 @@
       "chainId": "31337",
       "contracts": {
         "NiftyApesLiquidity": {
-          "address": "0x76cec9299B6Fa418dc71416FF353737AB7933A7D",
+          "address": "0x90c84237fDdf091b1E63f369AF122EB46000bc70",
           "abi": [
             {
               "anonymous": false,
@@ -966,7 +966,7 @@
           ]
         },
         "NiftyApesOffers": {
-          "address": "0xA3307BF348ACC4bEDdd67CCA2f7F0c4349d347Db",
+          "address": "0x3D63c50AD04DD5aE394CAB562b7691DD5de7CF6f",
           "abi": [
             {
               "anonymous": false,
@@ -1434,6 +1434,32 @@
                 }
               ],
               "stateMutability": "nonpayable",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "getBlockId",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
+              "type": "function"
+            },
+            {
+              "inputs": [],
+              "name": "getChainId",
+              "outputs": [
+                {
+                  "internalType": "uint256",
+                  "name": "",
+                  "type": "uint256"
+                }
+              ],
+              "stateMutability": "view",
               "type": "function"
             },
             {
@@ -2287,7 +2313,7 @@
           ]
         },
         "NiftyApesSigLending": {
-          "address": "0x313F922BE1649cEc058EC0f076664500c78bdc0b",
+          "address": "0x103A3b128991781EE2c8db0454cA99d67b257923",
           "abi": [
             {
               "anonymous": false,
@@ -2736,7 +2762,7 @@
           ]
         },
         "NiftyApesLending": {
-          "address": "0xc0Bb1650A8eA5dDF81998f17B5319afD656f4c11",
+          "address": "0xBbc18b580256A82dC0F9A86152b8B22E7C1C8005",
           "abi": [
             {
               "anonymous": false,
@@ -4590,7 +4616,7 @@
           ]
         },
         "YourCollectible": {
-          "address": "0x5322471a7E37Ac2B8902cFcba84d266b37D811A0",
+          "address": "0xB9d9e972100a1dD01cd441774b45b5821e136043",
           "abi": [
             {
               "inputs": [],
@@ -5062,7 +5088,7 @@
           ]
         },
         "YourContract": {
-          "address": "0x90c84237fDdf091b1E63f369AF122EB46000bc70",
+          "address": "0x707531c9999AaeF9232C8FEfBA31FBa4cB78d84a",
           "abi": [
             {
               "inputs": [],

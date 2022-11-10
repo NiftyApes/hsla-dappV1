@@ -11,6 +11,8 @@ import "./interfaces/niftyapes/offers/IOffers.sol";
 import "./interfaces/niftyapes/liquidity/ILiquidity.sol";
 import "./lib/ECDSABridge.sol";
 
+import "hardhat/console.sol";
+
 /// @title NiftyApes Offers
 /// @custom:version 1.0
 /// @author captnseagraves (captnseagraves.eth)
@@ -90,6 +92,141 @@ contract NiftyApesOffers is OwnableUpgradeable, PausableUpgradeable, EIP712Upgra
 
   /// @inheritdoc IOffers
   function getOfferHash(Offer memory offer) public view returns (bytes32) {
+    console.log("address(this) ", address(this));
+
+    console.log("_domainSeparatorV4");
+    console.logBytes(abi.encodePacked(_domainSeparatorV4()));
+
+    console.log("chainid");
+    console.log(block.chainid);
+
+    console.log("MOST IMPORTANT CHECK");
+    console.logBytes(abi.encodePacked(_hashTypedDataV4(0xbd87ab8861a9a90b2f8eb0ec3c1e60e936cb4b2809d83378f7f1ac73ec286fd2)));
+
+    console.log("CONTRACT OFFER HASH");
+
+    console.logBytes(
+      abi.encodePacked(
+        _hashTypedDataV4(
+          keccak256(
+            abi.encode(
+              0x428a8e8c29d93e1e11aecebd37fa09e4f7c542a1302c7ac497bf5f49662103a5,
+              keccak256(
+                abi.encode(
+                  offer.creator,
+                  offer.duration,
+                  offer.expiration,
+                  offer.fixedTerms,
+                  offer.floorTerm,
+                  offer.lenderOffer,
+                  offer.nftContractAddress,
+                  offer.nftId,
+                  offer.asset,
+                  offer.amount,
+                  offer.interestRatePerSecond,
+                  offer.floorTermLimit
+                )
+              )
+            )
+          )
+        )
+      )
+    );
+
+    // console.log("CONTRACT HASHED MESSAGE");
+
+    // console.logBytes(
+    //   abi.encodePacked(
+    //     ECDSAUpgradeable.toEthSignedMessageHash(
+    //       _hashTypedDataV4(
+    //         keccak256(
+    //           abi.encode(
+    //             0x428a8e8c29d93e1e11aecebd37fa09e4f7c542a1302c7ac497bf5f49662103a5,
+    //             keccak256(
+    //               abi.encode(
+    //                 offer.creator,
+    //                 offer.duration,
+    //                 offer.expiration,
+    //                 offer.fixedTerms,
+    //                 offer.floorTerm,
+    //                 offer.lenderOffer,
+    //                 offer.nftContractAddress,
+    //                 offer.nftId,
+    //                 offer.asset,
+    //                 offer.amount,
+    //                 offer.interestRatePerSecond,
+    //                 offer.floorTermLimit
+    //               )
+    //             )
+    //           )
+    //         )
+    //       )
+    //     )
+    //   )
+    // );
+
+    console.log("offer.creator ", offer.creator);
+    console.log("offer.duration ", offer.duration);
+    console.log("offer.expiration ", offer.expiration);
+    console.log("offer.fixedTerms ", offer.fixedTerms);
+    console.log("offer.floorTerm ", offer.floorTerm);
+    console.log("offer.lenderOffer ", offer.lenderOffer);
+    console.log("offer.nftContractAddress ", offer.nftContractAddress);
+    console.log("offer.nftId ", offer.nftId);
+    console.log("offer.asset ", offer.asset);
+    console.log("offer.amount ", offer.amount);
+    console.log("offer.interestRatePerSecond ", offer.interestRatePerSecond);
+    console.log("offer.floorTermLimit ", offer.floorTermLimit);
+
+    console.log("keccak256 of abi encode just offer fields");
+    console.logBytes(
+      abi.encode(
+        keccak256(
+          abi.encode(
+            offer.creator,
+            offer.duration,
+            offer.expiration,
+            offer.fixedTerms,
+            offer.floorTerm,
+            offer.lenderOffer,
+            offer.nftContractAddress,
+            offer.nftId,
+            offer.asset,
+            offer.amount,
+            offer.interestRatePerSecond,
+            offer.floorTermLimit
+          )
+        )
+      )
+    );
+
+    console.log("keccak256 of entire argument");
+    console.logBytes(
+      abi.encode(
+        keccak256(
+          abi.encode(
+            0x428a8e8c29d93e1e11aecebd37fa09e4f7c542a1302c7ac497bf5f49662103a5,
+            keccak256(
+              abi.encode(
+                offer.creator,
+                offer.duration,
+                offer.expiration,
+                offer.fixedTerms,
+                offer.floorTerm,
+                offer.lenderOffer,
+                offer.nftContractAddress,
+                offer.nftId,
+                offer.asset,
+                offer.amount,
+                offer.interestRatePerSecond,
+                offer.floorTermLimit
+              )
+            )
+          )
+        )
+      )
+    );
+
     return
       _hashTypedDataV4(
         keccak256(
@@ -312,4 +449,16 @@ contract NiftyApesOffers is OwnableUpgradeable, PausableUpgradeable, EIP712Upgra
   }
 
   function renounceOwnership() public override onlyOwner {}
+
+  function getChainId() external view returns (uint256) {
+    uint256 id;
+    assembly {
+      id := chainid()
+    }
+    return id;
+  }
+
+  function getBlockId() external view returns (uint256) {
+    return block.chainid;
+  }
 }

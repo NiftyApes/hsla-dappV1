@@ -1,11 +1,13 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable @typescript-eslint/no-shadow */
 import { getActiveOffersByLender } from 'api/getActiveOffersByLender';
+import { getActiveSignatureOffersByLender } from 'api/getActiveSignatureOffersByLender';
 import { getAllOffersByLender } from 'api/getAllOffersByLender';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
 import { getFloorOfferCountFromHash } from 'helpers/getOfferCountLeftFromHash';
+import { loanOffer } from 'loan';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useChainId } from './useChainId';
@@ -81,6 +83,64 @@ export const useOffersForLender = ({
       }
 
       const filteredOffers = _.compact(offers);
+
+      const sigOffers = await getActiveSignatureOffersByLender({
+        chainId,
+        lenderAddress,
+      });
+
+      for (let i = 0; i < sigOffers.length; i++) {
+        const sigOffer = sigOffers[i];
+
+        console.log('sigOffer', sigOffer);
+
+        const isCancelledOrFinalized =
+          await offersContract.getOfferSignatureStatus(sigOffer.Signature);
+
+        if (isCancelledOrFinalized) {
+          continue;
+        }
+
+        const offerWithAddedFields = loanOffer({
+          offer: sigOffer.Offer,
+          ...sigOffer.Offer,
+          OfferAttempt: sigOffer.Offer,
+          OfferTerms: {
+            Amount: sigOffer.Offer.amount,
+            InterestRatePerSecond: sigOffer.Offer.interestRatePerSecond,
+            Expiration: sigOffer.Offer.expiration,
+            Duration: sigOffer.Offer.duration,
+            OfferStatus: 'ACTIVE',
+            FloorTerm: true,
+          },
+          offerHash: sigOffer.OfferHash,
+          signature: sigOffer.Signature,
+        });
+
+        filteredOffers.push({ offer: offerWithAddedFields });
+      }
+
+      // if (sigOfferStr) {
+      //   const sigOffer = JSON.parse(sigOfferStr);
+
+      //   const offerWithAddedFields = loanOffer({
+      //     offer: sigOffer.offer,
+      //     ...sigOffer.offer,
+      //     OfferAttempt: sigOffer.offer,
+      //     OfferTerms: {
+      //       Amount: sigOffer.offer.amount,
+      //       InterestRatePerSecond: sigOffer.offer.interestRatePerSecond,
+      //       Expiration: sigOffer.offer.expiration,
+      //       Duration: sigOffer.offer.duration,
+      //       OfferStatus: 'ACTIVE',
+      //       FloorTerm: true,
+      //     },
+      //     offerHash: sigOffer.offerHash,
+      //     signature: sigOffer.sig,
+      //   });
+
+      //   filteredOffers.push({ offer: offerWithAddedFields });
+      // }
 
       setOffers(filteredOffers);
     }

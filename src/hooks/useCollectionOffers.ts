@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable no-await-in-loop */
 import { getOffersByCollection } from 'api/getOffersByCollection';
+import { getSignatureOffersByCollection } from 'api/getSignatureOffersByCollection';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
 import { getFloorOfferCountFromHash } from 'helpers/getOfferCountLeftFromHash';
+import { loanOffer } from 'loan';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useChainId } from './useChainId';
@@ -78,6 +80,42 @@ export const useCollectionOffers = ({
       }
 
       const filteredOffers = _.compact(offers);
+
+      const sigOffers = await getSignatureOffersByCollection({
+        chainId,
+        nftContractAddress,
+      });
+
+      console.log('sigOffers', sigOffers);
+
+      for (let i = 0; i < sigOffers.length; i++) {
+        const sigOffer = sigOffers[i];
+
+        const isCancelledOrFinalized =
+          await offersContract.getOfferSignatureStatus(sigOffer.Signature);
+
+        if (isCancelledOrFinalized) {
+          continue;
+        }
+
+        const offerWithAddedFields = loanOffer({
+          offer: { ...sigOffer.Offer, offerHash: sigOffer.OfferHash },
+          ...sigOffer.Offer,
+          OfferAttempt: sigOffer.Offer,
+          OfferTerms: {
+            Amount: sigOffer.Offer.amount,
+            InterestRatePerSecond: sigOffer.Offer.interestRatePerSecond,
+            Expiration: sigOffer.Offer.expiration,
+            Duration: sigOffer.Offer.duration,
+            OfferStatus: 'ACTIVE',
+            FloorTerm: true,
+          },
+          OfferHash: sigOffer.OfferHash,
+          signature: sigOffer.Signature,
+        });
+
+        filteredOffers.push(offerWithAddedFields);
+      }
 
       setOffers(filteredOffers);
     }

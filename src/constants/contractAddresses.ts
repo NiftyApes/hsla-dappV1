@@ -2,6 +2,8 @@ import cEthJSON from '../external/cEth/cEth.json';
 import LendingDeploymentJSON from '../generated/deployments/localhost/NiftyApesLending.json';
 import LiquidityDeploymentJSON from '../generated/deployments/localhost/NiftyApesLiquidity.json';
 import OffersDeploymentJSON from '../generated/deployments/localhost/NiftyApesOffers.json';
+import SigLendingDeploymentJSON from '../generated/deployments/localhost/NiftyApesSigLending.json';
+
 import YourCollectibleDeploymentJSON from '../generated/deployments/localhost/YourCollectible.json';
 
 export const BAYC_CONTRACT_ADDRESS =
@@ -26,6 +28,10 @@ export const GOERLI = {
     ADDRESS: '0xdaD319eEd71C286B90A6cfD4cb08ED754F835041',
     ABI: OffersDeploymentJSON.abi,
   },
+  SIG_LENDING: {
+    ADDRESS: '0xdC133330a326B72D102dEd45Af80f65088B12465',
+    ABI: SigLendingDeploymentJSON.abi,
+  },
   CETH: {
     ADDRESS: '0x20572e4c090f15667cf7378e16fad2ea0e2f3eff',
     ABI: cEthJSON.abi,
@@ -45,6 +51,10 @@ export const MAINNET = {
     ADDRESS: '0x540a59AD41a38b1Cc2B90D3adADC2F7417f1e451',
     ABI: OffersDeploymentJSON.abi,
   },
+  SIG_LENDING: {
+    ADDRESS: '0xc708c2efd6e6578809352d8e618c7f619f3b7f20',
+    ABI: SigLendingDeploymentJSON.abi,
+  },
   CETH: {
     ADDRESS: '0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5',
     ABI: cEthJSON.abi,
@@ -53,20 +63,24 @@ export const MAINNET = {
 
 export const LOCAL = {
   LENDING: {
-    ADDRESS: '0x05d4c15d505359A3647B714AfBfD60F3BB526953',
+    ADDRESS: LendingDeploymentJSON.address,
     ABI: LendingDeploymentJSON.abi,
   },
   LIQUIDITY: {
-    ADDRESS: '0x5106562923f74D8F2661a24557aCa6B471eb500a',
+    ADDRESS: LiquidityDeploymentJSON.address,
     ABI: LiquidityDeploymentJSON.abi,
   },
   OFFERS: {
-    ADDRESS: '0x456F57E2F5f84066c73e1223Ec08c898397108c2',
+    ADDRESS: OffersDeploymentJSON.address,
     ABI: OffersDeploymentJSON.abi,
   },
   CETH: {
-    ADDRESS: '0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5',
+    ADDRESS: cEthJSON.address,
     ABI: cEthJSON.abi,
+  },
+  SIG_LENDING: {
+    ADDRESS: SigLendingDeploymentJSON.address,
+    ABI: [...SigLendingDeploymentJSON.abi, ...LendingDeploymentJSON.abi],
   },
   YOUR_COLLECTIBLE: {
     ADDRESS: YourCollectibleDeploymentJSON.address,
