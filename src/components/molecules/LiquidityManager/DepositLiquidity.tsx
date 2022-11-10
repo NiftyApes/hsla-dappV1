@@ -13,11 +13,15 @@ import CryptoIcon from 'components/atoms/CryptoIcon';
 import { useDepositEthLiquidity } from 'hooks/useDepositEthLiquidity';
 import React, { useEffect, useState } from 'react';
 import { useWalletBalance } from 'hooks/useWalletBalance';
+import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
+import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { DepositBtn } from './DepositBtn';
 import { DepositMsg } from './DepositMsg';
 import { ToastSuccessCard } from '../../cards/ToastSuccessCard';
 
 export const DepositLiquidity: React.FC = () => {
+  const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.LENDERS);
+
   const balance = useWalletBalance();
   const toast = useToast();
 
@@ -57,6 +61,7 @@ export const DepositLiquidity: React.FC = () => {
       });
     }
     if (depositStatus === 'SUCCESS' && txReceipt) {
+      gaEventTracker(ACTIONS.LIQUIDITY, LABELS.DEPOSIT);
       toast({
         render: (props) => (
           <ToastSuccessCard

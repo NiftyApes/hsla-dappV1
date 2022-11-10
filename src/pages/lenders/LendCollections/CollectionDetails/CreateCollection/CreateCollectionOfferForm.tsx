@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import {
   Box,
   Button,
+  Center,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -23,6 +24,10 @@ import { useWalletAddress } from 'hooks/useWalletAddress';
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import _ from 'lodash';
 import JSConfetti from 'js-confetti';
+import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
+import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
+import { lendersLiquidity } from 'routes/router';
+import { Link } from 'react-router-dom';
 import { ToastSuccessCard } from '../../../../../components/cards/ToastSuccessCard';
 
 interface CreateCollectionOfferFormProps {
@@ -56,6 +61,7 @@ export const CreateCollectionOfferForm: React.FC<
   floorTermLimit,
   setFloorTermLimit,
 }) => {
+  const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.LENDERS);
   const { createCollectionOffer } = useCreateCollectionOffer({
     nftContractAddress,
   });
@@ -114,6 +120,7 @@ export const CreateCollectionOfferForm: React.FC<
 
       onPending: () => setCreateCollectionOfferStatus('PENDING'),
       onSuccess: (offerHash: string) => {
+        gaEventTracker(ACTIONS.OFFER, LABELS.CREATE);
         console.log('Offer hash', offerHash);
 
         setCollectionOfferAmt('');
@@ -173,6 +180,7 @@ export const CreateCollectionOfferForm: React.FC<
                   transform: 'translateY(-4px)',
                 }}
                 type="number"
+                onWheel={(e) => e.currentTarget.blur()}
                 textAlign="left"
                 value={collectionOfferAmt}
                 onChange={(e) => setCollectionOfferAmt(e.target.value)}
@@ -212,6 +220,7 @@ export const CreateCollectionOfferForm: React.FC<
           <Box position="relative">
             <Input
               type="number"
+              onWheel={(e) => e.currentTarget.blur()}
               value={apr}
               onChange={(e) => setApr(e.target.value)}
               bg="#F9F3FF"
@@ -243,6 +252,7 @@ export const CreateCollectionOfferForm: React.FC<
               <InputGroup position="relative">
                 <Input
                   type="number"
+                  onWheel={(e) => e.currentTarget.blur()}
                   value={duration}
                   onChange={(e) => setDuration(e.target.value)}
                   bg="#F9F3FF"
@@ -304,6 +314,23 @@ export const CreateCollectionOfferForm: React.FC<
       >
         CREATE OFFER
       </Button>
+      <FormControl isInvalid={doesOfferAmountExceedAvailableLiquidity}>
+        <Box mt="8px">
+          <Center>
+            {doesOfferAmountExceedAvailableLiquidity && (
+              <FormErrorMessage fontWeight={600} textAlign="center">
+                <Link
+                  style={{ textDecoration: 'underline' }}
+                  to={lendersLiquidity()}
+                >
+                  Desposit more liquidity&nbsp;
+                </Link>
+                to create an offer
+              </FormErrorMessage>
+            )}
+          </Center>
+        </Box>
+      </FormControl>
       <Flex
         alignItems="center"
         justifyContent="space-around"
