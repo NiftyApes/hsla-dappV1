@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable react/no-array-index-key */
@@ -41,7 +40,7 @@ const i18n = {
 };
 
 const OffersTable: React.FC<Props> = ({ offers, onClick }) => {
-  const [sortOrder, setSortOrder] = useState<string>('APR_ASC');
+  const [sortOrder, setSortOrder] = useState<string>('AMOUNT_DESC');
 
   const sortedOffers: any =
     offers &&

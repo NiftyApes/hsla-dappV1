@@ -59,7 +59,7 @@ const OfferBook: React.FC<OfferBookProps> = ({
       ? 3600 * 24 * 30 * 1000
       : 0;
 
-  const [sortOrder, setSortOrder] = useState<string>('APR_ASC');
+  const [sortOrder, setSortOrder] = useState<string>('AMOUNT_DESC');
 
   const sortedOffers: any =
     offers &&
