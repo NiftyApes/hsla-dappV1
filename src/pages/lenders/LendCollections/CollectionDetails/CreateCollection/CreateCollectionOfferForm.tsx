@@ -143,12 +143,11 @@ export const CreateCollectionOfferForm: React.FC<
     });
   };
 
-  const { collectionAddress } = useParams();
   const { floorPrice } = useRaribleCollectionStats({
-    contractAddress: collectionAddress,
+    contractAddress: nftContractAddress,
   });
 
-  if (!collectionAddress) {
+  if (!nftContractAddress) {
     return null;
   }
 
