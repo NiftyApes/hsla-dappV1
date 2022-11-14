@@ -1,24 +1,31 @@
 /* eslint-disable consistent-return */
-import React, { useState } from "react";
-import Icon from "components/atoms/Icon";
-import { BigNumber, ethers } from "ethers";
-import { Box, Button, Flex, Grid, Text, Tooltip, useToast } from "@chakra-ui/react";
-import { GOERLI, LOCAL, MAINNET } from "constants/contractAddresses";
-import { ToastSuccessCard } from "components/cards/ToastSuccessCard";
-import { formatEther } from "ethers/lib/utils";
-import { logError } from "logging/logError";
-import { useChainId } from "hooks/useChainId";
-import JSConfetti from "js-confetti";
-import { useAnalyticsEventTracker } from "hooks/useAnalyticsEventTracker";
-import { ACTIONS, CATEGORIES, LABELS } from "constants/googleAnalytics";
-import { LoanOffer } from "../../../loan";
-import { NFT } from "../../../nft";
-import { concatForDisplay } from "../../../helpers/roundForDisplay";
-import { humanizeContractError } from "../../../helpers/errorsMap";
-import { useERC721Approval } from "../../../hooks/useERC721Approval";
-import { useExecuteLoanByBorrower } from "../../../hooks/useExecuteLoanByBorrower";
-import LoadingIndicator from "../../atoms/LoadingIndicator";
-import { QuestionOutlineIcon } from "@chakra-ui/icons";
+import React, { useState } from 'react';
+import { BigNumber, ethers } from 'ethers';
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  Text,
+  Tooltip,
+  useToast,
+} from '@chakra-ui/react';
+import { GOERLI, LOCAL, MAINNET } from 'constants/contractAddresses';
+import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
+import { formatEther } from 'ethers/lib/utils';
+import { logError } from 'logging/logError';
+import { useChainId } from 'hooks/useChainId';
+import JSConfetti from 'js-confetti';
+import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
+import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
+import { QuestionOutlineIcon } from '@chakra-ui/icons';
+import { LoanOffer } from '../../../loan';
+import { NFT } from '../../../nft';
+import { concatForDisplay } from '../../../helpers/roundForDisplay';
+import { humanizeContractError } from '../../../helpers/errorsMap';
+import { useERC721Approval } from '../../../hooks/useERC721Approval';
+import { useExecuteLoanByBorrower } from '../../../hooks/useExecuteLoanByBorrower';
+import LoadingIndicator from '../../atoms/LoadingIndicator';
 
 interface Props {
   nft: NFT;
@@ -26,21 +33,21 @@ interface Props {
 }
 
 const i18n = {
-  allowButton: "allow niftyapes to transfer nft",
-  approveButton: "borrow money",
+  allowButton: 'allow niftyapes to transfer nft',
+  approveButton: 'borrow money',
   approveMessage: (nft: NFT, offer: LoanOffer) =>
     `Approve and transfer ${nft.name} #${
       nft.id
     } to the NiftyApes smart contract to borrow ${ethers.utils.formatEther(
-      BigNumber.from(String(offer.OfferTerms.Amount))
+      BigNumber.from(String(offer.OfferTerms.Amount)),
     )}Ξ for ${offer.durationDays} days`,
-  dealTermsLabel: "deal terms",
-  liquidityAwaits: "Liquidity Awaits",
-  toastApproveTransferError: "Unable to approve NFT transfer",
-  toastApproveTransferSuccess: "NFT Transfer approved",
-  toastLoanSuccess: "Loan executed successfully",
-  totalInterest: "total interest",
-  totalBorrowed: "is the most you could owe at the end of your loan"
+  dealTermsLabel: 'deal terms',
+  liquidityAwaits: 'Liquidity Awaits',
+  toastApproveTransferError: 'Unable to approve NFT transfer',
+  toastApproveTransferSuccess: 'NFT Transfer approved',
+  toastLoanSuccess: 'Loan executed successfully',
+  totalInterest: 'total interest',
+  totalBorrowed: 'is the most you could owe at the end of your loan',
 };
 
 const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
@@ -51,35 +58,35 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
   const jsConfetti = new JSConfetti();
 
   const operator =
-    chainId === "0x7a69"
+    chainId === '0x7a69'
       ? LOCAL.LENDING.ADDRESS
-      : chainId === "0x5"
-        ? GOERLI.LENDING.ADDRESS
-        : chainId === "0x1"
-          ? MAINNET.LENDING.ADDRESS
-          : "0x0";
+      : chainId === '0x5'
+      ? GOERLI.LENDING.ADDRESS
+      : chainId === '0x1'
+      ? MAINNET.LENDING.ADDRESS
+      : '0x0';
 
   const totalAmount: BigNumber = BigNumber.from(String(offer.amount));
   const totalInterest: BigNumber = BigNumber.from(
-    String(offer.OfferTerms.InterestRatePerSecond)
+    String(offer.OfferTerms.InterestRatePerSecond),
   ).mul(BigNumber.from(String(offer.OfferTerms.Duration)));
 
   const totalBorrowed: BigNumber = BigNumber.from(
-    String(offer.OfferTerms.Amount)
+    String(offer.OfferTerms.Amount),
   ).add(totalInterest);
 
   const fmtOfferAmount: string = formatEther(totalAmount);
   const { hasApproval, hasCheckedApproval, grantApproval } = useERC721Approval({
     contractAddress: nft.contractAddress,
     operator,
-    tokenId: nft.id
+    tokenId: nft.id,
   });
 
   const { executeLoanByBorrower } = useExecuteLoanByBorrower({
     nftContractAddress: nft.contractAddress,
     nftId: nft.id,
     offerHash: offer.OfferHash,
-    floorTerm: offer.OfferTerms.FloorTerm
+    floorTerm: offer.OfferTerms.FloorTerm,
   });
   const [isExecuting, setExecuting] = useState<boolean>(false);
 
@@ -89,9 +96,9 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
       await executeLoanByBorrower()
         .then(({ receipt }) => {
           jsConfetti.addConfetti({
-            emojis: ["🍌"],
+            emojis: ['🍌'],
             emojiSize: 80,
-            confettiNumber: 50
+            confettiNumber: 50,
           });
 
           gaEventTracker(ACTIONS.LOAN, LABELS.INIT);
@@ -104,18 +111,18 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
                 {...props}
               />
             ),
-            position: "top-right",
+            position: 'top-right',
             duration: 9000,
-            isClosable: true
+            isClosable: true,
           });
         })
         .catch((error) => {
           logError(error);
           toast({
             title: `Error: ${humanizeContractError(error.reason)}`,
-            status: "error",
-            position: "top-right",
-            isClosable: true
+            status: 'error',
+            position: 'top-right',
+            isClosable: true,
           });
 
           setExecuting(false);
@@ -124,31 +131,31 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
   };
 
   const [transferApprovalStatus, setTransferApprovalStatus] =
-    useState<string>("READY");
+    useState<string>('READY');
   const onApproveTransfer = async () => {
     await grantApproval({
-      onPending: () => setTransferApprovalStatus("PENDING"),
+      onPending: () => setTransferApprovalStatus('PENDING'),
       onSuccess: () => {
-        setTransferApprovalStatus("SUCCESS");
+        setTransferApprovalStatus('SUCCESS');
 
         toast({
           title: i18n.toastApproveTransferSuccess,
-          status: "success",
-          position: "top-right",
-          isClosable: true
+          status: 'success',
+          position: 'top-right',
+          isClosable: true,
         });
-        setTimeout(() => setTransferApprovalStatus("READY"), 1000);
+        setTimeout(() => setTransferApprovalStatus('READY'), 1000);
       },
       onError: () => {
         toast({
           title: i18n.toastApproveTransferError,
-          status: "error",
-          position: "top-right",
-          isClosable: true
+          status: 'error',
+          position: 'top-right',
+          isClosable: true,
         });
-        setTransferApprovalStatus("ERROR");
-        setTimeout(() => setTransferApprovalStatus("READY"), 1000);
-      }
+        setTransferApprovalStatus('ERROR');
+        setTimeout(() => setTransferApprovalStatus('READY'), 1000);
+      },
     });
   };
 
@@ -220,11 +227,11 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
                 </Text>
               </Flex>
               <Text fontSize="sm" color="solid.black" mt="5px">
-                for{" "}
+                for{' '}
                 <Text as="span" fontWeight="bold">
                   {offer.durationDays}
-                </Text>{" "}
-                days at{" "}
+                </Text>{' '}
+                days at{' '}
                 <Text as="span" fontWeight="bold">
                   {offer.aprPercentage}% APR
                 </Text>
@@ -257,7 +264,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
               </Flex>
               <Text fontSize="sm" color="solid.black" mb="20px">
                 <Text as="span" fontWeight="bold">
-                  {concatForDisplay(formatEther(totalBorrowed))}Ξ{" "}
+                  {concatForDisplay(formatEther(totalBorrowed))}Ξ{' '}
                 </Text>
                 {i18n.totalBorrowed}
               </Text>
