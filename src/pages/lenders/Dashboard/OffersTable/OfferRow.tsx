@@ -1,29 +1,30 @@
-import { useEffect } from 'react';
-import { Box, Button, Flex, Td, Text, Tr, useToast } from '@chakra-ui/react';
+import { useEffect } from "react";
+import { Box, Button, Flex, Td, Text, Tr, useToast } from "@chakra-ui/react";
 
-import LoadingIndicator from 'components/atoms/LoadingIndicator';
-import { ethers } from 'ethers';
-import { getAPR } from 'helpers/getAPR';
-import { roundForDisplay } from 'helpers/roundForDisplay';
-import { useCancelOffer } from 'hooks/useCancelOffer';
-import moment from 'moment';
-import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
-import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
-import { ToastSuccessCard } from '../../../../components/cards/ToastSuccessCard';
-import NFTCollectionCardSmall from '../../../../components/cards/NFTCollectionCardSmall';
+import LoadingIndicator from "components/atoms/LoadingIndicator";
+import { ethers } from "ethers";
+import { getAPR } from "helpers/getAPR";
+import { roundForDisplay } from "helpers/roundForDisplay";
+import { useCancelOffer } from "hooks/useCancelOffer";
+import moment from "moment";
+import { useAnalyticsEventTracker } from "hooks/useAnalyticsEventTracker";
+import { ACTIONS, CATEGORIES, LABELS } from "constants/googleAnalytics";
+import { ToastSuccessCard } from "../../../../components/cards/ToastSuccessCard";
+import NFTCollectionCardSmall from "../../../../components/cards/NFTCollectionCardSmall";
 
 export const OfferRow = ({ offer, offerHash, index }: any) => {
+
   const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.LENDERS);
   const toast = useToast();
 
   const { cancelOffer, cancelStatus, txReceipt } = useCancelOffer({
     nftContractAddress: offer.nftContractAddress,
     nftId: offer.nftId,
-    offerHash,
+    offerHash
   });
 
   useEffect(() => {
-    if (cancelStatus === 'SUCCESS' && txReceipt) {
+    if (cancelStatus === "SUCCESS" && txReceipt) {
       gaEventTracker(ACTIONS.OFFER, LABELS.CANCEL);
       toast({
         render: (props) => (
@@ -33,9 +34,9 @@ export const OfferRow = ({ offer, offerHash, index }: any) => {
             {...props}
           />
         ),
-        position: 'top-right',
+        position: "top-right",
         duration: 9000,
-        isClosable: true,
+        isClosable: true
       });
     }
   }, [cancelStatus, txReceipt]);
@@ -52,10 +53,10 @@ export const OfferRow = ({ offer, offerHash, index }: any) => {
       border="1px solid #eee"
       sx={{
         td: {
-          border: 'none',
-          fontSize: 'md',
-          textAlign: 'center',
-        },
+          border: "none",
+          fontSize: "md",
+          textAlign: "center"
+        }
       }}
     >
       <Td>
@@ -75,9 +76,9 @@ export const OfferRow = ({ offer, offerHash, index }: any) => {
             <Box mb="2px">
               <Text as="span" fontSize="xl" fontWeight="bold">
                 {ethers.utils.formatEther(offer.amount)}Ξ
-              </Text>{' '}
+              </Text>{" "}
               <Text as="span" color="#555">
-                {moment.duration(offer.duration, 'seconds').asDays()} days,
+                {moment.duration(offer.duration, "seconds").asDays()} days,
               </Text>
             </Box>
             <Box>
@@ -85,8 +86,8 @@ export const OfferRow = ({ offer, offerHash, index }: any) => {
                 {roundForDisplay(
                   getAPR({
                     amount: offer.amount,
-                    interestRatePerSecond: offer.interestRatePerSecond,
-                  }),
+                    interestRatePerSecond: offer.interestRatePerSecond
+                  })
                 )}
                 %
               </Text>{' '}
@@ -102,7 +103,7 @@ export const OfferRow = ({ offer, offerHash, index }: any) => {
         <Text
           fontSize="md"
           fontWeight="bold"
-          color={hasExpired ? 'notification.info' : '#24DFA5'}
+          color={hasExpired ? "notification.info" : "#24DFA5"}
         >
           {hasExpired ? 'Expired' : 'Active'}
         </Text>
@@ -111,15 +112,18 @@ export const OfferRow = ({ offer, offerHash, index }: any) => {
           : `Expires in ${moment(offer.expiration * 1000).toNow(true)}`}
       </Td>
       <Td>
+        <Text fontWeight="bold">{offer.floorTermLimit}/{offer.floorOfferCount}</Text> loans used
+      </Td>
+      <Td>
         {!hasExpired && (
           <Flex flexDir="column" alignItems="center">
             <Button
-              disabled={cancelStatus !== 'READY'}
+              disabled={cancelStatus !== "READY"}
               variant="neutral"
               onClick={cancelOffer}
             >
               Cancel
-              {cancelStatus !== 'READY' ? (
+              {cancelStatus !== "READY" ? (
                 <Flex as="span" alignItems="center" ml="8px">
                   <LoadingIndicator size="sm" />
                 </Flex>
