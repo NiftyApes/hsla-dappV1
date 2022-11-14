@@ -152,7 +152,7 @@ export const CreateCollectionOfferForm: React.FC<
   }
 
   const offerLTV: number =
-    (Number(collectionOfferAmt) / Number(floorPrice)) * 100;
+    (Number(collectionOfferAmt) / Number(floorPrice || 0)) * 100;
 
   return (
     <Box
