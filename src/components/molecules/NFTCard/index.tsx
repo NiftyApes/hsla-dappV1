@@ -34,7 +34,7 @@ const i18n = {
   initLoanButtonLabel: 'initiate loan',
   offerApr: (apr: number) => `${roundForDisplay(apr)}% APR`,
   offerDuration: (duration: number) => `${duration} days`,
-  offerLabel: (type: string) => `${type} offer`,
+  bestOffer: 'most Ξ, lowest apr',
   viewAllOffers: (count: number) => `View All Offers (${formatNumber(count)})`,
   topOffer: 'top offer for',
   allOffers: 'all offers for',
@@ -82,7 +82,7 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
         textAlign="center"
         textTransform="uppercase"
       >
-        {i18n.offerLabel(bestOffer.type)}
+        {i18n.bestOffer}
       </Container>
     );
   };

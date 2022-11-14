@@ -62,7 +62,35 @@ const Header: React.FC = () => {
             cursor="pointer"
           />
         </Link>
-
+        <Menu key={window.location.pathname}>
+          <MenuButton
+            as={Button}
+            rightIcon={<AiOutlineCaretDown />}
+            bg="transparent"
+            noOfLines={1}
+            fontSize={{ base: '14px', xl: '16px' }}
+          >
+            BORROWERS
+          </MenuButton>
+          <MenuList
+            borderRadius="15px"
+            boxShadow="0px 0px 21px rgba(58, 0, 131, 0.1)"
+            p="9px 7px"
+            fontSize="md"
+            sx={{
+              button: {
+                fontWeight: 'bold',
+                borderRadius: '10px',
+                p: '15px',
+              },
+            }}
+          >
+            <MenuItem onClick={navigateToBorrowersDashboard}>
+              📊 Dashboard
+            </MenuItem>
+            <MenuItem onClick={navigateToBorrowers}>🍌 Borrow</MenuItem>
+          </MenuList>
+        </Menu>
         <Hide below="md">
           <Text
             textTransform="uppercase"
@@ -70,6 +98,7 @@ const Header: React.FC = () => {
             mr="20px"
             noOfLines={1}
             fontSize={{ base: '14px', xl: '16px' }}
+            marginLeft="1rem"
           >
             Lenders
           </Text>
@@ -130,35 +159,6 @@ const Header: React.FC = () => {
             </MenuList>
           </Menu>
         </Hide>
-        <Menu key={window.location.pathname}>
-          <MenuButton
-            as={Button}
-            rightIcon={<AiOutlineCaretDown />}
-            bg="transparent"
-            noOfLines={1}
-            fontSize={{ base: '14px', xl: '16px' }}
-          >
-            BORROWERS
-          </MenuButton>
-          <MenuList
-            borderRadius="15px"
-            boxShadow="0px 0px 21px rgba(58, 0, 131, 0.1)"
-            p="9px 7px"
-            fontSize="md"
-            sx={{
-              button: {
-                fontWeight: 'bold',
-                borderRadius: '10px',
-                p: '15px',
-              },
-            }}
-          >
-            <MenuItem onClick={navigateToBorrowersDashboard}>
-              📊 Dashboard
-            </MenuItem>
-            <MenuItem onClick={navigateToBorrowers}>🍌 Borrow</MenuItem>
-          </MenuList>
-        </Menu>
       </Flex>
       <WalletInfo />
     </Flex>

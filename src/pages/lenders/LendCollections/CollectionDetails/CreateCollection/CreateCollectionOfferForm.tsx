@@ -1,12 +1,18 @@
+import Humanize from 'humanize-plus';
+
 import React, { useMemo, useState } from 'react';
 import {
   Box,
   Button,
+  Center,
+  CircularProgress,
+  CircularProgressLabel,
   Flex,
   FormControl,
   FormErrorMessage,
   Grid,
   GridItem,
+  HStack,
   Input,
   InputGroup,
   InputLeftElement,
@@ -23,6 +29,11 @@ import { useWalletAddress } from 'hooks/useWalletAddress';
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import _ from 'lodash';
 import JSConfetti from 'js-confetti';
+import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
+import { useRaribleCollectionStats } from 'hooks/useRaribleColectionStats';
+import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
+import { lendersLiquidity } from 'routes/router';
+import { Link } from 'react-router-dom';
 import { ToastSuccessCard } from '../../../../../components/cards/ToastSuccessCard';
 
 interface CreateCollectionOfferFormProps {
@@ -56,6 +67,7 @@ export const CreateCollectionOfferForm: React.FC<
   floorTermLimit,
   setFloorTermLimit,
 }) => {
+  const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.LENDERS);
   const { createCollectionOffer } = useCreateCollectionOffer({
     nftContractAddress,
   });
@@ -71,7 +83,6 @@ export const CreateCollectionOfferForm: React.FC<
 
   const toast = useToast();
   const jsConfetti = new JSConfetti();
-
   const isDurationValid: boolean =
     !_.isEmpty(duration) && Number(duration) >= 1;
   const isAprValid: boolean = !_.isEmpty(apr);
@@ -114,6 +125,7 @@ export const CreateCollectionOfferForm: React.FC<
 
       onPending: () => setCreateCollectionOfferStatus('PENDING'),
       onSuccess: (offerHash: string) => {
+        gaEventTracker(ACTIONS.OFFER, LABELS.CREATE);
         console.log('Offer hash', offerHash);
 
         setCollectionOfferAmt('');
@@ -131,6 +143,17 @@ export const CreateCollectionOfferForm: React.FC<
     });
   };
 
+  const { floorPrice } = useRaribleCollectionStats({
+    contractAddress: nftContractAddress,
+  });
+
+  if (!nftContractAddress) {
+    return null;
+  }
+
+  const offerLTV: number =
+    (Number(collectionOfferAmt) / Number(floorPrice)) * 100;
+
   return (
     <Box
       border="1px solid #EAD9FF"
@@ -139,6 +162,7 @@ export const CreateCollectionOfferForm: React.FC<
       py="11px"
       bg="solid.white"
       boxShadow="0px 4px 24px 0px #4910921A"
+      maxWidth="480px"
     >
       <Text
         bg="#f7f7f7"
@@ -156,7 +180,7 @@ export const CreateCollectionOfferForm: React.FC<
         my="18px"
         alignItems="center"
       >
-        <GridItem colSpan={3}>
+        <GridItem colSpan={2}>
           <FormControl isInvalid={doesOfferAmountExceedAvailableLiquidity}>
             <InputGroup>
               <InputLeftElement sx={{ top: '17px', left: '16px' }}>
@@ -173,6 +197,7 @@ export const CreateCollectionOfferForm: React.FC<
                   transform: 'translateY(-4px)',
                 }}
                 type="number"
+                onWheel={(e) => e.currentTarget.blur()}
                 textAlign="left"
                 value={collectionOfferAmt}
                 onChange={(e) => setCollectionOfferAmt(e.target.value)}
@@ -186,6 +211,23 @@ export const CreateCollectionOfferForm: React.FC<
               />
             </InputGroup>
           </FormControl>
+        </GridItem>
+        <GridItem colSpan={1} textAlign="center" opacity={0.75}>
+          <HStack spacing="20px" ml="1.85rem">
+            <Text fontSize="md" fontWeight="bold" mb="6px">
+              LTV
+            </Text>
+            <CircularProgress
+              value={offerLTV}
+              color="notification.notify"
+              trackColor="notification.info"
+              size="66px"
+            >
+              <CircularProgressLabel fontSize="sm" fontWeight="bold">
+                {Humanize.formatNumber(Number(offerLTV), 1)}%
+              </CircularProgressLabel>
+            </CircularProgress>
+          </HStack>
         </GridItem>
       </Grid>
       <Text
@@ -212,6 +254,7 @@ export const CreateCollectionOfferForm: React.FC<
           <Box position="relative">
             <Input
               type="number"
+              onWheel={(e) => e.currentTarget.blur()}
               value={apr}
               onChange={(e) => setApr(e.target.value)}
               bg="#F9F3FF"
@@ -243,6 +286,7 @@ export const CreateCollectionOfferForm: React.FC<
               <InputGroup position="relative">
                 <Input
                   type="number"
+                  onWheel={(e) => e.currentTarget.blur()}
                   value={duration}
                   onChange={(e) => setDuration(e.target.value)}
                   bg="#F9F3FF"
@@ -266,10 +310,10 @@ export const CreateCollectionOfferForm: React.FC<
                   </Text>
                 </InputRightElement>
               </InputGroup>
-              <Box ml="4px">
+              <Box>
                 {!isDurationValid && (
                   <FormErrorMessage fontWeight={600}>
-                    Duration must be at least 1 day
+                    Minimum duration is 1 day
                   </FormErrorMessage>
                 )}
               </Box>
@@ -284,7 +328,7 @@ export const CreateCollectionOfferForm: React.FC<
         textAlign="center"
         color="solid.gray0"
       >
-        Estimated Profit: {estimatedProfit}
+        Est. Profit: {estimatedProfit}
       </Text>
       <Button
         variant="neutralReverse"
@@ -304,6 +348,23 @@ export const CreateCollectionOfferForm: React.FC<
       >
         CREATE OFFER
       </Button>
+      <FormControl isInvalid={doesOfferAmountExceedAvailableLiquidity}>
+        <Box mt="8px">
+          <Center>
+            {doesOfferAmountExceedAvailableLiquidity && (
+              <FormErrorMessage fontWeight={600} textAlign="center">
+                <Link
+                  style={{ textDecoration: 'underline' }}
+                  to={lendersLiquidity()}
+                >
+                  Desposit more liquidity&nbsp;
+                </Link>
+                to create an offer
+              </FormErrorMessage>
+            )}
+          </Center>
+        </Box>
+      </FormControl>
       <Flex
         alignItems="center"
         justifyContent="space-around"
@@ -312,7 +373,7 @@ export const CreateCollectionOfferForm: React.FC<
       >
         <Flex alignItems="center">
           <div>Expires in</div>
-          <Box w="120px" ml="8px">
+          <Box w="100px" ml="8px">
             <Select
               size="sm"
               onChange={(e) => setExpiration(e.target.value)}
@@ -326,7 +387,7 @@ export const CreateCollectionOfferForm: React.FC<
         </Flex>
         <Flex alignItems="center">
           <div>Good for</div>
-          <Box w="120px" ml="8px">
+          <Box w="100px" ml="8px">
             <Select
               size="sm"
               onChange={(e) => setFloorTermLimit(e.target.value)}

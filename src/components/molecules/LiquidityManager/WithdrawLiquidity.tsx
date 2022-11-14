@@ -11,11 +11,14 @@ import {
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { useEffect, useState } from 'react';
 import { useWithdrawEthLiquidity } from 'hooks/useWithdrawEthLiquidity';
+import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
+import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { ToastSuccessCard } from '../../cards/ToastSuccessCard';
 import { WithdrawBtn } from './WithdrawBtn';
 import { WithdrawMsg } from './WithdrawMsg';
 
 export const WithdrawLiquidity: React.FC = () => {
+  const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.LENDERS);
   const toast = useToast();
 
   const {
@@ -56,6 +59,7 @@ export const WithdrawLiquidity: React.FC = () => {
       });
     }
     if (withdrawStatus === 'SUCCESS' && txReceipt) {
+      gaEventTracker(ACTIONS.LIQUIDITY, LABELS.WITHDRAW);
       toast({
         render: (props) => (
           <ToastSuccessCard

@@ -54,7 +54,7 @@ const OffersTable: React.FC<any> = ({ offers }) => {
   };
 
   return (
-    <Box minW="800px" border="1px solid" borderColor="accents.100">
+    <Box border="1px solid" borderColor="accents.100">
       <Table>
         <Thead>
           <Tr
