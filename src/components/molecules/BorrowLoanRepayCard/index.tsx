@@ -17,6 +17,8 @@ import { BigNumber } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 import { logError } from 'logging/logError';
 import JSConfetti from 'js-confetti';
+import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
+import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { humanizeContractError } from '../../../helpers/errorsMap';
 import { getAPR } from '../../../helpers/getAPR';
 import {
@@ -57,6 +59,7 @@ const i18n = {
 };
 
 const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
+  const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.BORROWERS);
   const toast = useToast();
 
   const jsConfetti = new JSConfetti();
@@ -108,6 +111,8 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
             emojiSize: 80,
             confettiNumber: 50,
           });
+
+          gaEventTracker(ACTIONS.LOAN, LABELS.REPAY);
 
           toast({
             render: (props) => (

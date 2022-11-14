@@ -81,6 +81,8 @@ export const getBestLoanOffer = (offers: Array<LoanOffer>): LoanOffer => {
 
   return Array.from(offers).sort(
     (a: LoanOffer, b: LoanOffer) =>
-      a.interestRatePerSecond - b.interestRatePerSecond,
+      b.amount - a.amount ||
+      a.aprPercentage - b.aprPercentage ||
+      b.durationDays - a.durationDays,
   )[0];
 };
