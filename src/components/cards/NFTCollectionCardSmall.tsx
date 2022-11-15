@@ -36,7 +36,13 @@ const NFTCollectionCardSmall: React.FC<Props> = ({
     <HStack as="button" title={name} spacing="10px" onClick={handleClick}>
       <Image src={image} w="55px" h="55px" mr="7px" borderRadius="full" />
       <VStack align="left" ml="10px">
-        <Text mt="7px" align="left" fontSize="md" fontWeight="bold" noOfLines={1}>
+        <Text
+          mt="7px"
+          align="left"
+          fontSize="md"
+          fontWeight="bold"
+          noOfLines={1}
+        >
           {name}
         </Text>
 
