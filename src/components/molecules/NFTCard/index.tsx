@@ -147,7 +147,7 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
           </Center>
 
           {isAllOffersOpen && (
-            <Modal isOpen onClose={onAllOffersClose} size="xl">
+            <Modal isOpen onClose={onAllOffersClose} size="2xl">
               <ModalOverlay />
               <ModalContent p="5px">
                 <NFTCardHeader
