@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Box, Button, Flex, Td, Text, Tr, useToast } from '@chakra-ui/react';
+import { Button, Flex, Td, Text, Tr, useToast } from '@chakra-ui/react';
 
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { ethers } from 'ethers';
@@ -11,6 +11,18 @@ import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
 import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { ToastSuccessCard } from '../../../../components/cards/ToastSuccessCard';
 import NFTCollectionCardSmall from '../../../../components/cards/NFTCollectionCardSmall';
+
+const i18n = {
+  durationAndApr: (offer: any) =>
+    `${moment
+      .duration(offer.duration, 'seconds')
+      .asDays()} days, ${roundForDisplay(
+      getAPR({
+        amount: offer.amount,
+        interestRatePerSecond: offer.interestRatePerSecond,
+      }),
+    )}% APR`,
+};
 
 export const OfferRow = ({ offer, offerHash, index }: any) => {
   const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.LENDERS);
@@ -60,43 +72,15 @@ export const OfferRow = ({ offer, offerHash, index }: any) => {
     >
       <Td>
         <NFTCollectionCardSmall
-          throttle={250 * index}
+          throttle={100 * index}
           contractAddress={offer.nftContractAddress}
         />
       </Td>
       <Td>
-        <Flex>
-          <Box flex="1" />
-          <Flex
-            flexDirection="column"
-            alignItems="flex-start"
-            justifyContent="flex-start"
-          >
-            <Box mb="2px">
-              <Text as="span" fontSize="xl" fontWeight="bold">
-                {ethers.utils.formatEther(offer.amount)}Ξ
-              </Text>{' '}
-              <Text as="span" color="#555">
-                {moment.duration(offer.duration, 'seconds').asDays()} days,
-              </Text>
-            </Box>
-            <Box>
-              <Text as="span" fontWeight="bold">
-                {roundForDisplay(
-                  getAPR({
-                    amount: offer.amount,
-                    interestRatePerSecond: offer.interestRatePerSecond,
-                  }),
-                )}
-                %
-              </Text>{' '}
-              <Text as="span" color="#555">
-                APR
-              </Text>
-            </Box>
-          </Flex>
-          <Box flex="1" />
-        </Flex>
+        <Text fontSize="md" fontWeight="bold">
+          {ethers.utils.formatEther(offer.amount)}Ξ
+        </Text>
+        <small>{i18n.durationAndApr(offer)}</small>
       </Td>
       <Td>
         <Text
@@ -106,15 +90,17 @@ export const OfferRow = ({ offer, offerHash, index }: any) => {
         >
           {hasExpired ? 'Expired' : 'Active'}
         </Text>
-        {hasExpired
-          ? `Expired ${moment(offer.expiration * 1000).toNow(true)} ago`
-          : `Expires in ${moment(offer.expiration * 1000).toNow(true)}`}
+        <small>
+          {hasExpired
+            ? `Expired ${moment(offer.expiration * 1000).toNow(true)} ago`
+            : `Expires in ${moment(offer.expiration * 1000).toNow(true)}`}
+        </small>
       </Td>
       <Td>
-        <Text fontWeight="bold">
-          {offer.floorTermLimit}/{offer.floorOfferCount}
-        </Text>{' '}
-        loans used
+        <Text fontSize="md" fontWeight="bold">
+          {`${offer.floorOfferCount}/${offer.floorTermLimit} `}
+        </Text>
+        <small>loans used</small>
       </Td>
       <Td>
         {!hasExpired && (

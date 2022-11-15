@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Image, Link, Text } from '@chakra-ui/react';
+import { VStack, HStack, Image, Link, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 import { useRaribleCollectionMetadata } from '../../hooks/useRaribleCollectionMetadata';
@@ -33,23 +33,23 @@ const NFTCollectionCardSmall: React.FC<Props> = ({
   }
 
   return (
-    <Flex as="button" flexDir="row" p="10px" onClick={handleClick}>
+    <HStack as="button" spacing="10px" onClick={handleClick}>
       <Image src={image} w="55px" h="55px" mr="7px" borderRadius="full" />
-      <Flex flexDir="column" ml="10px">
-        <Text fontWeight="bold" mt="4px">
+      <VStack align="left" ml="10px">
+        <Text mt="7px" align="left" fontSize="md" fontWeight="bold">
           {name}
         </Text>
-        <Flex flexDir="row" mt="5px" gap="1">
+
+        <HStack mt="-3px" spacing="5px">
           <Link href={esLink} target="_blank">
             <Icon name="etherscan" mt="1px" />
           </Link>
-
           <Link href={osLink} target="_blank">
             <Icon name="os" size={22} />
           </Link>
-        </Flex>
-      </Flex>
-    </Flex>
+        </HStack>
+      </VStack>
+    </HStack>
   );
 };
 
