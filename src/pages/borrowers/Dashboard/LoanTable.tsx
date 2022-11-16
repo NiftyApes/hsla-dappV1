@@ -19,9 +19,19 @@ const LoanTable: React.FC<Props> = ({ loans, onClick }) => {
     <Box px="120px">
       <Table>
         <Thead>
-          <Tr>
+          <Tr
+            sx={{
+              '& > th': {
+                fontWeight: 'bold',
+                fontSize: '2xs',
+                color: 'solid.gray0',
+                border: 'none',
+                py: '10px',
+              },
+            }}
+          >
             <Th>collateral</Th>
-            <Th>initiated</Th>
+            <Th>transaction</Th>
             <Th>terms</Th>
             <Th>repayment</Th>
             <Th>status</Th>

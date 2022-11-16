@@ -4,6 +4,7 @@ import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
 import React, { createContext, useEffect } from 'react';
 import { initWeb3Onboard } from 'services/wallet';
 
+
 interface WalletContextProps {
   connectWallet: () => void;
 }
