@@ -58,6 +58,31 @@ export const OfferRow = ({ offer, offerHash, index }: any) => {
 
   const expirationMoment = moment(offer.expiration * 1000);
   const hasExpired = moment().isAfter(expirationMoment);
+  const { isCancelled } = offer;
+
+  const getLabel = () => {
+    if (isCancelled) {
+      return 'Cancelled';
+    }
+
+    if (hasExpired) {
+      return 'Expired';
+    }
+
+    return 'Active';
+  };
+
+  const getColor = () => {
+    if (isCancelled) {
+      return 'red.400';
+    }
+
+    if (hasExpired) {
+      return 'notification.info';
+    }
+
+    return '#24DFA5';
+  };
 
   return (
     <Tr
@@ -83,12 +108,8 @@ export const OfferRow = ({ offer, offerHash, index }: any) => {
         <small>{i18n.durationAndApr(offer)}</small>
       </Td>
       <Td>
-        <Text
-          fontSize="md"
-          fontWeight="bold"
-          color={hasExpired ? 'notification.info' : '#24DFA5'}
-        >
-          {hasExpired ? 'Expired' : 'Active'}
+        <Text fontSize="md" fontWeight="bold" color={getColor()}>
+          {getLabel()}
         </Text>
         <small>
           {hasExpired

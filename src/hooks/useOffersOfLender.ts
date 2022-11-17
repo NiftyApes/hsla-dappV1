@@ -62,7 +62,7 @@ export const useOffersForLender = ({
           offerFromChain.creator ===
           '0x0000000000000000000000000000000000000000'
         ) {
-          offers[i] = undefined;
+          offers[i] = { ...offers[i], isCancelled: true };
         } else if (
           // Ignore offers that are out of punches
           floorOfferCount.toNumber() >= offerFromChain.floorTermLimit.toNumber()
