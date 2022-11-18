@@ -72,6 +72,7 @@ const OffersTable: React.FC<any> = ({ offers }) => {
             <Th>collateral</Th>
             <Th>terms</Th>
             <Th>status</Th>
+            <Th>uses</Th>
             <Th />
           </Tr>
         </Thead>

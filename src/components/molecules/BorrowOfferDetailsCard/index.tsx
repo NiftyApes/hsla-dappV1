@@ -1,8 +1,15 @@
 /* eslint-disable consistent-return */
 import React, { useState } from 'react';
-import Icon from 'components/atoms/Icon';
 import { BigNumber, ethers } from 'ethers';
-import { Box, Button, Flex, Grid, Text, useToast } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  Text,
+  Tooltip,
+  useToast,
+} from '@chakra-ui/react';
 import { GOERLI, LOCAL, MAINNET } from 'constants/contractAddresses';
 import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
 import { formatEther } from 'ethers/lib/utils';
@@ -11,6 +18,7 @@ import { useChainId } from 'hooks/useChainId';
 import JSConfetti from 'js-confetti';
 import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
 import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
+import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import { LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
 import { concatForDisplay } from '../../../helpers/roundForDisplay';
@@ -240,7 +248,13 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
                 >
                   {i18n.totalInterest}
                 </Text>
-                <Icon name="help-circle" color="solid.gray0" />
+                <Tooltip
+                  hasArrow
+                  textAlign="center"
+                  label="All loans are subject to a minimum of 00.25% interest."
+                >
+                  <QuestionOutlineIcon color="gray.500" />
+                </Tooltip>
               </Flex>
 
               <Flex alignItems="center">
