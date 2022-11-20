@@ -15,6 +15,6 @@ library ECDSABridge {
     console.logBytes(abi.encodePacked((hash)));
     console.log("hash.toEthSignedMessageHash()");
     console.logBytes(abi.encodePacked(hash.toEthSignedMessageHash()));
-    return hash.toEthSignedMessageHash().recover(signature);
+    return hash.recover(signature);
   }
 }

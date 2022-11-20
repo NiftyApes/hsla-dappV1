@@ -50,8 +50,6 @@ const OfferBook: React.FC<OfferBookProps> = ({
 
   const offers = useCollectionOffers({ nftContractAddress: collectionAddress });
 
-  console.log('useCollectionOffers offers', offers);
-
   const expirationInMilliseconds =
     expiration === '1'
       ? 3600 * 24 * 1000
@@ -299,8 +297,6 @@ const OfferBook: React.FC<OfferBookProps> = ({
           }
         >
           {sortedOffers?.map((offer: any, i: number) => {
-            console.log('offer ***', offer);
-
             return offer === 'DRAFT_OFFER' ? (
               <DraftOffer
                 key={i}

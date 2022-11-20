@@ -149,8 +149,6 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
       nftContractAddress,
     });
 
-    console.log('sigOffers', sigOffers);
-
     for (let i = 0; i < sigOffers.length; i++) {
       const sigOffer = sigOffers[i];
 
