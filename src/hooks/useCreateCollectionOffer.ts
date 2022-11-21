@@ -165,6 +165,7 @@ export const useCreateCollectionOffer = ({
           onSuccess &&
             onSuccess(
               ethers.utils._TypedDataEncoder.hashStruct('Offer', types, values),
+              true,
             );
         } else {
           const tx = await offersContract.createOffer({
