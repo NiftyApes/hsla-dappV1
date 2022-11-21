@@ -94,6 +94,7 @@ contract NiftyApesOffers is OwnableUpgradeable, PausableUpgradeable, EIP712Upgra
       _hashTypedDataV4(
         keccak256(
           abi.encode(
+            // keccak256("Offer(address creator,uint32 duration,uint32 expiration,bool fixedTerms,bool floorTerm,bool lenderOffer,address nftContractAddress,uint256 nftId,address asset,uint128 amount,uint96 interestRatePerSecond,uint64 floorTermLimit)")
             0x1aa447c4698867fd4d8771498b0eca50958fef11dfb5fa327aa0ac1366f492ce,
             offer.creator,
             offer.duration,
@@ -308,16 +309,4 @@ contract NiftyApesOffers is OwnableUpgradeable, PausableUpgradeable, EIP712Upgra
   }
 
   function renounceOwnership() public override onlyOwner {}
-
-  function getChainId() external view returns (uint256) {
-    uint256 id;
-    assembly {
-      id := chainid()
-    }
-    return id;
-  }
-
-  function getBlockId() external view returns (uint256) {
-    return block.chainid;
-  }
 }
