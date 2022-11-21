@@ -11,10 +11,6 @@ library ECDSABridge {
   using ECDSAUpgradeable for bytes32;
 
   function recover(bytes32 hash, bytes memory signature) internal view returns (address) {
-    console.log("recover hash");
-    console.logBytes(abi.encodePacked((hash)));
-    console.log("hash.toEthSignedMessageHash()");
-    console.logBytes(abi.encodePacked(hash.toEthSignedMessageHash()));
     return hash.recover(signature);
   }
 }

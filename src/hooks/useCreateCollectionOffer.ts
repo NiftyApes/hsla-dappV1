@@ -121,40 +121,6 @@ export const useCreateCollectionOffer = ({
             floorTermLimit,
           };
 
-          // const offerAttempt = {
-          //   creator: '0x027a214Aea09099dd547eC13B7384b8E146d23bf',
-          //   duration: 86400,
-          //   expiration: 1671327435,
-          //   fixedTerms: false,
-          //   floorTerm: true,
-          //   lenderOffer: true,
-          //   nftContractAddress: '0xb9d9e972100a1dd01cd441774b45b5821e136043',
-          //   nftId: 0,
-          //   asset: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
-          //   amount: '1000000000000000000',
-          //   interestRatePerSecond: 317057705,
-          //   floorTermLimit: 5,
-          // };
-
-          console.log('offerAttempt', offerAttempt);
-
-          const hash = await offersContract.getOfferHash(offerAttempt);
-
-          console.log('FINAL HASH SOLIDITY', hash);
-
-          // console.log(
-          //   'FRONTEND HASHED MESSAGE',
-          //   ethers.utils.hashMessage(ethers.utils.arrayify(hash)),
-          // );
-
-          // const sig = await signer.signMessage(
-          //   ethers.utils.arrayify(
-          //     '0x4ec9feee8e76c17ba6c8fbbf352d5f41ddd49608395deac38fed8b44ee2856cf',
-          //   ),
-          // );
-
-          // console.log('sig', sig);
-
           const domain = {
             name: 'NiftyApes_Offers',
             version: '0.0.1',
@@ -179,28 +145,9 @@ export const useCreateCollectionOffer = ({
             ],
           };
 
-          console.log(
-            'hashed domain ',
-            ethers.utils._TypedDataEncoder.hashDomain(domain),
-          );
-
           const values = offerAttempt;
 
-          console.log(
-            'hashed struct',
-            ethers.utils._TypedDataEncoder.hashStruct('Offer', types, values),
-          );
-
-          console.log(
-            'FINAL HASH ETHERS',
-            ethers.utils._TypedDataEncoder.hash(domain, types, values),
-          );
-
-          console.log('domain, types, values', domain, types, values);
-
           const result = await signer._signTypedData(domain, types, values);
-
-          console.log('frontend eip-712 sig', result);
 
           await saveSignatureOfferInDb({
             chainId,
