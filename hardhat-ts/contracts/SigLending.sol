@@ -129,7 +129,7 @@ contract NiftyApesSigLending is OwnableUpgradeable, PausableUpgradeable, Reentra
     require(nftId == offer.nftId, "00022");
   }
 
-  function _requireOfferCreator(Offer memory offer, address creator) internal view {
+  function _requireOfferCreator(Offer memory offer, address creator) internal pure {
     require(creator == offer.creator, "00024");
   }
 
