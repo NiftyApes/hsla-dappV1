@@ -196,8 +196,6 @@ export const useCreateCollectionOffer = ({
             throw new ErrorWithReason('reason: revert');
           }
 
-          console.log('receipt', receipt);
-
           onTxMined && onTxMined(receipt);
 
           const newOfferEvent = getEventFromReceipt({

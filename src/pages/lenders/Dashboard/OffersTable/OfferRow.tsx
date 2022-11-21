@@ -13,8 +13,6 @@ import { ToastSuccessCard } from '../../../../components/cards/ToastSuccessCard'
 export const OfferRow = ({ offer, offerHash, index }: any) => {
   const toast = useToast();
 
-  console.log('offer', offer);
-
   const { cancelOffer, cancelStatus, txReceipt } = useCancelOffer({
     nftContractAddress: offer.nftContractAddress,
     nftId: offer.nftId,

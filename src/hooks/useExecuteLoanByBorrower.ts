@@ -91,17 +91,11 @@ export const useExecuteLoanByBorrower = ({
           nftId,
         );
 
-        console.log('tx', tx);
-
         const receipt: any = await tx.wait();
-
-        console.log('receipt', receipt);
 
         if (receipt.status !== 1) {
           throw new ErrorWithReason('reason: revert');
         }
-
-        console.log(nftContractAddress, nftId, offerHash, true);
 
         const loanExecutedEvent = getEventFromReceipt({
           eventName: 'LoanExecuted',
@@ -109,32 +103,9 @@ export const useExecuteLoanByBorrower = ({
           abi: NiftyApesLendingDeploymentJSON.abi,
         });
 
-        console.log('loanExecutedEvent', loanExecutedEvent);
-
         const loan = loanExecutedEvent.args.loanAuction;
 
-        console.log('loan', loan);
-
         dispatch(fetchLoanAuctionByNFT(nft));
-
-        console.log('what we save in the loan db', {
-          chainId,
-          nftContractAddress: ethers.utils.getAddress(nftContractAddress),
-          nftId,
-          creator: offerAttempt.creator,
-          borrower: address,
-          lender: offerAttempt.creator,
-          transactionHash: receipt.transactionHash,
-          loanTerms: {
-            amount: offerAttempt.amount.toString(),
-            asset: 'ETH',
-            interestRatePerSecond:
-              offerAttempt.interestRatePerSecond.toString(),
-            duration: offerAttempt.duration,
-            loanBeginTimestamp: loan.loanBeginTimestamp,
-            loanEndTimestamp: loan.loanEndTimestamp,
-          },
-        });
 
         await saveLoanInDb({
           chainId,
@@ -156,26 +127,6 @@ export const useExecuteLoanByBorrower = ({
         });
 
         const timestamp = await getTransactionTimestamp(receipt);
-
-        console.log('what we save in the txn db', {
-          chainId,
-          transactionHash: receipt.transactionHash,
-          from: receipt.from,
-          transactionType: transactionTypes.LOAN_CREATED,
-          timestamp,
-          borrower: address,
-          lender: offerAttempt.creator,
-          data: {
-            lender: offerAttempt.creator,
-            nftContractAddress: offerAttempt.nftContractAddress,
-            nftId,
-            amount: offerAttempt.amount.toString(),
-            asset: 'ETH',
-            interestRatePerSecond:
-              offerAttempt.interestRatePerSecond.toString(),
-            duration: offerAttempt.duration,
-          },
-        });
 
         await saveTransactionInDb({
           chainId,

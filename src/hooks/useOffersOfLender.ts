@@ -92,8 +92,6 @@ export const useOffersForLender = ({
       for (let i = 0; i < sigOffers.length; i++) {
         const sigOffer = sigOffers[i];
 
-        console.log('sigOffer', sigOffer);
-
         const isCancelledOrFinalized =
           await offersContract.getOfferSignatureStatus(sigOffer.Signature);
 
