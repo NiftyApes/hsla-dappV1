@@ -118,28 +118,6 @@ export const useOffersForLender = ({
         filteredOffers.push({ offer: offerWithAddedFields });
       }
 
-      // if (sigOfferStr) {
-      //   const sigOffer = JSON.parse(sigOfferStr);
-
-      //   const offerWithAddedFields = loanOffer({
-      //     offer: sigOffer.offer,
-      //     ...sigOffer.offer,
-      //     OfferAttempt: sigOffer.offer,
-      //     OfferTerms: {
-      //       Amount: sigOffer.offer.amount,
-      //       InterestRatePerSecond: sigOffer.offer.interestRatePerSecond,
-      //       Expiration: sigOffer.offer.expiration,
-      //       Duration: sigOffer.offer.duration,
-      //       OfferStatus: 'ACTIVE',
-      //       FloorTerm: true,
-      //     },
-      //     offerHash: sigOffer.offerHash,
-      //     signature: sigOffer.sig,
-      //   });
-
-      //   filteredOffers.push({ offer: offerWithAddedFields });
-      // }
-
       setOffers(filteredOffers);
     }
 

@@ -80,6 +80,7 @@ export const LOCAL = {
   },
   SIG_LENDING: {
     ADDRESS: SigLendingDeploymentJSON.address,
+    // Both ABIs are here so we can extract Lending events from SigLending receipts
     ABI: [...SigLendingDeploymentJSON.abi, ...LendingDeploymentJSON.abi],
   },
   YOUR_COLLECTIBLE: {

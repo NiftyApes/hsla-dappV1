@@ -81,7 +81,7 @@ export const useCreateCollectionOffer = ({
         }
 
         if (!offersContract) {
-          throw new Error('Contract is not defined');
+          throw new Error('No Offers contract is not defined');
         }
 
         if (!signer) {
@@ -89,7 +89,7 @@ export const useCreateCollectionOffer = ({
         }
 
         if (!SigLendingContract) {
-          throw Error();
+          throw Error('No SigLending contract defined');
         }
 
         if (SIG) {
@@ -170,7 +170,6 @@ export const useCreateCollectionOffer = ({
           const tx = await offersContract.createOffer({
             creator: address,
             nftContractAddress,
-            // TODO make sure this is right
             interestRatePerSecond: Math.round(
               ((aprInPercent / 100) * (amount * 1e18)) / SECONDS_IN_YEAR,
             ),
@@ -184,7 +183,6 @@ export const useCreateCollectionOffer = ({
             expiration: Math.floor(
               Date.now() / 1000 + expirationInDays * 86400,
             ),
-            // TODO: Allow user to edit this in UI
             floorTermLimit,
           });
 
