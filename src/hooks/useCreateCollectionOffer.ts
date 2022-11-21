@@ -28,8 +28,6 @@ export const useCreateCollectionOffer = ({
 }) => {
   const offersContract = useOffersContract();
 
-  (window as any).o = offersContract;
-
   const address = useWalletAddress();
 
   const dispatch = useAppDispatch();
@@ -39,8 +37,6 @@ export const useCreateCollectionOffer = ({
   const provider = useWalletProvider();
 
   const SigLendingContract = useSigLendingContract();
-
-  (window as any).SigLendingContract = SigLendingContract;
 
   const web3Provider = useMemo(
     () => (provider ? new Web3Provider(provider) : undefined),

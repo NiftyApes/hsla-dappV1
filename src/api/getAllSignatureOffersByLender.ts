@@ -17,7 +17,5 @@ export const getAllSignatureOffersByLender = async ({
 
   const json = await result.json();
 
-  console.log('json', json);
-
   return json;
 };
