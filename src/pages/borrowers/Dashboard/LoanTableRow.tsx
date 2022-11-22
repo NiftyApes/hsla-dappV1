@@ -13,6 +13,7 @@ import {
   getLoanTimeRemaining,
   isLoanDefaulted,
 } from '../../../helpers/getDuration';
+import Icon from '../../../components/atoms/Icon';
 
 interface CallbackType {
   (loan: LoanAuction): void;
@@ -66,9 +67,8 @@ const LoanTableRow: React.FC<Props> = ({ loan, onClick }) => {
         <Link
           textDecoration="underline"
           href={`https://etherscan.io/tx/${loan.loanTxnHash}`}
-          target="_blank"
-          rel="noreferrer"
         >
+          <Icon display="inline-block" name="etherscan" />{' '}
           {startMoment.format('MMMM Do YYYY, h:mm:ss')}
         </Link>
       </Td>
@@ -93,9 +93,11 @@ const LoanTableRow: React.FC<Props> = ({ loan, onClick }) => {
         </Text>
       </Td>
       <Td>
-        {isLoanDefaulted(loan)
-          ? i18n.loanDefaulted
-          : `${getLoanTimeRemaining(loan)} remaining...`}
+        {isLoanDefaulted(loan) ? (
+          <Text color="red">{i18n.loanDefaulted}</Text>
+        ) : (
+          `${getLoanTimeRemaining(loan)} remaining...`
+        )}
       </Td>
       <Td>
         <Button variant="neutral" onClick={() => onClick(loan)}>

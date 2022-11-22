@@ -38,7 +38,7 @@ export const EthLiquidityInfo: React.FC = () => {
           <Link
             color="notification.notify"
             fontWeight="bold"
-            href="compound.finance"
+            href="https://compound.finance"
             isExternal
           >
             Compound

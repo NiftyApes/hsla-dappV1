@@ -20,5 +20,5 @@
     "inlineSources": true,
     "sourceRoot": "/"
   },
-  "include": ["src"]
+  "include": ["src", "./config-overrides.js", "./craco.config.js"]
 }

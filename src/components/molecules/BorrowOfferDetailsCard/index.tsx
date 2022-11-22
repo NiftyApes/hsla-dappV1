@@ -1,10 +1,20 @@
 /* eslint-disable consistent-return */
-import { Box, Button, Flex, Grid, Text, useToast } from '@chakra-ui/react';
-import Icon from 'components/atoms/Icon';
+import { QuestionOutlineIcon } from '@chakra-ui/icons';
+import {
+  Box,
+  Button,
+  Flex,
+  Grid,
+  Text,
+  Tooltip,
+  useToast,
+} from '@chakra-ui/react';
 import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
 import { GOERLI, LOCAL, MAINNET } from 'constants/contractAddresses';
+import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { BigNumber, ethers } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
+import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
 import { useChainId } from 'hooks/useChainId';
 import JSConfetti from 'js-confetti';
 import { logError } from 'logging/logError';
@@ -41,6 +51,7 @@ const i18n = {
 };
 
 const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
+  const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.BORROWERS);
   const toast = useToast();
 
   const chainId = useChainId();
@@ -91,6 +102,8 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
             emojiSize: 80,
             confettiNumber: 50,
           });
+
+          gaEventTracker(ACTIONS.LOAN, LABELS.INIT);
 
           toast({
             render: (props) => (
@@ -237,7 +250,13 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
                 >
                   {i18n.totalInterest}
                 </Text>
-                <Icon name="help-circle" color="solid.gray0" />
+                <Tooltip
+                  hasArrow
+                  textAlign="center"
+                  label="All loans are subject to a minimum of 00.25% interest."
+                >
+                  <QuestionOutlineIcon color="gray.500" />
+                </Tooltip>
               </Flex>
 
               <Flex alignItems="center">

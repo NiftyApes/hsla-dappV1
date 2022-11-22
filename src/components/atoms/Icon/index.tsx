@@ -22,6 +22,7 @@ import { ReactComponent as ArrowRight } from './assets/arrow-right.svg';
 import { ReactComponent as Alert } from './assets/alert.svg';
 import { ReactComponent as Update } from './assets/update.svg';
 import { ReactComponent as Mail } from './assets/mail.svg';
+import { ReactComponent as Edit } from './assets/edit.svg';
 
 export const IconMap = {
   menu: Menu,
@@ -45,6 +46,7 @@ export const IconMap = {
   alert: Alert,
   update: Update,
   mail: Mail,
+  edit: Edit,
 };
 
 interface Props extends BoxProps {

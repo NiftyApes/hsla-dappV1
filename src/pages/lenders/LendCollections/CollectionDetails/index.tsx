@@ -1,5 +1,5 @@
 import { Box, Center, Grid, GridItem } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
 import CollectionHeader from './CollectionHeader';
@@ -17,6 +17,15 @@ const CollectionDetailsModal: React.FC = () => {
   const [newlyAddedOfferHashes, setNewlyAddedOfferHashes] = useState<string[]>(
     [],
   );
+
+  useEffect(() => {
+    setCollectionOfferAmt('');
+    setApr('');
+    setDuration('');
+    setExpiration('30');
+    setFloorTermLimit('5');
+    setNewlyAddedOfferHashes([]);
+  }, [collectionAddress]);
 
   if (!collectionAddress) {
     return null;

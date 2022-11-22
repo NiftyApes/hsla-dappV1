@@ -7,14 +7,18 @@ import {
   Grid,
   GridItem,
   Text,
+  Tooltip,
   useToast,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 
+import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
+import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { BigNumber } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
+import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
 import JSConfetti from 'js-confetti';
 import { logError } from 'logging/logError';
 import { humanizeContractError } from '../../../helpers/errorsMap';
@@ -48,7 +52,7 @@ const i18n = {
   loanApr: 'Loan APR',
   loanBorrowed: 'Total borrowed',
   loanInformation: 'loan information',
-  loanInterest: 'Interest so far',
+  loanInterest: 'Interest owed ',
   loanOwed: 'Total Owed',
   loanDefaulted: 'Loan Defaulted',
   loanActive: 'Time Remaining',
@@ -57,6 +61,7 @@ const i18n = {
 };
 
 const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
+  const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.BORROWERS);
   const toast = useToast();
 
   const jsConfetti = new JSConfetti();
@@ -79,9 +84,13 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
   const basisPoints: BigNumber = amount.mul(25).div(10000);
 
   // Add basis points if total interest is less than
-  if (totalAccruedInterest.lt(basisPoints)) {
+  const earlyReplay = totalAccruedInterest.lt(basisPoints);
+
+  if (earlyReplay) {
     totalAccruedInterest = basisPoints;
   }
+
+  // Minimum interest owed 0.0025
 
   // Additional 20 minutes worth of interest
   const padding: BigNumber = irps.mul(3600);
@@ -108,6 +117,8 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
             emojiSize: 80,
             confettiNumber: 50,
           });
+
+          gaEventTracker(ACTIONS.LOAN, LABELS.REPAY);
 
           toast({
             render: (props) => (
@@ -198,10 +209,25 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
                   </Text>
                 </Text>
                 <Text>
-                  {i18n.loanInterest}{' '}
+                  {i18n.loanInterest}
                   <Text as="span" fontWeight="bold">
-                    {concatForDisplay(formatEther(totalAccruedInterest))}Ξ
+                    {concatForDisplay(
+                      formatEther(totalAccruedInterest.toString()),
+                    )}
+                    Ξ
                   </Text>
+                  {earlyReplay && (
+                    <Tooltip
+                      hasArrow
+                      textAlign="center"
+                      label="All loans are subject to a minimum of 00.25% interest."
+                    >
+                      <QuestionOutlineIcon
+                        sx={{ ml: '5px', mt: '-3px' }}
+                        color="gray.500"
+                      />
+                    </Tooltip>
+                  )}
                 </Text>
               </GridItem>
             </Grid>

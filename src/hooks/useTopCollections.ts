@@ -34,6 +34,11 @@ export const useTopCollections = () => {
       name: 'Mutant Ape Yacht Club',
     },
     {
+      address: '0x60bb1e2aa1c9acafb4d34f71585d7e959f387769',
+      image: '/assets/images/collections/collection_gobblers.png',
+      name: 'Art Gobblers',
+    },
+    {
       address: '0xED5AF388653567Af2F388E6224dC7C4b3241C544',
       image: '/assets/images/collections/collection_azuki.png',
       name: 'Azuki',
