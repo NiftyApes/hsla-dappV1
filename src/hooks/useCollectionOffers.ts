@@ -6,6 +6,7 @@ import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
 import { getFloorOfferCountFromHash } from 'helpers/getOfferCountLeftFromHash';
+import { getFloorSignatureOfferCountLeftFromSignature } from 'helpers/getSignatureOfferCountLeftFromSignature';
 import { loanOffer } from 'loan';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
@@ -98,9 +99,24 @@ export const useCollectionOffers = ({
           continue;
         }
 
+        const floorOfferCount =
+          await getFloorSignatureOfferCountLeftFromSignature({
+            offersContract,
+            signature: sigOffer.Signature,
+          });
+
+        // Ignore offers that are out of punches
+        if (
+          floorOfferCount &&
+          floorOfferCount.toNumber() >= sigOffer.Offer.floorTermLimit
+        ) {
+          continue;
+        }
+
         const offerWithAddedFields = loanOffer({
           offer: { ...sigOffer.Offer, offerHash: sigOffer.OfferHash },
           ...sigOffer.Offer,
+          floorOfferCount,
           OfferAttempt: sigOffer.Offer,
           OfferTerms: {
             Amount: sigOffer.Offer.amount,

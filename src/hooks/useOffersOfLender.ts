@@ -7,6 +7,7 @@ import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
 import { getFloorOfferCountFromHash } from 'helpers/getOfferCountLeftFromHash';
+import { getFloorSignatureOfferCountLeftFromSignature } from 'helpers/getSignatureOfferCountLeftFromSignature';
 
 import { loanOffer } from 'loan';
 import _ from 'lodash';
@@ -93,16 +94,31 @@ export const useOffersForLender = ({
       for (let i = 0; i < sigOffers.length; i++) {
         const sigOffer = sigOffers[i];
 
-        const isCancelledOrFinalized =
+        const isCanceledOrFinalized =
           await offersContract.getOfferSignatureStatus(sigOffer.Signature);
 
-        if (isCancelledOrFinalized) {
+        if (isCanceledOrFinalized) {
+          continue;
+        }
+
+        const floorOfferCount =
+          await getFloorSignatureOfferCountLeftFromSignature({
+            offersContract,
+            signature: sigOffer.Signature,
+          });
+
+        // Ignore offers that are out of punches
+        if (
+          floorOfferCount &&
+          floorOfferCount.toNumber() >= sigOffer.Offer.floorTermLimit
+        ) {
           continue;
         }
 
         const offerWithAddedFields = loanOffer({
           offer: sigOffer.Offer,
           ...sigOffer.Offer,
+          floorOfferCount,
           OfferAttempt: sigOffer.Offer,
           OfferTerms: {
             Amount: sigOffer.Offer.amount,
