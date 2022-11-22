@@ -17,7 +17,7 @@ import { useOffersContract, useSigLendingContract } from './useContracts';
 import { useWalletAddress } from './useWalletAddress';
 import { useWalletProvider } from './useWalletProvider';
 
-const SIG = true;
+const SHOULD_USE_SIGNATURE_OFFER = true;
 
 const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
@@ -92,7 +92,7 @@ export const useCreateCollectionOffer = ({
           throw Error('No SigLending contract defined');
         }
 
-        if (SIG) {
+        if (SHOULD_USE_SIGNATURE_OFFER) {
           const offerAttempt = {
             creator: address,
             duration: Math.floor(durationInDays * 86400),
