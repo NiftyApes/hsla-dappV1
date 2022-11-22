@@ -1,4 +1,5 @@
 import { updateOfferStatus } from 'api/updateOfferStatus';
+import { updateSignatureOfferStatus } from 'api/updateSignatureOfferStatus';
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
 import { ErrorWithReason } from 'errors';
@@ -69,9 +70,22 @@ export const useCancelOffer = ({
             throw new ErrorWithReason('reason: revert');
           }
 
+          const transactionTimestamp = await getTransactionTimestamp(receipt);
+
           setTxReceipt(receipt);
 
           setCancelStatus('SUCCESS');
+
+          await updateSignatureOfferStatus({
+            chainId,
+            nftContractAddress,
+            nftId,
+            offerExpiration: offer.expiration,
+            offerHash: offer.offerHash,
+            status: 'CANCELED',
+            transactionTimestamp,
+            transactionHash: receipt.transactionHash,
+          });
 
           setTimeout(() => {
             setCancelStatus('READY');
