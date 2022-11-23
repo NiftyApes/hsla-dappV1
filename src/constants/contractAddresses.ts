@@ -17,23 +17,23 @@ export const NOUNS_CONTRACT_ADDRESS =
 
 export const GOERLI = {
   LENDING: {
-    ADDRESS: '0x40df7d76c59721b1e0b0e1cf92dbd0a58d083de4',
+    ADDRESS: '0x40dF7D76C59721b1E0b0e1cf92Dbd0A58D083De4',
     ABI: LendingDeploymentJSON.abi,
   },
   LIQUIDITY: {
-    ADDRESS: '0x084a7ce2eb1ea21777df239550234eeb9d9ef47c',
+    ADDRESS: '0x084A7cE2eb1ea21777Df239550234EEb9D9ef47c',
     ABI: LiquidityDeploymentJSON.abi,
   },
   OFFERS: {
-    ADDRESS: '0x896a60e3f3457a3587f2ce30d812ffedb7547ec7',
+    ADDRESS: '0x896A60e3f3457a3587F2ce30D812ffeDb7547EC7',
     ABI: OffersDeploymentJSON.abi,
   },
   SIG_LENDING: {
-    ADDRESS: '0xf7c38f9b678cb96a6ee20448dab4a44b818de2a6',
+    ADDRESS: '0xf7c38F9b678cb96a6ee20448dab4a44B818dE2A6',
     ABI: SigLendingDeploymentJSON.abi,
   },
   CETH: {
-    ADDRESS: '0x20572e4c090f15667cf7378e16fad2ea0e2f3eff',
+    ADDRESS: '0x20572e4c090f15667cF7378e16FaD2eA0e2f3EfF',
     ABI: cEthJSON.abi,
   },
 } as const;
@@ -52,11 +52,11 @@ export const MAINNET = {
     ABI: OffersDeploymentJSON.abi,
   },
   SIG_LENDING: {
-    ADDRESS: '0xc708c2efd6e6578809352d8e618c7f619f3b7f20',
+    ADDRESS: '0xC708c2eFD6E6578809352d8E618C7f619f3B7f20',
     ABI: SigLendingDeploymentJSON.abi,
   },
   CETH: {
-    ADDRESS: '0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5',
+    ADDRESS: '0x4Ddc2D193948926D02f9B1fE9e1daa0718270ED5',
     ABI: cEthJSON.abi,
   },
 } as const;
