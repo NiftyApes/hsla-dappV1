@@ -92,6 +92,10 @@ export const useCreateCollectionOffer = ({
           throw Error('No SigLending contract defined');
         }
 
+        if (!chainId) {
+          throw Error('No chain id');
+        }
+
         if (SHOULD_USE_SIGNATURE_OFFER) {
           const offerAttempt = {
             creator: address,
@@ -120,7 +124,7 @@ export const useCreateCollectionOffer = ({
           const domain = {
             name: 'NiftyApes_Offers',
             version: '0.0.1',
-            chainId: 31337,
+            chainId,
             verifyingContract: offersContract.address,
           };
 
