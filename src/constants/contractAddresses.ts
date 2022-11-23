@@ -30,7 +30,8 @@ export const GOERLI = {
   },
   SIG_LENDING: {
     ADDRESS: '0xf7c38F9b678cb96a6ee20448dab4a44B818dE2A6',
-    ABI: SigLendingDeploymentJSON.abi,
+    // Both ABIs are here so we can extract Lending events from SigLending receipts
+    ABI: [...SigLendingDeploymentJSON.abi, ...LendingDeploymentJSON.abi],
   },
   CETH: {
     ADDRESS: '0x20572e4c090f15667cF7378e16FaD2eA0e2f3EfF',
@@ -53,7 +54,8 @@ export const MAINNET = {
   },
   SIG_LENDING: {
     ADDRESS: '0xC708c2eFD6E6578809352d8E618C7f619f3B7f20',
-    ABI: SigLendingDeploymentJSON.abi,
+    // Both ABIs are here so we can extract Lending events from SigLending receipts
+    ABI: [...SigLendingDeploymentJSON.abi, ...LendingDeploymentJSON.abi],
   },
   CETH: {
     ADDRESS: '0x4Ddc2D193948926D02f9B1fE9e1daa0718270ED5',
