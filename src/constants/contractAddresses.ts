@@ -17,19 +17,19 @@ export const NOUNS_CONTRACT_ADDRESS =
 
 export const GOERLI = {
   LENDING: {
-    ADDRESS: '0xCf6ac047C2E9A5e7cccb8887C4A141d69E5A16cC',
+    ADDRESS: '0x40df7d76c59721b1e0b0e1cf92dbd0a58d083de4',
     ABI: LendingDeploymentJSON.abi,
   },
   LIQUIDITY: {
-    ADDRESS: '0x0D54a1612f0af02b965d63DcA5DCEea3fF35dA16',
+    ADDRESS: '0x084a7ce2eb1ea21777df239550234eeb9d9ef47c',
     ABI: LiquidityDeploymentJSON.abi,
   },
   OFFERS: {
-    ADDRESS: '0xdaD319eEd71C286B90A6cfD4cb08ED754F835041',
+    ADDRESS: '0x896a60e3f3457a3587f2ce30d812ffedb7547ec7',
     ABI: OffersDeploymentJSON.abi,
   },
   SIG_LENDING: {
-    ADDRESS: '0xdC133330a326B72D102dEd45Af80f65088B12465',
+    ADDRESS: '0xf7c38f9b678cb96a6ee20448dab4a44b818de2a6',
     ABI: SigLendingDeploymentJSON.abi,
   },
   CETH: {
