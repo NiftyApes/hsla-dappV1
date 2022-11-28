@@ -82,7 +82,8 @@ export const useCancelOffer = ({
             nftId,
             offerExpiration: offer.expiration,
             offerHash: offer.offerHash,
-            status: 'CANCELED',
+            status: 'USED',
+            signature: offer.signature,
             transactionTimestamp,
             transactionHash: receipt.transactionHash,
           });

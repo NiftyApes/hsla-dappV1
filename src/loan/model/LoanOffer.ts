@@ -17,6 +17,7 @@ export enum OfferStatus {
   CANCELED = 'CANCELED',
   ACCEPTED = 'ACCEPTED',
   CLOSED = 'CLOSED',
+  USED = 'USED',
 }
 
 export interface LoanOffer {

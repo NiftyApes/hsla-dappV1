@@ -8,6 +8,7 @@ export async function updateSignatureOfferStatus({
   offerExpiration,
   offerHash,
   status,
+  signature,
   transactionTimestamp,
   transactionHash,
 }: {
@@ -17,6 +18,7 @@ export async function updateSignatureOfferStatus({
   offerExpiration: number;
   offerHash: string;
   status: string;
+  signature: string;
   transactionTimestamp?: number;
   transactionHash?: string;
 }) {
