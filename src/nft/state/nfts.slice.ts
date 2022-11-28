@@ -104,22 +104,30 @@ export const loadMainnetNFTs = createAsyncThunk<
 
   for (let i = 0; i < nfts.length; i++) {
     const nft = nfts[i];
-    if (cachedCollectionStats[nft.contract.address] === undefined) {
-      const response = await fetch(
-        `${RARIBLE_API_PATH}/data/collections/ETHEREUM:${nft.contract.address}/stats?currency=ETH`,
-        {
-          method: 'GET',
-        },
-      );
 
-      await new Promise((resolve) => {
-        setTimeout(resolve, 25);
-      });
+    try {
+      if (cachedCollectionStats[nft.contract.address] === undefined) {
+        const response = await fetch(
+          `${RARIBLE_API_PATH}/data/collections/ETHEREUM:${nft.contract.address}/stats?currency=ETH`,
+          {
+            method: 'GET',
+          },
+        );
 
-      cachedCollectionStats[nft.contract.address] = await response.json();
+        await new Promise((resolve) => {
+          setTimeout(resolve, 25);
+        });
+
+        cachedCollectionStats[nft.contract.address] = await response.json();
+      }
+    } catch (err) {
+      console.error(err);
     }
 
-    if (cachedCollectionStats[nft.contract.address].volume < 1) {
+    if (
+      cachedCollectionStats[nft.contract.address] &&
+      cachedCollectionStats[nft.contract.address].volume < 1
+    ) {
       nfts[i] = undefined;
     } else {
       nfts[i] = {
