@@ -4,7 +4,7 @@ import { useAppDispatch } from 'app/hooks';
 import { SECONDS_IN_YEAR } from 'constants/misc';
 import { increment } from 'counter/counterSlice';
 import { ErrorWithReason } from 'errors';
-import { ethers } from 'ethers';
+import { BigNumberish, ethers } from 'ethers';
 import { getEventFromReceipt } from 'helpers/getEventFromReceipt';
 import { logError } from 'logging/logError';
 import NiftyApesOffersDeploymentJSON from '../generated/deployments/localhost/NiftyApesOffers.json';
@@ -17,8 +17,10 @@ const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
 export const useCreateCollectionOffer = ({
   nftContractAddress,
+  nftId = 0,
 }: {
   nftContractAddress: string;
+  nftId?: BigNumberish;
 }) => {
   const offersContract = useOffersContract();
 
@@ -72,7 +74,7 @@ export const useCreateCollectionOffer = ({
           interestRatePerSecond: Math.round(
             ((aprInPercent / 100) * (amount * 1e18)) / SECONDS_IN_YEAR,
           ),
-          nftId: 0,
+          nftId,
           fixedTerms: false,
           floorTerm: true,
           lenderOffer: true,
