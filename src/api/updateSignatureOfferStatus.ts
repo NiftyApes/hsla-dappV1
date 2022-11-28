@@ -31,6 +31,7 @@ export async function updateSignatureOfferStatus({
       offerHash,
       transactionTimestamp,
       transactionHash,
+      signature,
       updateFields: { status },
     }),
   });
