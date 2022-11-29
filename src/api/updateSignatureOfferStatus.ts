@@ -6,7 +6,6 @@ export async function updateSignatureOfferStatus({
   nftContractAddress,
   nftId,
   offerExpiration,
-  offerHash,
   status,
   signature,
   transactionTimestamp,
@@ -16,7 +15,6 @@ export async function updateSignatureOfferStatus({
   nftContractAddress: string;
   nftId: string;
   offerExpiration: number;
-  offerHash: string;
   status: string;
   signature: string;
   transactionTimestamp?: number;
@@ -28,7 +26,6 @@ export async function updateSignatureOfferStatus({
       nftContractAddress: ethers.utils.getAddress(nftContractAddress),
       nftId,
       offerExpiration,
-      offerHash,
       transactionTimestamp,
       transactionHash,
       signature,

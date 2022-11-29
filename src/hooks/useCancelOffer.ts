@@ -81,7 +81,6 @@ export const useCancelOffer = ({
             nftContractAddress,
             nftId,
             offerExpiration: offer.expiration,
-            offerHash: offer.offerHash,
             status: 'USED',
             signature: offer.signature,
             transactionTimestamp,
