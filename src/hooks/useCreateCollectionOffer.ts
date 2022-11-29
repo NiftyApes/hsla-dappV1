@@ -41,12 +41,14 @@ export const useCreateCollectionOffer = ({
       onError,
       onTxSubmitted,
       onTxMined,
+      tokenId,
     }: {
       amount: number;
       aprInPercent: number;
       durationInDays: number;
       expirationInDays: number;
       floorTermLimit: number;
+      tokenId?: number;
       asset?: string;
       onPending?: any;
       onSuccess?: any;
@@ -66,6 +68,7 @@ export const useCreateCollectionOffer = ({
         }
 
         const tx = await offersContract.createOffer({
+          tokenId,
           creator: address,
           nftContractAddress,
           // TODO make sure this is right

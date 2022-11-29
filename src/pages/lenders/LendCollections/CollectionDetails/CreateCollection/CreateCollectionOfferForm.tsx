@@ -34,9 +34,17 @@ import { useRaribleCollectionStats } from 'hooks/useRaribleColectionStats';
 import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { lendersLiquidity } from 'routes/router';
 import { Link } from 'react-router-dom';
+import { useRaribleTokenMeta } from 'hooks/useRaribleTokenMeta';
+import { useDebounce } from 'hooks/useDebounce';
 import { ToastSuccessCard } from '../../../../../components/cards/ToastSuccessCard';
+import TokenControl from './TokenControl';
+
+type OfferTypes = 'offers' | 'token';
+
+const RARIBLE_TOKEN_DEBOUNCE_MS = 250;
 
 interface CreateCollectionOfferFormProps {
+  type: OfferTypes;
   nftContractAddress: string;
   collectionOfferAmt: string;
   setCollectionOfferAmt: React.Dispatch<React.SetStateAction<string>>;
@@ -48,12 +56,15 @@ interface CreateCollectionOfferFormProps {
   setExpiration: React.Dispatch<React.SetStateAction<string>>;
   addNewlyAddedOfferHash: (offerHash: string) => void;
   floorTermLimit: string;
+  tokenId: string;
   setFloorTermLimit: React.Dispatch<React.SetStateAction<string>>;
+  setTokenId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const CreateCollectionOfferForm: React.FC<
   CreateCollectionOfferFormProps
 > = ({
+  type,
   nftContractAddress,
   collectionOfferAmt,
   setCollectionOfferAmt,
@@ -66,6 +77,8 @@ export const CreateCollectionOfferForm: React.FC<
   addNewlyAddedOfferHash,
   floorTermLimit,
   setFloorTermLimit,
+  setTokenId,
+  tokenId,
 }) => {
   const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.LENDERS);
   const { createCollectionOffer } = useCreateCollectionOffer({
@@ -101,6 +114,7 @@ export const CreateCollectionOfferForm: React.FC<
 
   const onCreateOffer = () => {
     createCollectionOffer({
+      tokenId: Number(tokenId),
       amount: Number(collectionOfferAmt),
       aprInPercent: Number(apr),
       durationInDays: Number(duration),
@@ -147,6 +161,13 @@ export const CreateCollectionOfferForm: React.FC<
     contractAddress: nftContractAddress,
   });
 
+  const debonucedTokenId = useDebounce(tokenId, RARIBLE_TOKEN_DEBOUNCE_MS);
+
+  const fetchedNFT: any = useRaribleTokenMeta({
+    contractAddress: nftContractAddress,
+    tokenId: debonucedTokenId,
+  });
+
   if (!nftContractAddress) {
     return null;
   }
@@ -164,6 +185,14 @@ export const CreateCollectionOfferForm: React.FC<
       boxShadow="0px 4px 24px 0px #4910921A"
       maxWidth="480px"
     >
+      {type === 'token' ? (
+        <TokenControl
+          tokenId={tokenId}
+          setTokenId={setTokenId}
+          fetchedNFT={fetchedNFT}
+          disabled={createCollectionOfferStatus !== 'READY'}
+        />
+      ) : null}
       <Text
         bg="#f7f7f7"
         borderRadius="8px"
@@ -385,20 +414,22 @@ export const CreateCollectionOfferForm: React.FC<
             </Select>
           </Box>
         </Flex>
-        <Flex alignItems="center">
-          <div>Good for</div>
-          <Box w="100px" ml="8px">
-            <Select
-              size="sm"
-              onChange={(e) => setFloorTermLimit(e.target.value)}
-              value={floorTermLimit}
-            >
-              <option value="5">5 Loans</option>
-              <option value="10">10 Loans</option>
-              <option value="30">30 Loans</option>
-            </Select>
-          </Box>
-        </Flex>
+        {type === 'offers' ? (
+          <Flex alignItems="center">
+            <div>Good for</div>
+            <Box w="100px" ml="8px">
+              <Select
+                size="sm"
+                onChange={(e) => setFloorTermLimit(e.target.value)}
+                value={floorTermLimit}
+              >
+                <option value="5">5 Loans</option>
+                <option value="10">10 Loans</option>
+                <option value="30">30 Loans</option>
+              </Select>
+            </Box>
+          </Flex>
+        ) : null}
       </Flex>
     </Box>
   );

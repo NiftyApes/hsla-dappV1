@@ -6,14 +6,18 @@ import CollectionHeader from './CollectionHeader';
 import CreateCollectionOffer from './CreateCollection';
 import OfferBook from './OfferBook';
 
+type OfferTypes = 'offers' | 'token';
+
 const CollectionDetailsModal: React.FC = () => {
   const { collectionAddress } = useParams();
 
+  const [offerType, setOfferType] = useState<OfferTypes>('offers');
   const [collectionOfferAmt, setCollectionOfferAmt] = useState<string>('');
   const [apr, setApr] = useState<string>('');
   const [duration, setDuration] = useState<string>('');
   const [expiration, setExpiration] = useState<string>('30');
   const [floorTermLimit, setFloorTermLimit] = useState('5');
+  const [tokenId, setTokenId] = useState('');
   const [newlyAddedOfferHashes, setNewlyAddedOfferHashes] = useState<string[]>(
     [],
   );
@@ -25,7 +29,8 @@ const CollectionDetailsModal: React.FC = () => {
     setExpiration('30');
     setFloorTermLimit('5');
     setNewlyAddedOfferHashes([]);
-  }, [collectionAddress]);
+    setTokenId('');
+  }, [collectionAddress, offerType]);
 
   if (!collectionAddress) {
     return null;
@@ -50,6 +55,10 @@ const CollectionDetailsModal: React.FC = () => {
           </GridItem>
           <GridItem>
             <CreateCollectionOffer
+              offerType={offerType}
+              setOfferType={setOfferType}
+              tokenId={tokenId}
+              setTokenId={setTokenId}
               collectionOfferAmt={collectionOfferAmt}
               setCollectionOfferAmt={setCollectionOfferAmt}
               apr={apr}
