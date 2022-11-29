@@ -83,8 +83,7 @@ export const useCreateCollectionOffer = ({
           amount: ethers.utils.parseUnits(String(amount), 'ether'),
           duration: Math.floor(durationInDays * 86400),
           expiration: Math.floor(Date.now() / 1000 + expirationInDays * 86400),
-          // TODO: Allow user to edit this in UI
-          floorTermLimit,
+          floorTermLimit: tokenId ? false : floorTermLimit,
         });
 
         onTxSubmitted && onTxSubmitted(tx);
@@ -94,8 +93,6 @@ export const useCreateCollectionOffer = ({
         if (receipt.status !== 1) {
           throw new ErrorWithReason('reason: revert');
         }
-
-        console.log('receipt', receipt);
 
         onTxMined && onTxMined(receipt);
 
