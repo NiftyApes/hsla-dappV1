@@ -17,8 +17,6 @@ import { useOffersContract, useSigLendingContract } from './useContracts';
 import { useWalletAddress } from './useWalletAddress';
 import { useWalletProvider } from './useWalletProvider';
 
-const SHOULD_USE_SIGNATURE_OFFER = true;
-
 const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
 export const useCreateCollectionOffer = ({
@@ -33,6 +31,10 @@ export const useCreateCollectionOffer = ({
   const dispatch = useAppDispatch();
 
   const chainId = useChainId();
+
+  // Use on-chain offers for Mainnet, and signature offers everywhere else
+  // We'll eventually expand signature offers to Mainnet too
+  const SHOULD_USE_SIGNATURE_OFFER = chainId !== '0x1';
 
   const provider = useWalletProvider();
 
