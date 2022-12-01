@@ -1,17 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { Web3Provider } from '@ethersproject/providers';
 import { useAppDispatch } from 'app/hooks';
+import { LOCAL } from 'constants/contractAddresses';
 import { SECONDS_IN_YEAR } from 'constants/misc';
 import { increment } from 'counter/counterSlice';
 import { ErrorWithReason } from 'errors';
 import { ethers } from 'ethers';
 import { getEventFromReceipt } from 'helpers/getEventFromReceipt';
+import { saveOfferInDb } from 'helpers/saveOfferInDb';
+import { saveSignatureOfferInDb } from 'helpers/saveSignatureOfferInDb';
 import { logError } from 'logging/logError';
-import NiftyApesOffersDeploymentJSON from '../generated/deployments/localhost/NiftyApesOffers.json';
-import { saveOfferInDb } from '../helpers/saveOfferInDb';
+import { useEffect, useMemo, useState } from 'react';
 import { useChainId } from './useChainId';
-import { useOffersContract } from './useContracts';
+import { useOffersContract, useSigLendingContract } from './useContracts';
 import { useWalletAddress } from './useWalletAddress';
+import { useWalletProvider } from './useWalletProvider';
 
 const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
@@ -27,6 +31,65 @@ export const useCreateCollectionOffer = ({
   const dispatch = useAppDispatch();
 
   const chainId = useChainId();
+
+  // Use on-chain offers for Mainnet, and signature offers everywhere else
+  // We'll eventually expand signature offers to Mainnet too
+  const [shouldUseSignatureOffer, setShouldUseSignatureOffer] =
+    useState<boolean>();
+
+  // We avoid using signature-based offers on Mainnet if the Offers
+  // contract has not been upgraded to support them.
+  // We determine this by checking if the getOfferHash function of the contract
+  // returns the value we expect of the old contract, in which case we know
+  // it hasn't been upgraded yet.
+  useEffect(() => {
+    async function getOfferHashOfNullOffer() {
+      // Currently we can use signature-based offers everywhere except Mainnet
+      if (chainId && chainId !== '0x1') {
+        setShouldUseSignatureOffer(true);
+        return;
+      }
+
+      // If on Mainnet, check to see whether the Offers contract has been upgraded
+      if (chainId && chainId !== '0x1' && offersContract) {
+        const hash = await offersContract.getOfferHash({
+          creator: '0x0000000000000000000000000000000000000000',
+          duration: 0,
+          expiration: 0,
+          fixedTerms: false,
+          floorTerm: false,
+          lenderOffer: false,
+          nftContractAddress: '0x0000000000000000000000000000000000000000',
+          nftId: 0,
+          asset: '0x0000000000000000000000000000000000000000',
+          amount: 0,
+          interestRatePerSecond: 0,
+          floorTermLimit: 0,
+        });
+
+        const isUsingOldMainnetOffersContract =
+          hash ===
+          // We're just hardcoding the hash value provided by the old contract here
+          '0xbb1f20af3c34f52982b9b19490e3cda5bc38264d457f501710f8d318983c8df5';
+
+        setShouldUseSignatureOffer(!isUsingOldMainnetOffersContract);
+      }
+    }
+    getOfferHashOfNullOffer();
+  }, [chainId, offersContract]);
+
+  const provider = useWalletProvider();
+
+  const SigLendingContract = useSigLendingContract();
+
+  const web3Provider = useMemo(
+    () => (provider ? new Web3Provider(provider) : undefined),
+    [provider],
+  );
+
+  const signer = useMemo(() => {
+    return web3Provider ? web3Provider?.getSigner(address) : undefined;
+  }, [web3Provider]);
 
   return {
     createCollectionOffer: async ({
@@ -64,67 +127,156 @@ export const useCreateCollectionOffer = ({
         }
 
         if (!offersContract) {
-          throw new Error('Contract is not defined');
+          throw new Error('No Offers contract is not defined');
         }
 
-        const tx = await offersContract.createOffer({
-          tokenId,
-          creator: address,
-          nftContractAddress,
-          // TODO make sure this is right
-          interestRatePerSecond: Math.round(
-            ((aprInPercent / 100) * (amount * 1e18)) / SECONDS_IN_YEAR,
-          ),
-          nftId: 0,
-          fixedTerms: false,
-          floorTerm: true,
-          lenderOffer: true,
-          asset: ETH_ADDRESS,
-          amount: ethers.utils.parseUnits(String(amount), 'ether'),
-          duration: Math.floor(durationInDays * 86400),
-          expiration: Math.floor(Date.now() / 1000 + expirationInDays * 86400),
-          floorTermLimit: tokenId ? false : floorTermLimit,
-        });
-
-        onTxSubmitted && onTxSubmitted(tx);
-
-        const receipt: any = await tx.wait();
-
-        if (receipt.status !== 1) {
-          throw new ErrorWithReason('reason: revert');
+        if (!signer) {
+          throw new Error('No signer');
         }
 
-        onTxMined && onTxMined(receipt);
+        if (!SigLendingContract) {
+          throw Error('No SigLending contract defined');
+        }
 
-        const newOfferEvent = getEventFromReceipt({
-          eventName: 'NewOffer',
-          receipt,
-          abi: NiftyApesOffersDeploymentJSON.abi,
-        });
+        if (!chainId) {
+          throw Error('No chain id');
+        }
 
-        const { offer } = newOfferEvent.args;
+        if (shouldUseSignatureOffer) {
+          const offerAttempt = {
+            creator: address,
+            duration: Math.floor(durationInDays * 86400),
+            expiration: Math.floor(
+              Date.now() / 1000 + expirationInDays * 86400,
+            ),
+            fixedTerms: false,
+            floorTerm: true,
+            lenderOffer: true,
+            nftContractAddress,
+            nftId: 0,
 
-        const offerObj = {
-          creator: offer.creator,
-          nftContractAddress: offer.nftContractAddress,
-          interestRatePerSecond: offer.interestRatePerSecond.toString(),
-          fixedTerms: offer.fixedTerms,
-          floorTerm: offer.floorTerm,
-          lenderOffer: offer.lenderOffer,
-          nftId: offer.nftId.toNumber(),
-          asset: offer.asset,
-          amount: offer.amount.toString(),
-          duration: offer.duration,
-          expiration: offer.expiration,
-        };
+            asset: ETH_ADDRESS,
+            amount: ethers.utils.parseUnits(String(amount), 'ether'),
 
-        await saveOfferInDb({
-          chainId,
-          offerObj,
-          offerHash: newOfferEvent.args.offerHash,
-        });
+            // TODO make sure this is right
+            interestRatePerSecond: Math.round(
+              ((aprInPercent / 100) * (amount * 1e18)) / SECONDS_IN_YEAR,
+            ),
 
-        onSuccess && onSuccess(newOfferEvent.args.offerHash);
+            // TODO: Allow user to edit this in UI
+            floorTermLimit,
+          };
+
+          const domain = {
+            name: 'NiftyApes_Offers',
+            version: '0.0.1',
+            chainId,
+            verifyingContract: offersContract.address,
+          };
+
+          const types = {
+            Offer: [
+              { name: 'creator', type: 'address' },
+              { name: 'duration', type: 'uint32' },
+              { name: 'expiration', type: 'uint32' },
+              { name: 'fixedTerms', type: 'bool' },
+              { name: 'floorTerm', type: 'bool' },
+              { name: 'lenderOffer', type: 'bool' },
+              { name: 'nftContractAddress', type: 'address' },
+              { name: 'nftId', type: 'uint256' },
+              { name: 'asset', type: 'address' },
+              { name: 'amount', type: 'uint128' },
+              { name: 'interestRatePerSecond', type: 'uint96' },
+              { name: 'floorTermLimit', type: 'uint64' },
+            ],
+          };
+
+          const values = offerAttempt;
+
+          const result = await signer._signTypedData(domain, types, values);
+
+          await saveSignatureOfferInDb({
+            chainId,
+            nftContractAddress: offerAttempt.nftContractAddress,
+            nftId: offerAttempt.nftId,
+            creator: offerAttempt.creator,
+            offer: {
+              ...offerAttempt,
+              amount: offerAttempt.amount.toString(),
+            },
+            offerHash: ethers.utils._TypedDataEncoder.hashStruct(
+              'Offer',
+              types,
+              values,
+            ),
+            signature: result,
+          });
+
+          onSuccess &&
+            onSuccess(
+              ethers.utils._TypedDataEncoder.hashStruct('Offer', types, values),
+              true,
+            );
+        } else {
+          const tx = await offersContract.createOffer({
+            creator: address,
+            nftContractAddress,
+            interestRatePerSecond: Math.round(
+              ((aprInPercent / 100) * (amount * 1e18)) / SECONDS_IN_YEAR,
+            ),
+            nftId: 0,
+            fixedTerms: false,
+            floorTerm: true,
+            lenderOffer: true,
+            asset: ETH_ADDRESS,
+            amount: ethers.utils.parseUnits(String(amount), 'ether'),
+            duration: Math.floor(durationInDays * 86400),
+            expiration: Math.floor(
+              Date.now() / 1000 + expirationInDays * 86400,
+            ),
+            floorTermLimit,
+          });
+
+          onTxSubmitted && onTxSubmitted(tx);
+
+          const receipt: any = await tx.wait();
+
+          if (receipt.status !== 1) {
+            throw new ErrorWithReason('reason: revert');
+          }
+
+          onTxMined && onTxMined(receipt);
+
+          const newOfferEvent = getEventFromReceipt({
+            eventName: 'NewOffer',
+            receipt,
+            abi: LOCAL.OFFERS.ABI,
+          });
+
+          const { offer } = newOfferEvent.args;
+
+          const offerObj = {
+            creator: offer.creator,
+            nftContractAddress: offer.nftContractAddress,
+            interestRatePerSecond: offer.interestRatePerSecond.toString(),
+            fixedTerms: offer.fixedTerms,
+            floorTerm: offer.floorTerm,
+            lenderOffer: offer.lenderOffer,
+            nftId: offer.nftId.toNumber(),
+            asset: offer.asset,
+            amount: offer.amount.toString(),
+            duration: offer.duration,
+            expiration: offer.expiration,
+          };
+
+          await saveOfferInDb({
+            chainId,
+            offerObj,
+            offerHash: newOfferEvent.args.offerHash,
+          });
+
+          onSuccess && onSuccess(newOfferEvent.args.offerHash);
+        }
       } catch (e: any) {
         logError(e);
         if (onError) {
@@ -133,6 +285,7 @@ export const useCreateCollectionOffer = ({
           alert(e.message);
         }
       }
+
       dispatch(increment());
     },
   };

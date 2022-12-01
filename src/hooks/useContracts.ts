@@ -5,12 +5,15 @@ import {
   getGoerliLendingContract,
   getGoerliLiquidityContract,
   getGoerliOffersContract,
+  getGoerliSigLendingContract,
   getLocalLendingContract,
   getLocalLiquidityContract,
   getLocalOffersContract,
+  getLocalSigLendingContract,
   getMainnetLendingContract,
   getMainnetLiquidityContract,
   getMainnetOffersContract,
+  getMainnetSigLendingContract,
 } from 'helpers/getContracts';
 import { useChainId } from './useChainId';
 import { useWalletProvider } from './useWalletProvider';
@@ -98,5 +101,22 @@ export const useLendingContract = () => {
 
   if (provider && isMainnet(chainId)) {
     return getMainnetLendingContract({ provider });
+  }
+};
+
+export const useSigLendingContract = () => {
+  const provider = useWalletProvider();
+  const chainId = useChainId();
+
+  if (provider && isLocalChain(chainId)) {
+    return getLocalSigLendingContract({ provider });
+  }
+
+  if (provider && isGoerli(chainId)) {
+    return getGoerliSigLendingContract({ provider });
+  }
+
+  if (provider && isMainnet(chainId)) {
+    return getMainnetSigLendingContract({ provider });
   }
 };

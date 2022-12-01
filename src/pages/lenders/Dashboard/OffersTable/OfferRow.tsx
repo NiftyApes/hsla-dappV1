@@ -1,16 +1,16 @@
-import { useEffect } from 'react';
 import { Button, Flex, Td, Text, Tr, useToast } from '@chakra-ui/react';
+import { useEffect } from 'react';
 
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
+import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { ethers } from 'ethers';
 import { getAPR } from 'helpers/getAPR';
 import { roundForDisplay } from 'helpers/roundForDisplay';
+import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
 import { useCancelOffer } from 'hooks/useCancelOffer';
 import moment from 'moment';
-import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
-import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
-import { ToastSuccessCard } from '../../../../components/cards/ToastSuccessCard';
 import NFTCollectionCardSmall from '../../../../components/cards/NFTCollectionCardSmall';
+import { ToastSuccessCard } from '../../../../components/cards/ToastSuccessCard';
 
 const i18n = {
   durationAndApr: (offer: any) =>
@@ -32,6 +32,7 @@ export const OfferRow = ({ offer, offerHash, index }: any) => {
     nftContractAddress: offer.nftContractAddress,
     nftId: offer.nftId,
     offerHash,
+    offer,
   });
 
   useEffect(() => {
