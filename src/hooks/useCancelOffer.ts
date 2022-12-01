@@ -1,4 +1,5 @@
 import { updateOfferStatus } from 'api/updateOfferStatus';
+import { updateSignatureOfferStatus } from 'api/updateSignatureOfferStatus';
 import { useAppDispatch } from 'app/hooks';
 import { increment } from 'counter/counterSlice';
 import { ErrorWithReason } from 'errors';
@@ -13,12 +14,14 @@ export const useCancelOffer = ({
   nftContractAddress,
   nftId,
   offerHash,
+  offer,
 }: {
   nftContractAddress?: string;
   nftId: string;
   offerHash: string;
+  offer: any;
 }) => {
-  const niftyApesContract = useOffersContract();
+  const offersContract = useOffersContract();
 
   const dispatch = useAppDispatch();
 
@@ -38,7 +41,7 @@ export const useCancelOffer = ({
 
   const chainId = useChainId();
 
-  if (!niftyApesContract || !chainId) {
+  if (!offersContract || !chainId) {
     return {
       seizeAsset: undefined,
     };
@@ -52,62 +55,111 @@ export const useCancelOffer = ({
 
       setCancelStatus('PENDING');
 
-      try {
-        const offer = await niftyApesContract.getOffer(
-          nftContractAddress,
-          nftId,
-          offerHash,
-          true,
-        );
+      if (offer?.signature) {
+        try {
+          const tx = await offersContract.withdrawOfferSignature(
+            offer.offer,
+            offer.signature,
+          );
 
-        const offerExpiration = offer.expiration;
+          setTxObject(tx);
 
-        const tx = await niftyApesContract.removeOffer(
-          nftContractAddress,
-          nftId,
-          offerHash,
-          true,
-        );
+          const receipt: any = await tx.wait();
 
-        setTxObject(tx);
+          if (receipt.status !== 1) {
+            throw new ErrorWithReason('reason: revert');
+          }
 
-        const receipt: any = await tx.wait();
+          const transactionTimestamp = await getTransactionTimestamp(receipt);
 
-        if (receipt.status !== 1) {
-          throw new ErrorWithReason('reason: revert');
+          setTxReceipt(receipt);
+
+          setCancelStatus('SUCCESS');
+
+          await updateSignatureOfferStatus({
+            chainId,
+            nftContractAddress,
+            nftId,
+            offerExpiration: offer.expiration,
+            status: 'USED',
+            signature: offer.signature,
+            transactionTimestamp,
+            transactionHash: receipt.transactionHash,
+          });
+
+          setTimeout(() => {
+            setCancelStatus('READY');
+            setTxObject(null);
+            setTxReceipt(null);
+          }, 3000);
+        } catch (e) {
+          logError(e);
+          setCancelStatus('ERROR');
+
+          setTimeout(() => {
+            setCancelStatus('READY');
+            setTxObject(null);
+            setTxReceipt(null);
+          }, 3000);
         }
+      } else {
+        try {
+          const onChainOffer = await offersContract.getOffer(
+            nftContractAddress,
+            nftId,
+            offerHash,
+            true,
+          );
 
-        const transactionTimestamp = await getTransactionTimestamp(receipt);
+          const offerExpiration = onChainOffer.expiration;
 
-        setTxReceipt(receipt);
+          const tx = await offersContract.removeOffer(
+            nftContractAddress,
+            nftId,
+            offerHash,
+            true,
+          );
 
-        setCancelStatus('SUCCESS');
+          setTxObject(tx);
 
-        await updateOfferStatus({
-          chainId,
-          nftContractAddress,
-          nftId,
-          offerExpiration,
-          offerHash,
-          status: 'CANCELED',
-          transactionTimestamp,
-          transactionHash: receipt.transactionHash,
-        });
+          const receipt: any = await tx.wait();
 
-        setTimeout(() => {
-          setCancelStatus('READY');
-          setTxObject(null);
-          setTxReceipt(null);
-        }, 3000);
-      } catch (e) {
-        logError(e);
-        setCancelStatus('ERROR');
+          if (receipt.status !== 1) {
+            throw new ErrorWithReason('reason: revert');
+          }
 
-        setTimeout(() => {
-          setCancelStatus('READY');
-          setTxObject(null);
-          setTxReceipt(null);
-        }, 3000);
+          const transactionTimestamp = await getTransactionTimestamp(receipt);
+
+          setTxReceipt(receipt);
+
+          setCancelStatus('SUCCESS');
+
+          await updateOfferStatus({
+            chainId,
+            nftContractAddress,
+            nftId,
+            offerExpiration,
+            offerHash,
+            status: 'CANCELED',
+            transactionTimestamp,
+            transactionHash: receipt.transactionHash,
+          });
+
+          setTimeout(() => {
+            setCancelStatus('READY');
+            setTxObject(null);
+            setTxReceipt(null);
+          }, 3000);
+        } catch (e) {
+          logError(e);
+          setCancelStatus('ERROR');
+
+          setTimeout(() => {
+            setCancelStatus('READY');
+            setTxObject(null);
+            setTxReceipt(null);
+          }, 3000);
+        }
       }
 
       dispatch(increment());

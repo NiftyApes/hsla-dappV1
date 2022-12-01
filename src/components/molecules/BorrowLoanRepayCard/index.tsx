@@ -12,15 +12,15 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 
+import { QuestionOutlineIcon } from '@chakra-ui/icons';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
+import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { BigNumber } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
-import { logError } from 'logging/logError';
-import JSConfetti from 'js-confetti';
 import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
-import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
-import { QuestionOutlineIcon } from '@chakra-ui/icons';
+import JSConfetti from 'js-confetti';
+import { logError } from 'logging/logError';
 import { humanizeContractError } from '../../../helpers/errorsMap';
 import { getAPR } from '../../../helpers/getAPR';
 import {

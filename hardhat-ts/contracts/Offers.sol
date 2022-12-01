@@ -94,23 +94,20 @@ contract NiftyApesOffers is OwnableUpgradeable, PausableUpgradeable, EIP712Upgra
       _hashTypedDataV4(
         keccak256(
           abi.encode(
-            0x428a8e8c29d93e1e11aecebd37fa09e4f7c542a1302c7ac497bf5f49662103a5,
-            keccak256(
-              abi.encode(
-                offer.creator,
-                offer.duration,
-                offer.expiration,
-                offer.fixedTerms,
-                offer.floorTerm,
-                offer.lenderOffer,
-                offer.nftContractAddress,
-                offer.nftId,
-                offer.asset,
-                offer.amount,
-                offer.interestRatePerSecond,
-                offer.floorTermLimit
-              )
-            )
+            // keccak256("Offer(address creator,uint32 duration,uint32 expiration,bool fixedTerms,bool floorTerm,bool lenderOffer,address nftContractAddress,uint256 nftId,address asset,uint128 amount,uint96 interestRatePerSecond,uint64 floorTermLimit)")
+            0x1aa447c4698867fd4d8771498b0eca50958fef11dfb5fa327aa0ac1366f492ce,
+            offer.creator,
+            offer.duration,
+            offer.expiration,
+            offer.fixedTerms,
+            offer.floorTerm,
+            offer.lenderOffer,
+            offer.nftContractAddress,
+            offer.nftId,
+            offer.asset,
+            offer.amount,
+            offer.interestRatePerSecond,
+            offer.floorTermLimit
           )
         )
       );

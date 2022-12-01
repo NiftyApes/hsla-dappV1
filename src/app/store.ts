@@ -7,6 +7,7 @@ import {
   LendingContract,
   LiquidityContract,
   OffersContract,
+  SigLendingContract,
   Wallet,
 } from 'nft/model';
 import counterReducer from '../counter/counterSlice';
@@ -17,6 +18,7 @@ let wallet: Wallet | null = null;
 let lendingContract: LendingContract | null = null;
 let offersContract: OffersContract | null = null;
 let liquidityContract: LiquidityContract | null = null;
+let sigLendingContract: SigLendingContract | null = null;
 let cEthContract: any | null = null;
 
 export type ThunkExtra = {
@@ -53,6 +55,11 @@ export const store = configureStore({
 export const setStoreLendingContract = (newContract?: LendingContract | null) =>
   (lendingContract = newContract || null);
 export const getStoreLendingContract = () => lendingContract;
+
+export const setStoreSigLendingContract = (
+  newContract?: SigLendingContract | null,
+) => (sigLendingContract = newContract || null);
+export const getStoreSigLendingContract = () => sigLendingContract;
 
 export const setStoreOffersContract = (newContract?: OffersContract | null) =>
   (offersContract = newContract || null);

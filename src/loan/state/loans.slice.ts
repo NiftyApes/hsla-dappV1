@@ -1,11 +1,13 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { getSignatureOffersByCollection } from 'api/getSignatureOffersByCollection';
 import { AppDispatch, ThunkExtra } from 'app/store';
 import { ethers } from 'ethers';
 import { getApiUrl, getData } from 'helpers';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
 import { getFloorOfferCountFromHash } from 'helpers/getOfferCountLeftFromHash';
+import { getFloorSignatureOfferCountLeftFromSignature } from 'helpers/getSignatureOfferCountLeftFromSignature';
 import { ContractAddress, getNFTHash, NFT } from 'nft/model';
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import { LoanAuction, loanAuction, LoanOffer, loanOffer } from '../model';
@@ -142,6 +144,55 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
         }
       }),
     ).then((results) => data.filter((offer, j) => results[j]));
+
+    const sigOffers = await getSignatureOffersByCollection({
+      chainId,
+      nftContractAddress,
+    });
+
+    for (let i = 0; i < sigOffers.length; i++) {
+      const sigOffer = sigOffers[i];
+
+      const isCancelledOrFinalized =
+        await offersContract.getOfferSignatureStatus(sigOffer.Signature);
+
+      if (isCancelledOrFinalized) {
+        continue;
+      }
+
+      const floorOfferCount =
+        await getFloorSignatureOfferCountLeftFromSignature({
+          offersContract,
+          signature: sigOffer.Signature,
+        });
+
+      // Ignore offers that are out of punches
+      if (
+        floorOfferCount &&
+        floorOfferCount.toNumber() >= sigOffer.Offer.floorTermLimit
+      ) {
+        continue;
+      }
+
+      const offerWithAddedFields = loanOffer({
+        offer: sigOffer.Offer,
+        ...sigOffer.Offer,
+        floorOfferCount,
+        OfferAttempt: sigOffer.Offer,
+        OfferTerms: {
+          Amount: sigOffer.Offer.amount,
+          InterestRatePerSecond: sigOffer.Offer.interestRatePerSecond,
+          Expiration: sigOffer.Offer.expiration,
+          Duration: sigOffer.Offer.duration,
+          OfferStatus: 'ACTIVE',
+          FloorTerm: true,
+        },
+        OfferHash: sigOffer.OfferHash,
+        signature: sigOffer.Signature,
+      });
+
+      processedOffers.push(offerWithAddedFields);
+    }
 
     return {
       content: processedOffers,

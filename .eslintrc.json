@@ -29,6 +29,8 @@
     "no-nested-ternary": ["off"],
     "react/require-default-props": ["off"],
     "import/prefer-default-export": ["off"],
+    "no-continue": ["off"],
+    "no-await-in-loop": ["off"],
     "react/react-in-jsx-scope": ["off"],
     "react/jsx-uses-react": ["off"],
     "react/jsx-props-no-spreading": ["warn"],

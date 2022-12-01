@@ -2,6 +2,8 @@ import cEthJSON from '../external/cEth/cEth.json';
 import LendingDeploymentJSON from '../generated/deployments/localhost/NiftyApesLending.json';
 import LiquidityDeploymentJSON from '../generated/deployments/localhost/NiftyApesLiquidity.json';
 import OffersDeploymentJSON from '../generated/deployments/localhost/NiftyApesOffers.json';
+import SigLendingDeploymentJSON from '../generated/deployments/localhost/NiftyApesSigLending.json';
+
 import YourCollectibleDeploymentJSON from '../generated/deployments/localhost/YourCollectible.json';
 
 export const BAYC_CONTRACT_ADDRESS =
@@ -15,19 +17,24 @@ export const NOUNS_CONTRACT_ADDRESS =
 
 export const GOERLI = {
   LENDING: {
-    ADDRESS: '0xCf6ac047C2E9A5e7cccb8887C4A141d69E5A16cC',
+    ADDRESS: '0x40dF7D76C59721b1E0b0e1cf92Dbd0A58D083De4',
     ABI: LendingDeploymentJSON.abi,
   },
   LIQUIDITY: {
-    ADDRESS: '0x0D54a1612f0af02b965d63DcA5DCEea3fF35dA16',
+    ADDRESS: '0x084A7cE2eb1ea21777Df239550234EEb9D9ef47c',
     ABI: LiquidityDeploymentJSON.abi,
   },
   OFFERS: {
-    ADDRESS: '0xdaD319eEd71C286B90A6cfD4cb08ED754F835041',
+    ADDRESS: '0x896A60e3f3457a3587F2ce30D812ffeDb7547EC7',
     ABI: OffersDeploymentJSON.abi,
   },
+  SIG_LENDING: {
+    ADDRESS: '0xf7c38F9b678cb96a6ee20448dab4a44B818dE2A6',
+    // Both ABIs are here so we can extract Lending events from SigLending receipts
+    ABI: [...SigLendingDeploymentJSON.abi, ...LendingDeploymentJSON.abi],
+  },
   CETH: {
-    ADDRESS: '0x20572e4c090f15667cf7378e16fad2ea0e2f3eff',
+    ADDRESS: '0x20572e4c090f15667cF7378e16FaD2eA0e2f3EfF',
     ABI: cEthJSON.abi,
   },
 } as const;
@@ -45,28 +52,38 @@ export const MAINNET = {
     ADDRESS: '0x540a59AD41a38b1Cc2B90D3adADC2F7417f1e451',
     ABI: OffersDeploymentJSON.abi,
   },
+  SIG_LENDING: {
+    ADDRESS: '0xC708c2eFD6E6578809352d8E618C7f619f3B7f20',
+    // Both ABIs are here so we can extract Lending events from SigLending receipts
+    ABI: [...SigLendingDeploymentJSON.abi, ...LendingDeploymentJSON.abi],
+  },
   CETH: {
-    ADDRESS: '0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5',
+    ADDRESS: '0x4Ddc2D193948926D02f9B1fE9e1daa0718270ED5',
     ABI: cEthJSON.abi,
   },
 } as const;
 
 export const LOCAL = {
   LENDING: {
-    ADDRESS: '0x05d4c15d505359A3647B714AfBfD60F3BB526953',
+    ADDRESS: LendingDeploymentJSON.address,
     ABI: LendingDeploymentJSON.abi,
   },
   LIQUIDITY: {
-    ADDRESS: '0x5106562923f74D8F2661a24557aCa6B471eb500a',
+    ADDRESS: LiquidityDeploymentJSON.address,
     ABI: LiquidityDeploymentJSON.abi,
   },
   OFFERS: {
-    ADDRESS: '0x456F57E2F5f84066c73e1223Ec08c898397108c2',
+    ADDRESS: OffersDeploymentJSON.address,
     ABI: OffersDeploymentJSON.abi,
   },
   CETH: {
-    ADDRESS: '0x4ddc2d193948926d02f9b1fe9e1daa0718270ed5',
+    ADDRESS: cEthJSON.address,
     ABI: cEthJSON.abi,
+  },
+  SIG_LENDING: {
+    ADDRESS: SigLendingDeploymentJSON.address,
+    // Both ABIs are here so we can extract Lending events from SigLending receipts
+    ABI: [...SigLendingDeploymentJSON.abi, ...LendingDeploymentJSON.abi],
   },
   YOUR_COLLECTIBLE: {
     ADDRESS: YourCollectibleDeploymentJSON.address,

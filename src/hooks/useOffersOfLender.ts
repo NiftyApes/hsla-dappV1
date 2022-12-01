@@ -1,11 +1,15 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable @typescript-eslint/no-shadow */
 import { getActiveOffersByLender } from 'api/getActiveOffersByLender';
+import { getActiveSignatureOffersByLender } from 'api/getActiveSignatureOffersByLender';
 import { getAllOffersByLender } from 'api/getAllOffersByLender';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
 import { getFloorOfferCountFromHash } from 'helpers/getOfferCountLeftFromHash';
+import { getFloorSignatureOfferCountLeftFromSignature } from 'helpers/getSignatureOfferCountLeftFromSignature';
+
+import { loanOffer } from 'loan';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useChainId } from './useChainId';
@@ -81,6 +85,55 @@ export const useOffersForLender = ({
       }
 
       const filteredOffers = _.compact(offers);
+
+      const sigOffers = await getActiveSignatureOffersByLender({
+        chainId,
+        lenderAddress,
+      });
+
+      for (let i = 0; i < sigOffers.length; i++) {
+        const sigOffer = sigOffers[i];
+
+        const isCanceledOrFinalized =
+          await offersContract.getOfferSignatureStatus(sigOffer.Signature);
+
+        if (isCanceledOrFinalized) {
+          continue;
+        }
+
+        const floorOfferCount =
+          await getFloorSignatureOfferCountLeftFromSignature({
+            offersContract,
+            signature: sigOffer.Signature,
+          });
+
+        // Ignore offers that are out of punches
+        if (
+          floorOfferCount &&
+          floorOfferCount.toNumber() >= sigOffer.Offer.floorTermLimit
+        ) {
+          continue;
+        }
+
+        const offerWithAddedFields = loanOffer({
+          offer: sigOffer.Offer,
+          ...sigOffer.Offer,
+          floorOfferCount,
+          OfferAttempt: sigOffer.Offer,
+          OfferTerms: {
+            Amount: sigOffer.Offer.amount,
+            InterestRatePerSecond: sigOffer.Offer.interestRatePerSecond,
+            Expiration: sigOffer.Offer.expiration,
+            Duration: sigOffer.Offer.duration,
+            OfferStatus: 'ACTIVE',
+            FloorTerm: true,
+          },
+          offerHash: sigOffer.OfferHash,
+          signature: sigOffer.Signature,
+        });
+
+        filteredOffers.push({ offer: offerWithAddedFields });
+      }
 
       setOffers(filteredOffers);
     }
