@@ -9,8 +9,10 @@ import {
   InputLeftElement,
   Link as ChakraLink,
   Image,
+  Text,
 } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
+import _isEmpty from 'lodash/isEmpty';
 
 type TokenControlProps = {
   fetchedNFT: Record<string, any>;
@@ -34,21 +36,30 @@ const TokenControl: React.FC<TokenControlProps> = ({
       <FormControl>
         <InputGroup>
           <InputLeftElement sx={{ top: '17px', left: '16px', width: '3.5rem' }}>
-            <Image
-              borderRadius="8"
-              style={{ height: '3.5rem', width: '3.5rem' }}
-              mr=".75rem"
-              src={
-                (tokenId && fetchedNFT?.image) ||
-                '/assets/images/img-missing.png'
-              }
-            />
+            {tokenId && fetchedNFT?.image ? (
+              <Image
+                borderRadius="8"
+                style={{ height: '3.5rem', width: '3.5rem' }}
+                mr=".75rem"
+                src={fetchedNFT?.image}
+              />
+            ) : (
+              <Text
+                sx={{
+                  fontSize: 30,
+                  fontWeight: 'bold',
+                  color: 'gray.600',
+                }}
+              >
+                #
+              </Text>
+            )}
           </InputLeftElement>
           <Input
-            placeholder="Token ID"
+            placeholder="TYPE IN TOKEN ID"
             _placeholder={{
-              fontSize: 26,
-              transform: 'translateY(-2px)',
+              fontSize: 12,
+              transform: 'translateY(-5px)',
               fontWeight: 'bold',
             }}
             type="number"
@@ -68,29 +79,31 @@ const TokenControl: React.FC<TokenControlProps> = ({
       </FormControl>
     </GridItem>
     <GridItem colSpan={1} textAlign="center" opacity={0.75}>
-      <Flex ml="5" flexDirection="column">
-        <Flex>
-          <Icon name="etherscan" mr="5px" ml="3px" />
-          <ChakraLink
-            href={tokenId && fetchedNFT?.external_url}
-            target="_blank"
-          >
-            Etherscan
-          </ChakraLink>
+      {tokenId && !_isEmpty(fetchedNFT) ? (
+        <Flex ml="5" flexDirection="column">
+          <Flex>
+            <Icon name="etherscan" mr="5px" ml="3px" />
+            <ChakraLink
+              href={tokenId && fetchedNFT?.external_url}
+              target="_blank"
+            >
+              Etherscan
+            </ChakraLink>
+          </Flex>
+          <Flex>
+            <Icon name="os" size={23} mr="3px" />
+            <ChakraLink
+              href={
+                tokenId &&
+                `https://opensea.io/assets/ethereum/${fetchedNFT.contractAddress}/${fetchedNFT.id}`
+              }
+              target="_blank"
+            >
+              OpenSea
+            </ChakraLink>
+          </Flex>
         </Flex>
-        <Flex>
-          <Icon name="os" size={23} mr="3px" />
-          <ChakraLink
-            href={
-              tokenId &&
-              `https://opensea.io/assets/ethereum/${fetchedNFT.contractAddress}/${fetchedNFT.id}`
-            }
-            target="_blank"
-          >
-            OpenSea
-          </ChakraLink>
-        </Flex>
-      </Flex>
+      ) : null}
     </GridItem>
   </Grid>
 );
