@@ -370,9 +370,11 @@ const OfferBook: React.FC<OfferBookProps> = ({
                 </Td>
                 <Td>
                   <Text>
-                    {moment(offer.expiration * 1000).format(
-                      'h:mma, MMM D YYYY',
-                    )}
+                    {moment(offer.expiration * 1000).diff(moment(), 'days')}
+                    {moment(offer.expiration * 1000).diff(moment(), 'days') !==
+                    1
+                      ? ' days'
+                      : ' day'}
                   </Text>
                 </Td>
                 <Td />
