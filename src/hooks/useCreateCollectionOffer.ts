@@ -11,7 +11,7 @@ import { getEventFromReceipt } from 'helpers/getEventFromReceipt';
 import { saveOfferInDb } from 'helpers/saveOfferInDb';
 import { saveSignatureOfferInDb } from 'helpers/saveSignatureOfferInDb';
 import { logError } from 'logging/logError';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useChainId } from './useChainId';
 import { useOffersContract, useSigLendingContract } from './useContracts';
 import { useWalletAddress } from './useWalletAddress';
@@ -34,7 +34,49 @@ export const useCreateCollectionOffer = ({
 
   // Use on-chain offers for Mainnet, and signature offers everywhere else
   // We'll eventually expand signature offers to Mainnet too
-  const SHOULD_USE_SIGNATURE_OFFER = chainId !== '0x1';
+  const [shouldUseSignatureOffer, setShouldUseSignatureOffer] =
+    useState<boolean>();
+
+  // We avoid using signature-based offers on Mainnet if the Offers
+  // contract has not been upgraded to support them.
+  // We determine this by checking if the getOfferHash function of the contract
+  // returns the value we expect of the old contract, in which case we know
+  // it hasn't been upgraded yet.
+  useEffect(() => {
+    async function getOfferHashOfNullOffer() {
+      // Currently we can use signature-based offers everywhere except Mainnet
+      if (chainId && chainId !== '0x1') {
+        setShouldUseSignatureOffer(true);
+        return;
+      }
+
+      // If on Mainnet, check to see whether the Offers contract has been upgraded
+      if (chainId && chainId !== '0x1' && offersContract) {
+        const hash = await offersContract.getOfferHash({
+          creator: '0x0000000000000000000000000000000000000000',
+          duration: 0,
+          expiration: 0,
+          fixedTerms: false,
+          floorTerm: false,
+          lenderOffer: false,
+          nftContractAddress: '0x0000000000000000000000000000000000000000',
+          nftId: 0,
+          asset: '0x0000000000000000000000000000000000000000',
+          amount: 0,
+          interestRatePerSecond: 0,
+          floorTermLimit: 0,
+        });
+
+        const isUsingOldMainnetOffersContract =
+          hash ===
+          // We're just hardcoding the hash value provided by the old contract here
+          '0xbb1f20af3c34f52982b9b19490e3cda5bc38264d457f501710f8d318983c8df5';
+
+        setShouldUseSignatureOffer(!isUsingOldMainnetOffersContract);
+      }
+    }
+    getOfferHashOfNullOffer();
+  }, [chainId, offersContract]);
 
   const provider = useWalletProvider();
 
@@ -98,7 +140,7 @@ export const useCreateCollectionOffer = ({
           throw Error('No chain id');
         }
 
-        if (SHOULD_USE_SIGNATURE_OFFER) {
+        if (shouldUseSignatureOffer) {
           const offerAttempt = {
             creator: address,
             duration: Math.floor(durationInDays * 86400),
