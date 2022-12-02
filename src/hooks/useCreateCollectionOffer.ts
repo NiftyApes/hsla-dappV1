@@ -162,8 +162,6 @@ export const useCreateCollectionOffer = ({
             interestRatePerSecond: Math.round(
               ((aprInPercent / 100) * (amount * 1e18)) / SECONDS_IN_YEAR,
             ),
-
-            // TODO: Allow user to edit this in UI
             floorTermLimit: tokenId ? 0 : floorTermLimit,
           };
 

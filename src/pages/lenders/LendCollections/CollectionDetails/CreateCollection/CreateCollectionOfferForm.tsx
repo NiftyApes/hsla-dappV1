@@ -34,15 +34,11 @@ import JSConfetti from 'js-confetti';
 import _ from 'lodash';
 import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useRaribleTokenMeta } from 'hooks/useRaribleTokenMeta';
-import { useDebounce } from 'hooks/useDebounce';
 import { lendersLiquidity } from 'routes/router';
 import { ToastSuccessCard } from '../../../../../components/cards/ToastSuccessCard';
 import TokenControl from './TokenControl';
 
 type OfferTypes = 'offers' | 'token';
-
-const RARIBLE_TOKEN_DEBOUNCE_MS = 250;
 
 interface CreateCollectionOfferFormProps {
   type: OfferTypes;
@@ -60,6 +56,7 @@ interface CreateCollectionOfferFormProps {
   tokenId: string;
   setFloorTermLimit: React.Dispatch<React.SetStateAction<string>>;
   setTokenId: React.Dispatch<React.SetStateAction<string>>;
+  fetchedNFT: Record<string, any>;
 }
 
 export const CreateCollectionOfferForm: React.FC<
@@ -80,6 +77,7 @@ export const CreateCollectionOfferForm: React.FC<
   setFloorTermLimit,
   setTokenId,
   tokenId,
+  fetchedNFT,
 }) => {
   const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.LENDERS);
   const { createCollectionOffer } = useCreateCollectionOffer({
@@ -174,13 +172,6 @@ export const CreateCollectionOfferForm: React.FC<
 
   const { floorPrice } = useRaribleCollectionStats({
     contractAddress: nftContractAddress,
-  });
-
-  const debonucedTokenId = useDebounce(tokenId, RARIBLE_TOKEN_DEBOUNCE_MS);
-
-  const fetchedNFT: any = useRaribleTokenMeta({
-    contractAddress: nftContractAddress,
-    tokenId: debonucedTokenId,
   });
 
   if (!nftContractAddress) {

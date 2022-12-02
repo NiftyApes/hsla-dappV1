@@ -23,6 +23,7 @@ interface CreateCollectionOfferProps {
   tokenId: string;
   setOfferType: React.Dispatch<React.SetStateAction<OfferTypes>>;
   offerType: OfferTypes;
+  fetchedNFT: Record<string, any>;
 }
 
 const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
@@ -42,6 +43,7 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
   tokenId,
   offerType,
   setOfferType,
+  fetchedNFT,
 }) => {
   const { easyOfferAmount, easyOfferApr, easyOfferDuration } =
     useEasyOfferForCollection({
@@ -85,6 +87,7 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
         )}
       </Flex>
       <CreateCollectionOfferForm
+        fetchedNFT={fetchedNFT}
         type={offerType}
         nftContractAddress={nftContractAddress}
         collectionOfferAmt={collectionOfferAmt}

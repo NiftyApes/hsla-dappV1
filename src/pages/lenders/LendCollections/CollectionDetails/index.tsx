@@ -1,4 +1,6 @@
 import { Box, Center, Grid, GridItem } from '@chakra-ui/react';
+import { useDebounce } from 'hooks/useDebounce';
+import { useRaribleTokenMeta } from 'hooks/useRaribleTokenMeta';
 import React, { useEffect, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
@@ -7,6 +9,7 @@ import CreateCollectionOffer from './CreateCollection';
 import OfferBook from './OfferBook';
 
 type OfferTypes = 'offers' | 'token';
+const RARIBLE_TOKEN_DEBOUNCE_MS = 250;
 
 const CollectionDetailsModal: React.FC = () => {
   const { collectionAddress } = useParams();
@@ -32,6 +35,13 @@ const CollectionDetailsModal: React.FC = () => {
     setTokenId('');
   }, [collectionAddress, offerType]);
 
+  const debonucedTokenId = useDebounce(tokenId, RARIBLE_TOKEN_DEBOUNCE_MS);
+
+  const fetchedNFT: any = useRaribleTokenMeta({
+    contractAddress: collectionAddress,
+    tokenId: debonucedTokenId,
+  });
+
   if (!collectionAddress) {
     return null;
   }
@@ -46,6 +56,7 @@ const CollectionDetailsModal: React.FC = () => {
         >
           <GridItem>
             <OfferBook
+              tokenId={tokenId}
               collectionOfferAmt={collectionOfferAmt}
               apr={apr}
               duration={duration}
@@ -55,6 +66,7 @@ const CollectionDetailsModal: React.FC = () => {
           </GridItem>
           <GridItem>
             <CreateCollectionOffer
+              fetchedNFT={fetchedNFT}
               offerType={offerType}
               setOfferType={setOfferType}
               tokenId={tokenId}
