@@ -10,6 +10,8 @@ import { store } from './app/store';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorker from './serviceWorker';
 
+console.log('OLD GOERLI BRANCH');
+
 Sentry.init({
   dsn: 'https://e25ced3220074d7dbed923a26da046da@o4503999473385472.ingest.sentry.io/4504045219545088',
   integrations: [new BrowserTracing()],
