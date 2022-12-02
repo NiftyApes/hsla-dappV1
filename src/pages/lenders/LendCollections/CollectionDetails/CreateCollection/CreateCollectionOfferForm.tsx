@@ -1,6 +1,5 @@
 import Humanize from 'humanize-plus';
 
-import React, { useMemo, useState } from 'react';
 import {
   Box,
   Button,
@@ -21,19 +20,21 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
+import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import CryptoIcon from 'components/atoms/CryptoIcon';
+import { NonTxnToastSuccessCard } from 'components/cards/NonTxnToastSuccessCard';
+import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { SECONDS_IN_DAY, SECONDS_IN_YEAR } from 'constants/misc';
+import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
 import { useCreateCollectionOffer } from 'hooks/useCreateCollectionOffer';
 import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
-import { useWalletAddress } from 'hooks/useWalletAddress';
-import { TransactionReceipt } from '@ethersproject/abstract-provider';
-import _ from 'lodash';
-import JSConfetti from 'js-confetti';
-import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
 import { useRaribleCollectionStats } from 'hooks/useRaribleColectionStats';
-import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
-import { lendersLiquidity } from 'routes/router';
+import { useWalletAddress } from 'hooks/useWalletAddress';
+import JSConfetti from 'js-confetti';
+import _ from 'lodash';
+import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { lendersLiquidity } from 'routes/router';
 import { ToastSuccessCard } from '../../../../../components/cards/ToastSuccessCard';
 
 interface CreateCollectionOfferFormProps {
@@ -124,10 +125,24 @@ export const CreateCollectionOfferForm: React.FC<
       },
 
       onPending: () => setCreateCollectionOfferStatus('PENDING'),
-      onSuccess: (offerHash: string) => {
+      onSuccess: (offerHash: string, isSignatureBased = false) => {
         gaEventTracker(ACTIONS.OFFER, LABELS.CREATE);
-        console.log('Offer hash', offerHash);
+        if (isSignatureBased) {
+          jsConfetti.addConfetti({
+            emojis: ['🍌'],
+            emojiSize: 80,
+            confettiNumber: 50,
+          });
 
+          toast({
+            render: (props) => (
+              <NonTxnToastSuccessCard title="Offer Created" {...props} />
+            ),
+            position: 'top-right',
+            duration: 9000,
+            isClosable: true,
+          });
+        }
         setCollectionOfferAmt('');
         setApr('');
         setDuration('');

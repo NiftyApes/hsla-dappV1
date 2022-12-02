@@ -17,6 +17,7 @@ export enum OfferStatus {
   CANCELED = 'CANCELED',
   ACCEPTED = 'ACCEPTED',
   CLOSED = 'CLOSED',
+  USED = 'USED',
 }
 
 export interface LoanOffer {
@@ -38,6 +39,8 @@ export interface LoanOffer {
   symbol: CoinSymbol;
   floorOfferCount?: number;
   floorTermLimit?: number;
+  signature?: string;
+  OfferAttempt?: any;
 }
 
 const loanOffer = (json: any): LoanOffer => {

@@ -66,7 +66,7 @@ const func: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   await liquidityXLendingTx.wait();
   const offersXLendingTx = await offersContract.updateLendingContractAddress(lendingAddress);
   await offersXLendingTx.wait();
-  const offersXSigLendingTx = await offersContract.updateSigLendingContractAddress(lendingAddress);
+  const offersXSigLendingTx = await offersContract.updateSigLendingContractAddress(sigLendingAddress);
   await offersXSigLendingTx.wait();
   const sigLendingXLendingTx = await sigLendingContract.updateLendingContractAddress(lendingAddress);
   await sigLendingXLendingTx.wait();

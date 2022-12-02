@@ -307,7 +307,7 @@ const OfferBook: React.FC<OfferBookProps> = ({
               />
             ) : (
               <Tr
-                key={i}
+                key={offer.offerHash}
                 sx={{
                   td: {
                     backgroundColor: newlyAddedOfferHashes.includes(

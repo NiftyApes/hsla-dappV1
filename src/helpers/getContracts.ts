@@ -1,6 +1,11 @@
 import { EIP1193Provider } from '@web3-onboard/core';
 
-import { LendingContract, LiquidityContract, OffersContract } from 'nft/model';
+import {
+  LendingContract,
+  LiquidityContract,
+  OffersContract,
+  SigLendingContract,
+} from 'nft/model';
 
 import { GOERLI, LOCAL, MAINNET } from 'constants/contractAddresses';
 
@@ -11,9 +16,11 @@ import {
   getStoreLendingContract,
   getStoreLiquidityContract,
   getStoreOffersContract,
+  getStoreSigLendingContract,
   setStoreLendingContract,
   setStoreLiquidityContract,
   setStoreOffersContract,
+  setStoreSigLendingContract,
 } from '../app/store';
 
 function doesProviderMismatchContract({
@@ -54,6 +61,26 @@ export function getLocalLendingContract({
   return getStoreLendingContract();
 }
 
+export function getLocalSigLendingContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
+  let contract = getStoreSigLendingContract();
+
+  if (!contract || doesProviderMismatchContract({ provider, contract })) {
+    contract = getEthersContractWithEIP1193Provider({
+      abi: LOCAL.SIG_LENDING.ABI,
+      address: LOCAL.SIG_LENDING.ADDRESS,
+      provider,
+    }) as SigLendingContract;
+
+    setStoreSigLendingContract(contract);
+  }
+
+  return getStoreSigLendingContract();
+}
+
 export function getGoerliLendingContract({
   provider,
 }: {
@@ -74,6 +101,26 @@ export function getGoerliLendingContract({
   return getStoreLendingContract();
 }
 
+export function getGoerliSigLendingContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
+  let contract = getStoreSigLendingContract();
+
+  if (!contract || doesProviderMismatchContract({ provider, contract })) {
+    contract = getEthersContractWithEIP1193Provider({
+      abi: GOERLI.SIG_LENDING.ABI,
+      address: GOERLI.SIG_LENDING.ADDRESS,
+      provider,
+    }) as SigLendingContract;
+
+    setStoreSigLendingContract(contract);
+  }
+
+  return getStoreSigLendingContract();
+}
+
 export function getMainnetLendingContract({
   provider,
 }: {
@@ -92,6 +139,26 @@ export function getMainnetLendingContract({
   }
 
   return getStoreLendingContract();
+}
+
+export function getMainnetSigLendingContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
+  let contract = getStoreSigLendingContract();
+
+  if (!contract || doesProviderMismatchContract({ provider, contract })) {
+    contract = getEthersContractWithEIP1193Provider({
+      abi: MAINNET.SIG_LENDING.ABI,
+      address: MAINNET.SIG_LENDING.ADDRESS,
+      provider,
+    }) as SigLendingContract;
+
+    setStoreSigLendingContract(contract);
+  }
+
+  return getStoreSigLendingContract();
 }
 
 export function getLocalLiquidityContract({
