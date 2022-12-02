@@ -1,4 +1,3 @@
-import ReactGA from 'react-ga4';
 import { Button, ChakraProvider, Link } from '@chakra-ui/react';
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
 import {
@@ -10,9 +9,11 @@ import {
 } from 'app/store';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import GlobalModal from 'components/organisms/GlobalModal';
+import RouteTracker from 'components/organisms/RouteTracker';
 import { useCEthContract } from 'hooks/useCEthContract';
 import { useChainId } from 'hooks/useChainId';
 import {
+  isGnosis,
   isGoerli,
   isLocalChain,
   isMainnet,
@@ -23,11 +24,11 @@ import {
 import { useLocalStorage } from 'hooks/useLocalStorage';
 import { WalletContext } from 'lib/contexts/WalletProvider';
 import React, { Suspense, useContext, useEffect } from 'react';
+import ReactGA from 'react-ga4';
 import { BrowserRouter as Router, Routes } from 'react-router-dom';
 import Borrowers from 'routes/Borrowers';
 import Lenders from 'routes/Lenders';
 import Marketing from 'routes/Marketing';
-import RouteTracker from 'components/organisms/RouteTracker';
 import theme from './theme';
 
 if (window.location.hostname === 'app.niftyapes.money') {
@@ -58,7 +59,10 @@ const App: React.FC = () => {
   useEffect(() => {
     if (
       !chainId ||
-      (!isGoerli(chainId) && !isLocalChain(chainId) && !isMainnet(chainId))
+      (!isGoerli(chainId) &&
+        !isLocalChain(chainId) &&
+        !isMainnet(chainId) &&
+        !isGnosis(chainId))
     ) {
       setChain({ chainId: '0x1' });
     }
@@ -68,7 +72,8 @@ const App: React.FC = () => {
     chainId &&
     !isGoerli(chainId) &&
     !isLocalChain(chainId) &&
-    !isMainnet(chainId)
+    !isMainnet(chainId) &&
+    !isGnosis(chainId)
   ) {
     return (
       <div>

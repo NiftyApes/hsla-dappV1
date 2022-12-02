@@ -90,3 +90,30 @@ export const LOCAL = {
     ABI: YourCollectibleDeploymentJSON.abi,
   },
 } as const;
+
+export const GNOSIS = {
+  HEDGEY: {
+    ADDRESS: '0x2AA5d15Eb36E5960d056e8FeA6E7BB3e2a06A351',
+  },
+  LENDING: {
+    ADDRESS: '0x188Be78C746BEaFa2a96489719881e9C0a5AB06E',
+    ABI: LendingDeploymentJSON.abi,
+  },
+  LIQUIDITY: {
+    ADDRESS: '0x531f3d3CfAeAE4017A5af53a48575dD25E09404f',
+    ABI: LiquidityDeploymentJSON.abi,
+  },
+  OFFERS: {
+    ADDRESS: '0x436E4E12C2E1eb3D30013d98b94591dAA2c6910E',
+    ABI: OffersDeploymentJSON.abi,
+  },
+  SIG_LENDING: {
+    ADDRESS: '0x26dC993c23a4a0BFf380e161F89c26F9290e743B',
+    // Both ABIs are here so we can extract Lending events from SigLending receipts
+    ABI: [...SigLendingDeploymentJSON.abi, ...LendingDeploymentJSON.abi],
+  },
+  CETH: {
+    ADDRESS: '0xc532237E1F688EA786E6D156965d5af04d1a09E6',
+    ABI: cEthJSON.abi,
+  },
+};

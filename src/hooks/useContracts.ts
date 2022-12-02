@@ -2,6 +2,10 @@
 import { MAINNET } from 'constants/contractAddresses';
 import { ethers } from 'ethers';
 import {
+  getGnosisLendingContract,
+  getGnosisLiquidityContract,
+  getGnosisOffersContract,
+  getGnosisSigLendingContract,
   getGoerliLendingContract,
   getGoerliLiquidityContract,
   getGoerliOffersContract,
@@ -32,6 +36,12 @@ export const isMainnet = (cid: string | undefined): boolean | undefined => {
   return cid === '0x1';
 };
 
+export const isGnosis = (cid: string | undefined): boolean | undefined => {
+  console.log('cid', cid, cid === '0x64');
+
+  return cid === '0x64';
+};
+
 export const useLiquidityContract = () => {
   const provider = useWalletProvider();
   const chainId = useChainId();
@@ -46,6 +56,10 @@ export const useLiquidityContract = () => {
 
   if (provider && isMainnet(chainId)) {
     return getMainnetLiquidityContract({ provider });
+  }
+
+  if (provider && isGnosis(chainId)) {
+    return getGnosisLiquidityContract({ provider });
   }
 };
 
@@ -63,6 +77,10 @@ export const useOffersContract = () => {
 
   if (provider && isMainnet(chainId)) {
     return getMainnetOffersContract({ provider });
+  }
+
+  if (provider && isGnosis(chainId)) {
+    return getGnosisOffersContract({ provider });
   }
 
   if (!provider && isMainnet(chainId)) {
@@ -102,6 +120,10 @@ export const useLendingContract = () => {
   if (provider && isMainnet(chainId)) {
     return getMainnetLendingContract({ provider });
   }
+
+  if (provider && isGnosis(chainId)) {
+    return getGnosisLendingContract({ provider });
+  }
 };
 
 export const useSigLendingContract = () => {
@@ -118,5 +140,9 @@ export const useSigLendingContract = () => {
 
   if (provider && isMainnet(chainId)) {
     return getMainnetSigLendingContract({ provider });
+  }
+
+  if (provider && isGnosis(chainId)) {
+    return getGnosisSigLendingContract({ provider });
   }
 };

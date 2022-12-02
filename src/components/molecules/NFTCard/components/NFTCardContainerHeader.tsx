@@ -74,7 +74,7 @@ export const NFTCardContainerHeader: React.FC<Props> = ({
           textTransform="uppercase"
           textAlign="center"
         >
-          {tokenName} #{tokenId}
+          {tokenName.endsWith(tokenId) ? tokenName : `${tokenName} #${tokenId}`}
         </Text>
       </Flex>
       <Box w="100%" p="0 8px 8px 8px">
