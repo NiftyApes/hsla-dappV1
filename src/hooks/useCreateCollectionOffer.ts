@@ -150,7 +150,7 @@ export const useCreateCollectionOffer = ({
               Date.now() / 1000 + expirationInDays * 86400,
             ),
             fixedTerms: false,
-            floorTerm: true,
+            floorTerm: !tokenId,
             lenderOffer: true,
             nftContractAddress,
             nftId: tokenId,
