@@ -72,7 +72,7 @@ export const useCreateCollectionOffer = ({
           // We're just hardcoding the hash value provided by the old contract here
           '0xbb1f20af3c34f52982b9b19490e3cda5bc38264d457f501710f8d318983c8df5';
 
-        setShouldUseSignatureOffer(isUsingOldMainnetOffersContract);
+        setShouldUseSignatureOffer(!isUsingOldMainnetOffersContract);
       }
     }
     getOfferHashOfNullOffer();
