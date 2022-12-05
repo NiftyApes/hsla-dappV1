@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prefer-template */
 import { Web3Provider } from '@ethersproject/providers';
 import { useAppDispatch } from 'app/hooks';
 import { LOCAL } from 'constants/contractAddresses';
@@ -72,8 +73,7 @@ export const useCreateCollectionOffer = ({
           // We're just hardcoding the hash value provided by the old contract here
           '0xbb1f20af3c34f52982b9b19490e3cda5bc38264d457f501710f8d318983c8df5';
 
-        // JUST MAKING THIS FALSE FOR NOW WHILE WE TROUBLESHOOT LEDGER SIG ISSUE
-        setShouldUseSignatureOffer(false);
+        setShouldUseSignatureOffer(!isUsingOldMainnetOffersContract);
       }
     }
     getOfferHashOfNullOffer();
@@ -192,7 +192,19 @@ export const useCreateCollectionOffer = ({
 
           const values = offerAttempt;
 
-          const result = await signer._signTypedData(domain, types, values);
+          let result = await signer._signTypedData(domain, types, values);
+
+          // Ledger was ending signatures with '00' or '01' for some reason
+          // So below we're replacing those with '1b' and '1c' respectively
+          // In order to avoid ECDSA error
+
+          if (result.slice(-2) === '00') {
+            result = result.slice(0, -2) + '1b';
+          }
+
+          if (result.slice(-2) === '01') {
+            result = result.slice(0, -2) + '1c';
+          }
 
           await saveSignatureOfferInDb({
             chainId,
