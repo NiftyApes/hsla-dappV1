@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prefer-template */
 import { Web3Provider } from '@ethersproject/providers';
 import { useAppDispatch } from 'app/hooks';
 import { LOCAL } from 'constants/contractAddresses';
