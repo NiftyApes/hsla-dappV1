@@ -4,17 +4,17 @@ import { useRaribleTokenMeta } from 'hooks/useRaribleTokenMeta';
 import React, { useEffect, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
+import { OfferTypes } from '../constants';
 import CollectionHeader from './CollectionHeader';
 import CreateCollectionOffer from './CreateCollection';
 import OfferBook from './OfferBook';
 
-type OfferTypes = 'offers' | 'token';
 const RARIBLE_TOKEN_DEBOUNCE_MS = 250;
 
 const CollectionDetailsModal: React.FC = () => {
   const { collectionAddress } = useParams();
 
-  const [offerType, setOfferType] = useState<OfferTypes>('offers');
+  const [offerType, setOfferType] = useState<OfferTypes>('collection');
   const [collectionOfferAmt, setCollectionOfferAmt] = useState<string>('');
   const [apr, setApr] = useState<string>('');
   const [duration, setDuration] = useState<string>('');

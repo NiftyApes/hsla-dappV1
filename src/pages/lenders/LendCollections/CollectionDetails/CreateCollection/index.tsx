@@ -4,8 +4,8 @@ import { Box, Button, Flex, Radio, RadioGroup, Stack } from '@chakra-ui/react';
 import { useEasyOfferForCollection } from 'hooks/useEasyOfferForCollection';
 import Icon from 'components/atoms/Icon';
 import { CreateCollectionOfferForm } from './CreateCollectionOfferForm';
+import { OfferTypes } from '../../constants';
 
-type OfferTypes = 'offers' | 'token';
 interface CreateCollectionOfferProps {
   nftContractAddress: string;
   collectionOfferAmt: string;
@@ -65,7 +65,7 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
           value={offerType}
         >
           <Stack direction="row" spacing={4}>
-            <Radio value="offers">Collection</Radio>
+            <Radio value="collection">Collection</Radio>
             <Radio value="token">Individual Token</Radio>
           </Stack>
         </RadioGroup>
