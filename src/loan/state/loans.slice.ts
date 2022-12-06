@@ -64,7 +64,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
       });
     }
 
-    const data = await getData<LoanOffer>(
+    const collectionOffers = await getData<LoanOffer>(
       {
         url: getApiUrl(chainId, 'offers'),
         data: {
@@ -74,8 +74,21 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
       (json) => loanOffer(json),
     );
 
+    const nftOffers = await getData<LoanOffer>(
+      {
+        url: getApiUrl(chainId, 'offers'),
+        data: {
+          collection: ethers.utils.getAddress(nftContractAddress),
+          nftId,
+        },
+      },
+      (json) => loanOffer(json),
+    );
+
+    const allOffers = [...collectionOffers, ...nftOffers];
+
     const processedOffers = await Promise.all(
-      data.map(async (offer, i) => {
+      allOffers.map(async (offer, i) => {
         if (!liquidityContract || !cEthContract) {
           return false;
         }
@@ -134,8 +147,8 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
             return false;
           }
 
-          data[i] = {
-            ...data[i],
+          allOffers[i] = {
+            ...allOffers[i],
             floorOfferCount: floorOfferCount.toNumber(),
             floorTermLimit: offerFromChain.floorTermLimit.toNumber(),
           };
@@ -143,7 +156,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
           return true;
         }
       }),
-    ).then((results) => data.filter((offer, j) => results[j]));
+    ).then((results) => allOffers.filter((offer, j) => results[j]));
 
     const sigOffers = await getSignatureOffersByCollection({
       chainId,
@@ -168,6 +181,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
 
       // Ignore offers that are out of punches
       if (
+        sigOffer.Offer.floorTerm &&
         floorOfferCount &&
         floorOfferCount.toNumber() >= sigOffer.Offer.floorTermLimit
       ) {
