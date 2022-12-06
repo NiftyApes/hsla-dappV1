@@ -1,19 +1,26 @@
 import { Box, Center, Grid, GridItem } from '@chakra-ui/react';
+import { useDebounce } from 'hooks/useDebounce';
+import { useRaribleTokenMeta } from 'hooks/useRaribleTokenMeta';
 import React, { useEffect, useState } from 'react';
 
 import { useParams } from 'react-router-dom';
+import { OfferTypes } from '../constants';
 import CollectionHeader from './CollectionHeader';
 import CreateCollectionOffer from './CreateCollection';
 import OfferBook from './OfferBook';
 
+const RARIBLE_TOKEN_DEBOUNCE_MS = 250;
+
 const CollectionDetailsModal: React.FC = () => {
   const { collectionAddress } = useParams();
 
+  const [offerType, setOfferType] = useState<OfferTypes>('collection');
   const [collectionOfferAmt, setCollectionOfferAmt] = useState<string>('');
   const [apr, setApr] = useState<string>('');
   const [duration, setDuration] = useState<string>('');
   const [expiration, setExpiration] = useState<string>('30');
   const [floorTermLimit, setFloorTermLimit] = useState('5');
+  const [tokenId, setTokenId] = useState('');
   const [newlyAddedOfferHashes, setNewlyAddedOfferHashes] = useState<string[]>(
     [],
   );
@@ -25,7 +32,15 @@ const CollectionDetailsModal: React.FC = () => {
     setExpiration('30');
     setFloorTermLimit('5');
     setNewlyAddedOfferHashes([]);
-  }, [collectionAddress]);
+    setTokenId('');
+  }, [collectionAddress, offerType]);
+
+  const debonucedTokenId = useDebounce(tokenId, RARIBLE_TOKEN_DEBOUNCE_MS);
+
+  const fetchedNFT: any = useRaribleTokenMeta({
+    contractAddress: collectionAddress,
+    tokenId: debonucedTokenId,
+  });
 
   if (!collectionAddress) {
     return null;
@@ -41,6 +56,7 @@ const CollectionDetailsModal: React.FC = () => {
         >
           <GridItem>
             <OfferBook
+              tokenId={tokenId}
               collectionOfferAmt={collectionOfferAmt}
               apr={apr}
               duration={duration}
@@ -50,6 +66,11 @@ const CollectionDetailsModal: React.FC = () => {
           </GridItem>
           <GridItem>
             <CreateCollectionOffer
+              fetchedNFT={fetchedNFT}
+              offerType={offerType}
+              setOfferType={setOfferType}
+              tokenId={tokenId}
+              setTokenId={setTokenId}
               collectionOfferAmt={collectionOfferAmt}
               setCollectionOfferAmt={setCollectionOfferAmt}
               apr={apr}

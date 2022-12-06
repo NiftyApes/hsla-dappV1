@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
-import { Box, Button, Flex, Text, Tooltip } from '@chakra-ui/react';
-import { QuestionOutlineIcon } from '@chakra-ui/icons';
+import { Box, Button, Flex, Radio, RadioGroup, Stack } from '@chakra-ui/react';
 
 import { useEasyOfferForCollection } from 'hooks/useEasyOfferForCollection';
 import Icon from 'components/atoms/Icon';
 import { CreateCollectionOfferForm } from './CreateCollectionOfferForm';
+import { OfferTypes } from '../../constants';
 
 interface CreateCollectionOfferProps {
   nftContractAddress: string;
@@ -19,6 +19,11 @@ interface CreateCollectionOfferProps {
   addNewlyAddedOfferHash: (offerHash: string) => void;
   floorTermLimit: string;
   setFloorTermLimit: React.Dispatch<React.SetStateAction<string>>;
+  setTokenId: React.Dispatch<React.SetStateAction<string>>;
+  tokenId: string;
+  setOfferType: React.Dispatch<React.SetStateAction<OfferTypes>>;
+  offerType: OfferTypes;
+  fetchedNFT: Record<string, any>;
 }
 
 const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
@@ -34,6 +39,11 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
   addNewlyAddedOfferHash,
   floorTermLimit,
   setFloorTermLimit,
+  setTokenId,
+  tokenId,
+  offerType,
+  setOfferType,
+  fetchedNFT,
 }) => {
   const { easyOfferAmount, easyOfferApr, easyOfferDuration } =
     useEasyOfferForCollection({
@@ -49,36 +59,41 @@ const CreateCollectionOffer: React.FC<CreateCollectionOfferProps> = ({
   return (
     <Box maxW="600px" sx={{ position: 'relative', top: '-16px' }}>
       <Flex mb="16px" alignItems="center" justifyContent="space-between">
-        <Text fontWeight="bold" color="solid.gray0">
-          CREATE FLOOR OFFER TERMS
-        </Text>
+        <RadioGroup
+          colorScheme="green"
+          onChange={(newOfferType: OfferTypes) => setOfferType(newOfferType)}
+          value={offerType}
+        >
+          <Stack direction="row" spacing={4}>
+            <Radio value="collection">Collection</Radio>
+            <Radio value="token">Individual Token</Radio>
+          </Stack>
+        </RadioGroup>
+
         {easyOfferApr <= 0 ? null : (
           <Flex alignItems="center">
             <Button
               leftIcon={<Icon color="primary.purple" name="edit" />}
               padding="8px 12px"
-              disabled={easyOfferApr <= 0}
               onClick={onDraftTopOffer}
               color="primary.purple"
               variant="link"
               fontWeight="450"
+              fontSize="16"
             >
               Draft Top Offer
             </Button>
-            <Tooltip
-              hasArrow
-              textAlign="center"
-              label="Auto-drafts a competitive offer based on offerbook data."
-            >
-              <QuestionOutlineIcon color="gray.500" />
-            </Tooltip>
           </Flex>
         )}
       </Flex>
       <CreateCollectionOfferForm
+        fetchedNFT={fetchedNFT}
+        type={offerType}
         nftContractAddress={nftContractAddress}
         collectionOfferAmt={collectionOfferAmt}
         setCollectionOfferAmt={setCollectionOfferAmt}
+        setTokenId={setTokenId}
+        tokenId={tokenId}
         apr={apr}
         setApr={setApr}
         duration={duration}
