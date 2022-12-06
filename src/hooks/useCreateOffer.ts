@@ -19,7 +19,7 @@ import { useWalletProvider } from './useWalletProvider';
 
 const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
-export const useCreateCollectionOffer = ({
+export const useCreateOffer = ({
   nftContractAddress,
 }: {
   nftContractAddress: string;
@@ -92,7 +92,7 @@ export const useCreateCollectionOffer = ({
   }, [web3Provider]);
 
   return {
-    createCollectionOffer: async ({
+    createOffer: async ({
       amount,
       aprInPercent,
       durationInDays,

@@ -26,7 +26,7 @@ import { NonTxnToastSuccessCard } from 'components/cards/NonTxnToastSuccessCard'
 import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { SECONDS_IN_DAY, SECONDS_IN_YEAR } from 'constants/misc';
 import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
-import { useCreateCollectionOffer } from 'hooks/useCreateCollectionOffer';
+import { useCreateOffer } from 'hooks/useCreateOffer';
 import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
 import { useRaribleCollectionStats } from 'hooks/useRaribleColectionStats';
 import { useWalletAddress } from 'hooks/useWalletAddress';
@@ -37,8 +37,7 @@ import { Link } from 'react-router-dom';
 import { lendersLiquidity } from 'routes/router';
 import { ToastSuccessCard } from '../../../../../components/cards/ToastSuccessCard';
 import TokenControl from './TokenControl';
-
-type OfferTypes = 'offers' | 'token';
+import { OfferTypes } from '../../constants';
 
 interface CreateCollectionOfferFormProps {
   type: OfferTypes;
@@ -80,7 +79,7 @@ export const CreateCollectionOfferForm: React.FC<
   fetchedNFT,
 }) => {
   const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.LENDERS);
-  const { createCollectionOffer } = useCreateCollectionOffer({
+  const { createOffer } = useCreateOffer({
     nftContractAddress,
   });
 
@@ -112,7 +111,7 @@ export const CreateCollectionOfferForm: React.FC<
   }, [apr, collectionOfferAmt, duration]);
 
   const onCreateOffer = () => {
-    createCollectionOffer({
+    createOffer({
       tokenId: Number(tokenId),
       amount: Number(collectionOfferAmt),
       aprInPercent: Number(apr),
@@ -420,7 +419,7 @@ export const CreateCollectionOfferForm: React.FC<
             </Select>
           </Box>
         </Flex>
-        {type === 'offers' ? (
+        {type === 'collection' ? (
           <Flex alignItems="center">
             <div>Good for</div>
             <Box w="100px" ml="8px">
