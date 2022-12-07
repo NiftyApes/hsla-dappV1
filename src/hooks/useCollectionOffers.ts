@@ -107,6 +107,7 @@ export const useCollectionOffers = ({
 
         // Ignore offers that are out of punches
         if (
+          sigOffer.Offer.floorTerm &&
           floorOfferCount &&
           floorOfferCount.toNumber() >= sigOffer.Offer.floorTermLimit
         ) {

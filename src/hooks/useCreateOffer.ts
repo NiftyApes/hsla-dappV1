@@ -19,7 +19,7 @@ import { useWalletProvider } from './useWalletProvider';
 
 const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
-export const useCreateCollectionOffer = ({
+export const useCreateOffer = ({
   nftContractAddress,
 }: {
   nftContractAddress: string;
@@ -97,7 +97,7 @@ export const useCreateCollectionOffer = ({
   }, [web3Provider]);
 
   return {
-    createCollectionOffer: async ({
+    createOffer: async ({
       amount,
       aprInPercent,
       durationInDays,
@@ -109,12 +109,14 @@ export const useCreateCollectionOffer = ({
       onError,
       onTxSubmitted,
       onTxMined,
+      tokenId = 0,
     }: {
       amount: number;
       aprInPercent: number;
       durationInDays: number;
       expirationInDays: number;
       floorTermLimit: number;
+      tokenId?: number;
       asset?: string;
       onPending?: any;
       onSuccess?: any;
@@ -153,10 +155,10 @@ export const useCreateCollectionOffer = ({
               Date.now() / 1000 + expirationInDays * 86400,
             ),
             fixedTerms: false,
-            floorTerm: true,
+            floorTerm: !tokenId,
             lenderOffer: true,
             nftContractAddress,
-            nftId: 0,
+            nftId: tokenId,
 
             asset: ETH_ADDRESS,
             amount: ethers.utils.parseUnits(String(amount), 'ether'),
@@ -165,9 +167,7 @@ export const useCreateCollectionOffer = ({
             interestRatePerSecond: Math.round(
               ((aprInPercent / 100) * (amount * 1e18)) / SECONDS_IN_YEAR,
             ),
-
-            // TODO: Allow user to edit this in UI
-            floorTermLimit,
+            floorTermLimit: tokenId ? 0 : floorTermLimit,
           };
 
           const domain = {
@@ -227,7 +227,7 @@ export const useCreateCollectionOffer = ({
             interestRatePerSecond: Math.round(
               ((aprInPercent / 100) * (amount * 1e18)) / SECONDS_IN_YEAR,
             ),
-            nftId: 0,
+            nftId: tokenId,
             fixedTerms: false,
             floorTerm: true,
             lenderOffer: true,
@@ -237,7 +237,7 @@ export const useCreateCollectionOffer = ({
             expiration: Math.floor(
               Date.now() / 1000 + expirationInDays * 86400,
             ),
-            floorTermLimit,
+            floorTermLimit: tokenId ? 0 : floorTermLimit,
           });
 
           onTxSubmitted && onTxSubmitted(tx);
