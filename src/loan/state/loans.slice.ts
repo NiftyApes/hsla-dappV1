@@ -169,10 +169,12 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
       const isCancelledOrFinalized =
         await offersContract.getOfferSignatureStatus(sigOffer.Signature);
 
+      // Ignore cancelled or finalized offers
       if (isCancelledOrFinalized) {
         continue;
       }
 
+      // Ignore non-floor offers that are not for this NFT
       if (!sigOffer.Offer.floorTerm && sigOffer.Offer.nftId !== Number(nftId)) {
         continue;
       }
