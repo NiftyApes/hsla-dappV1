@@ -51,7 +51,7 @@ export const useCreateOffer = ({
       }
 
       // If on Mainnet, check to see whether the Offers contract has been upgraded
-      if (chainId && chainId !== '0x1' && offersContract) {
+      if (chainId && chainId === '0x1' && offersContract) {
         const hash = await offersContract.getOfferHash({
           creator: '0x0000000000000000000000000000000000000000',
           duration: 0,
@@ -72,7 +72,8 @@ export const useCreateOffer = ({
           // We're just hardcoding the hash value provided by the old contract here
           '0xbb1f20af3c34f52982b9b19490e3cda5bc38264d457f501710f8d318983c8df5';
 
-        setShouldUseSignatureOffer(!isUsingOldMainnetOffersContract);
+        // JUST MAKING THIS FALSE FOR NOW WHILE WE TROUBLESHOOT LEDGER SIG ISSUE
+        setShouldUseSignatureOffer(false);
       }
     }
     getOfferHashOfNullOffer();
