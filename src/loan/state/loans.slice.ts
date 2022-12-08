@@ -173,6 +173,10 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
         continue;
       }
 
+      if (!sigOffer.Offer.floorTerm && sigOffer.Offer.nftId !== Number(nftId)) {
+        continue;
+      }
+
       const floorOfferCount =
         await getFloorSignatureOfferCountLeftFromSignature({
           offersContract,
