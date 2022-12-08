@@ -7,5 +7,6 @@
     "IPFS",
     "keccak",
     "MAYC"
-  ]
+  ],
+  "solidity-va.hover": true
 }
