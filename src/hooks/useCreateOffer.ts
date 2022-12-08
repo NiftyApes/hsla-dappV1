@@ -73,7 +73,7 @@ export const useCreateOffer = ({
           '0xbb1f20af3c34f52982b9b19490e3cda5bc38264d457f501710f8d318983c8df5';
 
         // JUST MAKING THIS FALSE FOR NOW WHILE WE TROUBLESHOOT LEDGER SIG ISSUE
-        setShouldUseSignatureOffer(false);
+        setShouldUseSignatureOffer(!isUsingOldMainnetOffersContract);
       }
     }
     getOfferHashOfNullOffer();
