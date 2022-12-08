@@ -51,7 +51,7 @@ export const useCreateOffer = ({
       }
 
       // If on Mainnet, check to see whether the Offers contract has been upgraded
-      if (chainId && chainId !== '0x1' && offersContract) {
+      if (chainId && chainId === '0x1' && offersContract) {
         const hash = await offersContract.getOfferHash({
           creator: '0x0000000000000000000000000000000000000000',
           duration: 0,
