@@ -79,7 +79,7 @@ const BookOfferRow: React.FC<BookOfferRowProps> = ({
         </Text>
       </Td>
       <Td>
-        {fetchedNFT.id ? (
+        {offer.nftId && fetchedNFT.id ? (
           <HStack align="center" sx={{ justifyContent: 'center' }}>
             <Image
               borderRadius="8"
