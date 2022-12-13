@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prefer-template */
 import { Web3Provider } from '@ethersproject/providers';
 import { useAppDispatch } from 'app/hooks';
 import { LOCAL } from 'constants/contractAddresses';
@@ -56,7 +57,7 @@ export const useCreateOffer = ({
       }
 
       // If on Mainnet, check to see whether the Offers contract has been upgraded
-      if (chainId && chainId !== '0x1' && offersContract) {
+      if (chainId && chainId === '0x1' && offersContract) {
         const hash = await offersContract.getOfferHash({
           creator: '0x0000000000000000000000000000000000000000',
           duration: 0,
@@ -196,7 +197,19 @@ export const useCreateOffer = ({
 
           const values = offerAttempt;
 
-          const result = await signer._signTypedData(domain, types, values);
+          let result = await signer._signTypedData(domain, types, values);
+
+          // Ledger was ending signatures with '00' or '01' for some reason
+          // So below we're replacing those with '1b' and '1c' respectively
+          // In order to avoid ECDSA error
+
+          if (result.slice(-2) === '00') {
+            result = result.slice(0, -2) + '1b';
+          }
+
+          if (result.slice(-2) === '01') {
+            result = result.slice(0, -2) + '1c';
+          }
 
           await saveSignatureOfferInDb({
             chainId,
