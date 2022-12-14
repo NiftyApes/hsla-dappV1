@@ -31,6 +31,7 @@ import {
   isLoanDefaulted,
 } from '../../../helpers/getDuration';
 import NFTCardHeader from '../../cards/NFTCardHeader';
+import BorrowLoanRolloverCard from '../BorrowLoanRolloverCard';
 
 interface Props {
   loan: LoanAuction;
@@ -40,7 +41,9 @@ interface Props {
 const i18n = {
   actionButtonHelperText: 'What does this mean?',
   actionButtonText: 'repay loan',
+  rolloverButtonText: 'rollover loan',
   repayLoanHeader: 'repay loan on ',
+  rolloverLoanHeader: 'rollover loan for',
   loanApr: (apr: number) => `${apr}% APR`,
   loanDuration: (duration: number) => `${duration} days`,
   activeLoan: 'active loan',
@@ -53,7 +56,13 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
     isOpen: isRepayLoanOpen,
     onOpen: onRepayLoanOpen,
     onClose: onRepayLoanClose,
-  } = useDisclosure();
+  } = useDisclosure({ id: 'repay' });
+
+  const {
+    isOpen: isRolloverLoanOpen,
+    onOpen: onRolloverLoanOpen,
+    onClose: onRolloverLoanClose,
+  } = useDisclosure({ id: 'rollover' });
 
   const { amount, interestRatePerSecond: irps } = loan;
 
@@ -185,7 +194,6 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
             {getLoanTimeRemaining(loan)} remaining...
           </Text>
         </Flex>
-
         <Button
           borderRadius="8px"
           colorScheme="orange"
@@ -194,19 +202,23 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
           textTransform="uppercase"
           variant="solid"
           w="100%"
+          onClick={onRolloverLoanOpen}
+        >
+          {i18n.rolloverButtonText}
+        </Button>
+        <Button
+          borderRadius="8px"
+          colorScheme="orange"
+          py="6px"
+          size="sm"
+          textTransform="uppercase"
+          textColor="orange.600"
+          variant="text"
+          w="100%"
           onClick={onRepayLoanOpen}
         >
           {i18n.actionButtonText}
         </Button>
-
-        <Center mt="8px" mb="8px">
-          <Link
-            target="_blank"
-            href="https://docs.niftyapes.money/borrowers-dapp-guide/borrow-page/repaying-a-loan"
-          >
-            {i18n.actionButtonHelperText}
-          </Link>
-        </Center>
       </>
     );
   };
@@ -233,6 +245,25 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
                   title={i18n.repayLoanHeader}
                 />
                 <BorrowLoanRepayCard loan={loan} onRepay={onRepayLoanClose} />
+                <ModalCloseButton />
+              </ModalContent>
+            </Modal>
+          )}
+
+          {isRolloverLoanOpen && (
+            <Modal isOpen onClose={onRolloverLoanClose} size="xl">
+              <ModalOverlay />
+              <ModalContent p="5px">
+                <NFTCardHeader
+                  nft={nft}
+                  contractAddress={nft.contractAddress}
+                  tokenId={nft.id}
+                  title={i18n.rolloverLoanHeader}
+                />
+                <BorrowLoanRolloverCard
+                  loan={loan}
+                  onRollover={onRolloverLoanClose}
+                />
                 <ModalCloseButton />
               </ModalContent>
             </Modal>
