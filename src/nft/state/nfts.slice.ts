@@ -51,10 +51,17 @@ export const fetchHedgeysByWalletAddress = createAsyncThunk<
 >(
   'nfts/fetchHedgeysByWalletAddress',
   async ({ walletAddress, contract }, thunkApi) => {
+    const { lendingContract } = thunkApi.extra();
+
+    if (!lendingContract) {
+      throw Error('Lending contract not found');
+    }
+
     const nfts = [];
 
     let i = 0;
-    while (i < 100) {
+    const walletAddressBalance = await contract.balanceOf(walletAddress);
+    while (i < walletAddressBalance) {
       try {
         const tokenId = await contract.tokenOfOwnerByIndex(walletAddress, i);
         const response = await fetch(
@@ -78,6 +85,47 @@ export const fetchHedgeysByWalletAddress = createAsyncThunk<
         break;
       }
       i++;
+    }
+
+    let j = 0;
+    const lendingContractBalance = await contract.balanceOf(
+      lendingContract.address,
+    );
+    while (j < lendingContractBalance) {
+      try {
+        const tokenId = await contract.tokenOfOwnerByIndex(
+          lendingContract.address,
+          j,
+        );
+
+        const nftOwner = await lendingContract.ownerOf(
+          contract.address,
+          tokenId,
+        );
+
+        if (nftOwner === walletAddress) {
+          const response = await fetch(
+            `https://nft.hedgey.finance/gnosis/0x2aa5d15eb36e5960d056e8fea6e7bb3e2a06a351/${tokenId}`,
+          );
+          const json = await response.json();
+
+          nfts.push({
+            attributes: json.attributes,
+            contractAddress: '0x2aa5d15eb36e5960d056e8fea6e7bb3e2a06a351',
+            description: json.description,
+            external_url: json.external_url,
+            id: json.edition,
+            image: json.image,
+            name: json.name,
+            owner: walletAddress,
+            collectionName: 'Hedgey',
+          });
+        }
+      } catch (err) {
+        console.log(err);
+        break;
+      }
+      j++;
     }
 
     const nftsWithChainId: Array<NFT & { chainId: string }> | undefined =

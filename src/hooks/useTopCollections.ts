@@ -1,6 +1,6 @@
 import { LOCAL } from 'constants/contractAddresses';
 import { useChainId } from './useChainId';
-import { isGoerli, isLocalChain } from './useContracts';
+import { isGnosis, isGoerli, isLocalChain } from './useContracts';
 
 export interface NFTCollection {
   address: string;
@@ -12,7 +12,7 @@ export interface NFTCollection {
 export const useTopCollections = () => {
   const chainId = useChainId();
 
-  const collections: Array<NFTCollection> = [
+  let collections: Array<NFTCollection> = [
     {
       address: '0xd4e4078ca3495DE5B1d4dB434BEbc5a986197782',
       image: '/assets/images/collections/collection_autoglyphs.png',
@@ -109,6 +109,16 @@ export const useTopCollections = () => {
       image: '/assets/images/collections/bananaman.png',
       name: 'Bananaman (Goerli)',
     });
+  }
+
+  if (isGnosis(chainId)) {
+    collections = [
+      {
+        address: '0x2AA5d15Eb36E5960d056e8FeA6E7BB3e2a06A351',
+        image: '/assets/images/collections/collection_hedgeys.png',
+        name: 'Hedgeys (Gnosis)',
+      },
+    ];
   }
 
   return { collections };
