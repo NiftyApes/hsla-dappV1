@@ -132,7 +132,7 @@ const App: React.FC = () => {
             >
               You are on <strong>Gnosis Chain</strong>. The frontend for
               NiftyApes on Gnosis Chain works but is still in beta. Please note
-              "Eth" and Ξ throughout the app means xDai.
+              "Eth" and Ξ throughout the app mean <strong>xDai</strong>.
             </Box>
           )}
           <Routes>
