@@ -64,7 +64,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
       });
     }
 
-    const collectionOffers = await getData<LoanOffer>(
+    const offers = await getData<LoanOffer>(
       {
         url: getApiUrl(chainId, 'offers'),
         data: {
@@ -73,22 +73,9 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
       },
       (json) => loanOffer(json),
     );
-
-    const nftOffers = await getData<LoanOffer>(
-      {
-        url: getApiUrl(chainId, 'offers'),
-        data: {
-          collection: ethers.utils.getAddress(nftContractAddress),
-          nftId,
-        },
-      },
-      (json) => loanOffer(json),
-    );
-
-    const allOffers = [...collectionOffers, ...nftOffers];
 
     const processedOffers = await Promise.all(
-      allOffers.map(async (offer, i) => {
+      offers.map(async (offer, i) => {
         if (!liquidityContract || !cEthContract) {
           return false;
         }
@@ -99,7 +86,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
             offerHash: offer.OfferHash,
           });
 
-          if (!floorOfferCount) {
+          if (floorOfferCount === undefined) {
             return false;
           }
 
@@ -125,8 +112,9 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
 
           // Ignore offers that are out of punches
           if (
+            offerFromChain.floorTerm &&
             floorOfferCount.toNumber() >=
-            offerFromChain.floorTermLimit.toNumber()
+              offerFromChain.floorTermLimit.toNumber()
           ) {
             return false;
           }
@@ -147,8 +135,8 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
             return false;
           }
 
-          allOffers[i] = {
-            ...allOffers[i],
+          offers[i] = {
+            ...offers[i],
             floorOfferCount: floorOfferCount.toNumber(),
             floorTermLimit: offerFromChain.floorTermLimit.toNumber(),
           };
@@ -156,7 +144,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
           return true;
         }
       }),
-    ).then((results) => allOffers.filter((offer, j) => results[j]));
+    ).then((results) => offers.filter((offer, j) => results[j]));
 
     const sigOffers = await getSignatureOffersByCollection({
       chainId,
@@ -205,7 +193,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
           Expiration: sigOffer.Offer.expiration,
           Duration: sigOffer.Offer.duration,
           OfferStatus: 'ACTIVE',
-          FloorTerm: true,
+          FloorTerm: sigOffer.Offer.floorTerm,
         },
         OfferHash: sigOffer.OfferHash,
         signature: sigOffer.Signature,

@@ -48,14 +48,13 @@ export const useCollectionOffers = ({
         const offerFromChain = await getLoanOfferFromHash({
           offersContract,
           nftContractAddress,
-          // all collection offers have nftId 0
-          nftId: '0',
+          nftId: offers[i].offer.nftId,
           offerHash,
           floorTerm: offers[i].offer.floorTerm,
         });
 
         // Remove offer if any of the following obtains
-        if (!floorOfferCount || !offerFromChain) {
+        if (offerFromChain === undefined || floorOfferCount === undefined) {
           offers[i] = undefined;
         } else if (
           // This happens when there isn't an offer with this hash
@@ -65,6 +64,7 @@ export const useCollectionOffers = ({
           offers[i] = undefined;
         } else if (
           // Ignore offers that are out of punches
+          offerFromChain.floorTerm &&
           floorOfferCount.toNumber() >= offerFromChain.floorTermLimit.toNumber()
         ) {
           offers[i] = undefined;
@@ -125,7 +125,7 @@ export const useCollectionOffers = ({
             Expiration: sigOffer.Offer.expiration,
             Duration: sigOffer.Offer.duration,
             OfferStatus: 'ACTIVE',
-            FloorTerm: true,
+            FloorTerm: sigOffer.Offer.floorTerm,
           },
           OfferHash: sigOffer.OfferHash,
           signature: sigOffer.Signature,

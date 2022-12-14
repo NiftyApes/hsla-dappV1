@@ -242,7 +242,7 @@ export const useCreateOffer = ({
             ),
             nftId: tokenId,
             fixedTerms: false,
-            floorTerm: true,
+            floorTerm: !tokenId,
             lenderOffer: true,
             asset: ETH_ADDRESS,
             amount: ethers.utils.parseUnits(String(amount), 'ether'),
