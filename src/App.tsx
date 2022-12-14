@@ -131,8 +131,9 @@ const App: React.FC = () => {
               py="8px"
             >
               You are on <strong>Gnosis Chain</strong>. The frontend for
-              NiftyApes on Gnosis Chain works but is still in beta. Please note
-              "Eth" and Ξ throughout the app mean <strong>xDai</strong>.
+              NiftyApes on Gnosis Chain works, but is still in beta. Please note{' '}
+              <strong>Eth</strong> and <strong>Ξ</strong> throughout the app
+              mean <strong>xDai</strong>.
             </Box>
           )}
           <Routes>
