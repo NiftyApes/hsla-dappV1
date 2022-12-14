@@ -48,8 +48,6 @@ const NFTCollectionCardSmall: React.FC<Props> = ({
     return <LoadingIndicator size="md" />;
   }
 
-  console.log({ tokenId });
-
   return (
     <HStack as="button" title={name} spacing="10px" onClick={handleClick}>
       <Image
