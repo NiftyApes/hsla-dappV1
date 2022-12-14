@@ -1,4 +1,4 @@
-import { Button, ChakraProvider, Link } from '@chakra-ui/react';
+import { Box, Button, ChakraProvider, Link } from '@chakra-ui/react';
 import { useConnectWallet, useSetChain } from '@web3-onboard/react';
 import {
   setStoreCEthContract,
@@ -122,6 +122,19 @@ const App: React.FC = () => {
             }
           />
           <RouteTracker />
+          {isGnosis(chainId) && (
+            <Box
+              backgroundColor="red.50"
+              borderBottom="1px"
+              borderColor="red.100"
+              textAlign="center"
+              py="8px"
+            >
+              You are on <strong>Gnosis Chain</strong>. The frontend for
+              NiftyApes on Gnosis Chain works but is still in beta. Please note
+              "Eth" and Ξ throughout the app means xDai.
+            </Box>
+          )}
           <Routes>
             {Marketing}
             {Borrowers}
