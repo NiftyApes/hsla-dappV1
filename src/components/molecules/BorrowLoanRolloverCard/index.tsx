@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Box,
   Button,
@@ -6,13 +7,21 @@ import {
   Flex,
   Grid,
   GridItem,
+  SimpleGrid,
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Td,
   Text,
+  Th,
+  Thead,
   Tooltip,
+  Tr,
   useToast,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
-
-import { QuestionOutlineIcon } from '@chakra-ui/icons';
+import { QuestionOutlineIcon, ArrowForwardIcon } from '@chakra-ui/icons';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
 import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
@@ -51,7 +60,7 @@ const i18n = {
   footerText: 'Next payment due 📅 ',
   loanApr: 'Loan APR',
   loanBorrowed: 'Total borrowed',
-  loanInformation: 'rollover information',
+  loanInformation: 'rollover info',
   loanInterest: 'Interest owed ',
   loanOwed: 'Total Owed',
   loanDefaulted: 'Loan Defaulted',
@@ -170,116 +179,146 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({ loan, onRollover }) => {
             </Text>
           </Box>
           <Box p="10px">
-            <Center mb="10px" mt="10px">
-              <Text fontWeight="bold" fontSize="2.5xl">
-                {i18n.loanOwed} {formatEther(totalOwed)}Ξ
-              </Text>
-            </Center>
-
-            <Grid
-              gridTemplateColumns="repeat(2, minmax(0, 1fr))"
-              gridColumnGap="20px"
-              w="100%"
-              borderColor="solid.lightPurple"
-              textAlign="left"
-              bgColor="solid.white"
-            >
-              <GridItem>
-                <Text>
-                  {isLoanDefaulted(loan) ? i18n.loanDefaulted : i18n.loanActive}
-                  {!isLoanDefaulted(loan) && (
-                    <Text as="span" fontWeight="bold">
-                      &nbsp;{getLoanTimeRemaining(loan)}
-                    </Text>
-                  )}
-                </Text>
-                <Text>
-                  {i18n.loanApr}&nbsp;
-                  <Text as="span" fontWeight="bold">
-                    {roundForDisplay(apr)}%
-                  </Text>
-                </Text>
-              </GridItem>
-
-              <GridItem>
-                <Text>
-                  {i18n.loanBorrowed}{' '}
-                  <Text as="span" fontWeight="bold">
-                    {concatForDisplay(formatEther(amount))}Ξ
-                  </Text>
-                </Text>
-                <Text>
-                  {i18n.loanInterest}
-                  <Text as="span" fontWeight="bold">
-                    {concatForDisplay(
-                      formatEther(totalAccruedInterest.toString()),
-                    )}
-                    Ξ
-                  </Text>
-                  {earlyReplay && (
-                    <Tooltip
-                      hasArrow
-                      textAlign="center"
-                      label="All loans are subject to a minimum of 00.25% interest."
+            <TableContainer>
+              <Table variant="simple">
+                <Tbody>
+                  <Tr>
+                    <Td
+                      fontSize="14"
+                      textTransform="uppercase"
+                      color="gray.600"
                     >
-                      <QuestionOutlineIcon
-                        sx={{ ml: '5px', mt: '-3px' }}
-                        color="gray.500"
-                      />
-                    </Tooltip>
-                  )}
+                      current
+                    </Td>
+                    <Td>
+                      <Flex alignItems="center" gap="2">
+                        <CryptoIcon symbol="eth" size={24} />
+                        <Text>25.50</Text>
+                      </Flex>
+                    </Td>
+                    <Td>30 days</Td>
+                    <Td>13.37</Td>
+                    <Td />
+                  </Tr>
+                  <Tr>
+                    <Td
+                      fontSize="14"
+                      textTransform="uppercase"
+                      color="gray.600"
+                    >
+                      rollover
+                    </Td>
+                    <Td>
+                      <Flex alignItems="center" gap="2">
+                        <CryptoIcon symbol="eth" size={24} />
+                        <Text>20.0</Text>
+                      </Flex>
+                    </Td>
+                    <Td>30 days</Td>
+                    <Td>13.37</Td>
+                    <Td>
+                      <Button
+                        variant="link"
+                        textTransform="uppercase"
+                        colorScheme="purple"
+                        fontSize="14"
+                      >
+                        swap
+                      </Button>
+                    </Td>
+                  </Tr>
+                </Tbody>
+              </Table>
+            </TableContainer>
+            <Box
+              marginX="3"
+              marginTop="4"
+              padding="6"
+              border="1px solid rgba(101, 101, 101, 0.2)"
+              bg="rgba(101, 101, 101, 0.1)"
+              borderRadius="15"
+            >
+              <Flex justifyContent="space-between" flexDirection="row">
+                <Box>
+                  <Flex alignItems="center" flexDirection="column">
+                    <Flex gap="1" direction="row" alignItems="center">
+                      <Text fontSize="18" fontWeight="bold">
+                        25.5Ξ
+                      </Text>
+                      <ArrowForwardIcon />
+                      <Text fontSize="18" fontWeight="bold" color="#15e9a7">
+                        20.0Ξ
+                      </Text>
+                    </Flex>
+                    <Text color="gray.600" fontSize="14">
+                      Principle Change
+                    </Text>
+                  </Flex>
+                </Box>
+                <Box>
+                  <Flex alignItems="center" flexDirection="column">
+                    <Text fontSize="18" fontWeight="bold">
+                      5.07433Ξ
+                    </Text>
+                    <Text color="gray.600" fontSize="14">
+                      Payment Due Now
+                    </Text>
+                  </Flex>
+                </Box>
+                <Box>
+                  <Flex alignItems="center" flexDirection="column">
+                    <Text fontSize="18" fontWeight="bold">
+                      12:24 PM 02/23/24
+                    </Text>
+                    <Text color="gray.600" fontSize="14">
+                      Next Payment Due
+                    </Text>
+                  </Flex>
+                </Box>
+              </Flex>
+            </Box>
+            <Divider marginY={4} borderColor="gray.400" />
+            <Flex
+              marginX="4"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Flex alignItems="center">
+                <CryptoIcon symbol="eth" size={24} />
+                <Text ml="4px" mr="14px" color="solid.gray0" fontWeight="bold">
+                  ETH
                 </Text>
-              </GridItem>
-            </Grid>
+                <Text fontSize="3.5xl" noOfLines={1} maxWidth="200px">
+                  {formatEther(totalOwed)}Ξ
+                </Text>
+              </Flex>
+              <Button
+                borderWidth="2px"
+                borderRadius="15"
+                variant="outline"
+                colorScheme="purple"
+                padding="6"
+              >
+                Make Payment
+              </Button>
+            </Flex>
           </Box>
         </Flex>
-
-        <Flex
-          width="100%"
-          flexDir="column"
-          border="1px solid rgba(101, 101, 101, 0.2)"
-          bg="rgba(234, 217, 255, 0.2)"
-          borderRadius="15px"
-          mt="16px"
-          p="20px 16px"
+        <Button
+          marginTop={4}
+          marginBottom={1}
+          borderRadius="8px"
+          colorScheme="green"
+          backgroundColor="#15e9a7"
+          onClick={onRepayLoan}
+          py="6px"
+          size="lg"
+          textTransform="uppercase"
+          variant="solid"
+          w="100%"
         >
-          <Flex justifyContent="space-between" alignItems="center">
-            <Flex alignItems="center">
-              <CryptoIcon symbol="eth" size={24} />
-              <Text ml="4px" mr="14px" color="solid.gray0" fontWeight="bold">
-                ETH
-              </Text>
-              <Text fontSize="3.5xl" noOfLines={1} width="330px">
-                {formatEther(totalOwed)}Ξ
-              </Text>
-            </Flex>
-            <Text fontSize="sm" color="solid.gray0" textTransform="uppercase">
-              {i18n.paymentType}
-            </Text>
-          </Flex>
-
-          <Divider mt="20px" mb="15px" color="accents.100" />
-          <Button
-            borderRadius="8px"
-            colorScheme="green"
-            backgroundColor="#15e9a7"
-            onClick={onRepayLoan}
-            py="6px"
-            size="lg"
-            textTransform="uppercase"
-            variant="solid"
-            w="100%"
-          >
-            {isExecuting ? <LoadingIndicator size="xs" /> : i18n.actionButton}
-          </Button>
-        </Flex>
-
-        <Text mt="20px" fontSize="md" w="100%" textAlign="center">
-          {i18n.footerText}{' '}
-          <span>
-            {moment(new Date()).add(30, 'days').format('MMM DD, YYYY')}
-          </span>
-        </Text>
+          {isExecuting ? <LoadingIndicator size="xs" /> : i18n.actionButton}
+        </Button>
       </Flex>
     </Box>
   );

@@ -258,7 +258,9 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
                   nft={nft}
                   contractAddress={nft.contractAddress}
                   tokenId={nft.id}
-                  title={i18n.rolloverLoanHeader}
+                  title={`${i18n.rolloverLoanHeader} ${nft.collectionName} ${
+                    nft.id ? `#${nft.id}` : ''
+                  }`}
                 />
                 <BorrowLoanRolloverCard
                   loan={loan}
