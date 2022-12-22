@@ -37,8 +37,6 @@ export const isMainnet = (cid: string | undefined): boolean | undefined => {
 };
 
 export const isGnosis = (cid: string | undefined): boolean | undefined => {
-  console.log('cid', cid, cid === '0x64');
-
   return cid === '0x64';
 };
 

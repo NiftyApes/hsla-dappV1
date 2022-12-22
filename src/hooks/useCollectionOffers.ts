@@ -87,8 +87,6 @@ export const useCollectionOffers = ({
         nftContractAddress,
       });
 
-      console.log('sigOffers 2', sigOffers);
-
       for (let i = 0; i < sigOffers.length; i++) {
         const sigOffer = sigOffers[i];
 
