@@ -153,6 +153,18 @@ export const useExecuteLoanByBorrower = ({
         return { receipt };
       }
 
+      // else if on-chain offer
+
+      // fetch offer before, not after loan execution
+      // because some offers (i.e., token-specific offers)
+      // are deleted after loan execution
+      const offer = await offersContract.getOffer(
+        nftContractAddress,
+        nftId,
+        offerHash,
+        floorTerm,
+      );
+
       const tx = await lendingContract.executeLoanByBorrower(
         nftContractAddress,
         nftId,
@@ -165,13 +177,6 @@ export const useExecuteLoanByBorrower = ({
       if (receipt.status !== 1) {
         throw new ErrorWithReason('reason: revert');
       }
-
-      const offer = await offersContract.getOffer(
-        nftContractAddress,
-        nftId,
-        offerHash,
-        true,
-      );
 
       const loanExecutedEvent = getEventFromReceipt({
         eventName: 'LoanExecuted',

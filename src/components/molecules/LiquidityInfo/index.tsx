@@ -2,11 +2,11 @@ import { Box, Flex, Text } from '@chakra-ui/react';
 import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
 import { useTotalEthLoanedOut } from 'hooks/useTotalEthLoanedOut';
 import _ from 'lodash';
+import { useWalletAddress } from '../../../hooks/useWalletAddress';
+import { EmptyPlaceholder } from '../../cards/EmptyPlaceholder';
 import { EthLiquidityInfo } from './EthLiquidityInfo';
 import { LiquidityInfoLoading } from './LiquidityInfoLoading';
 import { LiquidityPieChart } from './LiquidityPieChart';
-import { useWalletAddress } from '../../../hooks/useWalletAddress';
-import { EmptyPlaceholder } from '../../cards/EmptyPlaceholder';
 
 const i18n = {
   disconnected: 'Please connect your wallet to proceed...',

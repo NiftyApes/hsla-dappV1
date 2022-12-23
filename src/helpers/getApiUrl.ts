@@ -6,6 +6,8 @@ export function getApiUrl(chainId: string, path: string) {
       ? 'GOERLI'
       : chainId === '0x1'
       ? 'MAINNET'
+      : chainId === '0x64'
+      ? 'GNOSIS'
       : '';
 
   const apiBaseUri =

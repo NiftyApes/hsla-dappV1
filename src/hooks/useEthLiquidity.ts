@@ -1,6 +1,6 @@
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
-import { GOERLI, LOCAL, MAINNET } from 'constants/contractAddresses';
+import { GNOSIS, GOERLI, LOCAL, MAINNET } from 'constants/contractAddresses';
 import { ethers } from 'ethers';
 import { useEffect, useState } from 'react';
 import { useCEthContract } from './useCEthContract';
@@ -36,6 +36,8 @@ export const useAvailableEthLiquidity = () => {
           ? GOERLI.CETH.ADDRESS
           : chainId === '0x1'
           ? MAINNET.CETH.ADDRESS
+          : chainId === '0x64'
+          ? GNOSIS.CETH.ADDRESS
           : '0x0',
       );
 

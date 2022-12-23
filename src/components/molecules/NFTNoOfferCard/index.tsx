@@ -8,6 +8,7 @@ interface Props {
   img?: string;
   tokenId: string;
   tokenName: string;
+  attributes?: any;
 }
 
 const i18n = {
@@ -19,6 +20,7 @@ const NFTNoOfferCard: React.FC<Props> = ({
   img,
   tokenId,
   tokenName,
+  attributes,
 }) => {
   return (
     <NFTCardContainer>
@@ -27,6 +29,7 @@ const NFTNoOfferCard: React.FC<Props> = ({
         tokenId={tokenId}
         tokenName={tokenName}
         collectionName={collectionName}
+        attributes={attributes}
       >
         <Center mt="8px">
           <Text color="solid.gray0" fontSize="sm" textTransform="uppercase">
