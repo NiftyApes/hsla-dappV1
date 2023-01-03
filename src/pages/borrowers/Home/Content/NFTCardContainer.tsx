@@ -40,6 +40,7 @@ export const NFTCardContainer = ({ item }: Props) => {
         tokenName={`${item.name}`}
         tokenId={item.id}
         img={item.image}
+        attributes={item.attributes}
       />
     );
   }

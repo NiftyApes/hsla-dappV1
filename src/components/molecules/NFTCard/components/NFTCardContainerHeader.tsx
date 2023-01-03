@@ -1,4 +1,7 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react';
+import { useChainId } from 'hooks/useChainId';
+import { isGnosis } from 'hooks/useContracts';
+import moment from 'moment';
 import React from 'react';
 
 interface Props {
@@ -7,6 +10,7 @@ interface Props {
   tokenId: string;
   tokenName: string;
   children: JSX.Element;
+  attributes?: any;
 }
 
 export const NFTCardContainerHeader: React.FC<Props> = ({
@@ -15,8 +19,29 @@ export const NFTCardContainerHeader: React.FC<Props> = ({
   img,
   tokenId,
   tokenName,
+  attributes,
 }) => {
   const tokenPadding = collectionName ? -5 : 16;
+
+  const chainId = useChainId();
+
+  let tokensCollateral;
+  let tokensLocked;
+  let unlockedDate;
+
+  if (isGnosis(chainId) && attributes) {
+    tokensCollateral = attributes.find(
+      (attr: any) => attr.trait_type === 'Tokens_Collateral',
+    )?.value;
+    tokensLocked = attributes.find(
+      (attr: any) => attr.trait_type === 'Tokens_Locked',
+    )?.value;
+    unlockedDate = attributes.find(
+      (attr: any) => attr.trait_type === 'Unlock_Date',
+    )?.value;
+  }
+
+  const formattedUnlockedDate = moment.unix(unlockedDate).format('MMM D, YYYY');
 
   return (
     <>
@@ -74,9 +99,23 @@ export const NFTCardContainerHeader: React.FC<Props> = ({
           textTransform="uppercase"
           textAlign="center"
         >
-          {tokenName} #{tokenId}
+          {tokenName.endsWith(tokenId) ? tokenName : `${tokenName} #${tokenId}`}
         </Text>
       </Flex>
+      {isGnosis(chainId) && (
+        <Box
+          w="100%"
+          p="8px"
+          mb="8px"
+          textAlign="center"
+          borderBottom="1px solid gray"
+          borderColor="accents.100"
+          backgroundColor="gray.50"
+        >
+          {tokensLocked} {tokensCollateral} unlocking{' '}
+          <span style={{ whiteSpace: 'nowrap' }}>{formattedUnlockedDate}</span>
+        </Box>
+      )}
       <Box w="100%" p="0 8px 8px 8px">
         {children}
       </Box>

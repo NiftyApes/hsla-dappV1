@@ -7,7 +7,7 @@ import {
   SigLendingContract,
 } from 'nft/model';
 
-import { GOERLI, LOCAL, MAINNET } from 'constants/contractAddresses';
+import { GNOSIS, GOERLI, LOCAL, MAINNET } from 'constants/contractAddresses';
 
 import { Contract } from 'ethers';
 import { getEthersContractWithEIP1193Provider } from './getEthersContractWithEIP1193Provider';
@@ -161,6 +161,46 @@ export function getMainnetSigLendingContract({
   return getStoreSigLendingContract();
 }
 
+export function getGnosisLendingContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
+  let contract = getStoreLendingContract();
+
+  if (!contract || doesProviderMismatchContract({ provider, contract })) {
+    contract = getEthersContractWithEIP1193Provider({
+      abi: GNOSIS.LENDING.ABI,
+      address: GNOSIS.LENDING.ADDRESS,
+      provider,
+    }) as LendingContract;
+
+    setStoreLendingContract(contract);
+  }
+
+  return getStoreLendingContract();
+}
+
+export function getGnosisSigLendingContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
+  let contract = getStoreSigLendingContract();
+
+  if (!contract || doesProviderMismatchContract({ provider, contract })) {
+    contract = getEthersContractWithEIP1193Provider({
+      abi: GNOSIS.SIG_LENDING.ABI,
+      address: GNOSIS.SIG_LENDING.ADDRESS,
+      provider,
+    }) as SigLendingContract;
+
+    setStoreSigLendingContract(contract);
+  }
+
+  return getStoreSigLendingContract();
+}
+
 export function getLocalLiquidityContract({
   provider,
 }: {
@@ -221,6 +261,26 @@ export function getMainnetLiquidityContract({
   return contract;
 }
 
+export function getGnosisLiquidityContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
+  let contract = getStoreLiquidityContract();
+
+  if (!contract || doesProviderMismatchContract({ provider, contract })) {
+    contract = getEthersContractWithEIP1193Provider({
+      abi: GNOSIS.LIQUIDITY.ABI,
+      address: GNOSIS.LIQUIDITY.ADDRESS,
+      provider,
+    }) as LiquidityContract;
+
+    setStoreLiquidityContract(contract);
+  }
+
+  return contract;
+}
+
 export function getLocalOffersContract({
   provider,
 }: {
@@ -272,6 +332,26 @@ export function getMainnetOffersContract({
     contract = getEthersContractWithEIP1193Provider({
       abi: MAINNET.OFFERS.ABI,
       address: MAINNET.OFFERS.ADDRESS,
+      provider,
+    }) as OffersContract;
+
+    setStoreOffersContract(contract);
+  }
+
+  return contract;
+}
+
+export function getGnosisOffersContract({
+  provider,
+}: {
+  provider: EIP1193Provider;
+}) {
+  let contract = getStoreOffersContract();
+
+  if (!contract || doesProviderMismatchContract({ provider, contract })) {
+    contract = getEthersContractWithEIP1193Provider({
+      abi: GNOSIS.OFFERS.ABI,
+      address: GNOSIS.OFFERS.ADDRESS,
       provider,
     }) as OffersContract;
 

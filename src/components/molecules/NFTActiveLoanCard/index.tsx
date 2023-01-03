@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Box,
   Button,
@@ -12,9 +11,10 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
+import React from 'react';
 
-import { formatEther } from 'ethers/lib/utils';
 import CryptoIcon from 'components/atoms/CryptoIcon';
+import { formatEther } from 'ethers/lib/utils';
 import { LoanAuction } from '../../../loan';
 import { NFT } from '../../../nft';
 
@@ -24,7 +24,6 @@ import { getAPR } from '../../../helpers/getAPR';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
 import { NFTCardContainerHeader } from '../NFTCard/components/NFTCardContainerHeader';
 
-import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
 import {
   getLoanDurationDays,
   getLoanTimeRemaining,
@@ -32,6 +31,7 @@ import {
 } from '../../../helpers/getDuration';
 import NFTCardHeader from '../../cards/NFTCardHeader';
 import BorrowLoanRolloverCard from '../BorrowLoanRolloverCard';
+import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
 
 interface Props {
   loan: LoanAuction;
@@ -230,6 +230,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
         tokenId={nft.id}
         tokenName={nft.name}
         collectionName={nft.collectionName}
+        attributes={nft.attributes}
       >
         <>
           {isLoanDefaulted(loan) ? renderDefaultedLoan() : renderActiveLoan()}
