@@ -9,7 +9,7 @@ export const useTopNiftyApesCollections = () => {
   useEffect(() => {
     setData([
       {
-        name: 'Collection',
+        address: '0x39ee2c7b3cb80254225884ca001F57118C8f21B6',
         highestPrincipal: '123',
         lowestApr: '0.023%',
         duration: '30 days',
@@ -17,7 +17,7 @@ export const useTopNiftyApesCollections = () => {
         totalLiquidity: '123',
       },
       {
-        name: 'Collection',
+        address: '0x3db5463a9e2d04334192c6f2dd4b72def4751a61',
         highestPrincipal: '123',
         lowestApr: '0.023%',
         duration: '30 days',
@@ -25,7 +25,7 @@ export const useTopNiftyApesCollections = () => {
         totalLiquidity: '123',
       },
       {
-        name: 'Collection',
+        address: '0xb4d06d46a8285f4ec79fd294f78a881799d8ced9',
         highestPrincipal: '123',
         lowestApr: '0.023%',
         duration: '30 days',
@@ -33,7 +33,7 @@ export const useTopNiftyApesCollections = () => {
         totalLiquidity: '123',
       },
       {
-        name: 'Collection',
+        address: '0xe43d741e21d8bf30545a88c46e4ff5681518ebad',
         highestPrincipal: '123',
         lowestApr: '0.023%',
         duration: '30 days',
@@ -41,7 +41,7 @@ export const useTopNiftyApesCollections = () => {
         totalLiquidity: '123',
       },
       {
-        name: 'Collection',
+        address: '0x6b00de202e3cd03c523ca05d8b47231dbdd9142b',
         highestPrincipal: '123',
         lowestApr: '0.023%',
         duration: '30 days',
