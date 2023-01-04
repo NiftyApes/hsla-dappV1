@@ -93,6 +93,57 @@ export const useTopCollections = () => {
       image: '/assets/images/collections/collection_lilnouns.png',
       name: 'Lil Nouns',
     },
+    //NEW
+    {
+      address: '0xba30e5f9bb24caa003e9f2f0497ad287fdf95623',
+      image: '/assets/images/collections/collection_lilnouns.png',
+      name: 'Bored Ape Kennel Club',
+    },
+    {
+      address: '0xbd3531da5cf5857e7cfaa92426877b022e612cf8',
+      image: '/assets/images/collections/collection_lilnouns.png',
+      name: 'Pudgy Penguins',
+    },
+    {
+      address: '0x33fd426905f149f8376e227d0c9d3340aad17af1',
+      image: '/assets/images/collections/collection_lilnouns.png',
+      name: 'The Memes by 6529',
+    },
+    {
+      address: '0x7f36182dee28c45de6072a34d29855bae76dbe2f',
+      image: '/assets/images/collections/collection_lilnouns.png',
+      name: 'Wolf Game',
+    },
+    {
+      address: '0x306b1ea3ecdf94ab739f1910bbda052ed4a9f949',
+      image: '/assets/images/collections/collection_lilnouns.png',
+      name: 'BEANZ Official',
+    },
+    {
+      address: '0x79fcdef22feed20eddacbb2587640e45491b757f',
+      image: '/assets/images/collections/collection_lilnouns.png',
+      name: 'mfer',
+    },
+    {
+      address: '0xbce3781ae7ca1a5e050bd9c4c77369867ebc307e',
+      image: '/assets/images/collections/collection_lilnouns.png',
+      name: 'goblintown',
+    },
+    {
+      address: '0xef1a89cbfabe59397ffda11fc5df293e9bc5db90',
+      image: '/assets/images/collections/collection_lilnouns.png',
+      name: 'Based Ghouls',
+    },
+    {
+      address: '0x39ee2c7b3cb80254225884ca001f57118c8f21b6',
+      image: '/assets/images/collections/collection_lilnouns.png',
+      name: 'Potatoz',
+    },
+    {
+      address: '0x42069abfe407c60cf4ae4112bedead391dba1cdb',
+      image: '/assets/images/collections/collection_lilnouns.png',
+      name: 'CryptoDickbutts S3',
+    },
   ];
 
   if (isLocalChain(chainId)) {
