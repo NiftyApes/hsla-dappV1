@@ -69,6 +69,7 @@ export const useOffersForLender = ({
           offers[i] = undefined;
         } else if (
           // Ignore offers that are out of punches
+          offerFromChain.floorTerm &&
           floorOfferCount.toNumber() >= offerFromChain.floorTermLimit.toNumber()
         ) {
           offers[i] = undefined;

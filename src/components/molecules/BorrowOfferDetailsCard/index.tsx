@@ -10,12 +10,11 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
-import { GOERLI, LOCAL, MAINNET } from 'constants/contractAddresses';
 import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { BigNumber, ethers } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
-import { useChainId } from 'hooks/useChainId';
+import { useLendingContract } from 'hooks/useContracts';
 import JSConfetti from 'js-confetti';
 import { logError } from 'logging/logError';
 import React, { useState } from 'react';
@@ -54,17 +53,9 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
   const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.BORROWERS);
   const toast = useToast();
 
-  const chainId = useChainId();
   const jsConfetti = new JSConfetti();
 
-  const operator =
-    chainId === '0x7a69'
-      ? LOCAL.LENDING.ADDRESS
-      : chainId === '0x5'
-      ? GOERLI.LENDING.ADDRESS
-      : chainId === '0x1'
-      ? MAINNET.LENDING.ADDRESS
-      : '0x0';
+  const lendingContract = useLendingContract();
 
   const totalAmount: BigNumber = BigNumber.from(String(offer.amount));
   const totalInterest: BigNumber = BigNumber.from(
@@ -78,7 +69,7 @@ const BorrowOfferDetailsCard: React.FC<Props> = ({ offer, nft }) => {
   const fmtOfferAmount: string = formatEther(totalAmount);
   const { hasApproval, hasCheckedApproval, grantApproval } = useERC721Approval({
     contractAddress: nft.contractAddress,
-    operator,
+    operator: lendingContract?.address,
     tokenId: nft.id,
   });
 

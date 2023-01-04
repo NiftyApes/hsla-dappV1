@@ -45,9 +45,14 @@ export const useCreateOffer = ({
   // it hasn't been upgraded yet.
   useEffect(() => {
     async function getOfferHashOfNullOffer() {
-      // Currently we can use signature-based offers everywhere except Mainnet
+      // If not on Mainnet, use signature offers everywhere except for Gnosis
       if (chainId && chainId !== '0x1') {
-        setShouldUseSignatureOffer(true);
+        if (chainId === '0x64') {
+          setShouldUseSignatureOffer(false);
+        } else {
+          setShouldUseSignatureOffer(true);
+        }
+
         return;
       }
 
@@ -237,7 +242,7 @@ export const useCreateOffer = ({
             ),
             nftId: tokenId,
             fixedTerms: false,
-            floorTerm: true,
+            floorTerm: !tokenId,
             lenderOffer: true,
             asset: ETH_ADDRESS,
             amount: ethers.utils.parseUnits(String(amount), 'ether'),
