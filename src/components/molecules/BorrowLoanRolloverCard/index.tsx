@@ -1,27 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   Box,
   Button,
-  Center,
   Divider,
   Flex,
-  Grid,
-  GridItem,
-  SimpleGrid,
   Table,
-  TableCaption,
   TableContainer,
   Tbody,
   Td,
   Text,
-  Th,
-  Thead,
-  Tooltip,
   Tr,
   useToast,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
-import { QuestionOutlineIcon, ArrowForwardIcon } from '@chakra-ui/icons';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
 import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
@@ -30,17 +21,10 @@ import { formatEther } from 'ethers/lib/utils';
 import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
 import JSConfetti from 'js-confetti';
 import { logError } from 'logging/logError';
-import moment from 'moment';
 import { humanizeContractError } from '../../../helpers/errorsMap';
 import { getAPR } from '../../../helpers/getAPR';
-import {
-  getLoanTimeRemaining,
-  isLoanDefaulted,
-} from '../../../helpers/getDuration';
-import {
-  concatForDisplay,
-  roundForDisplay,
-} from '../../../helpers/roundForDisplay';
+import { getLoanDurationDays } from '../../../helpers/getDuration';
+import { roundForDisplay } from '../../../helpers/roundForDisplay';
 import { useCalculateInterestAccrued } from '../../../hooks/useCalculateInterestAccrued';
 import { useRepayLoanByBorrower } from '../../../hooks/useRepayLoan';
 import { LoanAuction } from '../../../loan';
@@ -58,7 +42,6 @@ interface Props {
 const i18n = {
   actionButton: 'rollover loan',
   footerText: 'Next payment due 📅 ',
-  loanApr: 'Loan APR',
   loanBorrowed: 'Total borrowed',
   loanInformation: 'rollover info',
   loanInterest: 'Interest owed ',
@@ -67,6 +50,7 @@ const i18n = {
   loanActive: 'Time Remaining',
   paymentType: 'max payment',
   toastSuccess: 'Loan repaid successfully',
+  loanApr: (apr: number) => `${apr}%`,
 };
 
 const BorrowLoanRolloverCard: React.FC<Props> = ({ loan, onRollover }) => {
@@ -104,10 +88,12 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({ loan, onRollover }) => {
   // Additional 20 minutes worth of interest
   const padding: BigNumber = irps.mul(3600);
   const totalOwed: BigNumber = amount.add(totalAccruedInterest).add(padding);
-  const apr = getAPR({
-    amount: Number(amount.toString()),
-    interestRatePerSecond: irps.toNumber(),
-  });
+  const apr = roundForDisplay(
+    getAPR({
+      amount: Number(amount.toString()),
+      interestRatePerSecond: irps.toNumber(),
+    }),
+  );
 
   const { repayLoanByBorrower } = useRepayLoanByBorrower({
     nftContractAddress: loan.nftContractAddress,
@@ -193,11 +179,11 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({ loan, onRollover }) => {
                     <Td>
                       <Flex alignItems="center" gap="2">
                         <CryptoIcon symbol="eth" size={24} />
-                        <Text>25.50</Text>
+                        <Text>{formatEther(loan.amount)}Ξ</Text>
                       </Flex>
                     </Td>
-                    <Td>30 days</Td>
-                    <Td>13.37</Td>
+                    <Td>{getLoanDurationDays(loan)}</Td>
+                    <Td>{i18n.loanApr(apr)}</Td>
                     <Td />
                   </Tr>
                   <Tr>
