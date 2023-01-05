@@ -3,6 +3,7 @@ import { useChainId } from 'hooks/useChainId';
 import { isGnosis } from 'hooks/useContracts';
 import moment from 'moment';
 import React from 'react';
+import { ENS_CONTRACT_ADDRESS } from '../../../../constants/contractAddresses';
 
 interface Props {
   attributes?: any;
@@ -43,9 +44,8 @@ export const NFTCardContainerHeader: React.FC<Props> = ({
     )?.value;
   }
 
-  const showTokenMeta =
-    contractAddress.toLowerCase() !==
-    '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
+  // Don't display collection title + token id for ENS NFTs
+  const showTokenMeta = contractAddress.toLowerCase() !== ENS_CONTRACT_ADDRESS;
 
   const formattedUnlockedDate = moment.unix(unlockedDate).format('MMM D, YYYY');
 
