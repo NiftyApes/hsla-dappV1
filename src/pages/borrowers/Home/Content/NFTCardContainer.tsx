@@ -29,7 +29,14 @@ export const NFTCardContainer = ({ item }: Props) => {
     loanAuction &&
     loanAuction.nftOwner !== '0x0000000000000000000000000000000000000000'
   ) {
-    return <NFTActiveLoanCard key={item.id} nft={item} loan={loanAuction} />;
+    return (
+      <NFTActiveLoanCard
+        offers={loanOffers}
+        key={item.id}
+        nft={item}
+        loan={loanAuction}
+      />
+    );
   }
 
   if (loanOffers.length === 0) {

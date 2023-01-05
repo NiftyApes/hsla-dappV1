@@ -15,7 +15,7 @@ import React from 'react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { formatEther } from 'ethers/lib/utils';
-import { LoanAuction } from '../../../loan';
+import { LoanAuction, LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
 
 import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
@@ -36,6 +36,7 @@ import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
 interface Props {
   loan: LoanAuction;
   nft: NFT;
+  offers: Array<LoanOffer>;
 }
 
 const i18n = {
@@ -51,7 +52,7 @@ const i18n = {
   defaultedLoanStatus: 'Asset Has Not Been Seized',
 };
 
-const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
+const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft, offers }) => {
   const {
     isOpen: isRepayLoanOpen,
     onOpen: onRepayLoanOpen,
@@ -266,6 +267,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
                 <BorrowLoanRolloverCard
                   loan={loan}
                   onRollover={onRolloverLoanClose}
+                  offers={offers}
                 />
                 <ModalCloseButton />
               </ModalContent>

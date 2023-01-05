@@ -11,24 +11,30 @@ import {
   Tr,
   useToast,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
 import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
 import JSConfetti from 'js-confetti';
 import { logError } from 'logging/logError';
+import moment from 'moment';
 import { humanizeContractError } from '../../../helpers/errorsMap';
 import { getAPR } from '../../../helpers/getAPR';
-import { getLoanDurationDays } from '../../../helpers/getDuration';
+import {
+  getLoanTimeRemaining,
+  getOfferTimeRemaining,
+} from '../../../helpers/getDuration';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
 import { useCalculateInterestAccrued } from '../../../hooks/useCalculateInterestAccrued';
 import { useRepayLoanByBorrower } from '../../../hooks/useRepayLoan';
-import { LoanAuction } from '../../../loan';
+import { LoanAuction, LoanOffer } from '../../../loan';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
+
+const DATE_FORMAT = 'hh:mm A MM/DD/YY';
 
 interface CallbackType {
   (): void;
@@ -37,6 +43,7 @@ interface CallbackType {
 interface Props {
   loan: LoanAuction;
   onRollover: CallbackType;
+  offers: Array<LoanOffer>;
 }
 
 const i18n = {
@@ -53,9 +60,35 @@ const i18n = {
   loanApr: (apr: number) => `${apr}%`,
 };
 
-const BorrowLoanRolloverCard: React.FC<Props> = ({ loan, onRollover }) => {
+const BorrowLoanRolloverCard: React.FC<Props> = ({
+  loan,
+  onRollover,
+  offers,
+}) => {
   const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.BORROWERS);
   const toast = useToast();
+
+  // TODO: Change to be best offer
+  const [rolloverOffer] = useState<LoanOffer>(offers[1]);
+
+  const rolloverOfferAmount = useMemo(() => {
+    return ethers.utils.formatEther(
+      BigNumber.from(String(rolloverOffer.OfferTerms.Amount)),
+    );
+  }, [rolloverOffer.OfferTerms.Amount]);
+
+  const principleChangeColor = useMemo(() => {
+    if (rolloverOfferAmount > formatEther(loan.amount)) return '#15e9a7';
+    return '#000000';
+  }, [rolloverOfferAmount, loan.amount]);
+
+  const deltaCalculation = useMemo(() => {
+    return 'DELTA';
+  }, []);
+
+  const nextPaymentDue = useMemo(() => {
+    return moment().add(rolloverOffer.durationDays, 'days').format(DATE_FORMAT);
+  }, [rolloverOffer.durationDays]);
 
   const jsConfetti = new JSConfetti();
   const [isExecuting, setExecuting] = useState<boolean>(false);
@@ -182,7 +215,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({ loan, onRollover }) => {
                         <Text>{formatEther(loan.amount)}Ξ</Text>
                       </Flex>
                     </Td>
-                    <Td>{getLoanDurationDays(loan)}</Td>
+                    <Td>{getLoanTimeRemaining(loan)}</Td>
                     <Td>{i18n.loanApr(apr)}</Td>
                     <Td />
                   </Tr>
@@ -197,11 +230,11 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({ loan, onRollover }) => {
                     <Td>
                       <Flex alignItems="center" gap="2">
                         <CryptoIcon symbol="eth" size={24} />
-                        <Text>20.0</Text>
+                        <Text>{rolloverOfferAmount}Ξ</Text>
                       </Flex>
                     </Td>
-                    <Td>30 days</Td>
-                    <Td>13.37</Td>
+                    <Td>{getOfferTimeRemaining(rolloverOffer)}</Td>
+                    <Td>{i18n.loanApr(rolloverOffer.aprPercentage)}</Td>
                     <Td>
                       <Button
                         variant="link"
@@ -229,11 +262,15 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({ loan, onRollover }) => {
                   <Flex alignItems="center" flexDirection="column">
                     <Flex gap="1" direction="row" alignItems="center">
                       <Text fontSize="18" fontWeight="bold">
-                        25.5Ξ
+                        {formatEther(loan.amount)}Ξ
                       </Text>
                       <ArrowForwardIcon />
-                      <Text fontSize="18" fontWeight="bold" color="#15e9a7">
-                        20.0Ξ
+                      <Text
+                        fontSize="18"
+                        fontWeight="bold"
+                        color={principleChangeColor}
+                      >
+                        {rolloverOfferAmount}Ξ
                       </Text>
                     </Flex>
                     <Text color="gray.600" fontSize="14">
@@ -244,7 +281,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({ loan, onRollover }) => {
                 <Box>
                   <Flex alignItems="center" flexDirection="column">
                     <Text fontSize="18" fontWeight="bold">
-                      5.07433Ξ
+                      {deltaCalculation}Ξ
                     </Text>
                     <Text color="gray.600" fontSize="14">
                       Payment Due Now
@@ -254,7 +291,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({ loan, onRollover }) => {
                 <Box>
                   <Flex alignItems="center" flexDirection="column">
                     <Text fontSize="18" fontWeight="bold">
-                      12:24 PM 02/23/24
+                      {nextPaymentDue}
                     </Text>
                     <Text color="gray.600" fontSize="14">
                       Next Payment Due
@@ -275,7 +312,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({ loan, onRollover }) => {
                   ETH
                 </Text>
                 <Text fontSize="3.5xl" noOfLines={1} maxWidth="200px">
-                  {formatEther(totalOwed)}Ξ
+                  {deltaCalculation}Ξ
                 </Text>
               </Flex>
               <Button
@@ -291,6 +328,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({ loan, onRollover }) => {
           </Box>
         </Flex>
         <Button
+          disabled // Change to be disabled by delta calculation
           marginTop={4}
           marginBottom={1}
           borderRadius="8px"
