@@ -73,6 +73,7 @@ export const OfferRow = ({ offer, offerHash, index }: any) => {
     >
       <Td>
         <NFTCollectionCardSmall
+          tokenId={offer.nftId}
           throttle={100 * index}
           contractAddress={offer.nftContractAddress}
         />

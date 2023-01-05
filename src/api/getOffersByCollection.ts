@@ -27,6 +27,7 @@ export const getOffersByCollection = async ({
         floorTerm: item.OfferTerms.FloorTerm,
         creator: item.OfferTerms.LenderOffer ? item.Lender : item.Borrower,
         offerHash: item.OfferHash,
+        nftId: item.OfferTerms.NftId,
       },
       offerHash: item.OfferHash,
     };
