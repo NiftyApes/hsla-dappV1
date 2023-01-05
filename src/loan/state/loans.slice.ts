@@ -154,6 +154,9 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
     for (let i = 0; i < sigOffers.length; i++) {
       const sigOffer = sigOffers[i];
 
+      // Comment out double-checking chain for sig offer cancelled/finalized status
+      // This is for loading speed
+
       // const isCancelledOrFinalized =
       //   await offersContract.getOfferSignatureStatus(sigOffer.Signature);
 
