@@ -90,12 +90,15 @@ export const useCollectionOffers = ({
       for (let i = 0; i < sigOffers.length; i++) {
         const sigOffer = sigOffers[i];
 
-        const isCancelledOrFinalized =
-          await offersContract.getOfferSignatureStatus(sigOffer.Signature);
+        // Comment out double-checking chain for sig offer cancelled/finalized status
+        // This is for loading speed
 
-        if (isCancelledOrFinalized) {
-          continue;
-        }
+        // const isCancelledOrFinalized =
+        //   await offersContract.getOfferSignatureStatus(sigOffer.Signature);
+
+        // if (isCancelledOrFinalized) {
+        //   continue;
+        // }
 
         const floorOfferCount =
           await getFloorSignatureOfferCountLeftFromSignature({

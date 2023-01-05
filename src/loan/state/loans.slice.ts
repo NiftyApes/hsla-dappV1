@@ -154,13 +154,16 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
     for (let i = 0; i < sigOffers.length; i++) {
       const sigOffer = sigOffers[i];
 
-      const isCancelledOrFinalized =
-        await offersContract.getOfferSignatureStatus(sigOffer.Signature);
+      // Comment out double-checking chain for sig offer cancelled/finalized status
+      // This is for loading speed
 
-      // Ignore cancelled or finalized offers
-      if (isCancelledOrFinalized) {
-        continue;
-      }
+      // const isCancelledOrFinalized =
+      //   await offersContract.getOfferSignatureStatus(sigOffer.Signature);
+
+      // // Ignore cancelled or finalized offers
+      // if (isCancelledOrFinalized) {
+      //   continue;
+      // }
 
       // Ignore non-floor offers that are not for this NFT
       if (!sigOffer.Offer.floorTerm && sigOffer.Offer.nftId !== Number(nftId)) {
