@@ -15,6 +15,9 @@ export const DOODLES_CONTRACT_ADDRESS =
 export const NOUNS_CONTRACT_ADDRESS =
   '0x9c8ff314c9bc7f6e59a9d9225fb22946427edc03';
 
+export const ENS_CONTRACT_ADDRESS =
+  '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
+
 export const GOERLI = {
   LENDING: {
     ADDRESS: '0x40dF7D76C59721b1E0b0e1cf92Dbd0A58D083De4',
