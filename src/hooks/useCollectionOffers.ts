@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable no-await-in-loop */
 import { getOffersByCollection } from 'api/getOffersByCollection';
-import { getSignatureOffersByCollection } from 'api/getSignatureOffersByCollection';
+import { getSignatureOffersForCollectionIncludingTokenSpecific } from 'api/getSignatureOffersForCollectionIncludingTokenSpecific';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
@@ -82,10 +82,11 @@ export const useCollectionOffers = ({
 
       const filteredOffers = _.compact(offers);
 
-      const sigOffers = await getSignatureOffersByCollection({
-        chainId,
-        nftContractAddress,
-      });
+      const sigOffers =
+        await getSignatureOffersForCollectionIncludingTokenSpecific({
+          chainId,
+          nftContractAddress,
+        });
 
       for (let i = 0; i < sigOffers.length; i++) {
         const sigOffer = sigOffers[i];

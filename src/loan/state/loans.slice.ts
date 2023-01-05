@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getSignatureOffersByCollection } from 'api/getSignatureOffersByCollection';
+import { getSignatureOffersForCollectionIncludingTokenSpecific } from 'api/getSignatureOffersForCollectionIncludingTokenSpecific';
 import { AppDispatch, ThunkExtra } from 'app/store';
 import { ethers } from 'ethers';
 import { getApiUrl, getData } from 'helpers';
@@ -146,10 +146,11 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
       }),
     ).then((results) => offers.filter((offer, j) => results[j]));
 
-    const sigOffers = await getSignatureOffersByCollection({
-      chainId,
-      nftContractAddress,
-    });
+    const sigOffers =
+      await getSignatureOffersForCollectionIncludingTokenSpecific({
+        chainId,
+        nftContractAddress,
+      });
 
     for (let i = 0; i < sigOffers.length; i++) {
       const sigOffer = sigOffers[i];
