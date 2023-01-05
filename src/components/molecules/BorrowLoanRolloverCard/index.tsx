@@ -11,7 +11,7 @@ import {
   Tr,
   useToast,
 } from '@chakra-ui/react';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
@@ -35,6 +35,7 @@ import { LoanAuction, LoanOffer } from '../../../loan';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
 
 const DATE_FORMAT = 'hh:mm A MM/DD/YY';
+const MOMENT_INTERVAL_MS = 60000;
 
 interface CallbackType {
   (): void;
@@ -71,6 +72,20 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
   // TODO: Change to be best offer
   const [rolloverOffer] = useState<LoanOffer>(offers[1]);
 
+  const [nextPaymentDue, setNextPaymentDue] = useState(
+    moment().add(rolloverOffer.durationDays, 'days').format(DATE_FORMAT),
+  );
+
+  // Updates due payment UI every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNextPaymentDue(
+        moment().add(rolloverOffer.durationDays, 'days').format(DATE_FORMAT),
+      );
+    }, MOMENT_INTERVAL_MS);
+    return () => clearInterval(interval);
+  }, [rolloverOffer.durationDays]);
+
   const rolloverOfferAmount = useMemo(() => {
     return ethers.utils.formatEther(
       BigNumber.from(String(rolloverOffer.OfferTerms.Amount)),
@@ -85,10 +100,6 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
   const deltaCalculation = useMemo(() => {
     return 'DELTA';
   }, []);
-
-  const nextPaymentDue = useMemo(() => {
-    return moment().add(rolloverOffer.durationDays, 'days').format(DATE_FORMAT);
-  }, [rolloverOffer.durationDays]);
 
   const jsConfetti = new JSConfetti();
   const [isExecuting, setExecuting] = useState<boolean>(false);
