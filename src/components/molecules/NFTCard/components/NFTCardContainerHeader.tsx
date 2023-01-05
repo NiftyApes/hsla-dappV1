@@ -5,16 +5,18 @@ import moment from 'moment';
 import React from 'react';
 
 interface Props {
+  attributes?: any;
+  children: JSX.Element;
   collectionName?: string;
+  contractAddress: string;
   img?: string;
   tokenId: string;
   tokenName: string;
-  children: JSX.Element;
-  attributes?: any;
 }
 
 export const NFTCardContainerHeader: React.FC<Props> = ({
   children,
+  contractAddress,
   collectionName,
   img,
   tokenId,
@@ -41,6 +43,10 @@ export const NFTCardContainerHeader: React.FC<Props> = ({
     )?.value;
   }
 
+  const showTokenMeta =
+    contractAddress.toLowerCase() !==
+    '0x57f1887a8bf19b14fc0df6fd9b2acc9af147ea85';
+
   const formattedUnlockedDate = moment.unix(unlockedDate).format('MMM D, YYYY');
 
   return (
@@ -53,55 +59,59 @@ export const NFTCardContainerHeader: React.FC<Props> = ({
         w="260px"
       />
 
-      <Flex
-        align="center"
-        px="8px"
-        borderRadius="8px"
-        flexDir="column"
-        mt={`${210 + tokenPadding}px`}
-        pb="5px"
-        position="absolute"
-        zIndex="1"
-        _after={{
-          content: '""',
-          background:
-            'linear-gradient(360deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 100%)',
-          width: '260px',
-          height: '75px',
-          display: 'block',
-          position: 'absolute',
-          bottom: '0',
-          zIndex: '-10',
-        }}
-      >
-        {collectionName && collectionName !== '' && (
+      {showTokenMeta && (
+        <Flex
+          align="center"
+          px="8px"
+          borderRadius="8px"
+          flexDir="column"
+          mt={`${210 + tokenPadding}px`}
+          pb="5px"
+          position="absolute"
+          zIndex="1"
+          _after={{
+            content: '""',
+            background:
+              'linear-gradient(360deg, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 100%)',
+            width: '260px',
+            height: '75px',
+            display: 'block',
+            position: 'absolute',
+            bottom: '0',
+            zIndex: '-10',
+          }}
+        >
+          {collectionName && collectionName !== '' && (
+            <Text
+              color="white"
+              fontSize="sm"
+              fontWeight="bold"
+              maxW="240px"
+              textShadow="0px 0px 4px #000000"
+              textTransform="uppercase"
+              textAlign="center"
+              noOfLines={1}
+            >
+              {collectionName}
+            </Text>
+          )}
+
           <Text
-            color="white"
-            fontSize="sm"
-            fontWeight="bold"
+            color={tokenId ? 'white' : 'rgba(255,255,255,0)'}
+            fontSize="xl"
+            fontWeight="semibold"
+            noOfLines={1}
             maxW="240px"
             textShadow="0px 0px 4px #000000"
             textTransform="uppercase"
             textAlign="center"
-            noOfLines={1}
           >
-            {collectionName}
+            {tokenName.endsWith(tokenId)
+              ? tokenName
+              : `${tokenName} #${tokenId}`}
           </Text>
-        )}
-
-        <Text
-          color={tokenId ? 'white' : 'rgba(255,255,255,0)'}
-          fontSize="xl"
-          fontWeight="semibold"
-          noOfLines={1}
-          maxW="240px"
-          textShadow="0px 0px 4px #000000"
-          textTransform="uppercase"
-          textAlign="center"
-        >
-          {tokenName.endsWith(tokenId) ? tokenName : `${tokenName} #${tokenId}`}
-        </Text>
-      </Flex>
+        </Flex>
+      )}
       {isGnosis(chainId) && (
         <Box
           w="100%"

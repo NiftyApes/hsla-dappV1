@@ -90,11 +90,12 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
   return (
     <NFTCardContainer>
       <NFTCardContainerHeader
+        attributes={nft.attributes}
+        collectionName={nft.collectionName || ''}
+        contractAddress={nft.contractAddress}
         img={nft.image}
         tokenId={nft.id}
         tokenName={nft.name}
-        collectionName={nft.collectionName || ''}
-        attributes={nft.attributes}
       >
         <>
           <Flex
