@@ -214,11 +214,12 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
   return (
     <NFTCardContainer>
       <NFTCardContainerHeader
+        attributes={nft.attributes}
+        collectionName={nft.collectionName}
+        contractAddress={nft.contractAddress}
         img={nft.image}
         tokenId={nft.id}
         tokenName={nft.name}
-        collectionName={nft.collectionName}
-        attributes={nft.attributes}
       >
         <>
           {isLoanDefaulted(loan) ? renderDefaultedLoan() : renderActiveLoan()}

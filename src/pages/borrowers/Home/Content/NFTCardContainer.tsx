@@ -35,12 +35,13 @@ export const NFTCardContainer = ({ item }: Props) => {
   if (loanOffers.length === 0) {
     return (
       <NFTNoOfferCard
-        key={item.id}
-        collectionName={item.collectionName || ''}
-        tokenName={`${item.name}`}
-        tokenId={item.id}
-        img={item.image}
         attributes={item.attributes}
+        collectionName={item.collectionName || ''}
+        contractAddress={item.contractAddress}
+        img={item.image}
+        key={item.id}
+        tokenId={item.id}
+        tokenName={`${item.name}`}
       />
     );
   }
