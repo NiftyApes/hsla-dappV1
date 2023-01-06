@@ -1,11 +1,8 @@
-
 import { useTopCollectionStats } from 'providers/hooks/useTopCollectionStats';
 import { useEffect, useState } from 'react';
 
-
 export const useTopNiftyApesCollections = () => {
   const [data, setData] = useState<any>();
-
 
   const { topCollectionStats, loading: isLoadingTopCollectionStats } =
     useTopCollectionStats();
