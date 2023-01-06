@@ -1,5 +1,6 @@
 import { Box, BoxProps, Flex } from '@chakra-ui/react';
 import { useChainId } from 'hooks/useChainId';
+import { GnosisHedgeyNFTs } from './GnosisHedgeyNFTs';
 import { GoerliWalletNFTs } from './GoerliWalletNFTs';
 import { LocalhostContent } from './LocalWalletNFTs';
 import { MainnetWalletNFTs } from './MainnetWalletNFTs';
@@ -15,6 +16,8 @@ const Content: React.FC<Props> = ({ ...restProps }) => {
       <GoerliWalletNFTs />
     ) : chainId === '0x7a69' ? (
       <LocalhostContent />
+    ) : chainId === '0x64' ? (
+      <GnosisHedgeyNFTs />
     ) : null;
 
   return (

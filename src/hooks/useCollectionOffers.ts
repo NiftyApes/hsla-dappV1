@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-shadow */
 /* eslint-disable no-await-in-loop */
 import { getOffersByCollection } from 'api/getOffersByCollection';
-import { getSignatureOffersByCollection } from 'api/getSignatureOffersByCollection';
+import { getSignatureOffersForCollectionIncludingTokenSpecific } from 'api/getSignatureOffersForCollectionIncludingTokenSpecific';
 import { useAppSelector } from 'app/hooks';
 import { RootState } from 'app/store';
 import { getLoanOfferFromHash } from 'helpers/getLoanOfferFromHash';
@@ -48,14 +48,13 @@ export const useCollectionOffers = ({
         const offerFromChain = await getLoanOfferFromHash({
           offersContract,
           nftContractAddress,
-          // all collection offers have nftId 0
-          nftId: '0',
+          nftId: offers[i].offer.nftId,
           offerHash,
           floorTerm: offers[i].offer.floorTerm,
         });
 
         // Remove offer if any of the following obtains
-        if (!floorOfferCount || !offerFromChain) {
+        if (offerFromChain === undefined || floorOfferCount === undefined) {
           offers[i] = undefined;
         } else if (
           // This happens when there isn't an offer with this hash
@@ -65,6 +64,7 @@ export const useCollectionOffers = ({
           offers[i] = undefined;
         } else if (
           // Ignore offers that are out of punches
+          offerFromChain.floorTerm &&
           floorOfferCount.toNumber() >= offerFromChain.floorTermLimit.toNumber()
         ) {
           offers[i] = undefined;
@@ -82,22 +82,24 @@ export const useCollectionOffers = ({
 
       const filteredOffers = _.compact(offers);
 
-      const sigOffers = await getSignatureOffersByCollection({
-        chainId,
-        nftContractAddress,
-      });
-
-      console.log('sigOffers 2', sigOffers);
+      const sigOffers =
+        await getSignatureOffersForCollectionIncludingTokenSpecific({
+          chainId,
+          nftContractAddress,
+        });
 
       for (let i = 0; i < sigOffers.length; i++) {
         const sigOffer = sigOffers[i];
 
-        const isCancelledOrFinalized =
-          await offersContract.getOfferSignatureStatus(sigOffer.Signature);
+        // Comment out double-checking chain for sig offer cancelled/finalized status
+        // This is for loading speed
 
-        if (isCancelledOrFinalized) {
-          continue;
-        }
+        // const isCancelledOrFinalized =
+        //   await offersContract.getOfferSignatureStatus(sigOffer.Signature);
+
+        // if (isCancelledOrFinalized) {
+        //   continue;
+        // }
 
         const floorOfferCount =
           await getFloorSignatureOfferCountLeftFromSignature({
@@ -125,7 +127,7 @@ export const useCollectionOffers = ({
             Expiration: sigOffer.Offer.expiration,
             Duration: sigOffer.Offer.duration,
             OfferStatus: 'ACTIVE',
-            FloorTerm: true,
+            FloorTerm: sigOffer.Offer.floorTerm,
           },
           OfferHash: sigOffer.OfferHash,
           signature: sigOffer.Signature,

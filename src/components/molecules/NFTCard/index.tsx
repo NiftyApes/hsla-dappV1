@@ -20,10 +20,10 @@ import { roundForDisplay } from '../../../helpers/roundForDisplay';
 import { getBestLoanOffer, LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
 import Offers from '../../../pages/borrowers/Offers';
+import NFTCardHeader from '../../cards/NFTCardHeader';
 import BorrowOfferDetailsCard from '../BorrowOfferDetailsCard';
 import { NFTCardContainer } from './components/NFTCardContainer';
 import { NFTCardContainerHeader } from './components/NFTCardContainerHeader';
-import NFTCardHeader from '../../cards/NFTCardHeader';
 
 interface Props {
   nft: NFT;
@@ -90,10 +90,12 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
   return (
     <NFTCardContainer>
       <NFTCardContainerHeader
+        attributes={nft.attributes}
+        collectionName={nft.collectionName || ''}
+        contractAddress={nft.contractAddress}
         img={nft.image}
         tokenId={nft.id}
         tokenName={nft.name}
-        collectionName={nft.collectionName || ''}
       >
         <>
           <Flex
