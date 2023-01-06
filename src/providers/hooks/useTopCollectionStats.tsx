@@ -33,11 +33,7 @@ export function useTopCollectionStats({
 
   const collectionsWithActiveOffers = collections.filter(
     (collectionAddress: string) => {
-      const {
-        activeOnChainCollectionOffers,
-        activeSignatureCollectionOffers,
-        allActiveCollectionOffers,
-      } = getActiveOffersInfoForCollection({
+      const { allActiveCollectionOffers } = getActiveOffersInfoForCollection({
         collectionAddress,
         onChainOffers,
         signatureOffers,
