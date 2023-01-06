@@ -1,5 +1,6 @@
-import React from 'react';
 import { Box, Center, Text, VStack } from '@chakra-ui/react';
+import LoadingIndicator from 'components/atoms/LoadingIndicator';
+import React from 'react';
 import { useTopNiftyApesCollections } from '../../../hooks/useCollectionsByLiquidity';
 import CollectionList from './components/CollectionList';
 
@@ -24,10 +25,12 @@ const Home: React.FC = () => {
         </VStack>
       </Center>
 
-      {collections && (
+      {collections ? (
         <Box mt="10px">
           <CollectionList list={collections} />
         </Box>
+      ) : (
+        <LoadingIndicator />
       )}
     </VStack>
   );
