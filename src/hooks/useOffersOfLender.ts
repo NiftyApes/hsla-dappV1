@@ -95,10 +95,10 @@ export const useOffersForLender = ({
       for (let i = 0; i < sigOffers.length; i++) {
         const sigOffer = sigOffers[i];
 
-        // const isCanceledOrFinalized =
+        // const isCancelledOrFinalized =
         //   await offersContract.getOfferSignatureStatus(sigOffer.Signature);
 
-        // if (isCanceledOrFinalized) {
+        // if (isCancelledOrFinalized) {
         //   continue;
         // }
 
