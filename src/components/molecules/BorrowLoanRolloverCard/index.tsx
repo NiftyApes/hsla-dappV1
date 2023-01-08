@@ -97,10 +97,6 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
     return '#000000';
   }, [rolloverOfferAmount, loan.amount]);
 
-  const deltaCalculation = useMemo(() => {
-    return 'DELTA';
-  }, []);
-
   const jsConfetti = new JSConfetti();
   const [isExecuting, setExecuting] = useState<boolean>(false);
 
@@ -138,6 +134,14 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
       interestRatePerSecond: irps.toNumber(),
     }),
   );
+
+  const deltaCalculation = useMemo(() => {
+    const currentPrincipal = parseFloat(formatEther(loan.amount));
+    const rolloverPrincipal = parseFloat(rolloverOfferAmount);
+    const interestAccuredOnPrincipal = (apr / 100) * currentPrincipal;
+
+    return currentPrincipal + interestAccuredOnPrincipal - rolloverPrincipal;
+  }, [loan.amount, rolloverOfferAmount, apr]);
 
   const { repayLoanByBorrower } = useRepayLoanByBorrower({
     nftContractAddress: loan.nftContractAddress,
@@ -292,7 +296,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                 <Box>
                   <Flex alignItems="center" flexDirection="column">
                     <Text fontSize="18" fontWeight="bold">
-                      {deltaCalculation}Ξ
+                      {roundForDisplay(deltaCalculation)}Ξ
                     </Text>
                     <Text color="gray.600" fontSize="14">
                       Payment Due Now
@@ -323,7 +327,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                   ETH
                 </Text>
                 <Text fontSize="3.5xl" noOfLines={1} maxWidth="200px">
-                  {deltaCalculation}Ξ
+                  {roundForDisplay(deltaCalculation)}Ξ
                 </Text>
               </Flex>
               <Button
