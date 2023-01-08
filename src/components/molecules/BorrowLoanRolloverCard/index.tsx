@@ -419,8 +419,10 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
             <NFTCardHeader
               contractAddress={nft.contractAddress}
               tokenId={nft.id}
-              title={i18n.allOffers}
               nft={nft}
+              title={`All offers for ${nft.collectionName} ${
+                nft.id ? `#${nft.id}` : ''
+              }`}
             />
             <ModalCloseButton />
             <Offers nft={nft} offers={offers} onOfferSelect={onSelectOffer} />
