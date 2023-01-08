@@ -3,15 +3,20 @@ import {
   Button,
   Divider,
   Flex,
+  Modal,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
   Table,
   TableContainer,
   Tbody,
   Td,
   Text,
   Tr,
+  useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
@@ -22,6 +27,8 @@ import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
 import JSConfetti from 'js-confetti';
 import { logError } from 'logging/logError';
 import moment from 'moment';
+import NFTCardHeader from 'components/cards/NFTCardHeader';
+import Offers from 'pages/borrowers/Offers';
 import { humanizeContractError } from '../../../helpers/errorsMap';
 import { getAPR } from '../../../helpers/getAPR';
 import {
@@ -33,6 +40,7 @@ import { useCalculateInterestAccrued } from '../../../hooks/useCalculateInterest
 import { useRepayLoanByBorrower } from '../../../hooks/useRepayLoan';
 import { LoanAuction, LoanOffer } from '../../../loan';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
+import { NFT } from '../../../nft';
 
 const DATE_FORMAT = 'hh:mm A MM/DD/YY';
 const MOMENT_INTERVAL_MS = 60000;
@@ -45,6 +53,7 @@ interface Props {
   loan: LoanAuction;
   onRollover: CallbackType;
   offers: Array<LoanOffer>;
+  nft: NFT;
 }
 
 const i18n = {
@@ -59,18 +68,34 @@ const i18n = {
   paymentType: 'max payment',
   toastSuccess: 'Loan repaid successfully',
   loanApr: (apr: number) => `${apr}%`,
+  allOffers: 'all offers for',
 };
 
 const BorrowLoanRolloverCard: React.FC<Props> = ({
   loan,
   onRollover,
   offers,
+  nft,
 }) => {
   const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.BORROWERS);
   const toast = useToast();
 
   // TODO: Change to be best offer
-  const [rolloverOffer] = useState<LoanOffer>(offers[1]);
+  const [rolloverOffer, setRolloverOffer] = useState<LoanOffer>(offers[1]);
+
+  const {
+    isOpen: isAllOffersOpen,
+    onOpen: onAllOffersOpen,
+    onClose: onAllOffersClose,
+  } = useDisclosure();
+
+  const onSelectOffer = useCallback(
+    (offer: LoanOffer) => {
+      setRolloverOffer(offer);
+      onAllOffersClose();
+    },
+    [onAllOffersClose],
+  );
 
   const [nextPaymentDue, setNextPaymentDue] = useState(
     moment().add(rolloverOffer.durationDays, 'days').format(DATE_FORMAT),
@@ -192,174 +217,197 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
   };
 
   return (
-    <Box>
-      <Flex flexDir="column" width="100%" p="5px">
-        <Flex
-          width="100%"
-          flexDir="column"
-          border="1px solid rgba(101, 101, 101, 0.2)"
-          borderRadius="15px"
-        >
-          <Box
-            borderBottom="1px solid"
-            borderColor="rgba(101, 101, 101, 0.2)"
-            bg="white"
-            borderRadius="15px 15px 0 0"
-            textAlign="center"
-            w="100%"
+    <>
+      <Box>
+        <Flex flexDir="column" width="100%" p="5px">
+          <Flex
+            width="100%"
+            flexDir="column"
+            border="1px solid rgba(101, 101, 101, 0.2)"
+            borderRadius="15px"
           >
-            <Text color="solid.gray0" textTransform="uppercase">
-              {i18n.loanInformation}
-            </Text>
-          </Box>
-          <Box p="10px">
-            <TableContainer>
-              <Table variant="simple">
-                <Tbody>
-                  <Tr>
-                    <Td
-                      fontSize="14"
-                      textTransform="uppercase"
-                      color="gray.600"
-                    >
-                      current
-                    </Td>
-                    <Td>
-                      <Flex alignItems="center" gap="2">
-                        <CryptoIcon symbol="eth" size={24} />
-                        <Text>{formatEther(loan.amount)}Ξ</Text>
-                      </Flex>
-                    </Td>
-                    <Td>{getLoanTimeRemaining(loan)}</Td>
-                    <Td>{i18n.loanApr(apr)}</Td>
-                    <Td />
-                  </Tr>
-                  <Tr>
-                    <Td
-                      fontSize="14"
-                      textTransform="uppercase"
-                      color="gray.600"
-                    >
-                      rollover
-                    </Td>
-                    <Td>
-                      <Flex alignItems="center" gap="2">
-                        <CryptoIcon symbol="eth" size={24} />
-                        <Text>{rolloverOfferAmount}Ξ</Text>
-                      </Flex>
-                    </Td>
-                    <Td>{getOfferTimeRemaining(rolloverOffer)}</Td>
-                    <Td>{i18n.loanApr(rolloverOffer.aprPercentage)}</Td>
-                    <Td>
-                      <Button
-                        variant="link"
-                        textTransform="uppercase"
-                        colorScheme="purple"
-                        fontSize="14"
-                      >
-                        swap
-                      </Button>
-                    </Td>
-                  </Tr>
-                </Tbody>
-              </Table>
-            </TableContainer>
             <Box
-              marginX="3"
-              marginTop="4"
-              padding="6"
-              border="1px solid rgba(101, 101, 101, 0.2)"
-              bg="rgba(101, 101, 101, 0.1)"
-              borderRadius="15"
+              borderBottom="1px solid"
+              borderColor="rgba(101, 101, 101, 0.2)"
+              bg="white"
+              borderRadius="15px 15px 0 0"
+              textAlign="center"
+              w="100%"
             >
-              <Flex justifyContent="space-between" flexDirection="row">
-                <Box>
-                  <Flex alignItems="center" flexDirection="column">
-                    <Flex gap="1" direction="row" alignItems="center">
-                      <Text fontSize="18" fontWeight="bold">
-                        {formatEther(loan.amount)}Ξ
-                      </Text>
-                      <ArrowForwardIcon />
-                      <Text
-                        fontSize="18"
-                        fontWeight="bold"
-                        color={principleChangeColor}
+              <Text color="solid.gray0" textTransform="uppercase">
+                {i18n.loanInformation}
+              </Text>
+            </Box>
+            <Box p="10px">
+              <TableContainer>
+                <Table variant="simple">
+                  <Tbody>
+                    <Tr>
+                      <Td
+                        fontSize="14"
+                        textTransform="uppercase"
+                        color="gray.600"
                       >
-                        {rolloverOfferAmount}Ξ
+                        current
+                      </Td>
+                      <Td>
+                        <Flex alignItems="center" gap="2">
+                          <CryptoIcon symbol="eth" size={24} />
+                          <Text>{formatEther(loan.amount)}Ξ</Text>
+                        </Flex>
+                      </Td>
+                      <Td>{getLoanTimeRemaining(loan)}</Td>
+                      <Td>{i18n.loanApr(apr)}</Td>
+                      <Td />
+                    </Tr>
+                    <Tr>
+                      <Td
+                        fontSize="14"
+                        textTransform="uppercase"
+                        color="gray.600"
+                      >
+                        rollover
+                      </Td>
+                      <Td>
+                        <Flex alignItems="center" gap="2">
+                          <CryptoIcon symbol="eth" size={24} />
+                          <Text>{rolloverOfferAmount}Ξ</Text>
+                        </Flex>
+                      </Td>
+                      <Td>{getOfferTimeRemaining(rolloverOffer)}</Td>
+                      <Td>{i18n.loanApr(rolloverOffer.aprPercentage)}</Td>
+                      <Td>
+                        <Button
+                          onClick={onAllOffersOpen}
+                          variant="link"
+                          textTransform="uppercase"
+                          colorScheme="purple"
+                          fontSize="14"
+                        >
+                          swap
+                        </Button>
+                      </Td>
+                    </Tr>
+                  </Tbody>
+                </Table>
+              </TableContainer>
+              <Box
+                marginX="3"
+                marginTop="4"
+                padding="6"
+                border="1px solid rgba(101, 101, 101, 0.2)"
+                bg="rgba(101, 101, 101, 0.1)"
+                borderRadius="15"
+              >
+                <Flex justifyContent="space-between" flexDirection="row">
+                  <Box>
+                    <Flex alignItems="center" flexDirection="column">
+                      <Flex gap="1" direction="row" alignItems="center">
+                        <Text fontSize="18" fontWeight="bold">
+                          {formatEther(loan.amount)}Ξ
+                        </Text>
+                        <ArrowForwardIcon />
+                        <Text
+                          fontSize="18"
+                          fontWeight="bold"
+                          color={principleChangeColor}
+                        >
+                          {rolloverOfferAmount}Ξ
+                        </Text>
+                      </Flex>
+                      <Text color="gray.600" fontSize="14">
+                        Principle Change
                       </Text>
                     </Flex>
-                    <Text color="gray.600" fontSize="14">
-                      Principle Change
-                    </Text>
-                  </Flex>
-                </Box>
-                <Box>
-                  <Flex alignItems="center" flexDirection="column">
-                    <Text fontSize="18" fontWeight="bold">
-                      {roundForDisplay(deltaCalculation)}Ξ
-                    </Text>
-                    <Text color="gray.600" fontSize="14">
-                      Payment Due Now
-                    </Text>
-                  </Flex>
-                </Box>
-                <Box>
-                  <Flex alignItems="center" flexDirection="column">
-                    <Text fontSize="18" fontWeight="bold">
-                      {nextPaymentDue}
-                    </Text>
-                    <Text color="gray.600" fontSize="14">
-                      Next Payment Due
-                    </Text>
-                  </Flex>
-                </Box>
+                  </Box>
+                  <Box>
+                    <Flex alignItems="center" flexDirection="column">
+                      <Text fontSize="18" fontWeight="bold">
+                        {roundForDisplay(deltaCalculation)}Ξ
+                      </Text>
+                      <Text color="gray.600" fontSize="14">
+                        Payment Due Now
+                      </Text>
+                    </Flex>
+                  </Box>
+                  <Box>
+                    <Flex alignItems="center" flexDirection="column">
+                      <Text fontSize="18" fontWeight="bold">
+                        {nextPaymentDue}
+                      </Text>
+                      <Text color="gray.600" fontSize="14">
+                        Next Payment Due
+                      </Text>
+                    </Flex>
+                  </Box>
+                </Flex>
+              </Box>
+              <Divider marginY={4} borderColor="gray.400" />
+              <Flex
+                marginX="4"
+                justifyContent="space-between"
+                alignItems="center"
+              >
+                <Flex alignItems="center">
+                  <CryptoIcon symbol="eth" size={24} />
+                  <Text
+                    ml="4px"
+                    mr="14px"
+                    color="solid.gray0"
+                    fontWeight="bold"
+                  >
+                    ETH
+                  </Text>
+                  <Text fontSize="3.5xl" noOfLines={1} maxWidth="200px">
+                    {roundForDisplay(deltaCalculation)}Ξ
+                  </Text>
+                </Flex>
+                <Button
+                  borderWidth="2px"
+                  borderRadius="15"
+                  variant="outline"
+                  colorScheme="purple"
+                  padding="6"
+                >
+                  Make Payment
+                </Button>
               </Flex>
             </Box>
-            <Divider marginY={4} borderColor="gray.400" />
-            <Flex
-              marginX="4"
-              justifyContent="space-between"
-              alignItems="center"
-            >
-              <Flex alignItems="center">
-                <CryptoIcon symbol="eth" size={24} />
-                <Text ml="4px" mr="14px" color="solid.gray0" fontWeight="bold">
-                  ETH
-                </Text>
-                <Text fontSize="3.5xl" noOfLines={1} maxWidth="200px">
-                  {roundForDisplay(deltaCalculation)}Ξ
-                </Text>
-              </Flex>
-              <Button
-                borderWidth="2px"
-                borderRadius="15"
-                variant="outline"
-                colorScheme="purple"
-                padding="6"
-              >
-                Make Payment
-              </Button>
-            </Flex>
-          </Box>
+          </Flex>
+          <Button
+            disabled // Change to be disabled by delta calculation
+            marginTop={4}
+            marginBottom={1}
+            borderRadius="8px"
+            colorScheme="green"
+            backgroundColor="#15e9a7"
+            onClick={onRepayLoan}
+            py="6px"
+            size="lg"
+            textTransform="uppercase"
+            variant="solid"
+            w="100%"
+          >
+            {isExecuting ? <LoadingIndicator size="xs" /> : i18n.actionButton}
+          </Button>
         </Flex>
-        <Button
-          disabled // Change to be disabled by delta calculation
-          marginTop={4}
-          marginBottom={1}
-          borderRadius="8px"
-          colorScheme="green"
-          backgroundColor="#15e9a7"
-          onClick={onRepayLoan}
-          py="6px"
-          size="lg"
-          textTransform="uppercase"
-          variant="solid"
-          w="100%"
-        >
-          {isExecuting ? <LoadingIndicator size="xs" /> : i18n.actionButton}
-        </Button>
-      </Flex>
-    </Box>
+      </Box>
+      {isAllOffersOpen && (
+        <Modal isOpen onClose={onAllOffersClose} size="2xl">
+          <ModalOverlay />
+          <ModalContent p="5px">
+            <NFTCardHeader
+              contractAddress={nft.contractAddress}
+              tokenId={nft.id}
+              title={i18n.allOffers}
+              nft={nft}
+            />
+            <ModalCloseButton />
+            <Offers nft={nft} offers={offers} onOfferSelect={onSelectOffer} />
+          </ModalContent>
+        </Modal>
+      )}
+    </>
   );
 };
 export default BorrowLoanRolloverCard;

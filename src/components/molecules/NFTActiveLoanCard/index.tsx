@@ -266,6 +266,7 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft, offers }) => {
                   }`}
                 />
                 <BorrowLoanRolloverCard
+                  nft={nft}
                   loan={loan}
                   onRollover={onRolloverLoanClose}
                   offers={offers}
