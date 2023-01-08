@@ -38,7 +38,7 @@ import {
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
 import { useCalculateInterestAccrued } from '../../../hooks/useCalculateInterestAccrued';
 import { useRepayLoanByBorrower } from '../../../hooks/useRepayLoan';
-import { LoanAuction, LoanOffer } from '../../../loan';
+import { LoanAuction, LoanOffer, getBestLoanOffer } from '../../../loan';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
 import { NFT } from '../../../nft';
 
@@ -80,8 +80,8 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
   const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.BORROWERS);
   const toast = useToast();
 
-  // TODO: Change to be best offer
-  const [rolloverOffer, setRolloverOffer] = useState<LoanOffer>(offers[1]);
+  const bestOffer: LoanOffer = getBestLoanOffer(offers);
+  const [rolloverOffer, setRolloverOffer] = useState<LoanOffer>(bestOffer);
 
   const {
     isOpen: isAllOffersOpen,
@@ -164,6 +164,10 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
     const currentPrincipal = parseFloat(formatEther(loan.amount));
     const rolloverPrincipal = parseFloat(rolloverOfferAmount);
     const interestAccuredOnPrincipal = (apr / 100) * currentPrincipal;
+
+    if (rolloverPrincipal > currentPrincipal + interestAccuredOnPrincipal) {
+      return 0;
+    }
 
     return currentPrincipal + interestAccuredOnPrincipal - rolloverPrincipal;
   }, [loan.amount, rolloverOfferAmount, apr]);
