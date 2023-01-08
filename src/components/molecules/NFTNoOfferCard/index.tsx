@@ -4,11 +4,12 @@ import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
 import { NFTCardContainerHeader } from '../NFTCard/components/NFTCardContainerHeader';
 
 interface Props {
+  attributes?: any;
   collectionName?: string;
+  contractAddress: string;
   img?: string;
   tokenId: string;
   tokenName: string;
-  attributes?: any;
 }
 
 const i18n = {
@@ -16,20 +17,22 @@ const i18n = {
 };
 
 const NFTNoOfferCard: React.FC<Props> = ({
+  contractAddress,
+  attributes,
   collectionName,
   img,
   tokenId,
   tokenName,
-  attributes,
 }) => {
   return (
     <NFTCardContainer>
       <NFTCardContainerHeader
+        attributes={attributes}
+        collectionName={collectionName}
+        contractAddress={contractAddress}
         img={img}
         tokenId={tokenId}
         tokenName={tokenName}
-        collectionName={collectionName}
-        attributes={attributes}
       >
         <Center mt="8px">
           <Text color="solid.gray0" fontSize="sm" textTransform="uppercase">
