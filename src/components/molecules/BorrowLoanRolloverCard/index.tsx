@@ -353,7 +353,11 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                 alignItems="center"
               >
                 <Flex alignItems="center">
-                  <CryptoIcon symbol="eth" size={24} />
+                  {deltaCalculation === 0 ? (
+                    <Text fontSize={24}>👍</Text>
+                  ) : (
+                    <CryptoIcon symbol="eth" size={24} />
+                  )}
                   <Text
                     ml="4px"
                     mr="14px"
@@ -366,20 +370,32 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                     {roundForDisplay(deltaCalculation)}Ξ
                   </Text>
                 </Flex>
-                <Button
-                  borderWidth="2px"
-                  borderRadius="15"
-                  variant="outline"
-                  colorScheme="purple"
-                  padding="6"
-                >
-                  Make Payment
-                </Button>
+                {deltaCalculation === 0 ? (
+                  <Button
+                    borderWidth="2px"
+                    borderRadius="15"
+                    variant="outline"
+                    padding="6"
+                    _hover={{ backgroundColor: 'initial', cursor: 'default' }}
+                  >
+                    🥳 Payment Made 🎉
+                  </Button>
+                ) : (
+                  <Button
+                    borderWidth="2px"
+                    borderRadius="15"
+                    variant="outline"
+                    colorScheme="purple"
+                    padding="6"
+                  >
+                    Make Payment
+                  </Button>
+                )}
               </Flex>
             </Box>
           </Flex>
           <Button
-            disabled // Change to be disabled by delta calculation
+            disabled={deltaCalculation > 0}
             marginTop={4}
             marginBottom={1}
             borderRadius="8px"
