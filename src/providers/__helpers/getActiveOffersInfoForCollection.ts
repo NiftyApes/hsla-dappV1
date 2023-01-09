@@ -25,9 +25,6 @@ export function getActiveOffersInfoForCollection({
       0,
     );
 
-  console.log('collectionAddress', collectionAddress);
-  console.log('signatureOffers', signatureOffers);
-
   const activeSignatureCollectionOffers = signatureOffers.filter(
     (o: any) =>
       o.Collection.toLowerCase() === collectionAddress.toLowerCase() &&

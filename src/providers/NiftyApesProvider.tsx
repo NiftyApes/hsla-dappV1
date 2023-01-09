@@ -9,11 +9,12 @@ import {
   useMemo,
   useState,
 } from 'react';
+import { ALCHEMY_API_KEY } from './constants';
 import { MAINNET } from './__contracts/addresses';
 
 const provider = new ethers.providers.AlchemyProvider(
   'mainnet',
-  'F83MH9ibaXCMZ5B9PlWuykR3L4MvZwqp',
+  ALCHEMY_API_KEY,
 );
 
 const LendingContract = new ethers.Contract(
