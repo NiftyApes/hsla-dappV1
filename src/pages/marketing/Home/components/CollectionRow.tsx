@@ -1,6 +1,7 @@
 import React from 'react';
 import { Td, Text, Tr } from '@chakra-ui/react';
 
+import { SECONDS_IN_DAY } from '../../../../constants/misc';
 import NFTCollectionCardSmall from '../../../../components/cards/NFTCollectionCardSmall';
 
 interface Props {
@@ -36,7 +37,7 @@ const CollectionRow: React.FC<Props> = ({
         <Text fontWeight="bold">{apr.toFixed(2)}%</Text>
       </Td>
       <Td>
-        <Text fontWeight="bold">{i18n.days(duration / 86400)}</Text>
+        <Text fontWeight="bold">{i18n.days(duration / SECONDS_IN_DAY)}</Text>
       </Td>
       <Td>
         <Text fontWeight="bold">{offers}</Text>
