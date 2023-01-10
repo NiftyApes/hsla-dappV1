@@ -6,7 +6,7 @@ import CollectionList from './components/CollectionList';
 
 const i18n = {
   pageSubtitle: 'Borrow ETH using your NFTs as collateral',
-  pageTitle: 'Loans for NFTs',
+  pageTitle: 'Market View',
 };
 
 const Home: React.FC = () => {
