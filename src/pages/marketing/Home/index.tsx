@@ -6,7 +6,7 @@ import CollectionList from './components/CollectionList';
 
 const i18n = {
   pageSubtitle: 'Borrow ETH using your NFTs as collateral',
-  pageTitle: 'Market View',
+  pageTitle: 'All Offers',
 };
 
 const Home: React.FC = () => {
@@ -16,7 +16,12 @@ const Home: React.FC = () => {
     <VStack spacing="50px">
       <Center>
         <VStack>
-          <Text fontSize="8xl" as="b" textTransform="uppercase">
+          <Text
+            fontFamily="Work Sans"
+            fontSize="8xl"
+            fontWeight="black"
+            textTransform="uppercase"
+          >
             {i18n.pageTitle}
           </Text>
           <Text fontSize="xl" color="grey">
