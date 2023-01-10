@@ -7,8 +7,8 @@ import NFTCollectionCardSmall from '../../../../components/cards/NFTCollectionCa
 interface Props {
   address: string;
   apr: number;
-  duration: any;
-  liquidity: string;
+  duration: number;
+  liquidity: number;
   ltv: number | undefined;
   offers: string;
   principal: number;
@@ -50,7 +50,7 @@ const CollectionRow: React.FC<Props> = ({
         <Text fontWeight="bold">{offers}</Text>
       </Td>
       <Td>
-        <Text fontWeight="bold">{liquidity}Ξ</Text>
+        <Text fontWeight="bold">{liquidity.toFixed(2)}Ξ</Text>
       </Td>
     </Tr>
   );
