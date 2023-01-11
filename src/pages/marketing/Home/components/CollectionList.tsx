@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import CollectionRow from './CollectionRow';
+import { useRaribleCollectionStats } from '../../../../hooks/useRaribleColectionStats';
 
 interface Props {
   list: Array<any>;
@@ -11,6 +12,7 @@ const i18n = {
   thCollection: 'collection',
   thDuration: 'longest duration',
   thLiquidity: 'total liquidity',
+  thLtv: 'ltv',
   thOffers: '# of offers',
   thPrincipal: 'principal',
 };
@@ -23,6 +25,7 @@ const CollectionList: React.FC<Props> = ({ list }) => {
           <Tr>
             <Th>{i18n.thCollection}</Th>
             <Th>{i18n.thPrincipal}</Th>
+            <Th>{i18n.thLtv}</Th>
             <Th>{i18n.thApr}</Th>
             <Th>{i18n.thDuration}</Th>
             <Th>{i18n.thOffers}</Th>
@@ -32,17 +35,27 @@ const CollectionList: React.FC<Props> = ({ list }) => {
 
         <Tbody>
           {list.map(
-            ({
-              address,
-              highestPrincipal,
-              lowestApr,
-              duration,
-              numberOfOffers,
-              totalLiquidity,
-            }) => {
+            (
+              {
+                address,
+                highestPrincipal,
+                lowestApr,
+                duration,
+                numberOfOffers,
+                totalLiquidity,
+              },
+              idx,
+            ) => {
+              const { floorPrice } = useRaribleCollectionStats({
+                enabled: true,
+                throttle: idx * 100,
+                contractAddress: address,
+              });
+
               return (
                 <CollectionRow
                   address={address}
+                  ltv={floorPrice}
                   principal={highestPrincipal}
                   apr={lowestApr}
                   duration={duration}
