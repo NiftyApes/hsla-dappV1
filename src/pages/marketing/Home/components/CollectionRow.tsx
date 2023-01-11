@@ -5,12 +5,13 @@ import { SECONDS_IN_DAY } from '../../../../constants/misc';
 import NFTCollectionCardSmall from '../../../../components/cards/NFTCollectionCardSmall';
 
 interface Props {
+  address: string;
   apr: number;
   duration: number;
   liquidity: number;
-  address: string;
+  ltv: number | undefined;
   offers: string;
-  principal: string;
+  principal: number;
 }
 
 const i18n = {
@@ -18,10 +19,11 @@ const i18n = {
 };
 
 const CollectionRow: React.FC<Props> = ({
+  address,
   apr,
   duration,
   liquidity,
-  address,
+  ltv,
   offers,
   principal,
 }) => {
@@ -32,6 +34,11 @@ const CollectionRow: React.FC<Props> = ({
       </Td>
       <Td>
         <Text fontWeight="bold">{principal}Ξ</Text>
+      </Td>
+      <Td>
+        <Text fontWeight="bold">
+          {ltv !== undefined ? `${((principal / ltv) * 100).toFixed(2)}%` : ''}
+        </Text>
       </Td>
       <Td>
         <Text fontWeight="bold">{apr.toFixed(2)}%</Text>
