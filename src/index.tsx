@@ -2,6 +2,7 @@ import { ColorModeScript } from '@chakra-ui/react';
 import * as Sentry from '@sentry/react';
 import { BrowserTracing } from '@sentry/tracing';
 import { WalletProvider } from 'lib/contexts/WalletProvider';
+import { NiftyApesProvider } from 'providers/NiftyApesProvider';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import theme from 'theme';
@@ -33,7 +34,9 @@ root.render(
     <ColorModeScript initialColorMode={theme.config.initialColorMode} />
     <Provider store={store}>
       <WalletProvider>
-        <App />
+        <NiftyApesProvider>
+          <App />
+        </NiftyApesProvider>
       </WalletProvider>
     </Provider>
   </Sentry.ErrorBoundary>,
