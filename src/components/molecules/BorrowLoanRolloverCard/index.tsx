@@ -83,6 +83,8 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
   const bestOffer: LoanOffer = getBestLoanOffer(offers);
   const [rolloverOffer, setRolloverOffer] = useState<LoanOffer>(bestOffer);
 
+  const [paymentSuccess] = useState(false);
+
   const {
     isOpen: isAllOffersOpen,
     onOpen: onAllOffersOpen,
@@ -377,8 +379,11 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                     variant="outline"
                     padding="6"
                     _hover={{ backgroundColor: 'initial', cursor: 'default' }}
+                    _active={{ backgroundColor: 'initial', cursor: 'default' }}
                   >
-                    🥳 Payment Made 🎉
+                    {paymentSuccess
+                      ? '🥳 Payment Made 🎉'
+                      : 'No Payment Needed'}
                   </Button>
                 ) : (
                   <Button
@@ -425,7 +430,12 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
               }`}
             />
             <ModalCloseButton />
-            <Offers nft={nft} offers={offers} onOfferSelect={onSelectOffer} />
+            <Offers
+              actionLabel="Borrow"
+              nft={nft}
+              offers={offers}
+              onOfferSelect={onSelectOffer}
+            />
           </ModalContent>
         </Modal>
       )}
