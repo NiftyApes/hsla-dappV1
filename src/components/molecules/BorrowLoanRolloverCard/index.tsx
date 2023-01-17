@@ -1,3 +1,4 @@
+import { ArrowForwardIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -16,31 +17,31 @@ import {
   useDisclosure,
   useToast,
 } from '@chakra-ui/react';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
 import CryptoIcon from 'components/atoms/CryptoIcon';
+import NFTCardHeader from 'components/cards/NFTCardHeader';
 import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
 import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { BigNumber, ethers } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
+import { getAPR } from 'helpers/getAPR';
 import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
+import { usePartiallyRepayLoanByBorrower } from 'hooks/usePartiallyRepayLoan';
+import { useRefinanceByBorrower } from 'hooks/useRefinanceLoanByBorrower';
 import JSConfetti from 'js-confetti';
 import { logError } from 'logging/logError';
 import moment from 'moment';
-import NFTCardHeader from 'components/cards/NFTCardHeader';
 import Offers from 'pages/borrowers/Offers';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { humanizeContractError } from '../../../helpers/errorsMap';
-import { getAPR } from '../../../helpers/getAPR';
 import {
   getLoanTimeRemaining,
   getOfferTimeRemaining,
 } from '../../../helpers/getDuration';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
 import { useCalculateInterestAccrued } from '../../../hooks/useCalculateInterestAccrued';
-import { useRepayLoanByBorrower } from '../../../hooks/useRepayLoan';
-import { LoanAuction, LoanOffer, getBestLoanOffer } from '../../../loan';
-import LoadingIndicator from '../../atoms/LoadingIndicator';
+import { getBestLoanOffer, LoanAuction, LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
+import LoadingIndicator from '../../atoms/LoadingIndicator';
 
 const DATE_FORMAT = 'hh:mm A MM/DD/YY';
 const MOMENT_INTERVAL_MS = 60000;
@@ -67,6 +68,8 @@ const i18n = {
   loanActive: 'Time Remaining',
   paymentType: 'max payment',
   toastSuccess: 'Loan repaid successfully',
+  partialRepayToastSuccess: 'Partial repayment successful',
+  refinanceByBorrowerToastSuccess: 'Loan rollover successful',
   loanApr: (apr: number) => `${apr}%`,
   allOffers: 'all offers for',
 };
@@ -80,7 +83,10 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
   const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.BORROWERS);
   const toast = useToast();
 
-  const bestOffer: LoanOffer = getBestLoanOffer(offers);
+  // We're only frontend-supporting rollovers for signature offers for now
+  const bestOffer: LoanOffer = getBestLoanOffer(
+    offers.filter((o) => o.signature),
+  );
   const [rolloverOffer, setRolloverOffer] = useState<LoanOffer>(bestOffer);
 
   const {
@@ -117,20 +123,22 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
     );
   }, [rolloverOffer.OfferTerms.Amount]);
 
-  const principleChangeColor = useMemo(() => {
-    if (rolloverOfferAmount > formatEther(loan.amount)) return '#15e9a7';
+  const principalChangeColor = useMemo(() => {
+    if (rolloverOfferAmount > formatEther(loan.amountDrawn)) return '#15e9a7';
     return '#000000';
-  }, [rolloverOfferAmount, loan.amount]);
+  }, [rolloverOfferAmount, loan.amountDrawn]);
 
   const jsConfetti = new JSConfetti();
   const [isExecuting, setExecuting] = useState<boolean>(false);
+  const [isExecutingPartialRepayment, setExecutingPartialRepayment] =
+    useState<boolean>(false);
 
   const accruedInterest: Array<BigNumber> = useCalculateInterestAccrued({
     nftContractAddress: loan.nftContractAddress,
     nftId: loan.nftId,
   });
 
-  const { amount, interestRatePerSecond: irps } = loan;
+  const { amount, amountDrawn, interestRatePerSecond: irps } = loan;
 
   // Note: When running this on a local chain, the interest will be 0 until a new block is created.
   // Simply create a new transaction and the correct amount of interest will show up
@@ -138,8 +146,8 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
     ? accruedInterest[0].add(accruedInterest[1])
     : BigNumber.from(0);
 
-  // 25 basis points of the total amount
-  const basisPoints: BigNumber = amount.mul(25).div(10000);
+  // 25 basis points of the amount drawn
+  const basisPoints: BigNumber = amountDrawn.mul(25).div(10000);
 
   // Add basis points if total interest is less than
   const earlyReplay = totalAccruedInterest.lt(basisPoints);
@@ -152,7 +160,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
 
   // Additional 20 minutes worth of interest
   const padding: BigNumber = irps.mul(3600);
-  const totalOwed: BigNumber = amount.add(totalAccruedInterest).add(padding);
+  const totalAccruedInterestInWei: BigNumber = totalAccruedInterest;
   const apr = roundForDisplay(
     getAPR({
       amount: Number(amount.toString()),
@@ -160,42 +168,60 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
     }),
   );
 
-  const deltaCalculation = useMemo(() => {
-    const currentPrincipal = parseFloat(formatEther(loan.amount));
-    const rolloverPrincipal = parseFloat(rolloverOfferAmount);
-    const interestAccuredOnPrincipal = (apr / 100) * currentPrincipal;
+  const currentPrincipal = parseFloat(formatEther(loan.amountDrawn));
 
-    if (rolloverPrincipal > currentPrincipal + interestAccuredOnPrincipal) {
+  const totalAccruedInterestInEth = parseFloat(
+    formatEther(totalAccruedInterestInWei),
+  );
+
+  const deltaCalculation = useMemo(() => {
+    const rolloverPrincipal = parseFloat(rolloverOfferAmount);
+
+    const paddingInEth = parseFloat(formatEther(padding)) + 0.01;
+
+    if (rolloverPrincipal >= currentPrincipal + totalAccruedInterestInEth) {
       return 0;
     }
 
-    return currentPrincipal + interestAccuredOnPrincipal - rolloverPrincipal;
-  }, [loan.amount, rolloverOfferAmount, apr]);
+    return (
+      currentPrincipal +
+      totalAccruedInterestInEth +
+      paddingInEth -
+      rolloverPrincipal
+    );
+  }, [
+    currentPrincipal,
+    totalAccruedInterestInEth,
+    rolloverOfferAmount,
+    padding,
+  ]);
 
-  const { repayLoanByBorrower } = useRepayLoanByBorrower({
+  const { partiallyRepayLoanByBorrower } = usePartiallyRepayLoanByBorrower({
     nftContractAddress: loan.nftContractAddress,
     nftId: loan.nftId,
-    amount: totalOwed,
+    amount: deltaCalculation,
   });
 
-  const onRepayLoan = async () => {
-    if (repayLoanByBorrower) {
-      setExecuting(true);
+  const { refinanceLoanByBorrower } = useRefinanceByBorrower({
+    nftContractAddress: loan.nftContractAddress,
+    nftId: loan.nftId,
+    offer: rolloverOffer,
+    signature: rolloverOffer.signature as string,
+    expectedLastUpdatedTimestamp: loan.lastUpdatedTimestamp,
+  });
 
-      await repayLoanByBorrower()
+  const onPartiallyRepayLoan = async () => {
+    if (partiallyRepayLoanByBorrower) {
+      setExecutingPartialRepayment(true);
+
+      await partiallyRepayLoanByBorrower()
         .then(({ receipt }: any) => {
-          jsConfetti.addConfetti({
-            emojis: ['🍌'],
-            emojiSize: 80,
-            confettiNumber: 50,
-          });
-
-          gaEventTracker(ACTIONS.LOAN, LABELS.REPAY);
+          gaEventTracker(ACTIONS.LOAN, LABELS.PARTIALLY_REPLAY);
 
           toast({
             render: (props) => (
               <ToastSuccessCard
-                title={i18n.toastSuccess}
+                title={i18n.partialRepayToastSuccess}
                 txn={receipt}
                 {...props}
               />
@@ -204,7 +230,48 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
             duration: 9000,
             isClosable: true,
           });
-          setExecuting(false);
+          setExecutingPartialRepayment(false);
+        })
+        .catch((error) => {
+          logError(error);
+          toast({
+            title: `Error: ${humanizeContractError(error.reason)}`,
+            status: 'error',
+            position: 'top-right',
+            isClosable: true,
+          });
+          setExecutingPartialRepayment(false);
+        });
+    }
+  };
+
+  const onRefinanceLoanByBorrower = async () => {
+    if (refinanceLoanByBorrower) {
+      setExecuting(true);
+
+      await refinanceLoanByBorrower()
+        .then(({ receipt }: any) => {
+          gaEventTracker(ACTIONS.LOAN, LABELS.REFINANCE_BY_BORROWER);
+
+          jsConfetti.addConfetti({
+            emojis: ['🍌'],
+            emojiSize: 80,
+            confettiNumber: 50,
+          });
+
+          toast({
+            render: (props) => (
+              <ToastSuccessCard
+                title={i18n.refinanceByBorrowerToastSuccess}
+                txn={receipt}
+                {...props}
+              />
+            ),
+            position: 'top-right',
+            duration: 9000,
+            isClosable: true,
+          });
+          setExecutingPartialRepayment(false);
           onRollover();
         })
         .catch((error) => {
@@ -257,7 +324,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                       <Td>
                         <Flex alignItems="center" gap="2">
                           <CryptoIcon symbol="eth" size={24} />
-                          <Text>{formatEther(loan.amount)}Ξ</Text>
+                          <Text>{formatEther(loan.amountDrawn)}Ξ</Text>
                         </Flex>
                       </Td>
                       <Td>{getLoanTimeRemaining(loan)}</Td>
@@ -308,26 +375,29 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                     <Flex alignItems="center" flexDirection="column">
                       <Flex gap="1" direction="row" alignItems="center">
                         <Text fontSize="18" fontWeight="bold">
-                          {formatEther(loan.amount)}Ξ
+                          {formatEther(loan.amountDrawn)}Ξ
                         </Text>
                         <ArrowForwardIcon />
                         <Text
                           fontSize="18"
                           fontWeight="bold"
-                          color={principleChangeColor}
+                          color={principalChangeColor}
                         >
-                          {rolloverOfferAmount}Ξ
+                          {currentPrincipal +
+                            totalAccruedInterestInEth -
+                            deltaCalculation}
+                          Ξ
                         </Text>
                       </Flex>
                       <Text color="gray.600" fontSize="14">
-                        Principle Change
+                        Principal Change
                       </Text>
                     </Flex>
                   </Box>
                   <Box>
                     <Flex alignItems="center" flexDirection="column">
                       <Text fontSize="18" fontWeight="bold">
-                        {roundForDisplay(deltaCalculation)}Ξ
+                        {deltaCalculation}Ξ
                       </Text>
                       <Text color="gray.600" fontSize="14">
                         Payment Due Now
@@ -387,8 +457,13 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                     variant="outline"
                     colorScheme="purple"
                     padding="6"
+                    onClick={onPartiallyRepayLoan}
                   >
-                    Make Payment
+                    {isExecutingPartialRepayment ? (
+                      <LoadingIndicator size="xs" />
+                    ) : (
+                      'Make Payment'
+                    )}
                   </Button>
                 )}
               </Flex>
@@ -401,7 +476,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
             borderRadius="8px"
             colorScheme="green"
             backgroundColor="#15e9a7"
-            onClick={onRepayLoan}
+            onClick={onRefinanceLoanByBorrower}
             py="6px"
             size="lg"
             textTransform="uppercase"
