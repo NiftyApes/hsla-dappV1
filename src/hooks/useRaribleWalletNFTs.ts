@@ -5,6 +5,14 @@ import { logError } from '../logging/logError';
 
 const RARIBLE_API_PATH = 'https://api.rarible.org/v0.1';
 
+const localCache: any = {};
+
+export type IRaribleCollection = {
+  contractAddress: string;
+  items: [];
+  itemsCount: number;
+};
+
 export const useRaribleWalletNFTs = ({
   contractAddress,
   enabled = true,
@@ -12,7 +20,19 @@ export const useRaribleWalletNFTs = ({
   contractAddress?: string;
   enabled?: boolean;
 }) => {
-  const [items, setItems] = useState<any>();
+  if (!contractAddress) {
+    throw new Error('Contract address is required');
+  }
+
+  const [items, setItems] = useState<IRaribleCollection[]>([]);
+
+  const hasCache = () => {
+    return Object.prototype.hasOwnProperty.call(localCache, contractAddress);
+  };
+
+  const setCache = (val: any) => {
+    localCache[contractAddress] = val;
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,36 +50,37 @@ export const useRaribleWalletNFTs = ({
       response
         .json()
         .then((data) => {
+          const unsorted = <any>[];
           const hash: any = {};
 
           data.items.forEach((item: any) => {
             if (hash[item.collection]) {
-              hash[item.collection].nfts.push(item.id);
-              hash[item.collection].count += 1;
+              hash[item.collection].tokens.push(item.id);
+              hash[item.collection].itemsCount += 1;
             } else {
               hash[item.collection] = {
                 contractAddress: item.collection,
-                nfts: [item.id],
-                count: 1,
+                tokens: [item.id],
+                itemsCount: 1,
               };
+              unsorted.push(hash[item.collection]);
             }
           });
 
-          const unsorted = [];
-
-          for (const [key, val] in Object.entries(hash)) {
-            unsorted.push(hash[key]);
-          }
-          const sorted = unsorted.sort((a: any, b: any) => {
-            return a.count - b.count;
-          });
+          const sorted = unsorted.sort(
+            (a: any, b: any) => b.itemsCount - a.itemsCount,
+          );
+          setCache(sorted);
           setItems(sorted);
         })
         .catch((e) => {
           logError(e);
         });
     };
-    if (enabled) {
+
+    if (hasCache() && enabled) {
+      setItems({ ...localCache[contractAddress] });
+    } else {
       fetchData();
     }
   }, [contractAddress]);

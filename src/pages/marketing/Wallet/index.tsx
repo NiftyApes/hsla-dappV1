@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Center, Text, VStack } from '@chakra-ui/react';
 import { useRaribleWalletNFTs } from '../../../hooks/useRaribleWalletNFTs';
 import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
+import WalletCollections from './components/WalletCollections';
 
 const i18n = {
   pageSubtitle: 'Details for wallet',
@@ -11,11 +12,9 @@ const i18n = {
 const WALLET_ADDRESS = '0x1d671d1B191323A38490972D58354971E5c1cd2A';
 
 const Wallet: React.FC = () => {
-  const items: any = useRaribleWalletNFTs({
+  const items = useRaribleWalletNFTs({
     contractAddress: WALLET_ADDRESS,
   });
-
-  console.log(items);
 
   return (
     <VStack spacing="50px">
@@ -35,7 +34,13 @@ const Wallet: React.FC = () => {
         </VStack>
       </Center>
 
-      {items ? <Box mt="10px">Loaded</Box> : <LoadingIndicator />}
+      {items ? (
+        <Box mt="10px">
+          <WalletCollections list={items} />
+        </Box>
+      ) : (
+        <LoadingIndicator />
+      )}
     </VStack>
   );
 };
