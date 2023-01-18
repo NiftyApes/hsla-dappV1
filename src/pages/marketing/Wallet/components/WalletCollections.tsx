@@ -38,11 +38,11 @@ const WalletCollections: React.FC<Props> = ({ list }) => {
         </Thead>
 
         <Tbody>
-          {list.map(({ contractAddress, itemsCount }, idx) => {
+          {list.map(({ contractAddress, tokens }, idx) => {
             const { floorPrice } = useRaribleCollectionStats({
               enabled: true,
               throttle: idx * 100,
-              contractAddress: contractAddress.replace('ETHEREUM:', ''),
+              contractAddress,
             });
 
             const { loading, collectionStats } = useCollectionStats({
@@ -63,16 +63,19 @@ const WalletCollections: React.FC<Props> = ({ list }) => {
 
             return (
               <WalletCollectionRow
-                address={contractAddress}
-                itemsCount={itemsCount}
-                ltv={floorPrice}
-                principal={highestPrincipal}
+                index={idx}
                 apr={lowestApr}
+                contractAddress={contractAddress}
                 duration={longestDuration}
-                offers={String(numberOfOffers)}
+                floor={floorPrice}
                 liquidity={totalLiquidity}
+                offers={String(numberOfOffers)}
+                principal={highestPrincipal}
+                tokens={tokens}
               />
             );
+            // }
+            // return '';
           })}
         </Tbody>
       </Table>

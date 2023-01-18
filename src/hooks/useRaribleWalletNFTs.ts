@@ -9,7 +9,7 @@ const localCache: any = {};
 
 export type IRaribleCollection = {
   contractAddress: string;
-  items: [];
+  tokens: [];
   itemsCount: number;
 };
 
@@ -54,16 +54,21 @@ export const useRaribleWalletNFTs = ({
           const hash: any = {};
 
           data.items.forEach((item: any) => {
-            if (hash[item.collection]) {
-              hash[item.collection].tokens.push(item.id);
-              hash[item.collection].itemsCount += 1;
+            const collectionAddress: string = item.collection.replace(
+              'ETHEREUM:',
+              '',
+            );
+
+            if (hash[collectionAddress]) {
+              hash[collectionAddress].tokens.push(item.id);
+              hash[collectionAddress].itemsCount += 1;
             } else {
-              hash[item.collection] = {
-                contractAddress: item.collection,
+              hash[collectionAddress] = {
+                contractAddress: collectionAddress,
                 tokens: [item.id],
                 itemsCount: 1,
               };
-              unsorted.push(hash[item.collection]);
+              unsorted.push(hash[collectionAddress]);
             }
           });
 

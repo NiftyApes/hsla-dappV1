@@ -9,7 +9,7 @@ const i18n = {
   pageTitle: 'Wallet Landing',
 };
 
-const WALLET_ADDRESS = '0x1d671d1B191323A38490972D58354971E5c1cd2A';
+const WALLET_ADDRESS = '0xDdC0c711A642145785e03DFB9B39E04d1Dad3889';
 
 const Wallet: React.FC = () => {
   const items = useRaribleWalletNFTs({
