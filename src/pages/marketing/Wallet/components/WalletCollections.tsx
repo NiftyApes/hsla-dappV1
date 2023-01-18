@@ -37,25 +37,30 @@ const WalletCollections: React.FC<Props> = ({ list }) => {
         </Thead>
 
         <Tbody>
-          {list.map(({ contractAddress, itemsCount }, idx) => {
+          {list.map(({ contractAddress, tokens }, idx) => {
             const { floorPrice } = useRaribleCollectionStats({
               enabled: true,
               throttle: idx * 100,
-              contractAddress: contractAddress.replace('ETHEREUM:', ''),
+              contractAddress,
             });
 
+            // Only display collections with volume
+            // if (volume && volume > 0) {
             return (
               <WalletCollectionRow
-                address={contractAddress}
-                itemsCount={itemsCount}
-                ltv={floorPrice}
-                principal={0}
                 apr={0}
+                contractAddress={contractAddress}
                 duration={0}
-                offers="0"
                 liquidity={0}
+                ltv={floorPrice}
+                offers="0"
+                principal={0}
+                index={idx}
+                tokens={tokens}
               />
             );
+            // }
+            // return '';
           })}
         </Tbody>
       </Table>

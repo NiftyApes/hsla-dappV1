@@ -1,18 +1,19 @@
 import React from 'react';
-import { Td, Text, Tr } from '@chakra-ui/react';
-
+import { AvatarGroup, Avatar, Td, Text, Tr } from '@chakra-ui/react';
 import { SECONDS_IN_DAY } from '../../../../constants/misc';
 import NFTCollectionCardSmall from '../../../../components/cards/NFTCollectionCardSmall';
+import { useRaribleTokenMeta } from '../../../../hooks/useRaribleTokenMeta';
 
 interface Props {
-  address: string;
   apr: number;
+  contractAddress: string;
   duration: number;
-  itemsCount: number;
+  index: number;
   liquidity: number;
   ltv: number | undefined;
   offers: string;
   principal: number;
+  tokens: [];
 }
 
 const i18n = {
@@ -20,25 +21,36 @@ const i18n = {
 };
 
 const WalletCollectionRow: React.FC<Props> = ({
-  address,
   apr,
+  contractAddress,
   duration,
-  itemsCount,
+  index,
   liquidity,
   ltv,
   offers,
   principal,
+  tokens,
 }) => {
   return (
     <Tr>
       <Td>
         <NFTCollectionCardSmall
-          contractAddress={address.replace('ETHEREUM:', '')}
-          throttle={0}
+          contractAddress={contractAddress}
+          throttle={index * 100}
         />
       </Td>
       <Td>
-        <Text fontWeight="bold">{itemsCount}</Text>
+        <AvatarGroup size="lg" max={4}>
+          {tokens.map((item: string, idx) => {
+            const key = `${idx}`;
+            const tokenId = item.split(':')[2];
+            const { image, name }: any = useRaribleTokenMeta({
+              contractAddress,
+              tokenId,
+            });
+            return <Avatar size="lg" name={name} key={key} src={image} />;
+          })}
+        </AvatarGroup>
       </Td>
       <Td>
         <Text fontWeight="bold">{principal}Ξ</Text>
