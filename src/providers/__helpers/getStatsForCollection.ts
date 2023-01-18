@@ -17,6 +17,17 @@ export function getStatsForCollection({
     signatureOffers,
   });
 
+  if (allActiveCollectionOffers.length === 0) {
+    return {
+      address: undefined,
+      highestPrincipal: undefined,
+      lowestApr: undefined,
+      longestDuration: undefined,
+      numberOfOffers: undefined,
+      totalLiquidity: undefined,
+    };
+  }
+
   const highestPrincipal = Math.max(
     ...allActiveCollectionOffers.map((o: any) => {
       if (o.Signature) {
@@ -52,7 +63,7 @@ export function getStatsForCollection({
     address: collectionAddress,
     highestPrincipal,
     lowestApr,
-    duration: Math.max(
+    longestDuration: Math.max(
       ...allActiveCollectionOffers.map(
         (o) => o.offer?.duration || o.Offer?.duration,
       ),
