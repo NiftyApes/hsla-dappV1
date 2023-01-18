@@ -1,7 +1,7 @@
-import React from 'react';
 import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
-import CollectionRow from './CollectionRow';
+import React from 'react';
 import { useRaribleCollectionStats } from '../../../../hooks/useRaribleColectionStats';
+import CollectionRow from './CollectionRow';
 
 interface Props {
   list: Array<any>;
@@ -40,7 +40,7 @@ const CollectionList: React.FC<Props> = ({ list }) => {
                 address,
                 highestPrincipal,
                 lowestApr,
-                duration,
+                longestDuration,
                 numberOfOffers,
                 totalLiquidity,
               },
@@ -58,7 +58,7 @@ const CollectionList: React.FC<Props> = ({ list }) => {
                   ltv={floorPrice}
                   principal={highestPrincipal}
                   apr={lowestApr}
-                  duration={duration}
+                  duration={longestDuration}
                   offers={numberOfOffers}
                   liquidity={totalLiquidity}
                 />
