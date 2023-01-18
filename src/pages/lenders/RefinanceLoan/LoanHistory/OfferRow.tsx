@@ -40,6 +40,7 @@ const BookOfferRow: React.FC<BookOfferRowProps> = ({
         },
       }}
     >
+      <Td>[Timestamp]</Td>
       <Td
         sx={{
           position: 'relative',
@@ -98,14 +99,7 @@ const BookOfferRow: React.FC<BookOfferRowProps> = ({
           {moment.duration(offer.duration, 'seconds').asDays() !== 1 && 's'}
         </Text>
       </Td>
-      <Td>
-        <Text>
-          {moment(offer.expiration * 1000).diff(moment(), 'days')}
-          {moment(offer.expiration * 1000).diff(moment(), 'days') !== 1
-            ? ' days'
-            : ' day'}
-        </Text>
-      </Td>
+      <Td>0x000</Td>
       <Td />
     </Tr>
   );

@@ -6,7 +6,6 @@ import {
   Center,
   CircularProgress,
   CircularProgressLabel,
-  Flex,
   FormControl,
   FormErrorMessage,
   Grid,
@@ -16,7 +15,6 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
-  Select,
   Text,
   useToast,
 } from '@chakra-ui/react';
@@ -24,7 +22,6 @@ import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { NonTxnToastSuccessCard } from 'components/cards/NonTxnToastSuccessCard';
 import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
-import { SECONDS_IN_DAY, SECONDS_IN_YEAR } from 'constants/misc';
 import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
 import { useCreateOffer } from 'hooks/useCreateOffer';
 import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
@@ -32,7 +29,7 @@ import { useRaribleCollectionStats } from 'hooks/useRaribleColectionStats';
 import { useWalletAddress } from 'hooks/useWalletAddress';
 import JSConfetti from 'js-confetti';
 import _ from 'lodash';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { lendersLiquidity } from 'routes/router';
 import { ToastSuccessCard } from '../../../../components/cards/ToastSuccessCard';
@@ -68,10 +65,8 @@ export const StealLoanForm: React.FC<StealLoanFormProps> = ({
   duration,
   setDuration,
   expiration,
-  setExpiration,
   addNewlyAddedOfferHash,
   floorTermLimit,
-  setFloorTermLimit,
   setTokenId,
   tokenId,
   fetchedNFT,
@@ -101,12 +96,6 @@ export const StealLoanForm: React.FC<StealLoanFormProps> = ({
   const isOfferReady: boolean = isDurationValid && isAprValid && isOfferValid;
 
   const walletAddress = useWalletAddress();
-
-  const estimatedProfit = useMemo(() => {
-    const irps: number = Number(apr) / 100 / SECONDS_IN_YEAR;
-    const secs: number = Number(duration) * SECONDS_IN_DAY;
-    return irps * secs * Number(collectionOfferAmt);
-  }, [apr, collectionOfferAmt, duration]);
 
   const onCreateOffer = () => {
     createOffer({
@@ -353,15 +342,6 @@ export const StealLoanForm: React.FC<StealLoanFormProps> = ({
           </Box>
         </GridItem>
       </Grid>
-      <Text
-        fontSize="md"
-        fontWeight="bold"
-        pt="24px"
-        textAlign="center"
-        color="solid.gray0"
-      >
-        Est. Profit: {estimatedProfit}
-      </Text>
       <Button
         variant="neutralReverse"
         py="36px"
@@ -378,7 +358,7 @@ export const StealLoanForm: React.FC<StealLoanFormProps> = ({
         }
         isLoading={createCollectionOfferStatus === 'PENDING'}
       >
-        CREATE OFFER
+        STEAL LOAN
       </Button>
       <FormControl isInvalid={doesOfferAmountExceedAvailableLiquidity}>
         <Box mt="8px">
@@ -397,43 +377,6 @@ export const StealLoanForm: React.FC<StealLoanFormProps> = ({
           </Center>
         </Box>
       </FormControl>
-      <Flex
-        alignItems="center"
-        justifyContent="space-around"
-        my="24px"
-        mx="30px"
-      >
-        <Flex alignItems="center">
-          <div>Expires in</div>
-          <Box w="100px" ml="8px">
-            <Select
-              size="sm"
-              onChange={(e) => setExpiration(e.target.value)}
-              value={expiration}
-            >
-              <option value="1">1 day</option>
-              <option value="7">7 days</option>
-              <option value="30">30 days</option>
-            </Select>
-          </Box>
-        </Flex>
-        {type === 'collection' ? (
-          <Flex alignItems="center">
-            <div>Good for</div>
-            <Box w="100px" ml="8px">
-              <Select
-                size="sm"
-                onChange={(e) => setFloorTermLimit(e.target.value)}
-                value={floorTermLimit}
-              >
-                <option value="5">5 Loans</option>
-                <option value="10">10 Loans</option>
-                <option value="30">30 Loans</option>
-              </Select>
-            </Box>
-          </Flex>
-        ) : null}
-      </Flex>
     </Box>
   );
 };

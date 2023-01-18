@@ -1,4 +1,12 @@
-import { Box, Center, Grid, GridItem } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  Flex,
+  Grid,
+  GridItem,
+  Link,
+  Text,
+} from '@chakra-ui/react';
 import { useDebounce } from 'hooks/useDebounce';
 import { useRaribleTokenMeta } from 'hooks/useRaribleTokenMeta';
 import React, { useEffect, useState } from 'react';
@@ -7,14 +15,14 @@ import { useParams } from 'react-router-dom';
 import { OfferTypes } from './constants';
 import CollectionHeader from './CollectionHeader';
 import StealLoan from './StealLoan';
-import OfferBook from './OfferBook';
+import LoanHistory from './LoanHistory';
 
 const RARIBLE_TOKEN_DEBOUNCE_MS = 250;
 
 const RefinanceLoan: React.FC = () => {
   const { collectionAddress } = useParams();
 
-  const [offerType, setOfferType] = useState<OfferTypes>('collection');
+  const [offerType] = useState<OfferTypes>('collection');
   const [collectionOfferAmt, setCollectionOfferAmt] = useState<string>('');
   const [apr, setApr] = useState<string>('');
   const [duration, setDuration] = useState<string>('');
@@ -47,15 +55,101 @@ const RefinanceLoan: React.FC = () => {
   }
 
   return (
-    <Center>
+    <Center mb="16">
       <Box minW="1120px" maxW="1600px">
         <CollectionHeader />
         <Grid
+          gap={16}
           mt="16px"
           gridTemplateColumns="max(1160*0.60px, min(60vw, 1600*0.60px)) 1fr"
         >
           <GridItem>
-            <OfferBook
+            <Flex flexDirection="column">
+              <div>
+                <Text
+                  fontWeight="bold"
+                  color="solid.gray0"
+                  textTransform="uppercase"
+                  sx={{ position: 'relative', top: '-16px', left: '4px' }}
+                >
+                  Costs
+                </Text>
+                <Text fontStyle="italic" mb="42px">
+                  In order to refinance, the loan + interest earned must be paid
+                  to the loan originator. Read more about how refinancing works
+                  and how fees are calculated&nbsp;
+                  <Link
+                    fontWeight="bold"
+                    color="purple"
+                    href="https://compound.finance/"
+                    isExternal
+                  >
+                    here
+                  </Link>
+                </Text>
+              </div>
+              <Box
+                marginBottom="16"
+                padding="6"
+                border="1px solid rgba(101, 101, 101, 0.2)"
+                borderRadius="15"
+                backgroundColor="white"
+              >
+                <Flex justifyContent="space-between" flexDirection="row">
+                  <Box>
+                    <Flex flexDirection="column">
+                      <Text color="gray.600" fontWeight="700" fontSize="14">
+                        Principle
+                      </Text>
+                      <Text fontSize="22" fontWeight="900">
+                        25.50Ξ
+                      </Text>
+                    </Flex>
+                  </Box>
+                  <Box>
+                    <Flex flexDirection="column">
+                      <Text color="gray.600" fontWeight="700" fontSize="14">
+                        Interest Accrued
+                      </Text>
+                      <Text fontSize="22" fontWeight="900">
+                        +1.98Ξ
+                      </Text>
+                    </Flex>
+                  </Box>
+                  <Box>
+                    <Flex flexDirection="column">
+                      <Text color="gray.600" fontWeight="700" fontSize="14">
+                        Refi-premium
+                      </Text>
+                      <Text fontSize="22" fontWeight="900">
+                        +0.00Ξ
+                      </Text>
+                    </Flex>
+                  </Box>
+                  <Box>
+                    <Flex flexDirection="column">
+                      <Text color="gray.600" fontWeight="700" fontSize="14">
+                        Required AMT
+                      </Text>
+                      <Text fontSize="22" fontWeight="900">
+                        27.48Ξ
+                      </Text>
+                    </Flex>
+                  </Box>
+                  <Box>
+                    <Flex flexDirection="column">
+                      <Text color="gray.600" fontWeight="700" fontSize="14">
+                        Your Balance
+                      </Text>
+                      <Text fontSize="22" fontWeight="900">
+                        330.632Ξ
+                      </Text>
+                    </Flex>
+                  </Box>
+                </Flex>
+              </Box>
+            </Flex>
+            <LoanHistory
               tokenId={tokenId}
               collectionOfferAmt={collectionOfferAmt}
               apr={apr}
@@ -68,7 +162,6 @@ const RefinanceLoan: React.FC = () => {
             <StealLoan
               fetchedNFT={fetchedNFT}
               offerType={offerType}
-              setOfferType={setOfferType}
               tokenId={tokenId}
               setTokenId={setTokenId}
               collectionOfferAmt={collectionOfferAmt}

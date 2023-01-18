@@ -27,7 +27,7 @@ const CollectionHeader: React.FC = () => {
   });
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { floorPrice, items, owners, volume } = useRaribleCollectionStats({
+  const { floorPrice, items, volume } = useRaribleCollectionStats({
     contractAddress: collectionAddress,
   });
 
@@ -100,19 +100,28 @@ const CollectionHeader: React.FC = () => {
 
       <Flex alignItems="center" flexDirection="column">
         <Text fontSize="xl" fontWeight="bold" mr="8px">
-          {Humanize.formatNumber(Number(owners))}
+          {Humanize.formatNumber(Number(floorPrice), 2)}Ξ
         </Text>
         <Text color="solid.gray0" fontSize="sm" fontWeight="bold" mr="8px">
-          Owners
+          Floor
+        </Text>
+      </Flex>
+
+      <Flex alignItems="center" flexDirection="column">
+        <Text color="#FF5B5B" fontSize="xl" fontWeight="bold" mr="8px">
+          -34.78%
+        </Text>
+        <Text color="solid.gray0" fontSize="sm" fontWeight="bold" mr="8px">
+          30 day change
         </Text>
       </Flex>
 
       <Flex alignItems="center" flexDirection="column">
         <Text fontSize="xl" fontWeight="bold" mr="8px">
-          {Humanize.formatNumber(Number(floorPrice), 2)}Ξ
+          0xA287..D5C7
         </Text>
         <Text color="solid.gray0" fontSize="sm" fontWeight="bold" mr="8px">
-          Floor
+          Owner
         </Text>
       </Flex>
 
