@@ -9,9 +9,9 @@ import { useLoanAuction } from 'hooks/useLoanAuction';
 import { useSeizeAsset } from 'hooks/useSeizeAsset';
 import NFTCardSmall from '../../../../components/cards/NFTCardSmall';
 import {
+  getLoanBeginDate,
   getLoanDurationDays,
   getLoanTimeRemaining,
-  getLoanBeginDate,
   isLoanDefaulted,
 } from '../../../../helpers/getDuration';
 
@@ -73,7 +73,7 @@ export const LoanRow = ({ loanFromDb }: any) => {
               </Text>
               <Box mb="2px">
                 <Text as="span" fontSize="xl" fontWeight="bold">
-                  {ethers.utils.formatEther(loanFromChain.amount)}Ξ
+                  {ethers.utils.formatEther(loanFromChain.amountDrawn)}Ξ
                 </Text>{' '}
                 <Text as="span" color="#555">
                   {getLoanDurationDays(loanFromChain)}

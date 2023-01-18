@@ -30,8 +30,8 @@ import {
   isLoanDefaulted,
 } from '../../../helpers/getDuration';
 import NFTCardHeader from '../../cards/NFTCardHeader';
-import BorrowLoanRolloverCard from '../BorrowLoanRolloverCard';
 import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
+import BorrowLoanRolloverCard from '../BorrowLoanRolloverCard';
 
 interface Props {
   loan: LoanAuction;
@@ -175,12 +175,32 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft, offers }) => {
               {i18n.activeLoan}
             </Text>
           </Box>
-          <Flex alignItems="center">
-            <CryptoIcon symbol="eth" size={25} />
-            <Text ml="6px" fontSize="3.5xl" fontWeight="bold">
-              {formatEther(loan.amount)}Ξ
-            </Text>
-          </Flex>
+          {loan.amountDrawn === loan.amount && (
+            <Flex alignItems="center">
+              <CryptoIcon symbol="eth" size={25} />
+              <Text ml="6px" fontSize="3.5xl" fontWeight="bold">
+                {formatEther(loan.amount)}Ξ
+              </Text>
+            </Flex>
+          )}
+          {loan.amountDrawn !== loan.amount && (
+            <>
+              <Flex alignItems="center" p="4px">
+                <CryptoIcon symbol="eth" size={25} />
+                <Text ml="6px" fontWeight="bold" mr="4px">
+                  {roundForDisplay(Number(formatEther(loan.amountDrawn)))}Ξ
+                </Text>{' '}
+                drawn
+              </Flex>
+              <Flex alignItems="center" p="4px">
+                <CryptoIcon symbol="eth" size={25} />
+                <Text ml="6px" fontWeight="bold" mr="4px">
+                  {roundForDisplay(Number(formatEther(loan.amount)))}Ξ
+                </Text>{' '}
+                available
+              </Flex>
+            </>
+          )}
 
           <Text fontSize="lg" color="solid.gray0">
             <Text as="span" color="solid.black" fontWeight="semibold">
@@ -195,31 +215,52 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft, offers }) => {
             {getLoanTimeRemaining(loan)} remaining...
           </Text>
         </Flex>
-        <Button
-          borderRadius="8px"
-          colorScheme="orange"
-          py="6px"
-          size="lg"
-          textTransform="uppercase"
-          variant="solid"
-          w="100%"
-          onClick={onRolloverLoanOpen}
-        >
-          {i18n.rolloverButtonText}
-        </Button>
-        <Button
-          borderRadius="8px"
-          colorScheme="orange"
-          py="6px"
-          size="sm"
-          textTransform="uppercase"
-          textColor="orange.600"
-          variant="text"
-          w="100%"
-          onClick={onRepayLoanOpen}
-        >
-          {i18n.actionButtonText}
-        </Button>
+        {
+          /* only show rollover modal is >0 signature offers */ offers.filter(
+            (o) => o.signature,
+          )?.length > 0 ? (
+            <>
+              <Button
+                borderRadius="8px"
+                colorScheme="orange"
+                py="6px"
+                size="lg"
+                textTransform="uppercase"
+                variant="solid"
+                w="100%"
+                onClick={onRolloverLoanOpen}
+              >
+                {i18n.rolloverButtonText}
+              </Button>
+              <Button
+                borderRadius="8px"
+                colorScheme="orange"
+                py="6px"
+                size="sm"
+                textTransform="uppercase"
+                textColor="orange.600"
+                variant="text"
+                w="100%"
+                onClick={onRepayLoanOpen}
+              >
+                {i18n.actionButtonText}
+              </Button>
+            </>
+          ) : (
+            <Button
+              borderRadius="8px"
+              colorScheme="orange"
+              py="6px"
+              size="lg"
+              textTransform="uppercase"
+              variant="solid"
+              w="100%"
+              onClick={onRepayLoanOpen}
+            >
+              {i18n.actionButtonText}
+            </Button>
+          )
+        }
       </>
     );
   };
