@@ -1,9 +1,8 @@
-import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
-import { useCollectionStats } from 'providers/hooks/useCollectionStats';
 import React from 'react';
+import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
+import WalletCollectionRow from './WalletCollectionRow';
 import { useRaribleCollectionStats } from '../../../../hooks/useRaribleColectionStats';
 import { IRaribleCollection } from '../../../../hooks/useRaribleWalletNFTs';
-import WalletCollectionRow from './WalletCollectionRow';
 
 interface Props {
   list: Array<IRaribleCollection>;
@@ -45,32 +44,16 @@ const WalletCollections: React.FC<Props> = ({ list }) => {
               contractAddress: contractAddress.replace('ETHEREUM:', ''),
             });
 
-            const { loading, collectionStats } = useCollectionStats({
-              nftContractAddress: contractAddress.replace('ETHEREUM:', ''),
-            });
-
-            if (loading) {
-              return <div>Loading</div>;
-            }
-
-            const {
-              highestPrincipal,
-              lowestApr,
-              longestDuration,
-              numberOfOffers,
-              totalLiquidity,
-            } = collectionStats;
-
             return (
               <WalletCollectionRow
                 address={contractAddress}
                 itemsCount={itemsCount}
                 ltv={floorPrice}
-                principal={highestPrincipal}
-                apr={lowestApr}
-                duration={longestDuration}
-                offers={String(numberOfOffers)}
-                liquidity={totalLiquidity}
+                principal={0}
+                apr={0}
+                duration={0}
+                offers="0"
+                liquidity={0}
               />
             );
           })}
