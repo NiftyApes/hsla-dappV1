@@ -89,7 +89,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
   );
   const [rolloverOffer, setRolloverOffer] = useState<LoanOffer>(bestOffer);
 
-  const [paymentSuccess] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   const {
     isOpen: isAllOffersOpen,
@@ -233,6 +233,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
             isClosable: true,
           });
           setExecutingPartialRepayment(false);
+          setPaymentSuccess(true);
         })
         .catch((error) => {
           logError(error);
@@ -326,7 +327,12 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                       <Td>
                         <Flex alignItems="center" gap="2">
                           <CryptoIcon symbol="eth" size={24} />
-                          <Text>{formatEther(loan.amountDrawn)}Ξ</Text>
+                          <Text>
+                            {roundForDisplay(
+                              Number(formatEther(loan.amountDrawn)),
+                            )}
+                            Ξ
+                          </Text>
                         </Flex>
                       </Td>
                       <Td>{getLoanTimeRemaining(loan)}</Td>
@@ -344,7 +350,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                       <Td>
                         <Flex alignItems="center" gap="2">
                           <CryptoIcon symbol="eth" size={24} />
-                          <Text>{rolloverOfferAmount}Ξ</Text>
+                          <Text>{Number(rolloverOfferAmount).toFixed(4)}Ξ</Text>
                         </Flex>
                       </Td>
                       <Td>{getOfferTimeRemaining(rolloverOffer)}</Td>
@@ -377,7 +383,10 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                     <Flex alignItems="center" flexDirection="column">
                       <Flex gap="1" direction="row" alignItems="center">
                         <Text fontSize="18" fontWeight="bold">
-                          {formatEther(loan.amountDrawn)}Ξ
+                          {roundForDisplay(
+                            Number(formatEther(loan.amountDrawn)),
+                          )}
+                          Ξ
                         </Text>
                         <ArrowForwardIcon />
                         <Text
@@ -385,9 +394,11 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                           fontWeight="bold"
                           color={principalChangeColor}
                         >
-                          {currentPrincipal +
-                            totalAccruedInterestInEth -
-                            deltaCalculation}
+                          {roundForDisplay(
+                            currentPrincipal +
+                              totalAccruedInterestInEth -
+                              deltaCalculation,
+                          )}
                           Ξ
                         </Text>
                       </Flex>
@@ -399,7 +410,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                   <Box>
                     <Flex alignItems="center" flexDirection="column">
                       <Text fontSize="18" fontWeight="bold">
-                        {deltaCalculation}Ξ
+                        {roundForDisplay(deltaCalculation)}Ξ
                       </Text>
                       <Text color="gray.600" fontSize="14">
                         Payment Due Now
