@@ -69,7 +69,7 @@ const WalletCollections: React.FC<Props> = ({ list }) => {
                 duration={longestDuration}
                 floor={floorPrice}
                 liquidity={totalLiquidity}
-                offers={String(numberOfOffers)}
+                offers={numberOfOffers}
                 principal={highestPrincipal}
                 tokens={tokens}
               />

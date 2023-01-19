@@ -12,16 +12,13 @@ interface Props {
   index: number;
   liquidity: number | undefined;
   floor: number | undefined;
-  offers: string | undefined;
+  offers: number | undefined;
   principal: number | undefined;
   tokens: [];
 }
 
 const i18n = {
-  apr: (val: any) => (_.isUndefined(val) ? '' : `${Number(val).toFixed(2)}%`),
   days: (num: number) => (num === 1 ? `${num} day` : `${num} days`),
-  liquidity: (val: any) =>
-    _.isUndefined(val) ? '' : `${Number(val).toFixed(2)}Ξ`,
   principal: (principal: any, floor: number) =>
     _.isUndefined(principal)
       ? ''
@@ -61,7 +58,9 @@ const WalletCollectionRow: React.FC<Props> = ({
         </AvatarGroup>
       </Td>
       <Td>
-        <Text fontWeight="bold">{principal}Ξ</Text>
+        <Text fontWeight="bold">
+          {!_.isUndefined(principal) && `${principal}Ξ`}
+        </Text>
       </Td>
       <Td>
         <Text fontWeight="bold">
@@ -69,7 +68,9 @@ const WalletCollectionRow: React.FC<Props> = ({
         </Text>
       </Td>
       <Td>
-        <Text fontWeight="bold">{i18n.apr(apr)}%</Text>
+        <Text fontWeight="bold">
+          {_.isUndefined(apr) ? '' : `${Number(apr).toFixed(2)}%`}
+        </Text>
       </Td>
       <Td>
         <Text fontWeight="bold">
@@ -78,10 +79,14 @@ const WalletCollectionRow: React.FC<Props> = ({
         </Text>
       </Td>
       <Td>
-        <Text fontWeight="bold">{offers}</Text>
+        <Text fontWeight="bold">{!_.isUndefined(offers) && offers}</Text>
       </Td>
       <Td>
-        <Text fontWeight="bold">{i18n.liquidity(liquidity)}</Text>
+        <Text fontWeight="bold">
+          {!_.isUndefined(liquidity) &&
+            Number(liquidity) > 0 &&
+            `${Number(liquidity).toFixed(2)}Ξ`}
+        </Text>
       </Td>
     </Tr>
   );
