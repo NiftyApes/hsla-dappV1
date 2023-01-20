@@ -31,6 +31,7 @@ interface CallbackType {
 interface Props {
   offers: Array<LoanOffer>;
   onClick: CallbackType;
+  actionLabel?: string;
 }
 
 const i18n = {
@@ -40,7 +41,7 @@ const i18n = {
   action: 'borrow',
 };
 
-const OffersTable: React.FC<Props> = ({ offers, onClick }) => {
+const OffersTable: React.FC<Props> = ({ offers, onClick, actionLabel }) => {
   const [sortOrder, setSortOrder] = useState<string>('APR_ASC');
 
   const sortedOffers: any =
@@ -194,7 +195,7 @@ const OffersTable: React.FC<Props> = ({ offers, onClick }) => {
                     color: 'solid.white',
                   }}
                 >
-                  {i18n.action}
+                  {actionLabel || i18n.action}
                 </Button>
               </Td>
             </Tr>

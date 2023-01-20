@@ -15,7 +15,7 @@ import React from 'react';
 
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { formatEther } from 'ethers/lib/utils';
-import { LoanAuction } from '../../../loan';
+import { LoanAuction, LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
 
 import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
@@ -31,16 +31,20 @@ import {
 } from '../../../helpers/getDuration';
 import NFTCardHeader from '../../cards/NFTCardHeader';
 import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
+import BorrowLoanRolloverCard from '../BorrowLoanRolloverCard';
 
 interface Props {
   loan: LoanAuction;
   nft: NFT;
+  offers: Array<LoanOffer>;
 }
 
 const i18n = {
   actionButtonHelperText: 'What does this mean?',
   actionButtonText: 'repay loan',
+  rolloverButtonText: 'rollover loan',
   repayLoanHeader: 'repay loan on ',
+  rolloverLoanHeader: 'rollover loan for',
   loanApr: (apr: number) => `${apr}% APR`,
   loanDuration: (duration: number) => `${duration} days`,
   activeLoan: 'active loan',
@@ -48,12 +52,18 @@ const i18n = {
   defaultedLoanStatus: 'Asset Has Not Been Seized',
 };
 
-const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
+const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft, offers }) => {
   const {
     isOpen: isRepayLoanOpen,
     onOpen: onRepayLoanOpen,
     onClose: onRepayLoanClose,
-  } = useDisclosure();
+  } = useDisclosure({ id: 'repay' });
+
+  const {
+    isOpen: isRolloverLoanOpen,
+    onOpen: onRolloverLoanOpen,
+    onClose: onRolloverLoanClose,
+  } = useDisclosure({ id: 'rollover' });
 
   const { amount, interestRatePerSecond: irps } = loan;
 
@@ -165,12 +175,32 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
               {i18n.activeLoan}
             </Text>
           </Box>
-          <Flex alignItems="center">
-            <CryptoIcon symbol="eth" size={25} />
-            <Text ml="6px" fontSize="3.5xl" fontWeight="bold">
-              {formatEther(loan.amount)}Ξ
-            </Text>
-          </Flex>
+          {loan.amountDrawn === loan.amount && (
+            <Flex alignItems="center">
+              <CryptoIcon symbol="eth" size={25} />
+              <Text ml="6px" fontSize="3.5xl" fontWeight="bold">
+                {formatEther(loan.amount)}Ξ
+              </Text>
+            </Flex>
+          )}
+          {loan.amountDrawn !== loan.amount && (
+            <>
+              <Flex alignItems="center" p="4px">
+                <CryptoIcon symbol="eth" size={25} />
+                <Text ml="6px" fontWeight="bold" mr="4px">
+                  {roundForDisplay(Number(formatEther(loan.amountDrawn)))}Ξ
+                </Text>{' '}
+                drawn
+              </Flex>
+              <Flex alignItems="center" p="4px">
+                <CryptoIcon symbol="eth" size={25} />
+                <Text ml="6px" fontWeight="bold" mr="4px">
+                  {roundForDisplay(Number(formatEther(loan.amount)))}Ξ
+                </Text>{' '}
+                available
+              </Flex>
+            </>
+          )}
 
           <Text fontSize="lg" color="solid.gray0">
             <Text as="span" color="solid.black" fontWeight="semibold">
@@ -185,28 +215,52 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
             {getLoanTimeRemaining(loan)} remaining...
           </Text>
         </Flex>
-
-        <Button
-          borderRadius="8px"
-          colorScheme="orange"
-          py="6px"
-          size="lg"
-          textTransform="uppercase"
-          variant="solid"
-          w="100%"
-          onClick={onRepayLoanOpen}
-        >
-          {i18n.actionButtonText}
-        </Button>
-
-        <Center mt="8px" mb="8px">
-          <Link
-            target="_blank"
-            href="https://docs.niftyapes.money/borrowers-dapp-guide/borrow-page/repaying-a-loan"
-          >
-            {i18n.actionButtonHelperText}
-          </Link>
-        </Center>
+        {
+          /* only show rollover modal is >0 signature offers */ offers.filter(
+            (o) => o.signature,
+          )?.length > 0 ? (
+            <>
+              <Button
+                borderRadius="8px"
+                colorScheme="orange"
+                py="6px"
+                size="lg"
+                textTransform="uppercase"
+                variant="solid"
+                w="100%"
+                onClick={onRolloverLoanOpen}
+              >
+                {i18n.rolloverButtonText}
+              </Button>
+              <Button
+                borderRadius="8px"
+                colorScheme="orange"
+                py="6px"
+                size="sm"
+                textTransform="uppercase"
+                textColor="orange.600"
+                variant="text"
+                w="100%"
+                onClick={onRepayLoanOpen}
+              >
+                {i18n.actionButtonText}
+              </Button>
+            </>
+          ) : (
+            <Button
+              borderRadius="8px"
+              colorScheme="orange"
+              py="6px"
+              size="lg"
+              textTransform="uppercase"
+              variant="solid"
+              w="100%"
+              onClick={onRepayLoanOpen}
+            >
+              {i18n.actionButtonText}
+            </Button>
+          )
+        }
       </>
     );
   };
@@ -235,6 +289,29 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
                   title={i18n.repayLoanHeader}
                 />
                 <BorrowLoanRepayCard loan={loan} onRepay={onRepayLoanClose} />
+                <ModalCloseButton />
+              </ModalContent>
+            </Modal>
+          )}
+
+          {isRolloverLoanOpen && (
+            <Modal isOpen onClose={onRolloverLoanClose} size="xl">
+              <ModalOverlay />
+              <ModalContent p="5px">
+                <NFTCardHeader
+                  nft={nft}
+                  contractAddress={nft.contractAddress}
+                  tokenId={nft.id}
+                  title={`${i18n.rolloverLoanHeader} ${nft.collectionName} ${
+                    nft.id ? `#${nft.id}` : ''
+                  }`}
+                />
+                <BorrowLoanRolloverCard
+                  nft={nft}
+                  loan={loan}
+                  onRollover={onRolloverLoanClose}
+                  offers={offers}
+                />
                 <ModalCloseButton />
               </ModalContent>
             </Modal>

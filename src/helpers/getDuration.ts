@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { LoanAuction } from '../loan';
+import { LoanAuction, LoanOffer } from '../loan';
 
 export const getLoanDurationDays = (loan: LoanAuction): string => {
   return `${Math.round(
@@ -17,4 +17,8 @@ export const getLoanTimeRemaining = (loan: LoanAuction): string => {
 export const isLoanDefaulted = (loan: LoanAuction): boolean => {
   const endMoment = moment(loan.loanEndTimestamp * 1000);
   return moment().isAfter(endMoment);
+};
+export const getOfferTimeRemaining = (offer: LoanOffer): string => {
+  const endMoment = moment(offer.expiration * 1000);
+  return endMoment.toNow(true);
 };

@@ -72,7 +72,7 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
     nftId: loan.nftId,
   });
 
-  const { amount, interestRatePerSecond: irps } = loan;
+  const { amount, amountDrawn, interestRatePerSecond: irps } = loan;
 
   // Note: When running this on a local chain, the interest will be 0 until a new block is created.
   // Simply create a new transaction and the correct amount of interest will show up
@@ -80,8 +80,8 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
     ? accruedInterest[0].add(accruedInterest[1])
     : BigNumber.from(0);
 
-  // 25 basis points of the total amount
-  const basisPoints: BigNumber = amount.mul(25).div(10000);
+  // 25 basis points of the amount drawn
+  const basisPoints: BigNumber = amountDrawn.mul(25).div(10000);
 
   // Add basis points if total interest is less than
   const earlyReplay = totalAccruedInterest.lt(basisPoints);
@@ -94,7 +94,9 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
 
   // Additional 20 minutes worth of interest
   const padding: BigNumber = irps.mul(3600);
-  const totalOwed: BigNumber = amount.add(totalAccruedInterest).add(padding);
+  const totalOwed: BigNumber = amountDrawn
+    .add(totalAccruedInterest)
+    .add(padding);
   const apr = getAPR({
     amount: Number(amount.toString()),
     interestRatePerSecond: irps.toNumber(),
@@ -205,7 +207,7 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
                 <Text>
                   {i18n.loanBorrowed}{' '}
                   <Text as="span" fontWeight="bold">
-                    {concatForDisplay(formatEther(amount))}Ξ
+                    {concatForDisplay(formatEther(amountDrawn))}Ξ
                   </Text>
                 </Text>
                 <Text>
