@@ -134,16 +134,6 @@ export const useRefinanceByBorrower = ({
         },
       });
 
-      console.log('updating loan status', {
-        chainId,
-        nftContractAddress,
-        nftId,
-        loanBeginTimestamp: oldLoan.loanBeginTimestamp,
-        status: 'REFINANCED',
-        transactionTimestamp,
-        transactionHash: receipt.transactionHash,
-      });
-
       await updateLoanStatus({
         chainId,
         nftContractAddress,
