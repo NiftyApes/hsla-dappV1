@@ -5,7 +5,7 @@
       "chainId": "31337",
       "contracts": {
         "NiftyApesLiquidity": {
-          "address": "0x398E4948e373Db819606A459456176D31C3B1F91",
+          "address": "0xbe18A1B61ceaF59aEB6A9bC81AB4FB87D56Ba167",
           "abi": [
             {
               "anonymous": false,
@@ -966,7 +966,7 @@
           ]
         },
         "NiftyApesOffers": {
-          "address": "0xbe18A1B61ceaF59aEB6A9bC81AB4FB87D56Ba167",
+          "address": "0x25C0a2F0A077F537Bd11897F04946794c2f6f1Ef",
           "abi": [
             {
               "anonymous": false,
@@ -2287,7 +2287,7 @@
           ]
         },
         "NiftyApesSigLending": {
-          "address": "0x25C0a2F0A077F537Bd11897F04946794c2f6f1Ef",
+          "address": "0x01cf58e264d7578D4C67022c58A24CbC4C4a304E",
           "abi": [
             {
               "anonymous": false,
@@ -2736,7 +2736,7 @@
           ]
         },
         "NiftyApesLending": {
-          "address": "0x01cf58e264d7578D4C67022c58A24CbC4C4a304E",
+          "address": "0xd038A2EE73b64F30d65802Ad188F27921656f28F",
           "abi": [
             {
               "anonymous": false,
@@ -4590,7 +4590,7 @@
           ]
         },
         "YourCollectible": {
-          "address": "0xd038A2EE73b64F30d65802Ad188F27921656f28F",
+          "address": "0x666432Ccb747B2220875cE185f487Ed53677faC9",
           "abi": [
             {
               "inputs": [],
@@ -5062,7 +5062,7 @@
           ]
         },
         "YourContract": {
-          "address": "0x666432Ccb747B2220875cE185f487Ed53677faC9",
+          "address": "0xeC1BB74f5799811c0c1Bff94Ef76Fb40abccbE4a",
           "abi": [
             {
               "inputs": [],

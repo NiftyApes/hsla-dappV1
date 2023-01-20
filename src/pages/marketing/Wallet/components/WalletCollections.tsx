@@ -1,13 +1,8 @@
-import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
-import { useCollectionStats } from 'providers/hooks/useCollectionStats';
 import React from 'react';
+import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import { useRaribleCollectionStats } from '../../../../hooks/useRaribleColectionStats';
 import { IRaribleCollection } from '../../../../hooks/useRaribleWalletNFTs';
 import WalletCollectionRow from './WalletCollectionRow';
-
-interface Props {
-  list: Array<IRaribleCollection>;
-}
 
 const i18n = {
   thNFTS: 'your nfts',
@@ -20,7 +15,9 @@ const i18n = {
   thPrincipal: 'principal',
 };
 
-const WalletCollections: React.FC<Props> = ({ list }) => {
+const WalletCollections: React.FC<{ list: Array<IRaribleCollection> }> = ({
+  list,
+}) => {
   return (
     <TableContainer>
       <Table variant="simple">
@@ -45,37 +42,38 @@ const WalletCollections: React.FC<Props> = ({ list }) => {
               contractAddress,
             });
 
-            const { loading, collectionStats } = useCollectionStats({
-              nftContractAddress: contractAddress.replace('ETHEREUM:', ''),
-            });
+            const key: string = `${contractAddress}${idx}`;
 
-            if (loading) {
-              return <div>Loading</div>;
-            }
-
-            const {
-              highestPrincipal,
-              lowestApr,
-              longestDuration,
-              numberOfOffers,
-              totalLiquidity,
-            } = collectionStats;
+            // const { loading, collectionStats } = useCollectionStats({
+            //   nftContractAddress: contractAddress.replace('ETHEREUM:', ''),
+            // });
+            //
+            // if (loading) {
+            //   return <div>Loading</div>;
+            // }
+            //
+            // const {
+            //   highestPrincipal,
+            //   lowestApr,
+            //   longestDuration,
+            //   numberOfOffers,
+            //   totalLiquidity,
+            // } = collectionStats;
 
             return (
               <WalletCollectionRow
-                index={idx}
-                apr={lowestApr}
+                apr={undefined}
                 contractAddress={contractAddress}
-                duration={longestDuration}
+                duration={undefined}
                 floor={floorPrice}
-                liquidity={totalLiquidity}
-                offers={numberOfOffers}
-                principal={highestPrincipal}
+                index={idx}
+                key={key}
+                liquidity={undefined}
+                offers={undefined}
+                principal={undefined}
                 tokens={tokens}
               />
             );
-            // }
-            // return '';
           })}
         </Tbody>
       </Table>

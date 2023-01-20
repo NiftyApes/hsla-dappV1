@@ -25,6 +25,7 @@ export const useRaribleWalletNFTs = ({
   }
 
   const [items, setItems] = useState<IRaribleCollection[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const hasCache = () => {
     return Object.prototype.hasOwnProperty.call(localCache, contractAddress);
@@ -81,6 +82,7 @@ export const useRaribleWalletNFTs = ({
         .catch((e) => {
           logError(e);
         });
+      setLoading(false);
     };
 
     if (hasCache() && enabled) {
@@ -90,5 +92,5 @@ export const useRaribleWalletNFTs = ({
     }
   }, [contractAddress]);
 
-  return items;
+  return { items, loading };
 };
