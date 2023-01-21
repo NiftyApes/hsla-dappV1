@@ -27,7 +27,6 @@ export function useCollectionStats({
   if (!onChainOffers || !signatureOffers) {
     return { loading: true, collectionStats: undefined };
   }
-
   const collectionStats = getStatsForCollection({
     onChainOffers,
     signatureOffers,

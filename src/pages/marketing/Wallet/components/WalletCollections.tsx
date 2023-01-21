@@ -1,6 +1,8 @@
 import React from 'react';
+import _ from 'lodash';
 import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import { useRaribleCollectionStats } from '../../../../hooks/useRaribleColectionStats';
+import { useCollectionStats } from '../../../../providers/hooks/useCollectionStats';
 import { IRaribleCollection } from '../../../../hooks/useRaribleWalletNFTs';
 import WalletCollectionRow from './WalletCollectionRow';
 
@@ -13,6 +15,7 @@ const i18n = {
   thLtv: 'ltv',
   thOffers: '# of offers',
   thPrincipal: 'principal',
+  thPotential: 'borrow potential',
 };
 
 const WalletCollections: React.FC<{ list: Array<IRaribleCollection> }> = ({
@@ -25,12 +28,8 @@ const WalletCollections: React.FC<{ list: Array<IRaribleCollection> }> = ({
           <Tr>
             <Th>{i18n.thCollection}</Th>
             <Th>{i18n.thNFTS}</Th>
-            <Th>{i18n.thPrincipal}</Th>
-            <Th>{i18n.thLtv}</Th>
-            <Th>{i18n.thApr}</Th>
-            <Th>{i18n.thDuration}</Th>
-            <Th>{i18n.thOffers}</Th>
-            <Th>{i18n.thLiquidity}</Th>
+            <Th>{i18n.thPotential}</Th>
+            <Th>Action</Th>
           </Tr>
         </Thead>
 
@@ -44,33 +43,21 @@ const WalletCollections: React.FC<{ list: Array<IRaribleCollection> }> = ({
 
             const key: string = `${contractAddress}${idx}`;
 
-            // const { loading, collectionStats } = useCollectionStats({
-            //   nftContractAddress: contractAddress.replace('ETHEREUM:', ''),
-            // });
-            //
-            // if (loading) {
-            //   return <div>Loading</div>;
-            // }
-            //
-            // const {
-            //   highestPrincipal,
-            //   lowestApr,
-            //   longestDuration,
-            //   numberOfOffers,
-            //   totalLiquidity,
-            // } = collectionStats;
+            const { collectionStats } = useCollectionStats({
+              nftContractAddress: contractAddress.replace('ETHEREUM:', ''),
+            });
 
             return (
               <WalletCollectionRow
-                apr={undefined}
                 contractAddress={contractAddress}
-                duration={undefined}
                 floor={floorPrice}
                 index={idx}
                 key={key}
-                liquidity={undefined}
-                offers={undefined}
-                principal={undefined}
+                principal={
+                  _.isUndefined(collectionStats)
+                    ? undefined
+                    : collectionStats.highestPrincipal
+                }
                 tokens={tokens}
               />
             );
