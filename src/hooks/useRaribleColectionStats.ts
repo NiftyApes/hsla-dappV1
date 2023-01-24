@@ -53,7 +53,6 @@ export const useRaribleCollectionStats = ({
         })
         .catch((err) => {
           logError(err);
-          throw err;
         });
     };
 

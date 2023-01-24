@@ -3,8 +3,12 @@ import _ from 'lodash';
 import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import { useRaribleCollectionStats } from '../../../../hooks/useRaribleColectionStats';
 import { useCollectionStats } from '../../../../providers/hooks/useCollectionStats';
-import { IRaribleCollection } from '../../../../hooks/useRaribleWalletNFTs';
 import WalletCollectionRow from './WalletCollectionRow';
+
+export type IWalletCollection = {
+  contractAddress: string;
+  tokens: [];
+};
 
 const i18n = {
   thNFTS: 'your nfts',
@@ -18,7 +22,7 @@ const i18n = {
   thPotential: 'borrow potential',
 };
 
-const WalletCollections: React.FC<{ list: Array<IRaribleCollection> }> = ({
+const WalletCollections: React.FC<{ list: Array<IWalletCollection> }> = ({
   list,
 }) => {
   return (
@@ -36,7 +40,6 @@ const WalletCollections: React.FC<{ list: Array<IRaribleCollection> }> = ({
         <Tbody>
           {list.map(({ contractAddress, tokens }, idx) => {
             const { floorPrice } = useRaribleCollectionStats({
-              enabled: true,
               throttle: idx * 100,
               contractAddress,
             });

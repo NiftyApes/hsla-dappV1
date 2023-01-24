@@ -41,17 +41,19 @@ export const useRaribleTokenMeta = ({
       response
         .json()
         .then((data) => {
-          const { name, description, content } = data.meta;
+          if (data.meta) {
+            const { name, description, content } = data.meta;
 
-          setMeta({
-            ...container,
-            name,
-            description,
-            image:
-              content.length > 0
-                ? content.find((item: any) => item['@type'] === 'IMAGE').url
-                : '',
-          });
+            setMeta({
+              ...container,
+              name,
+              description,
+              image:
+                content.length > 0
+                  ? content.find((item: any) => item['@type'] === 'IMAGE').url
+                  : '',
+            });
+          }
         })
         .catch((e) => {
           logError(e);

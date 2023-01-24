@@ -1,8 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Center, Text, VStack } from '@chakra-ui/react';
 import { useRaribleWalletNFTs } from '../../../hooks/useRaribleWalletNFTs';
 import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
 import { useTopNiftyApesCollections } from '../../../hooks/useCollectionsByLiquidity';
+import WalletCollections, {
+  IWalletCollection,
+} from './components/WalletCollections';
 
 const i18n = {
   pageSubtitle: 'Details for wallet',
@@ -12,28 +15,41 @@ const i18n = {
 const WALLET_ADDRESS = '0xDdC0c711A642145785e03DFB9B39E04d1Dad3889';
 
 const Wallet: React.FC = () => {
-  const naCollectionsWithOffers: any = useTopNiftyApesCollections({
+  const [withOffers, setWithOffers] = useState<IWalletCollection[]>([]);
+  const [withoutOffers, setWithoutOffers] = useState<IWalletCollection[]>([]);
+
+  const naCollections: any = useTopNiftyApesCollections({
     limit: 1000,
   });
-  const { items, loading } = useRaribleWalletNFTs({
+
+  const { items: walletCollections, loading } = useRaribleWalletNFTs({
     contractAddress: WALLET_ADDRESS,
   });
 
-  useEffect(() => {
-    if (!loading && naCollectionsWithOffers) {
-      naCollectionsWithOffers.forEach((na: any) => {
-        console.log(
-          items.forEach((item) =>
-            console.log(item.contractAddress === na.address),
-          ),
-        );
-      });
-    }
-  }, [loading, naCollectionsWithOffers]);
+  const [isDone, setDone] = useState(false);
 
-  if (loading) {
-    return <Box>Loading...</Box>;
-  }
+  useEffect(() => {
+    if (!loading && naCollections) {
+      walletCollections.forEach(({ contractAddress, tokens }) => {
+        const hasOffers: any = naCollections.find(
+          (item: any) => item.address === contractAddress,
+        );
+
+        if (hasOffers) {
+          setWithOffers((state) => [
+            ...state,
+            ...[{ contractAddress, tokens }],
+          ]);
+        } else {
+          setWithoutOffers((state) => [
+            ...state,
+            ...[{ contractAddress, tokens }],
+          ]);
+        }
+      });
+      setDone(true);
+    }
+  }, [loading, naCollections]);
 
   return (
     <VStack spacing="50px">
@@ -53,13 +69,14 @@ const Wallet: React.FC = () => {
         </VStack>
       </Center>
 
-      {items && !loading ? (
-        <Box mt="10px">{items.length}</Box>
+      {isDone ? (
+        <Box>
+          <WalletCollections list={[...withOffers, ...withoutOffers]} />
+        </Box>
       ) : (
         <LoadingIndicator />
       )}
     </VStack>
   );
 };
-
 export default Wallet;

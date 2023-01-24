@@ -12,6 +12,8 @@ interface Props {
   tokens: [];
 }
 
+const AVATAR_GROUP_SIZE = 4;
+
 const WalletCollectionRow: React.FC<Props> = ({
   contractAddress,
   index,
@@ -28,14 +30,23 @@ const WalletCollectionRow: React.FC<Props> = ({
         />
       </Td>
       <Td>
-        <AvatarGroup size="lg" max={4}>
+        <AvatarGroup size="lg" max={AVATAR_GROUP_SIZE}>
           {tokens.map((item: string, idx) => {
             const key = `${idx}`;
             const tokenId = item.split(':')[2];
-            const { image, name }: any = useRaribleTokenMeta({
-              contractAddress,
-              tokenId,
-            });
+
+            let image: string = '';
+            let name: string = '';
+            // avoid loading data for the hidden image
+            if (idx + 1 <= AVATAR_GROUP_SIZE) {
+              const result: any = useRaribleTokenMeta({
+                contractAddress,
+                tokenId,
+              });
+              image = result.image;
+              name = result.name;
+            }
+
             return <Avatar size="lg" name={name} key={key} src={image} />;
           })}
         </AvatarGroup>
