@@ -1,4 +1,3 @@
-import { ArrowForwardIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -29,9 +28,8 @@ import { usePartiallyRepayLoanByBorrower } from 'hooks/usePartiallyRepayLoan';
 import { useRefinanceByBorrower } from 'hooks/useRefinanceLoanByBorrower';
 import JSConfetti from 'js-confetti';
 import { logError } from 'logging/logError';
-import moment from 'moment';
 import Offers from 'pages/borrowers/Offers';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { humanizeContractError } from '../../../helpers/errorsMap';
 import {
   getLoanTimeRemaining,
@@ -42,9 +40,7 @@ import { useCalculateInterestAccrued } from '../../../hooks/useCalculateInterest
 import { getBestLoanOffer, LoanAuction, LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
-
-const DATE_FORMAT = 'hh:mm A MM/DD/YY';
-const MOMENT_INTERVAL_MS = 60000;
+import RolloverLoanVisual from '../RolloverLoanVisual';
 
 interface CallbackType {
   (): void;
@@ -105,30 +101,11 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
     [onAllOffersClose],
   );
 
-  const [nextPaymentDue, setNextPaymentDue] = useState(
-    moment().add(rolloverOffer.durationDays, 'days').format(DATE_FORMAT),
-  );
-
-  // Updates due payment UI every minute
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setNextPaymentDue(
-        moment().add(rolloverOffer.durationDays, 'days').format(DATE_FORMAT),
-      );
-    }, MOMENT_INTERVAL_MS);
-    return () => clearInterval(interval);
-  }, [rolloverOffer.durationDays]);
-
   const rolloverOfferAmount = useMemo(() => {
     return ethers.utils.formatEther(
       BigNumber.from(String(rolloverOffer.OfferTerms.Amount)),
     );
   }, [rolloverOffer.OfferTerms.Amount]);
-
-  const principalChangeColor = useMemo(() => {
-    if (rolloverOfferAmount > formatEther(loan.amountDrawn)) return '#15e9a7';
-    return '#000000';
-  }, [rolloverOfferAmount, loan.amountDrawn]);
 
   const jsConfetti = new JSConfetti();
   const [isExecuting, setExecuting] = useState<boolean>(false);
@@ -370,65 +347,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                   </Tbody>
                 </Table>
               </TableContainer>
-              <Box
-                marginX="3"
-                marginTop="4"
-                padding="6"
-                border="1px solid rgba(101, 101, 101, 0.2)"
-                bg="rgba(101, 101, 101, 0.1)"
-                borderRadius="15"
-              >
-                <Flex justifyContent="space-between" flexDirection="row">
-                  <Box>
-                    <Flex alignItems="center" flexDirection="column">
-                      <Flex gap="1" direction="row" alignItems="center">
-                        <Text fontSize="18" fontWeight="bold">
-                          {roundForDisplay(
-                            Number(formatEther(loan.amountDrawn)),
-                          )}
-                          Ξ
-                        </Text>
-                        <ArrowForwardIcon />
-                        <Text
-                          fontSize="18"
-                          fontWeight="bold"
-                          color={principalChangeColor}
-                        >
-                          {roundForDisplay(
-                            currentPrincipal +
-                              totalAccruedInterestInEth -
-                              deltaCalculation,
-                          )}
-                          Ξ
-                        </Text>
-                      </Flex>
-                      <Text color="gray.600" fontSize="14">
-                        Principal Change
-                      </Text>
-                    </Flex>
-                  </Box>
-                  <Box>
-                    <Flex alignItems="center" flexDirection="column">
-                      <Text fontSize="18" fontWeight="bold">
-                        {roundForDisplay(deltaCalculation)}Ξ
-                      </Text>
-                      <Text color="gray.600" fontSize="14">
-                        Payment Due Now
-                      </Text>
-                    </Flex>
-                  </Box>
-                  <Box>
-                    <Flex alignItems="center" flexDirection="column">
-                      <Text fontSize="18" fontWeight="bold">
-                        {nextPaymentDue}
-                      </Text>
-                      <Text color="gray.600" fontSize="14">
-                        Next Payment Due
-                      </Text>
-                    </Flex>
-                  </Box>
-                </Flex>
-              </Box>
+              <RolloverLoanVisual loan={loan} offer={rolloverOffer} />
               <Divider marginY={4} borderColor="gray.400" />
               <Flex
                 marginX="4"
@@ -517,10 +436,11 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
             />
             <ModalCloseButton />
             <Offers
+              variant="rollover"
               actionLabel="Borrow"
-              nft={nft}
               offers={offers}
               onOfferSelect={onSelectOffer}
+              loan={loan}
             />
           </ModalContent>
         </Modal>

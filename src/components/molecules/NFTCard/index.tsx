@@ -159,11 +159,7 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
                   nft={nft}
                 />
                 <ModalCloseButton />
-                <Offers
-                  nft={nft}
-                  offers={offers}
-                  onOfferSelect={onSecondaryOffer}
-                />
+                <Offers offers={offers} onOfferSelect={onSecondaryOffer} />
               </ModalContent>
             </Modal>
           )}
