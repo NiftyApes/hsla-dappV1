@@ -258,7 +258,7 @@ export const CreateCollectionOfferForm: React.FC<
               size="66px"
             >
               <CircularProgressLabel fontSize="sm" fontWeight="bold">
-                {Humanize.formatNumber(Number(offerLTV), 1)}%
+                {Humanize.formatNumber(Number(offerLTV || 0), 1)}%
               </CircularProgressLabel>
             </CircularProgress>
           </HStack>
