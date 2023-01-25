@@ -41,6 +41,8 @@ export const useRaribleWalletNFTs = ({
         return;
       }
 
+      setLoading(true);
+
       const response = await fetch(
         `${RARIBLE_API_PATH}/items/byOwner?owner=ETHEREUM:${contractAddress}&blockchains=ETHEREUM`,
         {

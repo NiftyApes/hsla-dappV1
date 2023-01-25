@@ -1,32 +1,56 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Center, Text, VStack } from '@chakra-ui/react';
+import { ethers } from 'ethers';
+import {
+  Box,
+  Button,
+  Center,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Text,
+  VStack,
+} from '@chakra-ui/react';
 import { useRaribleWalletNFTs } from '../../../hooks/useRaribleWalletNFTs';
 import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
 import { useTopNiftyApesCollections } from '../../../hooks/useCollectionsByLiquidity';
+
 import WalletCollections, {
   IWalletCollection,
 } from './components/WalletCollections';
 
+type ISharedWalletState = {
+  isDone: boolean;
+  withOffers: IWalletCollection[];
+  withoutOffers: IWalletCollection[];
+};
+
 const i18n = {
   pageSubtitle: 'Details for wallet',
   pageTitle: 'Wallet Landing',
+  inputPlaceholder: 'Paste Collection Address',
+  inputButton: 'Go',
 };
 
-const WALLET_ADDRESS = '0xDdC0c711A642145785e03DFB9B39E04d1Dad3889';
-
 const Wallet: React.FC = () => {
-  const [withOffers, setWithOffers] = useState<IWalletCollection[]>([]);
-  const [withoutOffers, setWithoutOffers] = useState<IWalletCollection[]>([]);
+  const [sharedState, setSharedState] = useState<ISharedWalletState>({
+    isDone: false,
+    withOffers: [],
+    withoutOffers: [],
+  });
+
+  const [walletAddress, setWalletAddress] = useState('');
+
+  const [validWalletAddress, setValidWalletAddress] = useState(
+    '0xDdC0c711A642145785e03DFB9B39E04d1Dad3889',
+  );
 
   const naCollections: any = useTopNiftyApesCollections({
     limit: 1000,
   });
 
   const { items: walletCollections, loading } = useRaribleWalletNFTs({
-    contractAddress: WALLET_ADDRESS,
+    contractAddress: validWalletAddress,
   });
-
-  const [isDone, setDone] = useState(false);
 
   useEffect(() => {
     if (!loading && naCollections) {
@@ -36,20 +60,35 @@ const Wallet: React.FC = () => {
         );
 
         if (hasOffers) {
-          setWithOffers((state) => [
-            ...state,
-            ...[{ contractAddress, tokens }],
-          ]);
+          setSharedState((prevState) => {
+            return {
+              ...prevState,
+              withOffers: [
+                ...prevState.withOffers,
+                ...[{ contractAddress, tokens }],
+              ],
+            };
+          });
         } else {
-          setWithoutOffers((state) => [
-            ...state,
-            ...[{ contractAddress, tokens }],
-          ]);
+          setSharedState((prevState) => {
+            return {
+              ...prevState,
+              withoutOffers: [
+                ...prevState.withoutOffers,
+                ...[{ contractAddress, tokens }],
+              ],
+            };
+          });
         }
       });
-      setDone(true);
+      setSharedState((prevState) => {
+        return {
+          ...prevState,
+          isDone: true,
+        };
+      });
     }
-  }, [loading, naCollections]);
+  }, [loading, validWalletAddress]);
 
   return (
     <VStack spacing="50px">
@@ -63,15 +102,54 @@ const Wallet: React.FC = () => {
           >
             {i18n.pageTitle}
           </Text>
-          <Text fontSize="xl" color="grey">
-            {i18n.pageSubtitle} {WALLET_ADDRESS}
-          </Text>
+
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+
+              setValidWalletAddress(walletAddress);
+
+              setSharedState({
+                isDone: false,
+                withOffers: [],
+                withoutOffers: [],
+              });
+            }}
+          >
+            <InputGroup size="lg" width="900px">
+              <Input
+                placeholder={'Wallet adddress or ens'}
+                size="lg"
+                bg="#F9F3FF"
+                p="15px 25px"
+                borderRadius="15px"
+                w="100%"
+                h="auto"
+                border="none"
+                onChange={(event) => {
+                  setWalletAddress(event.target.value);
+                }}
+              />
+              <InputRightElement width="4.5rem" mt="5px">
+                <Button
+                  size="sm"
+                  disabled={!ethers.utils.isAddress(walletAddress)}
+                  type="submit"
+                  variant="neutralReverse"
+                >
+                  {i18n.inputButton}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
+          </form>
         </VStack>
       </Center>
 
-      {isDone ? (
+      {sharedState.isDone ? (
         <Box>
-          <WalletCollections list={[...withOffers, ...withoutOffers]} />
+          <WalletCollections
+            list={[...sharedState.withOffers, ...sharedState.withoutOffers]}
+          />
         </Box>
       ) : (
         <LoadingIndicator />
