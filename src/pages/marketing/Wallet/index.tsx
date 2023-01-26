@@ -11,6 +11,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useRaribleWalletNFTs } from '../../../hooks/useRaribleWalletNFTs';
+import { useRaribleFloorBatch } from '../../../hooks/useRaribleBatchFloors';
 import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
 import { useTopNiftyApesCollections } from '../../../hooks/useCollectionsByLiquidity';
 
@@ -39,6 +40,12 @@ const Wallet: React.FC = () => {
   });
 
   const [walletAddress, setWalletAddress] = useState('');
+  const [actual, setActual] = useState<number>(0);
+
+  const { loaded } = useRaribleFloorBatch({
+    list: sharedState.withoutOffers,
+    enabled: sharedState.isDone,
+  });
 
   const [validWalletAddress, setValidWalletAddress] = useState(
     '0xDdC0c711A642145785e03DFB9B39E04d1Dad3889',
@@ -52,6 +59,12 @@ const Wallet: React.FC = () => {
     contractAddress: validWalletAddress,
   });
 
+  // const { floorPrice } = useRaribleCollectionStats({
+  //   contractAddress,
+  //   enabled: _.isUndefined(highestPrincipal),
+  //   throttle: idx * 100,
+  // });
+
   useEffect(() => {
     if (!loading && naCollections) {
       walletCollections.forEach(({ contractAddress, tokens }) => {
@@ -60,12 +73,32 @@ const Wallet: React.FC = () => {
         );
 
         if (hasOffers) {
+          const {
+            highestPrincipal,
+            longestDuration,
+            lowestApr,
+            numberOfOffers,
+            totalLiquidity,
+          } = hasOffers;
+
+          setActual((prev) => prev + highestPrincipal * tokens.length);
+
           setSharedState((prevState) => {
             return {
               ...prevState,
               withOffers: [
                 ...prevState.withOffers,
-                ...[{ contractAddress, tokens }],
+                ...[
+                  {
+                    contractAddress,
+                    highestPrincipal,
+                    longestDuration,
+                    lowestApr,
+                    numberOfOffers,
+                    tokens,
+                    totalLiquidity,
+                  },
+                ],
               ],
             };
           });
@@ -81,6 +114,7 @@ const Wallet: React.FC = () => {
           });
         }
       });
+
       setSharedState((prevState) => {
         return {
           ...prevState,
@@ -88,7 +122,7 @@ const Wallet: React.FC = () => {
         };
       });
     }
-  }, [loading, validWalletAddress]);
+  }, [loading, naCollections]);
 
   return (
     <VStack spacing="50px">
@@ -101,6 +135,15 @@ const Wallet: React.FC = () => {
             textTransform="uppercase"
           >
             {i18n.pageTitle}
+          </Text>
+
+          <Text
+            fontFamily="Work Sans"
+            fontSize="6xl"
+            fontWeight="black"
+            textTransform="uppercase"
+          >
+            Actual {actual} {loaded.length}
           </Text>
 
           <form
@@ -118,7 +161,7 @@ const Wallet: React.FC = () => {
           >
             <InputGroup size="lg" width="900px">
               <Input
-                placeholder={'Wallet adddress or ens'}
+                placeholder="Wallet Address or ENS name"
                 size="lg"
                 bg="#F9F3FF"
                 p="15px 25px"

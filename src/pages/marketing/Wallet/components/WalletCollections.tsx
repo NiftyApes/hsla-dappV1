@@ -1,30 +1,28 @@
 import React from 'react';
-import _ from 'lodash';
 import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
-import { useRaribleCollectionStats } from '../../../../hooks/useRaribleColectionStats';
-import { useCollectionStats } from '../../../../providers/hooks/useCollectionStats';
+
 import WalletCollectionRow from './WalletCollectionRow';
 
 export type IWalletCollection = {
   contractAddress: string;
+  highestPrincipal?: number;
+  longestDuration?: number;
+  lowestApr?: number;
+  numberOfOffers?: number;
   tokens: [];
+  totalLiquidity?: number;
+  floorPrice?: number;
 };
 
 const i18n = {
-  thNFTS: 'your nfts',
-  thApr: 'lowest apr',
   thCollection: 'collection',
-  thDuration: 'longest duration',
-  thLiquidity: 'total liquidity',
-  thLtv: 'ltv',
-  thOffers: '# of offers',
-  thPrincipal: 'principal',
+  thNFTS: 'your nfts',
   thPotential: 'borrow potential',
 };
 
-const WalletCollections: React.FC<{ list: Array<IWalletCollection> }> = ({
-  list,
-}) => {
+const WalletCollections: React.FC<{
+  list: Array<IWalletCollection>;
+}> = ({ list }) => {
   return (
     <TableContainer>
       <Table variant="simple">
@@ -38,33 +36,25 @@ const WalletCollections: React.FC<{ list: Array<IWalletCollection> }> = ({
         </Thead>
 
         <Tbody>
-          {list.map(({ contractAddress, tokens }, idx) => {
-            const { floorPrice } = useRaribleCollectionStats({
-              throttle: idx * 100,
-              contractAddress,
-            });
+          {list.map(
+            (
+              { contractAddress, tokens, highestPrincipal, floorPrice },
+              idx,
+            ) => {
+              const key: string = `${contractAddress}${idx}`;
 
-            const key: string = `${contractAddress}${idx}`;
-
-            const { collectionStats } = useCollectionStats({
-              nftContractAddress: contractAddress.replace('ETHEREUM:', ''),
-            });
-
-            return (
-              <WalletCollectionRow
-                contractAddress={contractAddress}
-                floor={floorPrice}
-                index={idx}
-                key={key}
-                principal={
-                  _.isUndefined(collectionStats)
-                    ? undefined
-                    : collectionStats.highestPrincipal
-                }
-                tokens={tokens}
-              />
-            );
-          })}
+              return (
+                <WalletCollectionRow
+                  contractAddress={contractAddress}
+                  floor={floorPrice}
+                  index={idx}
+                  key={key}
+                  principal={highestPrincipal}
+                  tokens={tokens}
+                />
+              );
+            },
+          )}
         </Tbody>
       </Table>
     </TableContainer>
