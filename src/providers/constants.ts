@@ -1,1 +1,1 @@
-export const ALCHEMY_API_KEY = 'F83MH9ibaXCMZ5B9PlWuykR3L4MvZwqp';
+export const ALCHEMY_API_KEY = 'jxUUn2DsYODlc68SEU_7eNGCn2hQ7b63';
