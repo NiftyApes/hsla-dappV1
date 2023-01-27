@@ -1,18 +1,7 @@
 import React from 'react';
 import { Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
-
+import { IWalletCollection } from '../../../../constants/types';
 import WalletCollectionRow from './WalletCollectionRow';
-
-export type IWalletCollection = {
-  contractAddress: string;
-  highestPrincipal?: number;
-  longestDuration?: number;
-  lowestApr?: number;
-  numberOfOffers?: number;
-  tokens: [];
-  totalLiquidity?: number;
-  floorPrice?: number;
-};
 
 const i18n = {
   thCollection: 'collection',

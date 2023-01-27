@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { IWalletCollection } from '../pages/marketing/Wallet/components/WalletCollections';
+import { IWalletCollection } from '../constants/types';
 
 export const RARIBLE_API_PATH = 'https://api.rarible.org/v0.1';
 
@@ -10,20 +10,26 @@ export const useRaribleFloorBatch = ({
   enabled: boolean;
   list: IWalletCollection[];
 }) => {
-  const [loaded, setLoaded] = useState<IWalletCollection[]>([]);
+  const [hydrated, setHydrated] = useState<IWalletCollection[]>([]);
 
   useEffect(() => {
-    console.log('Called', list.length);
     list.forEach((item, idx) => {
-      console.log(idx);
       setTimeout(() => {
-        setLoaded((prevState) => {
-          return [...prevState, item];
-        });
-        console.log('Loaded');
-      }, 100 * idx);
+        fetch(
+          `${RARIBLE_API_PATH}/data/collections/ETHEREUM:${item.contractAddress}/stats?currency=ETH`,
+          {
+            method: 'GET',
+          },
+        )
+          .then((response) => response.json())
+          .then(({ floorPrice }) => {
+            setHydrated((prev) => {
+              return [...prev, ...[{ ...item, floorPrice }]];
+            });
+          });
+      }, 120 * idx);
     });
   }, [enabled]);
 
-  return { loaded };
+  return { hydrated };
 };

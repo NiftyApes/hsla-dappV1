@@ -7,17 +7,16 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  Progress,
   Text,
   VStack,
 } from '@chakra-ui/react';
 import { useRaribleWalletNFTs } from '../../../hooks/useRaribleWalletNFTs';
 import { useRaribleFloorBatch } from '../../../hooks/useRaribleBatchFloors';
-import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
+import { IWalletCollection } from '../../../constants/types';
+import WalletCollections from './components/WalletCollections';
 import { useTopNiftyApesCollections } from '../../../hooks/useCollectionsByLiquidity';
-
-import WalletCollections, {
-  IWalletCollection,
-} from './components/WalletCollections';
+import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
 
 type ISharedWalletState = {
   isDone: boolean;
@@ -41,8 +40,9 @@ const Wallet: React.FC = () => {
 
   const [walletAddress, setWalletAddress] = useState('');
   const [actual, setActual] = useState<number>(0);
+  const [estimated, setEstimated] = useState<number>(0);
 
-  const { loaded } = useRaribleFloorBatch({
+  const { hydrated } = useRaribleFloorBatch({
     list: sharedState.withoutOffers,
     enabled: sharedState.isDone,
   });
@@ -59,11 +59,13 @@ const Wallet: React.FC = () => {
     contractAddress: validWalletAddress,
   });
 
-  // const { floorPrice } = useRaribleCollectionStats({
-  //   contractAddress,
-  //   enabled: _.isUndefined(highestPrincipal),
-  //   throttle: idx * 100,
-  // });
+  useEffect(() => {
+    setEstimated(
+      hydrated.reduce((acc, itm) => {
+        return acc + (itm.floorPrice || 0) * itm.tokens.length;
+      }, 0),
+    );
+  }, [hydrated]);
 
   useEffect(() => {
     if (!loading && naCollections) {
@@ -137,26 +139,44 @@ const Wallet: React.FC = () => {
             {i18n.pageTitle}
           </Text>
 
-          <Text
-            fontFamily="Work Sans"
-            fontSize="6xl"
-            fontWeight="black"
-            textTransform="uppercase"
-          >
-            Actual {actual} {loaded.length}
-          </Text>
+          {sharedState.isDone ? (
+            <Text
+              fontFamily="Work Sans"
+              fontSize="6xl"
+              fontWeight="black"
+              textTransform="uppercase"
+            >
+              <Progress
+                colorScheme="yellow"
+                size="lg"
+                value={(estimated / (actual + estimated)) * 100}
+              />
+              HOPIUM 💰{estimated.toFixed(2)} (actual 💰 {actual.toFixed(2)})
+            </Text>
+          ) : (
+            <Text
+              fontFamily="Work Sans"
+              fontSize="6xl"
+              fontWeight="black"
+              textTransform="uppercase"
+            >
+              Calculating your bags 🍌💰
+            </Text>
+          )}
 
           <form
             onSubmit={(event) => {
               event.preventDefault();
 
-              setValidWalletAddress(walletAddress);
+              setActual(0);
+              setEstimated(0);
 
               setSharedState({
-                isDone: false,
+                isDone: true,
                 withOffers: [],
                 withoutOffers: [],
               });
+              setValidWalletAddress(walletAddress);
             }}
           >
             <InputGroup size="lg" width="900px">
@@ -190,9 +210,7 @@ const Wallet: React.FC = () => {
 
       {sharedState.isDone ? (
         <Box>
-          <WalletCollections
-            list={[...sharedState.withOffers, ...sharedState.withoutOffers]}
-          />
+          <WalletCollections list={[...sharedState.withOffers, ...hydrated]} />
         </Box>
       ) : (
         <LoadingIndicator />
