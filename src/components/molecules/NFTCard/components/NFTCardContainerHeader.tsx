@@ -53,10 +53,10 @@ export const NFTCardContainerHeader: React.FC<Props> = ({
     <>
       <Image
         borderRadius="8px 8px 0 0"
-        h="260px"
+        h="220px"
         objectFit="cover"
         src={img}
-        w="260px"
+        w="228px"
       />
 
       {showTokenMeta && (
@@ -65,7 +65,7 @@ export const NFTCardContainerHeader: React.FC<Props> = ({
           px="8px"
           borderRadius="8px"
           flexDir="column"
-          mt={`${210 + tokenPadding}px`}
+          mt={`${169 + tokenPadding}px`}
           pb="5px"
           position="absolute"
           zIndex="1"
