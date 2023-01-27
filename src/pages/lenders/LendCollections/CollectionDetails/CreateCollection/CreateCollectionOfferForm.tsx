@@ -37,7 +37,7 @@ import { Link } from 'react-router-dom';
 import { lendersLiquidity } from 'routes/router';
 import { ToastSuccessCard } from '../../../../../components/cards/ToastSuccessCard';
 import TokenControl from './TokenControl';
-import { OfferTypes } from '../../constants';
+import { MonolithicSmartContracts, OfferTypes } from '../../constants';
 
 interface CreateCollectionOfferFormProps {
   type: OfferTypes;
@@ -180,6 +180,20 @@ export const CreateCollectionOfferForm: React.FC<
   const offerLTV: number =
     (Number(collectionOfferAmt) / Number(floorPrice || 0)) * 100;
 
+  const showLTV = useMemo(() => {
+    const isMonolithicContract = Object.values<string>(
+      MonolithicSmartContracts,
+    ).includes(nftContractAddress);
+
+    const isNotANumber = _.isNaN(Number(offerLTV));
+
+    if (isMonolithicContract || isNotANumber) {
+      return false;
+    }
+
+    return true;
+  }, [nftContractAddress, offerLTV]);
+
   return (
     <Box
       border="1px solid #EAD9FF"
@@ -214,7 +228,7 @@ export const CreateCollectionOfferForm: React.FC<
         my="18px"
         alignItems="center"
       >
-        <GridItem colSpan={2}>
+        <GridItem colSpan={showLTV ? 2 : 3}>
           <FormControl isInvalid={doesOfferAmountExceedAvailableLiquidity}>
             <InputGroup>
               <InputLeftElement sx={{ top: '17px', left: '16px' }}>
@@ -246,23 +260,25 @@ export const CreateCollectionOfferForm: React.FC<
             </InputGroup>
           </FormControl>
         </GridItem>
-        <GridItem colSpan={1} textAlign="center" opacity={0.75}>
-          <HStack spacing="20px" ml="1.85rem">
-            <Text fontSize="md" fontWeight="bold" mb="6px">
-              LTV
-            </Text>
-            <CircularProgress
-              value={offerLTV}
-              color="notification.notify"
-              trackColor="notification.info"
-              size="66px"
-            >
-              <CircularProgressLabel fontSize="sm" fontWeight="bold">
-                {Humanize.formatNumber(Number(offerLTV), 1)}%
-              </CircularProgressLabel>
-            </CircularProgress>
-          </HStack>
-        </GridItem>
+        {showLTV ? (
+          <GridItem colSpan={1} textAlign="center" opacity={0.75}>
+            <HStack spacing="20px" ml="1.85rem">
+              <Text fontSize="md" fontWeight="bold" mb="6px">
+                LTV
+              </Text>
+              <CircularProgress
+                value={offerLTV}
+                color="notification.notify"
+                trackColor="notification.info"
+                size="66px"
+              >
+                <CircularProgressLabel fontSize="sm" fontWeight="bold">
+                  {Humanize.formatNumber(Number(offerLTV), 1)}%
+                </CircularProgressLabel>
+              </CircularProgress>
+            </HStack>
+          </GridItem>
+        ) : null}
       </Grid>
       <Text
         bg="#f7f7f7"
