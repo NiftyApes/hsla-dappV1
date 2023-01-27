@@ -27,7 +27,7 @@ export const useCollectionOffers = ({
 
   useEffect(() => {
     async function fetchLoanOffersForNFT() {
-      if (!offersContract || !nftContractAddress) {
+      if (!nftContractAddress) {
         return;
       }
 
