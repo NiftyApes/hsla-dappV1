@@ -106,20 +106,9 @@ const OffersTable: React.FC<Props> = ({ offers, onClick, loan }) => {
           >
             <Th maxWidth="2%" borderRadius="8px 0px 0px 8px">
               <Flex alignItems="center" justifyContent="center">
-                <span
-                  style={{ cursor: 'pointer', marginLeft: '2px' }}
-                  onClick={() => {
-                    if (sortOrder !== 'AMOUNT_ASC') {
-                      setSortOrder('AMOUNT_ASC');
-                    } else {
-                      setSortOrder('AMOUNT_DESC');
-                    }
-                  }}
-                >
+                <span style={{ cursor: 'pointer', marginLeft: '2px' }}>
                   <HStack align="center" spacing="2px">
                     <Box>Selected</Box>
-                    {sortOrder === 'AMOUNT_ASC' && <FaSortUp size="18px" />}
-                    {sortOrder === 'AMOUNT_DESC' && <FaSortDown size="18px" />}
                   </HStack>
                 </span>
               </Flex>
