@@ -11,6 +11,7 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react';
+
 import { useRaribleWalletNFTs } from '../../../hooks/useRaribleWalletNFTs';
 import { useRaribleFloorBatch } from '../../../hooks/useRaribleBatchFloors';
 import { IWalletCollection } from '../../../constants/types';
