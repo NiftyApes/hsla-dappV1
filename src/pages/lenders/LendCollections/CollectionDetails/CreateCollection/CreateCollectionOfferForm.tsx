@@ -1,6 +1,9 @@
 import Humanize from 'humanize-plus';
 
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Box,
   Button,
   Center,
@@ -402,15 +405,18 @@ export const CreateCollectionOfferForm: React.FC<
         <Box mt="8px">
           <Center>
             {doesOfferAmountExceedAvailableLiquidity && (
-              <FormErrorMessage fontWeight={600} textAlign="center">
-                <Link
-                  style={{ textDecoration: 'underline' }}
-                  to={lendersLiquidity()}
-                >
-                  Desposit more liquidity&nbsp;
-                </Link>
-                to create an offer
-              </FormErrorMessage>
+              <Alert borderRadius="8px" status="error">
+                <AlertIcon />
+                <AlertDescription>
+                  <Link
+                    style={{ textDecoration: 'underline' }}
+                    to={lendersLiquidity()}
+                  >
+                    Deposit more liquidity&nbsp;
+                  </Link>
+                  to create an offer
+                </AlertDescription>
+              </Alert>
             )}
           </Center>
         </Box>
