@@ -228,9 +228,11 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft, offers }) => {
               width="calc(100% - 16px)"
               padding="0.5em 0"
               transition="all .25s ease-in-out"
+              borderTop="1px solid transparent"
               sx={{
                 '.nftContainer:hover &': {
                   bottom: `0px`,
+                  borderColor: 'orange',
                 },
               }}
             >
