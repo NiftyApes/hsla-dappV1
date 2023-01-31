@@ -34,9 +34,8 @@ const i18n = {
   offerApr: (apr: number) => `${roundForDisplay(apr)}%`,
   offerDurationLabel: 'Duration',
   offerDuration: (duration: number) => `${duration} days`,
-  offerNumLabel: 'Offers',
   bestOffer: 'most Ξ, lowest apr',
-  offersLabel: `Offers`,
+  offersLabel: 'Offers',
   topOffer: 'top offer for',
   allOffers: 'all offers for',
 };
@@ -152,7 +151,7 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
                   fontWeight="semibold"
                   textTransform="uppercase"
                 >
-                  {i18n.offerNumLabel}
+                  {i18n.offersLabel}
                 </Text>
                 <Text>{offers.length}</Text>
               </Flex>
