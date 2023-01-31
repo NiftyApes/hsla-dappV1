@@ -24,7 +24,6 @@ import { roundForDisplay } from '../../../helpers/roundForDisplay';
 import { NFTCardContainerHeader } from '../NFTCard/components/NFTCardContainerHeader';
 
 import {
-  // getLoanDurationDays,
   getLoanTimeRemaining,
   isLoanDefaulted,
 } from '../../../helpers/getDuration';

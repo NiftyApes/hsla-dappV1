@@ -14,7 +14,6 @@ import {
 import React, { useState } from 'react';
 
 import { BigNumber, ethers } from 'ethers';
-// import { formatNumber } from 'lib/helpers/string';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
 import { getBestLoanOffer, LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
@@ -38,7 +37,6 @@ const i18n = {
   offerNumLabel: 'Offers',
   bestOffer: 'most Ξ, lowest apr',
   offersLabel: `Offers`,
-  // viewAllOffers: (count: number) => ` Offers (${formatNumber(count)})`,
   topOffer: 'top offer for',
   allOffers: 'all offers for',
 };
