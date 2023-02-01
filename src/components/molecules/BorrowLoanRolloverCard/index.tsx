@@ -39,7 +39,11 @@ import {
 } from '../../../helpers/getDuration';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
 import { useCalculateInterestAccrued } from '../../../hooks/useCalculateInterestAccrued';
-import { getBestLoanOffer, LoanAuction, LoanOffer } from '../../../loan';
+import {
+  getMostSimilarOfferForRollover,
+  LoanAuction,
+  LoanOffer,
+} from '../../../loan';
 import { NFT } from '../../../nft';
 import LoadingIndicator from '../../atoms/LoadingIndicator';
 
@@ -84,9 +88,11 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
   const toast = useToast();
 
   // We're only frontend-supporting rollovers for signature offers for now
-  const bestOffer: LoanOffer = getBestLoanOffer(
-    offers.filter((o) => o.signature),
-  );
+  const bestOffer: LoanOffer = getMostSimilarOfferForRollover({
+    loanOfferAmount: loan.amount,
+    offers: offers.filter((o) => o.signature),
+  });
+
   const [rolloverOffer, setRolloverOffer] = useState<LoanOffer>(bestOffer);
 
   const [paymentSuccess, setPaymentSuccess] = useState(false);
