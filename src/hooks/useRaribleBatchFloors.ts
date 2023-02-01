@@ -31,5 +31,5 @@ export const useRaribleFloorBatch = ({
     });
   }, [enabled]);
 
-  return { hydrated };
+  return { hydrated, setHydrated };
 };

@@ -19,12 +19,6 @@ import WalletCollections from './components/WalletCollections';
 import { useTopNiftyApesCollections } from '../../../hooks/useCollectionsByLiquidity';
 import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
 
-type ISharedWalletState = {
-  isDone: boolean;
-  withOffers: IWalletCollection[];
-  withoutOffers: IWalletCollection[];
-};
-
 const i18n = {
   pageSubtitle: 'Details for wallet',
   pageTitle: 'Wallet Landing',
@@ -33,19 +27,18 @@ const i18n = {
 };
 
 const Wallet: React.FC = () => {
-  const [sharedState, setSharedState] = useState<ISharedWalletState>({
-    isDone: false,
-    withOffers: [],
-    withoutOffers: [],
-  });
+  const [isAllDataLoaded, setIsAllDataLoaded] = useState<boolean>(false);
 
-  const [walletAddress, setWalletAddress] = useState('');
-  const [actual, setActual] = useState<number>(0);
-  const [estimated, setEstimated] = useState<number>(0);
+  const [colsNoOffers, setColsNoOffers] = useState<IWalletCollection[]>([]);
+  const [colsWithOffers, setColsWithOffers] = useState<IWalletCollection[]>([]);
+
+  const [walletAddress, setWalletAddress] = useState<string>('');
+  const [actualWalletValue, setActualWalletValue] = useState<number>(0);
+  const [estimatedWalletValue, setEstimatedWalletValue] = useState<number>(0);
 
   const { hydrated } = useRaribleFloorBatch({
-    list: sharedState.withoutOffers,
-    enabled: sharedState.isDone,
+    list: colsNoOffers,
+    enabled: isAllDataLoaded,
   });
 
   const [validWalletAddress, setValidWalletAddress] = useState(
@@ -56,12 +49,12 @@ const Wallet: React.FC = () => {
     limit: 1000,
   });
 
-  const { items: walletCollections, loading } = useRaribleWalletNFTs({
+  const { items: walletCollections } = useRaribleWalletNFTs({
     contractAddress: validWalletAddress,
   });
 
   useEffect(() => {
-    setEstimated(
+    setEstimatedWalletValue(
       hydrated.reduce((acc, itm) => {
         return acc + (itm.floorPrice || 0) * itm.tokens.length;
       }, 0),
@@ -69,7 +62,7 @@ const Wallet: React.FC = () => {
   }, [hydrated]);
 
   useEffect(() => {
-    if (!loading && naCollections) {
+    if (walletCollections !== undefined && naCollections !== undefined) {
       walletCollections.forEach(({ contractAddress, tokens }) => {
         const hasOffers: any = naCollections.find(
           (item: any) => item.address === contractAddress,
@@ -84,48 +77,36 @@ const Wallet: React.FC = () => {
             totalLiquidity,
           } = hasOffers;
 
-          setActual((prev) => prev + highestPrincipal * tokens.length);
+          setActualWalletValue(
+            (prev) => prev + highestPrincipal * tokens.length,
+          );
 
-          setSharedState((prevState) => {
-            return {
-              ...prevState,
-              withOffers: [
-                ...prevState.withOffers,
-                ...[
-                  {
-                    contractAddress,
-                    highestPrincipal,
-                    longestDuration,
-                    lowestApr,
-                    numberOfOffers,
-                    tokens,
-                    totalLiquidity,
-                  },
-                ],
+          setColsWithOffers((prev) => {
+            return [
+              ...prev,
+              ...[
+                {
+                  contractAddress,
+                  highestPrincipal,
+                  longestDuration,
+                  lowestApr,
+                  numberOfOffers,
+                  tokens,
+                  totalLiquidity,
+                },
               ],
-            };
+            ];
           });
         } else {
-          setSharedState((prevState) => {
-            return {
-              ...prevState,
-              withoutOffers: [
-                ...prevState.withoutOffers,
-                ...[{ contractAddress, tokens }],
-              ],
-            };
+          setColsNoOffers((prev) => {
+            return [...prev, ...[{ contractAddress, tokens }]];
           });
         }
       });
 
-      setSharedState((prevState) => {
-        return {
-          ...prevState,
-          isDone: true,
-        };
-      });
+      setIsAllDataLoaded(true);
     }
-  }, [loading, naCollections]);
+  }, [validWalletAddress, walletCollections, naCollections]);
 
   return (
     <VStack spacing="50px">
@@ -140,7 +121,7 @@ const Wallet: React.FC = () => {
             {i18n.pageTitle}
           </Text>
 
-          {sharedState.isDone ? (
+          {isAllDataLoaded ? (
             <Text
               fontFamily="Work Sans"
               fontSize="6xl"
@@ -150,9 +131,14 @@ const Wallet: React.FC = () => {
               <Progress
                 colorScheme="yellow"
                 size="lg"
-                value={(estimated / (actual + estimated)) * 100}
+                value={
+                  (estimatedWalletValue /
+                    (actualWalletValue + estimatedWalletValue)) *
+                  100
+                }
               />
-              HOPIUM 💰{estimated.toFixed(2)} (actual 💰 {actual.toFixed(2)})
+              HOPIUM 💰{estimatedWalletValue.toFixed(2)} (actual 💰{' '}
+              {actualWalletValue.toFixed(2)})
             </Text>
           ) : (
             <Text
@@ -169,15 +155,14 @@ const Wallet: React.FC = () => {
             onSubmit={(event) => {
               event.preventDefault();
 
-              setActual(0);
-              setEstimated(0);
-
-              setSharedState({
-                isDone: true,
-                withOffers: [],
-                withoutOffers: [],
-              });
               setValidWalletAddress(walletAddress);
+
+              // setIsAllDataLoaded(false);
+              setActualWalletValue(0);
+              setEstimatedWalletValue(0);
+              // setColsWithOffers([]);
+              // setColsNoOffers([]);
+              // setHydrated([]);
             }}
           >
             <InputGroup size="lg" width="900px">
@@ -209,9 +194,10 @@ const Wallet: React.FC = () => {
         </VStack>
       </Center>
 
-      {sharedState.isDone ? (
+      {isAllDataLoaded ? (
         <Box>
-          <WalletCollections list={[...sharedState.withOffers, ...hydrated]} />
+          {validWalletAddress}
+          <WalletCollections list={[...colsWithOffers, ...hydrated]} />
         </Box>
       ) : (
         <LoadingIndicator />
