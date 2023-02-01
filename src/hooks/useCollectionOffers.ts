@@ -30,7 +30,10 @@ export const useCollectionOffers = ({
 
   useEffect(() => {
     async function fetchLoanOffersForNFT() {
-      if (!nftContractAddress || !filterSignatureOffers) {
+      if (
+        !nftContractAddress ||
+        (chainId === '0x1' && !filterSignatureOffers)
+      ) {
         return;
       }
 
@@ -95,7 +98,7 @@ export const useCollectionOffers = ({
       // when we expand dApp provider to Goerli,
       // we can drop chain restriction
       let filteredSigOffers = sigOffers;
-      if (chainId === '0x1') {
+      if (chainId === '0x1' && filterSignatureOffers) {
         filteredSigOffers = filterSignatureOffers(sigOffers);
       }
 
