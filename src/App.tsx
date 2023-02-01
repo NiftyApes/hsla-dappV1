@@ -1,5 +1,5 @@
-import { Box, Button, ChakraProvider, Link } from '@chakra-ui/react';
-import { useConnectWallet, useSetChain } from '@web3-onboard/react';
+import { Button, ChakraProvider, Link } from '@chakra-ui/react';
+import { useConnectWallet } from '@web3-onboard/react';
 import {
   setStoreCEthContract,
   setStoreLendingContract,
@@ -13,7 +13,6 @@ import RouteTracker from 'components/organisms/RouteTracker';
 import { useCEthContract } from 'hooks/useCEthContract';
 import { useChainId } from 'hooks/useChainId';
 import {
-  isGnosis,
   isGoerli,
   isLocalChain,
   isMainnet,
@@ -21,9 +20,8 @@ import {
   useLiquidityContract,
   useOffersContract,
 } from 'hooks/useContracts';
-import { useLocalStorage } from 'hooks/useLocalStorage';
 import { WalletContext } from 'lib/contexts/WalletProvider';
-import React, { Suspense, useContext, useEffect } from 'react';
+import React, { Suspense, useContext } from 'react';
 import ReactGA from 'react-ga4';
 import { BrowserRouter as Router, Routes } from 'react-router-dom';
 import Borrowers from 'routes/Borrowers';
@@ -37,7 +35,6 @@ if (window.location.hostname === 'app.niftyapes.money') {
 
 const App: React.FC = () => {
   const [{ wallet }] = useConnectWallet();
-  const [, setChain] = useSetChain();
   const lendingContract = useLendingContract();
   const offersContract = useOffersContract();
   const liquidityContract = useLiquidityContract();
@@ -54,26 +51,21 @@ const App: React.FC = () => {
 
   const chainId = useChainId();
 
-  const [mainnetEnabled] = useLocalStorage('mainnet-enabled', null);
-
-  useEffect(() => {
-    if (
-      !chainId ||
-      (!isGoerli(chainId) &&
-        !isLocalChain(chainId) &&
-        !isMainnet(chainId) &&
-        !isGnosis(chainId))
-    ) {
-      setChain({ chainId: '0x1' });
-    }
-  }, [chainId, mainnetEnabled]);
+  // Disable automatic chain switch prompting for now
+  // useEffect(() => {
+  //   if (
+  //     !chainId ||
+  //     (!isGoerli(chainId) && !isLocalChain(chainId) && !isMainnet(chainId))
+  //   ) {
+  //     setChain({ chainId: '0x1' });
+  //   }
+  // }, [chainId, mainnetEnabled]);
 
   if (
     chainId &&
     !isGoerli(chainId) &&
     !isLocalChain(chainId) &&
-    !isMainnet(chainId) &&
-    !isGnosis(chainId)
+    !isMainnet(chainId)
   ) {
     return (
       <div>
@@ -122,20 +114,6 @@ const App: React.FC = () => {
             }
           />
           <RouteTracker />
-          {isGnosis(chainId) && (
-            <Box
-              backgroundColor="red.50"
-              borderBottom="1px"
-              borderColor="red.100"
-              textAlign="center"
-              py="8px"
-            >
-              You are on <strong>Gnosis Chain</strong>. The frontend for
-              NiftyApes on Gnosis Chain works, but is still in beta. Please note{' '}
-              <strong>Eth</strong> and <strong>Ξ</strong> throughout the app
-              mean <strong>xDai</strong>.
-            </Box>
-          )}
           <Routes>
             {Marketing}
             {Borrowers}
