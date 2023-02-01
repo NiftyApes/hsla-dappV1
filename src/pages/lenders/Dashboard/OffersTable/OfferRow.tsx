@@ -73,6 +73,7 @@ export const OfferRow = ({ offer, offerHash, index }: any) => {
     >
       <Td>
         <NFTCollectionCardSmall
+          tokenId={offer.nftId}
           throttle={100 * index}
           contractAddress={offer.nftContractAddress}
         />
@@ -99,7 +100,9 @@ export const OfferRow = ({ offer, offerHash, index }: any) => {
       </Td>
       <Td>
         <Text fontSize="md" fontWeight="bold">
-          {`${offer.floorOfferCount}/${offer.floorTermLimit} `}
+          {offer.floorTerm
+            ? `${offer.floorOfferCount}/${offer.floorTermLimit}`
+            : `0/1 `}
         </Text>
         <small>loans used</small>
       </Td>

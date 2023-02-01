@@ -69,6 +69,7 @@ export const useOffersForLender = ({
           offers[i] = undefined;
         } else if (
           // Ignore offers that are out of punches
+          offerFromChain.floorTerm &&
           floorOfferCount.toNumber() >= offerFromChain.floorTermLimit.toNumber()
         ) {
           offers[i] = undefined;
@@ -94,12 +95,12 @@ export const useOffersForLender = ({
       for (let i = 0; i < sigOffers.length; i++) {
         const sigOffer = sigOffers[i];
 
-        const isCanceledOrFinalized =
-          await offersContract.getOfferSignatureStatus(sigOffer.Signature);
+        // const isCancelledOrFinalized =
+        //   await offersContract.getOfferSignatureStatus(sigOffer.Signature);
 
-        if (isCanceledOrFinalized) {
-          continue;
-        }
+        // if (isCancelledOrFinalized) {
+        //   continue;
+        // }
 
         const floorOfferCount =
           await getFloorSignatureOfferCountLeftFromSignature({
@@ -109,6 +110,7 @@ export const useOffersForLender = ({
 
         // Ignore offers that are out of punches
         if (
+          sigOffer.Offer.floorTerm &&
           floorOfferCount &&
           floorOfferCount.toNumber() >= sigOffer.Offer.floorTermLimit
         ) {

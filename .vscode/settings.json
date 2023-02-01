@@ -4,8 +4,11 @@
     "CETH",
     "chakra",
     "ethersproject",
+    "HEDGEY",
+    "Hedgeys",
     "IPFS",
     "keccak",
     "MAYC"
-  ]
+  ],
+  "solidity-va.hover": true
 }

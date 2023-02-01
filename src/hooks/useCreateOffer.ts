@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prefer-template */
 import { Web3Provider } from '@ethersproject/providers';
 import { useAppDispatch } from 'app/hooks';
 import { LOCAL } from 'constants/contractAddresses';
@@ -19,7 +20,7 @@ import { useWalletProvider } from './useWalletProvider';
 
 const ETH_ADDRESS = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE';
 
-export const useCreateCollectionOffer = ({
+export const useCreateOffer = ({
   nftContractAddress,
 }: {
   nftContractAddress: string;
@@ -44,14 +45,19 @@ export const useCreateCollectionOffer = ({
   // it hasn't been upgraded yet.
   useEffect(() => {
     async function getOfferHashOfNullOffer() {
-      // Currently we can use signature-based offers everywhere except Mainnet
+      // If not on Mainnet, use signature offers everywhere except for Gnosis
       if (chainId && chainId !== '0x1') {
-        setShouldUseSignatureOffer(true);
+        if (chainId === '0x64') {
+          setShouldUseSignatureOffer(false);
+        } else {
+          setShouldUseSignatureOffer(true);
+        }
+
         return;
       }
 
       // If on Mainnet, check to see whether the Offers contract has been upgraded
-      if (chainId && chainId !== '0x1' && offersContract) {
+      if (chainId && chainId === '0x1' && offersContract) {
         const hash = await offersContract.getOfferHash({
           creator: '0x0000000000000000000000000000000000000000',
           duration: 0,
@@ -92,7 +98,7 @@ export const useCreateCollectionOffer = ({
   }, [web3Provider]);
 
   return {
-    createCollectionOffer: async ({
+    createOffer: async ({
       amount,
       aprInPercent,
       durationInDays,
@@ -104,12 +110,14 @@ export const useCreateCollectionOffer = ({
       onError,
       onTxSubmitted,
       onTxMined,
+      tokenId = 0,
     }: {
       amount: number;
       aprInPercent: number;
       durationInDays: number;
       expirationInDays: number;
       floorTermLimit: number;
+      tokenId?: number;
       asset?: string;
       onPending?: any;
       onSuccess?: any;
@@ -148,10 +156,10 @@ export const useCreateCollectionOffer = ({
               Date.now() / 1000 + expirationInDays * 86400,
             ),
             fixedTerms: false,
-            floorTerm: true,
+            floorTerm: !tokenId,
             lenderOffer: true,
             nftContractAddress,
-            nftId: 0,
+            nftId: tokenId,
 
             asset: ETH_ADDRESS,
             amount: ethers.utils.parseUnits(String(amount), 'ether'),
@@ -160,9 +168,7 @@ export const useCreateCollectionOffer = ({
             interestRatePerSecond: Math.round(
               ((aprInPercent / 100) * (amount * 1e18)) / SECONDS_IN_YEAR,
             ),
-
-            // TODO: Allow user to edit this in UI
-            floorTermLimit,
+            floorTermLimit: tokenId ? 0 : floorTermLimit,
           };
 
           const domain = {
@@ -191,7 +197,19 @@ export const useCreateCollectionOffer = ({
 
           const values = offerAttempt;
 
-          const result = await signer._signTypedData(domain, types, values);
+          let result = await signer._signTypedData(domain, types, values);
+
+          // Ledger was ending signatures with '00' or '01' for some reason
+          // So below we're replacing those with '1b' and '1c' respectively
+          // In order to avoid ECDSA error
+
+          if (result.slice(-2) === '00') {
+            result = result.slice(0, -2) + '1b';
+          }
+
+          if (result.slice(-2) === '01') {
+            result = result.slice(0, -2) + '1c';
+          }
 
           await saveSignatureOfferInDb({
             chainId,
@@ -222,9 +240,9 @@ export const useCreateCollectionOffer = ({
             interestRatePerSecond: Math.round(
               ((aprInPercent / 100) * (amount * 1e18)) / SECONDS_IN_YEAR,
             ),
-            nftId: 0,
+            nftId: tokenId,
             fixedTerms: false,
-            floorTerm: true,
+            floorTerm: !tokenId,
             lenderOffer: true,
             asset: ETH_ADDRESS,
             amount: ethers.utils.parseUnits(String(amount), 'ether'),
@@ -232,7 +250,7 @@ export const useCreateCollectionOffer = ({
             expiration: Math.floor(
               Date.now() / 1000 + expirationInDays * 86400,
             ),
-            floorTermLimit,
+            floorTermLimit: tokenId ? 0 : floorTermLimit,
           });
 
           onTxSubmitted && onTxSubmitted(tx);

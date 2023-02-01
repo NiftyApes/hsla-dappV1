@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { getSignatureOffersByCollection } from 'api/getSignatureOffersByCollection';
+import { getSignatureOffersForCollectionIncludingTokenSpecific } from 'api/getSignatureOffersForCollectionIncludingTokenSpecific';
 import { AppDispatch, ThunkExtra } from 'app/store';
 import { ethers } from 'ethers';
 import { getApiUrl, getData } from 'helpers';
@@ -64,7 +64,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
       });
     }
 
-    const data = await getData<LoanOffer>(
+    const offers = await getData<LoanOffer>(
       {
         url: getApiUrl(chainId, 'offers'),
         data: {
@@ -75,7 +75,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
     );
 
     const processedOffers = await Promise.all(
-      data.map(async (offer, i) => {
+      offers.map(async (offer, i) => {
         if (!liquidityContract || !cEthContract) {
           return false;
         }
@@ -86,7 +86,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
             offerHash: offer.OfferHash,
           });
 
-          if (!floorOfferCount) {
+          if (floorOfferCount === undefined) {
             return false;
           }
 
@@ -112,8 +112,9 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
 
           // Ignore offers that are out of punches
           if (
+            offerFromChain.floorTerm &&
             floorOfferCount.toNumber() >=
-            offerFromChain.floorTermLimit.toNumber()
+              offerFromChain.floorTermLimit.toNumber()
           ) {
             return false;
           }
@@ -134,8 +135,8 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
             return false;
           }
 
-          data[i] = {
-            ...data[i],
+          offers[i] = {
+            ...offers[i],
             floorOfferCount: floorOfferCount.toNumber(),
             floorTermLimit: offerFromChain.floorTermLimit.toNumber(),
           };
@@ -143,20 +144,30 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
           return true;
         }
       }),
-    ).then((results) => data.filter((offer, j) => results[j]));
+    ).then((results) => offers.filter((offer, j) => results[j]));
 
-    const sigOffers = await getSignatureOffersByCollection({
-      chainId,
-      nftContractAddress,
-    });
+    const sigOffers =
+      await getSignatureOffersForCollectionIncludingTokenSpecific({
+        chainId,
+        nftContractAddress,
+      });
 
     for (let i = 0; i < sigOffers.length; i++) {
       const sigOffer = sigOffers[i];
 
-      const isCancelledOrFinalized =
-        await offersContract.getOfferSignatureStatus(sigOffer.Signature);
+      // Comment out double-checking chain for sig offer cancelled/finalized status
+      // This is for loading speed
 
-      if (isCancelledOrFinalized) {
+      // const isCancelledOrFinalized =
+      //   await offersContract.getOfferSignatureStatus(sigOffer.Signature);
+
+      // // Ignore cancelled or finalized offers
+      // if (isCancelledOrFinalized) {
+      //   continue;
+      // }
+
+      // Ignore non-floor offers that are not for this NFT
+      if (!sigOffer.Offer.floorTerm && sigOffer.Offer.nftId !== Number(nftId)) {
         continue;
       }
 
@@ -168,6 +179,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
 
       // Ignore offers that are out of punches
       if (
+        sigOffer.Offer.floorTerm &&
         floorOfferCount &&
         floorOfferCount.toNumber() >= sigOffer.Offer.floorTermLimit
       ) {
@@ -185,7 +197,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
           Expiration: sigOffer.Offer.expiration,
           Duration: sigOffer.Offer.duration,
           OfferStatus: 'ACTIVE',
-          FloorTerm: true,
+          FloorTerm: sigOffer.Offer.floorTerm,
         },
         OfferHash: sigOffer.OfferHash,
         signature: sigOffer.Signature,

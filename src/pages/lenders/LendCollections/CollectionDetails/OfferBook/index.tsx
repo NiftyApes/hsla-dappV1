@@ -7,27 +7,22 @@ import {
   Flex,
   HStack,
   Table,
-  Tag,
   Tbody,
-  Td,
   Text,
   Th,
   Thead,
   Tr,
 } from '@chakra-ui/react';
-import CryptoIcon from 'components/atoms/CryptoIcon';
 import LoadingIndicator from 'components/atoms/LoadingIndicator';
 import { ethers } from 'ethers';
 import { getAPR } from 'helpers/getAPR';
-import { roundForDisplay } from 'helpers/roundForDisplay';
 import { useCollectionOffers } from 'hooks/useCollectionOffers';
-import { useWalletAddress } from 'hooks/useWalletAddress';
 import _ from 'lodash';
-import moment from 'moment';
 import React, { useState } from 'react';
 import { FaSortDown, FaSortUp } from 'react-icons/fa';
 import { useParams } from 'react-router-dom';
 import { DraftOffer } from './DraftOffer';
+import BookOfferRow from './OfferRow';
 
 interface OfferBookProps {
   collectionOfferAmt: string;
@@ -35,6 +30,7 @@ interface OfferBookProps {
   duration: string;
   expiration: string;
   newlyAddedOfferHashes: string[];
+  tokenId: string;
 }
 
 const OfferBook: React.FC<OfferBookProps> = ({
@@ -43,10 +39,9 @@ const OfferBook: React.FC<OfferBookProps> = ({
   duration,
   expiration,
   newlyAddedOfferHashes,
+  tokenId,
 }) => {
   const { collectionAddress } = useParams();
-
-  const walletAddress = useWalletAddress();
 
   const offers = useCollectionOffers({ nftContractAddress: collectionAddress });
 
@@ -93,6 +88,10 @@ const OfferBook: React.FC<OfferBookProps> = ({
       ? _.sortBy(offers, (o) => o.expiration)
       : sortOrder === 'EXPIRATION_DESC'
       ? _.sortBy(offers, (o) => -o.expiration)
+      : sortOrder === 'ASSET_ASC'
+      ? _.sortBy(offers, (o) => o.nftId)
+      : sortOrder === 'ASSET_DESC'
+      ? _.sortBy(offers, (o) => -o.nftId)
       : offers);
 
   const sortDraftOfferIndex =
@@ -136,6 +135,10 @@ const OfferBook: React.FC<OfferBookProps> = ({
           ? o.expiration
           : sortOrder === 'EXPIRATION_DESC'
           ? -o.expiration
+          : sortOrder === 'ASSET_ASC'
+          ? o.nftId
+          : sortOrder === 'ASSET_DESC'
+          ? -o.nftId
           : o.apr
           ? o.apr
           : getAPR({
@@ -240,6 +243,26 @@ const OfferBook: React.FC<OfferBookProps> = ({
                 <span
                   style={{ cursor: 'pointer', marginLeft: '2px' }}
                   onClick={() => {
+                    if (sortOrder !== 'ASSET_ASC') {
+                      setSortOrder('ASSET_ASC');
+                    } else {
+                      setSortOrder('ASSET_DESC');
+                    }
+                  }}
+                >
+                  <HStack spacing="2px">
+                    <Box>Asset</Box>
+                    {sortOrder === 'ASSET_ASC' && <FaSortUp size="18px" />}
+                    {sortOrder === 'ASSET_DESC' && <FaSortDown size="18px" />}
+                  </HStack>
+                </span>
+              </Flex>
+            </Th>
+            <Th>
+              <Flex alignItems="center" justifyContent="center">
+                <span
+                  style={{ cursor: 'pointer', marginLeft: '2px' }}
+                  onClick={() => {
                     if (sortOrder !== 'DURATION_ASC') {
                       setSortOrder('DURATION_ASC');
                     } else {
@@ -270,7 +293,7 @@ const OfferBook: React.FC<OfferBookProps> = ({
                   }}
                 >
                   <HStack spacing="2px">
-                    <Box> Offer Expires</Box>
+                    <Box>Offer Expires</Box>
                     {sortOrder === 'EXPIRATION_ASC' && <FaSortUp size="18px" />}
                     {sortOrder === 'EXPIRATION_DESC' && (
                       <FaSortDown size="18px" />
@@ -304,81 +327,14 @@ const OfferBook: React.FC<OfferBookProps> = ({
                 apr={Number(apr)}
                 duration={Number(duration)}
                 expirationInMilliseconds={expirationInMilliseconds}
+                tokenId={tokenId}
+                collectionAddress={collectionAddress}
               />
             ) : (
-              <Tr
-                key={offer.offerHash}
-                sx={{
-                  td: {
-                    backgroundColor: newlyAddedOfferHashes.includes(
-                      offer.offerHash,
-                    )
-                      ? 'yellow.100'
-                      : 'auto',
-                    border: 'none',
-                    fontSize: 'md',
-                    textAlign: 'center',
-                  },
-                }}
-              >
-                <Td
-                  sx={{
-                    position: 'relative',
-                  }}
-                >
-                  <span style={{ whiteSpace: 'nowrap' }}>
-                    {walletAddress && walletAddress === offer.creator && (
-                      <Tag
-                        bgColor="orange.300"
-                        color="white"
-                        fontSize="xs"
-                        fontWeight={600}
-                        sx={{
-                          position: 'absolute',
-                          left: '-24px',
-                          top: '14px',
-                        }}
-                      >
-                        YOURS
-                      </Tag>
-                    )}
-                    <Flex alignItems="center" justifyContent="center">
-                      <CryptoIcon symbol="eth" size={16} />
-                      <Text ml="8px">
-                        {ethers.utils.formatEther(offer.amount)}
-                      </Text>
-                    </Flex>
-                  </span>
-                </Td>
-                <Td>
-                  <Text>
-                    {roundForDisplay(
-                      getAPR({
-                        amount: offer.amount,
-                        interestRatePerSecond: offer.interestRatePerSecond,
-                      }),
-                    )}
-                    %
-                  </Text>
-                </Td>
-                <Td>
-                  <Text>
-                    {moment.duration(offer.duration, 'seconds').asDays()} day
-                    {moment.duration(offer.duration, 'seconds').asDays() !==
-                      1 && 's'}
-                  </Text>
-                </Td>
-                <Td>
-                  <Text>
-                    {moment(offer.expiration * 1000).diff(moment(), 'days')}
-                    {moment(offer.expiration * 1000).diff(moment(), 'days') !==
-                    1
-                      ? ' days'
-                      : ' day'}
-                  </Text>
-                </Td>
-                <Td />
-              </Tr>
+              <BookOfferRow
+                offer={offer}
+                newlyAddedOfferHashes={newlyAddedOfferHashes}
+              />
             );
           })}
         </Tbody>

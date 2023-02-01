@@ -1,6 +1,9 @@
 import Humanize from 'humanize-plus';
 
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
   Box,
   Button,
   Center,
@@ -26,7 +29,7 @@ import { NonTxnToastSuccessCard } from 'components/cards/NonTxnToastSuccessCard'
 import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
 import { SECONDS_IN_DAY, SECONDS_IN_YEAR } from 'constants/misc';
 import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
-import { useCreateCollectionOffer } from 'hooks/useCreateCollectionOffer';
+import { useCreateOffer } from 'hooks/useCreateOffer';
 import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
 import { useRaribleCollectionStats } from 'hooks/useRaribleColectionStats';
 import { useWalletAddress } from 'hooks/useWalletAddress';
@@ -36,8 +39,11 @@ import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { lendersLiquidity } from 'routes/router';
 import { ToastSuccessCard } from '../../../../../components/cards/ToastSuccessCard';
+import TokenControl from './TokenControl';
+import { MonolithicSmartContracts, OfferTypes } from '../../constants';
 
 interface CreateCollectionOfferFormProps {
+  type: OfferTypes;
   nftContractAddress: string;
   collectionOfferAmt: string;
   setCollectionOfferAmt: React.Dispatch<React.SetStateAction<string>>;
@@ -49,12 +55,16 @@ interface CreateCollectionOfferFormProps {
   setExpiration: React.Dispatch<React.SetStateAction<string>>;
   addNewlyAddedOfferHash: (offerHash: string) => void;
   floorTermLimit: string;
+  tokenId: string;
   setFloorTermLimit: React.Dispatch<React.SetStateAction<string>>;
+  setTokenId: React.Dispatch<React.SetStateAction<string>>;
+  fetchedNFT: Record<string, any>;
 }
 
 export const CreateCollectionOfferForm: React.FC<
   CreateCollectionOfferFormProps
 > = ({
+  type,
   nftContractAddress,
   collectionOfferAmt,
   setCollectionOfferAmt,
@@ -67,9 +77,12 @@ export const CreateCollectionOfferForm: React.FC<
   addNewlyAddedOfferHash,
   floorTermLimit,
   setFloorTermLimit,
+  setTokenId,
+  tokenId,
+  fetchedNFT,
 }) => {
   const gaEventTracker = useAnalyticsEventTracker(CATEGORIES.LENDERS);
-  const { createCollectionOffer } = useCreateCollectionOffer({
+  const { createOffer } = useCreateOffer({
     nftContractAddress,
   });
 
@@ -101,7 +114,8 @@ export const CreateCollectionOfferForm: React.FC<
   }, [apr, collectionOfferAmt, duration]);
 
   const onCreateOffer = () => {
-    createCollectionOffer({
+    createOffer({
+      tokenId: Number(tokenId),
       amount: Number(collectionOfferAmt),
       aprInPercent: Number(apr),
       durationInDays: Number(duration),
@@ -169,6 +183,20 @@ export const CreateCollectionOfferForm: React.FC<
   const offerLTV: number =
     (Number(collectionOfferAmt) / Number(floorPrice || 0)) * 100;
 
+  const showLTV = useMemo(() => {
+    const isMonolithicContract = Object.values<string>(
+      MonolithicSmartContracts,
+    ).includes(nftContractAddress);
+
+    const isNotANumber = _.isNaN(Number(offerLTV));
+
+    if (isMonolithicContract || isNotANumber) {
+      return false;
+    }
+
+    return true;
+  }, [nftContractAddress, offerLTV]);
+
   return (
     <Box
       border="1px solid #EAD9FF"
@@ -179,6 +207,14 @@ export const CreateCollectionOfferForm: React.FC<
       boxShadow="0px 4px 24px 0px #4910921A"
       maxWidth="480px"
     >
+      {type === 'token' ? (
+        <TokenControl
+          tokenId={tokenId}
+          setTokenId={setTokenId}
+          fetchedNFT={fetchedNFT}
+          disabled={createCollectionOfferStatus !== 'READY'}
+        />
+      ) : null}
       <Text
         bg="#f7f7f7"
         borderRadius="8px"
@@ -195,7 +231,7 @@ export const CreateCollectionOfferForm: React.FC<
         my="18px"
         alignItems="center"
       >
-        <GridItem colSpan={2}>
+        <GridItem colSpan={showLTV ? 2 : 3}>
           <FormControl isInvalid={doesOfferAmountExceedAvailableLiquidity}>
             <InputGroup>
               <InputLeftElement sx={{ top: '17px', left: '16px' }}>
@@ -227,23 +263,25 @@ export const CreateCollectionOfferForm: React.FC<
             </InputGroup>
           </FormControl>
         </GridItem>
-        <GridItem colSpan={1} textAlign="center" opacity={0.75}>
-          <HStack spacing="20px" ml="1.85rem">
-            <Text fontSize="md" fontWeight="bold" mb="6px">
-              LTV
-            </Text>
-            <CircularProgress
-              value={offerLTV}
-              color="notification.notify"
-              trackColor="notification.info"
-              size="66px"
-            >
-              <CircularProgressLabel fontSize="sm" fontWeight="bold">
-                {Humanize.formatNumber(Number(offerLTV), 1)}%
-              </CircularProgressLabel>
-            </CircularProgress>
-          </HStack>
-        </GridItem>
+        {showLTV ? (
+          <GridItem colSpan={1} textAlign="center" opacity={0.75}>
+            <HStack spacing="20px" ml="1.85rem">
+              <Text fontSize="md" fontWeight="bold" mb="6px">
+                LTV
+              </Text>
+              <CircularProgress
+                value={offerLTV}
+                color="notification.notify"
+                trackColor="notification.info"
+                size="66px"
+              >
+                <CircularProgressLabel fontSize="sm" fontWeight="bold">
+                  {Humanize.formatNumber(Number(offerLTV), 1)}%
+                </CircularProgressLabel>
+              </CircularProgress>
+            </HStack>
+          </GridItem>
+        ) : null}
       </Grid>
       <Text
         bg="#f7f7f7"
@@ -367,15 +405,18 @@ export const CreateCollectionOfferForm: React.FC<
         <Box mt="8px">
           <Center>
             {doesOfferAmountExceedAvailableLiquidity && (
-              <FormErrorMessage fontWeight={600} textAlign="center">
-                <Link
-                  style={{ textDecoration: 'underline' }}
-                  to={lendersLiquidity()}
-                >
-                  Desposit more liquidity&nbsp;
-                </Link>
-                to create an offer
-              </FormErrorMessage>
+              <Alert borderRadius="8px" status="error">
+                <AlertIcon />
+                <AlertDescription>
+                  <Link
+                    style={{ textDecoration: 'underline' }}
+                    to={lendersLiquidity()}
+                  >
+                    Deposit more liquidity&nbsp;
+                  </Link>
+                  to create an offer
+                </AlertDescription>
+              </Alert>
             )}
           </Center>
         </Box>
@@ -400,20 +441,22 @@ export const CreateCollectionOfferForm: React.FC<
             </Select>
           </Box>
         </Flex>
-        <Flex alignItems="center">
-          <div>Good for</div>
-          <Box w="100px" ml="8px">
-            <Select
-              size="sm"
-              onChange={(e) => setFloorTermLimit(e.target.value)}
-              value={floorTermLimit}
-            >
-              <option value="5">5 Loans</option>
-              <option value="10">10 Loans</option>
-              <option value="30">30 Loans</option>
-            </Select>
-          </Box>
-        </Flex>
+        {type === 'collection' ? (
+          <Flex alignItems="center">
+            <div>Good for</div>
+            <Box w="100px" ml="8px">
+              <Select
+                size="sm"
+                onChange={(e) => setFloorTermLimit(e.target.value)}
+                value={floorTermLimit}
+              >
+                <option value="5">5 Loans</option>
+                <option value="10">10 Loans</option>
+                <option value="30">30 Loans</option>
+              </Select>
+            </Box>
+          </Flex>
+        ) : null}
       </Flex>
     </Box>
   );

@@ -41,6 +41,116 @@ export type FetchNFTsResponse = {
 
 const cachedCollectionStats: any = {};
 
+export const fetchHedgeysByWalletAddress = createAsyncThunk<
+  FetchNFTsResponse | undefined,
+  {
+    walletAddress: WalletAddress;
+    contract: Contract;
+  },
+  NFTsThunkApi
+>(
+  'nfts/fetchHedgeysByWalletAddress',
+  async ({ walletAddress, contract }, thunkApi) => {
+    const { lendingContract } = thunkApi.extra();
+
+    if (!lendingContract) {
+      throw Error('Lending contract not found');
+    }
+
+    const nfts = [];
+
+    let i = 0;
+    const walletAddressBalance = await contract.balanceOf(walletAddress);
+    while (i < walletAddressBalance) {
+      try {
+        const tokenId = await contract.tokenOfOwnerByIndex(walletAddress, i);
+        const response = await fetch(
+          `https://nft.hedgey.finance/gnosis/0x2aa5d15eb36e5960d056e8fea6e7bb3e2a06a351/${tokenId}`,
+        );
+        const json = await response.json();
+
+        nfts.push({
+          attributes: json.attributes,
+          contractAddress: '0x2aa5d15eb36e5960d056e8fea6e7bb3e2a06a351',
+          description: json.description,
+          external_url: json.external_url,
+          id: json.edition,
+          image: json.image,
+          name: json.name,
+          owner: walletAddress,
+          collectionName: 'Hedgey',
+        });
+      } catch (err) {
+        console.log(err);
+        break;
+      }
+      i++;
+    }
+
+    let j = 0;
+    const lendingContractBalance = await contract.balanceOf(
+      lendingContract.address,
+    );
+    while (j < lendingContractBalance) {
+      try {
+        const tokenId = await contract.tokenOfOwnerByIndex(
+          lendingContract.address,
+          j,
+        );
+
+        const nftOwner = await lendingContract.ownerOf(
+          contract.address,
+          tokenId,
+        );
+
+        if (nftOwner === walletAddress) {
+          const response = await fetch(
+            `https://nft.hedgey.finance/gnosis/0x2aa5d15eb36e5960d056e8fea6e7bb3e2a06a351/${tokenId}`,
+          );
+          const json = await response.json();
+
+          nfts.push({
+            attributes: json.attributes,
+            contractAddress: '0x2aa5d15eb36e5960d056e8fea6e7bb3e2a06a351',
+            description: json.description,
+            external_url: json.external_url,
+            id: json.edition,
+            image: json.image,
+            name: json.name,
+            owner: walletAddress,
+            collectionName: 'Hedgey',
+          });
+        }
+      } catch (err) {
+        console.log(err);
+        break;
+      }
+      j++;
+    }
+
+    const nftsWithChainId: Array<NFT & { chainId: string }> | undefined =
+      nfts?.map((nft: NFT) => ({
+        ...nft,
+        chainId: '0x64',
+      }));
+
+    if (nftsWithChainId) {
+      nftsWithChainId.forEach((nft) =>
+        thunkApi.dispatch(fetchLoanOffersByNFT(nft)),
+      );
+      nftsWithChainId.forEach((nft) =>
+        thunkApi.dispatch(fetchLoanAuctionByNFT(nft)),
+      );
+    }
+
+    return {
+      content: nfts,
+      fetching: false,
+      error: undefined,
+    };
+  },
+);
+
 export const fetchLocalNFTsByWalletAddress = createAsyncThunk<
   FetchNFTsResponse | undefined,
   {
@@ -272,6 +382,44 @@ const slice = createSlice({
       },
     );
     builder.addCase(fetchLocalNFTsByWalletAddress.rejected, (state, action) => {
+      state.nftsByWalletAddress = {
+        ...state.nftsByWalletAddress,
+        [action.meta.arg.walletAddress]: {
+          content: undefined,
+          fetching: false,
+          error: action.error.message ?? 'rejected',
+        },
+      };
+    });
+    builder.addCase(fetchHedgeysByWalletAddress.pending, (state, action) => {
+      state.nftsByWalletAddress = {
+        ...state.nftsByWalletAddress,
+        [action.meta.arg.walletAddress]: {
+          ...state.nftsByWalletAddress[action.meta.arg.walletAddress],
+          fetching: true,
+          error: undefined,
+        },
+      };
+    });
+    builder.addCase(fetchHedgeysByWalletAddress.fulfilled, (state, action) => {
+      if (action.payload && action.meta.arg.walletAddress) {
+        if (!state.nftsByWalletAddress[action.meta.arg.walletAddress].content) {
+          state.nftsByWalletAddress[action.meta.arg.walletAddress].content = [];
+        }
+
+        if (action.payload.content) {
+          state.nftsByWalletAddress[
+            action.meta.arg.walletAddress
+          ].content?.push(...action.payload.content);
+        }
+
+        state.nftsByWalletAddress[action.meta.arg.walletAddress].fetching =
+          false;
+        state.nftsByWalletAddress[action.meta.arg.walletAddress].error =
+          undefined;
+      }
+    });
+    builder.addCase(fetchHedgeysByWalletAddress.rejected, (state, action) => {
       state.nftsByWalletAddress = {
         ...state.nftsByWalletAddress,
         [action.meta.arg.walletAddress]: {

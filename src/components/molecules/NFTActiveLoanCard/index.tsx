@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Box,
   Button,
@@ -12,10 +11,10 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
+import React from 'react';
 
 import { formatEther } from 'ethers/lib/utils';
-import CryptoIcon from 'components/atoms/CryptoIcon';
-import { LoanAuction } from '../../../loan';
+import { LoanAuction, LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
 
 import { NFTCardContainer } from '../NFTCard/components/NFTCardContainer';
@@ -24,36 +23,44 @@ import { getAPR } from '../../../helpers/getAPR';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
 import { NFTCardContainerHeader } from '../NFTCard/components/NFTCardContainerHeader';
 
-import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
 import {
-  getLoanDurationDays,
   getLoanTimeRemaining,
   isLoanDefaulted,
 } from '../../../helpers/getDuration';
 import NFTCardHeader from '../../cards/NFTCardHeader';
+import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
+import BorrowLoanRolloverCard from '../BorrowLoanRolloverCard';
 
 interface Props {
   loan: LoanAuction;
   nft: NFT;
+  offers: Array<LoanOffer>;
 }
 
 const i18n = {
   actionButtonHelperText: 'What does this mean?',
-  actionButtonText: 'repay loan',
+  actionButtonText: 'repay',
+  rolloverButtonText: 'rollover',
   repayLoanHeader: 'repay loan on ',
-  loanApr: (apr: number) => `${apr}% APR`,
+  rolloverLoanHeader: 'rollover loan for',
+  loanApr: (apr: number) => `${apr}%`,
   loanDuration: (duration: number) => `${duration} days`,
   activeLoan: 'active loan',
-  defaultedLoan: 'defaulted',
-  defaultedLoanStatus: 'Asset Has Not Been Seized',
+  defaultedLoan: 'defaulting',
 };
 
-const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
+const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft, offers }) => {
   const {
     isOpen: isRepayLoanOpen,
     onOpen: onRepayLoanOpen,
     onClose: onRepayLoanClose,
-  } = useDisclosure();
+  } = useDisclosure({ id: 'repay' });
+
+  const {
+    isOpen: isRolloverLoanOpen,
+    onOpen: onRolloverLoanOpen,
+    onClose: onRolloverLoanClose,
+  } = useDisclosure({ id: 'rollover' });
 
   const { amount, interestRatePerSecond: irps } = loan;
 
@@ -73,7 +80,6 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
           borderRadius="8px"
           border="1px solid"
           borderColor="red.300"
-          minHeight="128px"
           bg="red.50"
           w="100%"
           mt="8px"
@@ -90,45 +96,32 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
             <Text
               textTransform="uppercase"
               fontWeight="bold"
-              fontSize="md"
+              fontSize="sm"
               color="white"
             >
               {i18n.defaultedLoan}
             </Text>
           </Box>
           <Flex alignItems="center">
-            <CryptoIcon symbol="eth" size={25} />
-            <Text ml="6px" fontSize="3.5xl" fontWeight="bold" color="red.600">
+            <Text ml="6px" fontSize="4xl">
               {formatEther(loan.amount)}Ξ
             </Text>
           </Flex>
-
-          <Text fontSize="md" color="red.600" fontWeight="bold">
-            {i18n.defaultedLoanStatus}
-          </Text>
         </Flex>
 
         <Button
           borderRadius="8px"
           colorScheme="red"
           py="6px"
-          size="lg"
+          size="sm"
           textTransform="uppercase"
           variant="solid"
           w="100%"
+          p="1.32rem"
           onClick={onRepayLoanOpen}
         >
           {i18n.actionButtonText}
         </Button>
-
-        <Center mt="8px" mb="8px">
-          <Link
-            target="_blank"
-            href="https://docs.niftyapes.money/overview/loan-default-faq"
-          >
-            {i18n.actionButtonHelperText}
-          </Link>
-        </Center>
       </>
     );
   };
@@ -146,7 +139,6 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
           bg="orange.50"
           w="100%"
           mt="8px"
-          mb="8px"
         >
           <Box
             borderBottom="1px solid"
@@ -159,54 +151,134 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
             <Text
               textTransform="uppercase"
               fontWeight="bold"
-              fontSize="md"
+              fontSize="sm"
               color="orange.400"
             >
               {i18n.activeLoan}
             </Text>
           </Box>
-          <Flex alignItems="center">
-            <CryptoIcon symbol="eth" size={25} />
-            <Text ml="6px" fontSize="3.5xl" fontWeight="bold">
-              {formatEther(loan.amount)}Ξ
-            </Text>
+          {loan.amountDrawn === loan.amount && (
+            <Flex alignItems="center">
+              <Text ml="6px" fontSize="4xl">
+                {formatEther(loan.amount)}Ξ
+              </Text>
+            </Flex>
+          )}
+          {loan.amountDrawn !== loan.amount && (
+            <Flex alignItems="center" p="4px">
+              <Text ml="6px" fontSize="4xl">
+                {roundForDisplay(Number(formatEther(loan.amountDrawn)))}Ξ
+              </Text>
+            </Flex>
+          )}
+
+          <Flex justify="space-evenly" w="100%">
+            <Flex direction="column" align="center">
+              <Text
+                as="span"
+                fontSize="xs"
+                color="solid.black"
+                fontWeight="semibold"
+                textTransform="uppercase"
+              >
+                MAX
+              </Text>
+              <Text>
+                {' '}
+                {roundForDisplay(Number(formatEther(loan.amount)))}Ξ{' '}
+              </Text>
+            </Flex>
+            <Flex direction="column" align="center">
+              <Text
+                as="span"
+                fontSize="xs"
+                color="solid.black"
+                fontWeight="semibold"
+                textTransform="uppercase"
+              >
+                APR
+              </Text>
+              <Text>{i18n.loanApr(apr)}</Text>
+            </Flex>
+            <Flex direction="column" align="center">
+              <Text
+                as="span"
+                fontSize="xs"
+                color="solid.black"
+                fontWeight="semibold"
+                textTransform="uppercase"
+              >
+                Payment Due
+              </Text>
+              <Text>{getLoanTimeRemaining(loan)}</Text>
+            </Flex>
           </Flex>
-
-          <Text fontSize="lg" color="solid.gray0">
-            <Text as="span" color="solid.black" fontWeight="semibold">
-              {getLoanDurationDays(loan)}
-            </Text>
-            &nbsp;at&nbsp;
-            <Text as="span" color="solid.black" fontWeight="semibold">
-              {i18n.loanApr(apr)}
-            </Text>
-          </Text>
-          <Text color="solid.black" fontSize="sm">
-            {getLoanTimeRemaining(loan)} remaining...
-          </Text>
         </Flex>
-
-        <Button
-          borderRadius="8px"
-          colorScheme="orange"
-          py="6px"
-          size="lg"
-          textTransform="uppercase"
-          variant="solid"
-          w="100%"
-          onClick={onRepayLoanOpen}
-        >
-          {i18n.actionButtonText}
-        </Button>
-
-        <Center mt="8px" mb="8px">
-          <Link
-            target="_blank"
-            href="https://docs.niftyapes.money/borrowers-dapp-guide/borrow-page/repaying-a-loan"
-          >
-            {i18n.actionButtonHelperText}
-          </Link>
-        </Center>
+        {
+          /* only show rollover modal is >0 signature offers */ offers.filter(
+            (o) => o.signature,
+          )?.length > 0 ? (
+            <Flex
+              className="overflow"
+              w="100%"
+              bg="white"
+              position="absolute"
+              bottom="-60px"
+              width="calc(100% - 16px)"
+              padding="0.5em 0"
+              transition="all .25s ease-in-out"
+              borderTop="1px solid transparent"
+              sx={{
+                '.nftContainer:hover &': {
+                  bottom: `0px`,
+                  borderColor: 'orange',
+                },
+              }}
+            >
+              <Button
+                borderRadius="8px"
+                colorScheme="orange"
+                py="6px"
+                size="sm"
+                textTransform="uppercase"
+                w="65%"
+                p="1.32rem"
+                onClick={onRolloverLoanOpen}
+              >
+                {i18n.rolloverButtonText}
+              </Button>
+              <Center
+                mt="8px"
+                mb="8px"
+                w="35%"
+                textAlign="center"
+                textTransform="uppercase"
+                fontWeight="Bold"
+              >
+                <Link
+                  fontSize="14px"
+                  color="orange.500"
+                  onClick={onRepayLoanOpen}
+                >
+                  {i18n.actionButtonText}
+                </Link>
+              </Center>
+            </Flex>
+          ) : (
+            <Button
+              borderRadius="8px"
+              colorScheme="orange"
+              py="6px"
+              size="lg"
+              textTransform="uppercase"
+              variant="solid"
+              w="100%"
+              onClick={onRepayLoanOpen}
+            >
+              {i18n.actionButtonText}
+            </Button>
+          )
+        }
       </>
     );
   };
@@ -214,10 +286,12 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
   return (
     <NFTCardContainer>
       <NFTCardContainerHeader
+        attributes={nft.attributes}
+        collectionName={nft.collectionName}
+        contractAddress={nft.contractAddress}
         img={nft.image}
         tokenId={nft.id}
         tokenName={nft.name}
-        collectionName={nft.collectionName}
       >
         <>
           {isLoanDefaulted(loan) ? renderDefaultedLoan() : renderActiveLoan()}
@@ -233,6 +307,29 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft }) => {
                   title={i18n.repayLoanHeader}
                 />
                 <BorrowLoanRepayCard loan={loan} onRepay={onRepayLoanClose} />
+                <ModalCloseButton />
+              </ModalContent>
+            </Modal>
+          )}
+
+          {isRolloverLoanOpen && (
+            <Modal isOpen onClose={onRolloverLoanClose} size="xl">
+              <ModalOverlay />
+              <ModalContent p="5px">
+                <NFTCardHeader
+                  nft={nft}
+                  contractAddress={nft.contractAddress}
+                  tokenId={nft.id}
+                  title={`${i18n.rolloverLoanHeader} ${nft.collectionName} ${
+                    nft.id ? `#${nft.id}` : ''
+                  }`}
+                />
+                <BorrowLoanRolloverCard
+                  nft={nft}
+                  loan={loan}
+                  onRollover={onRolloverLoanClose}
+                  offers={offers}
+                />
                 <ModalCloseButton />
               </ModalContent>
             </Modal>

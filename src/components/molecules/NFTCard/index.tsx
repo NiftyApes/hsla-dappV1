@@ -13,17 +13,15 @@ import {
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 
-import CryptoIcon from 'components/atoms/CryptoIcon';
 import { BigNumber, ethers } from 'ethers';
-import { formatNumber } from 'lib/helpers/string';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
 import { getBestLoanOffer, LoanOffer } from '../../../loan';
 import { NFT } from '../../../nft';
 import Offers from '../../../pages/borrowers/Offers';
+import NFTCardHeader from '../../cards/NFTCardHeader';
 import BorrowOfferDetailsCard from '../BorrowOfferDetailsCard';
 import { NFTCardContainer } from './components/NFTCardContainer';
 import { NFTCardContainerHeader } from './components/NFTCardContainerHeader';
-import NFTCardHeader from '../../cards/NFTCardHeader';
 
 interface Props {
   nft: NFT;
@@ -31,11 +29,13 @@ interface Props {
 }
 
 const i18n = {
-  initLoanButtonLabel: 'initiate loan',
-  offerApr: (apr: number) => `${roundForDisplay(apr)}% APR`,
+  initLoanButtonLabel: 'Borrow',
+  offerAprLabel: `APR`,
+  offerApr: (apr: number) => `${roundForDisplay(apr)}%`,
+  offerDurationLabel: 'Duration',
   offerDuration: (duration: number) => `${duration} days`,
   bestOffer: 'most Ξ, lowest apr',
-  viewAllOffers: (count: number) => `View All Offers (${formatNumber(count)})`,
+  offersLabel: 'Offers',
   topOffer: 'top offer for',
   allOffers: 'all offers for',
 };
@@ -70,17 +70,19 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
     setActiveOffer(bestOffer);
     onOfferDetailsOpen();
   };
-
   const renderBestOffer = () => {
     return (
       <Container
         borderBottom="1px solid"
         borderColor="accents.100"
         borderRadius="8px 8px 0 0"
-        fontSize="md"
+        padding=".2rem 0"
+        fontSize="12px"
         fontWeight="bold"
         textAlign="center"
         textTransform="uppercase"
+        background="white"
+        color="solid.gray0"
       >
         {i18n.bestOffer}
       </Container>
@@ -90,10 +92,12 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
   return (
     <NFTCardContainer>
       <NFTCardContainerHeader
+        attributes={nft.attributes}
+        collectionName={nft.collectionName || ''}
+        contractAddress={nft.contractAddress}
         img={nft.image}
         tokenId={nft.id}
         tokenName={nft.name}
-        collectionName={nft.collectionName || ''}
       >
         <>
           <Flex
@@ -106,45 +110,104 @@ const NFTCard: React.FC<Props> = ({ nft, offers }) => {
             bg="#C4C4C41A"
             w="100%"
             mt="8px"
-            mb="8px"
           >
             {renderBestOffer()}
 
             <Flex alignItems="center">
-              <CryptoIcon symbol="eth" size={25} />
-              <Text ml="6px" fontSize="3.5xl" fontWeight="bold">
+              <Text ml="6px" fontSize="4xl">
                 {fmtOfferAmount(bestOffer)}Ξ
               </Text>
             </Flex>
-
-            <Text fontSize="lg" color="solid.gray0">
-              <Text as="span" color="solid.black" fontWeight="semibold">
-                {i18n.offerDuration(bestOffer.durationDays)}
-              </Text>
-              &nbsp;at&nbsp;
-              <Text as="span" color="solid.black" fontWeight="semibold">
-                {i18n.offerApr(bestOffer.aprPercentage)}
-              </Text>
-            </Text>
+            <Flex justify="space-evenly" w="100%">
+              <Flex direction="column" align="center">
+                <Text
+                  as="span"
+                  fontSize="xs"
+                  color="solid.black"
+                  fontWeight="semibold"
+                  textTransform="uppercase"
+                >
+                  {i18n.offerDurationLabel}
+                </Text>
+                <Text>{i18n.offerDuration(bestOffer.durationDays)}</Text>
+              </Flex>
+              <Flex direction="column" align="center">
+                <Text
+                  as="span"
+                  fontSize="xs"
+                  color="solid.black"
+                  fontWeight="semibold"
+                  textTransform="uppercase"
+                >
+                  {i18n.offerAprLabel}
+                </Text>
+                <Text>{i18n.offerApr(bestOffer.aprPercentage)}</Text>
+              </Flex>
+              <Flex direction="column" align="center">
+                <Text
+                  as="span"
+                  fontSize="xs"
+                  color="solid.black"
+                  fontWeight="semibold"
+                  textTransform="uppercase"
+                >
+                  {i18n.offersLabel}
+                </Text>
+                <Text>{offers.length}</Text>
+              </Flex>
+            </Flex>
           </Flex>
-          <Button
-            colorScheme="purple"
-            onClick={onBestOffer}
-            py="6px"
-            size="lg"
-            textTransform="uppercase"
-            variant="outline"
+          <Flex
+            className="overflow"
             w="100%"
-            borderRadius="8px"
+            bg="white"
+            position="absolute"
+            bottom="-60px"
+            width="calc(100% - 16px)"
+            padding="0.5em 0"
+            transition="all .25s ease-in-out"
+            borderTop="1px solid transparent"
+            sx={{
+              '.nftContainer:hover &': {
+                bottom: `0px`,
+                borderColor: 'accents.100',
+              },
+            }}
           >
-            {i18n.initLoanButtonLabel}
-          </Button>
+            <Button
+              className="buttonContainer"
+              colorScheme="purple"
+              onClick={onBestOffer}
+              py="6px"
+              size="sm"
+              textTransform="uppercase"
+              variant="outline"
+              w="65%"
+              p="1.32rem"
+              borderRadius="8px"
+              fontWeight="Bold"
+              _hover={{ bg: 'primary.purple', color: 'white' }}
+            >
+              {i18n.initLoanButtonLabel}
+            </Button>
 
-          <Center mt="8px" mb="8px">
-            <Link onClick={onAllOffersOpen}>
-              {i18n.viewAllOffers(offers.length)}
-            </Link>
-          </Center>
+            <Center
+              mt="8px"
+              mb="8px"
+              w="35%"
+              textAlign="center"
+              textTransform="uppercase"
+              fontWeight="Bold"
+            >
+              <Link
+                fontSize="14px"
+                color="primary.purple"
+                onClick={onAllOffersOpen}
+              >
+                {i18n.offersLabel}
+              </Link>
+            </Center>
+          </Flex>
 
           {isAllOffersOpen && (
             <Modal isOpen onClose={onAllOffersClose} size="2xl">
