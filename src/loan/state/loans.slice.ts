@@ -201,7 +201,7 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
         .mul(exchangeRate)
         .div((1e18).toString()); // This doesn't work if you don't toString
 
-      if (sigOffer.Offer.amount > lenderLiquidityInEth) {
+      if (lenderLiquidityInEth.lt(sigOffer.Offer.amount)) {
         continue;
       }
 
