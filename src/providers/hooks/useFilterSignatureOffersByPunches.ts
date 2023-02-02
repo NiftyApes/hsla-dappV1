@@ -6,7 +6,7 @@ export function useFilterSignatureOffersByPunches() {
   const { signatureOffers, loading: isLoadingSignatureOffers } =
     useSignatureOffers();
 
-  const filterSignatureOffers = useCallback(
+  const filterSignatureOffersByPunches = useCallback(
     (signatureOffersToFilter: any) =>
       signatureOffers?.length > 0
         ? signatureOffersToFilter.filter((sotf: any) => {
@@ -34,6 +34,6 @@ export function useFilterSignatureOffersByPunches() {
 
   return {
     loading: false,
-    filterSignatureOffers,
+    filterSignatureOffersByPunches,
   };
 }

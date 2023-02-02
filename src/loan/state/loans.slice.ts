@@ -153,6 +153,10 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
       });
 
     for (let i = 0; i < sigOffers.length; i++) {
+      if (!liquidityContract || !cEthContract) {
+        continue;
+      }
+
       const sigOffer = sigOffers[i];
 
       // Comment out double-checking chain for sig offer cancelled/finalized status
@@ -183,6 +187,21 @@ export const fetchLoanOffersByNFT = createAsyncThunk<
         floorOfferCount &&
         floorOfferCount.toNumber() >= sigOffer.Offer.floorTermLimit
       ) {
+        continue;
+      }
+
+      const lenderLiquidityInCEth = await liquidityContract.getCAssetBalance(
+        sigOffer.Offer.creator,
+        cEthContract.address,
+      );
+
+      const exchangeRate = await cEthContract.exchangeRateStored();
+
+      const lenderLiquidityInEth = lenderLiquidityInCEth
+        .mul(exchangeRate)
+        .div((1e18).toString()); // This doesn't work if you don't toString
+
+      if (sigOffer.Offer.amount > lenderLiquidityInEth) {
         continue;
       }
 

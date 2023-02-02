@@ -9,6 +9,7 @@ import { getFloorOfferCountFromHash } from 'helpers/getOfferCountLeftFromHash';
 import { getFloorSignatureOfferCountLeftFromSignature } from 'helpers/getSignatureOfferCountLeftFromSignature';
 import { loanOffer } from 'loan';
 import _ from 'lodash';
+import { useFilterSignatureOffersByLiquidityBacking } from 'providers/hooks/useFilterSignatureOffersByLiquidityBacking';
 import { useFilterSignatureOffersByPunches } from 'providers/hooks/useFilterSignatureOffersByPunches';
 import { useEffect, useState } from 'react';
 import { useChainId } from './useChainId';
@@ -26,14 +27,22 @@ export const useCollectionOffers = ({
 
   const chainId = useChainId();
 
-  const { filterSignatureOffers } = useFilterSignatureOffersByPunches();
+  const { filterSignatureOffersByPunches } =
+    useFilterSignatureOffersByPunches();
+  const { filterSignatureOffersByLiquidityBacking } =
+    useFilterSignatureOffersByLiquidityBacking();
 
   useEffect(() => {
     async function fetchLoanOffersForNFT() {
-      if (
-        !nftContractAddress ||
-        (isMainnet(chainId) && !filterSignatureOffers)
-      ) {
+      if (!nftContractAddress) {
+        return;
+      }
+
+      if (isMainnet(chainId) && !filterSignatureOffersByPunches) {
+        return;
+      }
+
+      if (isMainnet(chainId) && !filterSignatureOffersByLiquidityBacking) {
         return;
       }
 
@@ -98,8 +107,14 @@ export const useCollectionOffers = ({
       // when we expand dApp provider to Goerli,
       // we can drop chain restriction
       let filteredSigOffers = sigOffers;
-      if (isMainnet(chainId) && filterSignatureOffers) {
-        filteredSigOffers = filterSignatureOffers(sigOffers);
+      if (
+        isMainnet(chainId) &&
+        filterSignatureOffersByPunches &&
+        filterSignatureOffersByLiquidityBacking
+      ) {
+        filteredSigOffers = await filterSignatureOffersByLiquidityBacking(
+          filterSignatureOffersByPunches(sigOffers),
+        );
       }
 
       for (let i = 0; i < filteredSigOffers.length; i++) {
@@ -154,7 +169,8 @@ export const useCollectionOffers = ({
     nftContractAddress,
     offersContract,
     chainId,
-    filterSignatureOffers,
+    filterSignatureOffersByPunches,
+    filterSignatureOffersByLiquidityBacking,
     cacheCounter,
   ]);
 

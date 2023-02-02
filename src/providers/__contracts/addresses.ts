@@ -1,4 +1,15 @@
-export const MAINNET = {
+/* eslint-disable */
+import { CHAIN } from '../constants';
+
+if (!CHAIN) {
+  throw new Error('CHAIN is not defined');
+}
+
+if (CHAIN !== 'MAINNET' && CHAIN !== 'GOERLI') {
+  throw new Error('CHAIN is not defined correctly: ' + CHAIN);
+}
+
+const MAINNET = {
   SIG_LENDING: {
     ADDRESS: '0xc708c2efd6e6578809352d8e618c7f619f3b7f20',
     ABI: [
@@ -5135,8 +5146,16 @@ export const MAINNET = {
       {
         anonymous: false,
         inputs: [
-          { indexed: false, name: 'oldReserveFactorMantissa', type: 'uint256' },
-          { indexed: false, name: 'newReserveFactorMantissa', type: 'uint256' },
+          {
+            indexed: false,
+            name: 'oldReserveFactorMantissa',
+            type: 'uint256',
+          },
+          {
+            indexed: false,
+            name: 'newReserveFactorMantissa',
+            type: 'uint256',
+          },
         ],
         name: 'NewReserveFactor',
         type: 'event',
@@ -5184,3 +5203,34 @@ export const MAINNET = {
     ],
   },
 } as const;
+
+const GOERLI = {
+  SIG_LENDING: {
+    ADDRESS: '0xf7c38F9b678cb96a6ee20448dab4a44B818dE2A6',
+    ABI: MAINNET.SIG_LENDING.ABI,
+  },
+  LENDING: {
+    ADDRESS: '0x40dF7D76C59721b1E0b0e1cf92Dbd0A58D083De4',
+    ABI: MAINNET.LENDING.ABI,
+  },
+  LIQUIDITY: {
+    ADDRESS: '0x084A7cE2eb1ea21777Df239550234EEb9D9ef47c',
+    ABI: MAINNET.LIQUIDITY.ABI,
+  },
+  OFFERS: {
+    ADDRESS: '0x896A60e3f3457a3587F2ce30D812ffeDb7547EC7',
+    ABI: MAINNET.OFFERS.ABI,
+  },
+  CETH: {
+    ADDRESS: '0x20572e4c090f15667cF7378e16FaD2eA0e2f3EfF',
+    ABI: MAINNET.CETH.ABI,
+  },
+} as const;
+
+const contracts = { MAINNET, GOERLI };
+
+export const SIG_LENDING = contracts[CHAIN].SIG_LENDING;
+export const LENDING = contracts[CHAIN].LENDING;
+export const LIQUIDITY = contracts[CHAIN].LIQUIDITY;
+export const OFFERS = contracts[CHAIN].OFFERS;
+export const CETH = contracts[CHAIN].CETH;
