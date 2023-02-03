@@ -424,7 +424,11 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
             variant="solid"
             w="100%"
           >
-            {isExecuting ? <LoadingIndicator size="xs" /> : i18n.actionButton}
+            {isExecuting ? (
+              <LoadingIndicator color="#12D196" size="xs" />
+            ) : (
+              i18n.actionButton
+            )}
           </Button>
         </Flex>
       </Box>
