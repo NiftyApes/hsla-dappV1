@@ -1,15 +1,11 @@
 import Humanize from 'humanize-plus';
 
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
   Box,
   Button,
   Center,
   CircularProgress,
   CircularProgressLabel,
-  Flex,
   FormControl,
   FormErrorMessage,
   Grid,
@@ -19,7 +15,6 @@ import {
   InputGroup,
   InputLeftElement,
   InputRightElement,
-  Select,
   Text,
   useToast,
 } from '@chakra-ui/react';
@@ -27,7 +22,6 @@ import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import CryptoIcon from 'components/atoms/CryptoIcon';
 import { NonTxnToastSuccessCard } from 'components/cards/NonTxnToastSuccessCard';
 import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
-import { SECONDS_IN_DAY, SECONDS_IN_YEAR } from 'constants/misc';
 import { useAnalyticsEventTracker } from 'hooks/useAnalyticsEventTracker';
 import { useCreateOffer } from 'hooks/useCreateOffer';
 import { useAvailableEthLiquidity } from 'hooks/useEthLiquidity';
@@ -35,14 +29,14 @@ import { useRaribleCollectionStats } from 'hooks/useRaribleColectionStats';
 import { useWalletAddress } from 'hooks/useWalletAddress';
 import JSConfetti from 'js-confetti';
 import _ from 'lodash';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { lendersLiquidity } from 'routes/router';
-import { ToastSuccessCard } from '../../../../../components/cards/ToastSuccessCard';
+import { ToastSuccessCard } from '../../../../components/cards/ToastSuccessCard';
 import TokenControl from './TokenControl';
-import { MonolithicSmartContracts, OfferTypes } from '../../constants';
+import { OfferTypes } from '../constants';
 
-interface CreateCollectionOfferFormProps {
+interface StealLoanFormProps {
   type: OfferTypes;
   nftContractAddress: string;
   collectionOfferAmt: string;
@@ -61,9 +55,7 @@ interface CreateCollectionOfferFormProps {
   fetchedNFT: Record<string, any>;
 }
 
-export const CreateCollectionOfferForm: React.FC<
-  CreateCollectionOfferFormProps
-> = ({
+export const StealLoanForm: React.FC<StealLoanFormProps> = ({
   type,
   nftContractAddress,
   collectionOfferAmt,
@@ -73,10 +65,8 @@ export const CreateCollectionOfferForm: React.FC<
   duration,
   setDuration,
   expiration,
-  setExpiration,
   addNewlyAddedOfferHash,
   floorTermLimit,
-  setFloorTermLimit,
   setTokenId,
   tokenId,
   fetchedNFT,
@@ -106,12 +96,6 @@ export const CreateCollectionOfferForm: React.FC<
   const isOfferReady: boolean = isDurationValid && isAprValid && isOfferValid;
 
   const walletAddress = useWalletAddress();
-
-  const estimatedProfit = useMemo(() => {
-    const irps: number = Number(apr) / 100 / SECONDS_IN_YEAR;
-    const secs: number = Number(duration) * SECONDS_IN_DAY;
-    return irps * secs * Number(collectionOfferAmt);
-  }, [apr, collectionOfferAmt, duration]);
 
   const onCreateOffer = () => {
     createOffer({
@@ -183,20 +167,6 @@ export const CreateCollectionOfferForm: React.FC<
   const offerLTV: number =
     (Number(collectionOfferAmt) / Number(floorPrice || 0)) * 100;
 
-  const showLTV = useMemo(() => {
-    const isMonolithicContract = Object.values<string>(
-      MonolithicSmartContracts,
-    ).includes(nftContractAddress);
-
-    const isNotANumber = _.isNaN(Number(offerLTV));
-
-    if (isMonolithicContract || isNotANumber) {
-      return false;
-    }
-
-    return true;
-  }, [nftContractAddress, offerLTV]);
-
   return (
     <Box
       border="1px solid #EAD9FF"
@@ -231,7 +201,7 @@ export const CreateCollectionOfferForm: React.FC<
         my="18px"
         alignItems="center"
       >
-        <GridItem colSpan={showLTV ? 2 : 3}>
+        <GridItem colSpan={2}>
           <FormControl isInvalid={doesOfferAmountExceedAvailableLiquidity}>
             <InputGroup>
               <InputLeftElement sx={{ top: '17px', left: '16px' }}>
@@ -263,25 +233,23 @@ export const CreateCollectionOfferForm: React.FC<
             </InputGroup>
           </FormControl>
         </GridItem>
-        {showLTV ? (
-          <GridItem colSpan={1} textAlign="center" opacity={0.75}>
-            <HStack spacing="20px" ml="1.85rem">
-              <Text fontSize="md" fontWeight="bold" mb="6px">
-                LTV
-              </Text>
-              <CircularProgress
-                value={offerLTV}
-                color="notification.notify"
-                trackColor="notification.info"
-                size="66px"
-              >
-                <CircularProgressLabel fontSize="sm" fontWeight="bold">
-                  {Humanize.formatNumber(Number(offerLTV), 1)}%
-                </CircularProgressLabel>
-              </CircularProgress>
-            </HStack>
-          </GridItem>
-        ) : null}
+        <GridItem colSpan={1} textAlign="center" opacity={0.75}>
+          <HStack spacing="20px" ml="1.85rem">
+            <Text fontSize="md" fontWeight="bold" mb="6px">
+              LTV
+            </Text>
+            <CircularProgress
+              value={offerLTV}
+              color="notification.notify"
+              trackColor="notification.info"
+              size="66px"
+            >
+              <CircularProgressLabel fontSize="sm" fontWeight="bold">
+                {Humanize.formatNumber(Number(offerLTV), 1)}%
+              </CircularProgressLabel>
+            </CircularProgress>
+          </HStack>
+        </GridItem>
       </Grid>
       <Text
         bg="#f7f7f7"
@@ -374,15 +342,6 @@ export const CreateCollectionOfferForm: React.FC<
           </Box>
         </GridItem>
       </Grid>
-      <Text
-        fontSize="md"
-        fontWeight="bold"
-        pt="24px"
-        textAlign="center"
-        color="solid.gray0"
-      >
-        Est. Profit: {estimatedProfit}
-      </Text>
       <Button
         variant="neutralReverse"
         py="36px"
@@ -399,65 +358,25 @@ export const CreateCollectionOfferForm: React.FC<
         }
         isLoading={createCollectionOfferStatus === 'PENDING'}
       >
-        CREATE OFFER
+        STEAL LOAN
       </Button>
       <FormControl isInvalid={doesOfferAmountExceedAvailableLiquidity}>
         <Box mt="8px">
           <Center>
             {doesOfferAmountExceedAvailableLiquidity && (
-              <Alert borderRadius="8px" status="error">
-                <AlertIcon />
-                <AlertDescription>
-                  <Link
-                    style={{ textDecoration: 'underline' }}
-                    to={lendersLiquidity()}
-                  >
-                    Deposit more liquidity&nbsp;
-                  </Link>
-                  to create an offer
-                </AlertDescription>
-              </Alert>
+              <FormErrorMessage fontWeight={600} textAlign="center">
+                <Link
+                  style={{ textDecoration: 'underline' }}
+                  to={lendersLiquidity()}
+                >
+                  Desposit more liquidity&nbsp;
+                </Link>
+                to create an offer
+              </FormErrorMessage>
             )}
           </Center>
         </Box>
       </FormControl>
-      <Flex
-        alignItems="center"
-        justifyContent="space-around"
-        my="24px"
-        mx="30px"
-      >
-        <Flex alignItems="center">
-          <div>Expires in</div>
-          <Box w="100px" ml="8px">
-            <Select
-              size="sm"
-              onChange={(e) => setExpiration(e.target.value)}
-              value={expiration}
-            >
-              <option value="1">1 day</option>
-              <option value="7">7 days</option>
-              <option value="30">30 days</option>
-            </Select>
-          </Box>
-        </Flex>
-        {type === 'collection' ? (
-          <Flex alignItems="center">
-            <div>Good for</div>
-            <Box w="100px" ml="8px">
-              <Select
-                size="sm"
-                onChange={(e) => setFloorTermLimit(e.target.value)}
-                value={floorTermLimit}
-              >
-                <option value="5">5 Loans</option>
-                <option value="10">10 Loans</option>
-                <option value="30">30 Loans</option>
-              </Select>
-            </Box>
-          </Flex>
-        ) : null}
-      </Flex>
     </Box>
   );
 };

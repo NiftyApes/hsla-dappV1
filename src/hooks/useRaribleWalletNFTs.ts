@@ -5,8 +5,6 @@ import { logError } from '../logging/logError';
 
 const RARIBLE_API_PATH = 'https://api.rarible.org/v0.1';
 
-const localCache: any = {};
-
 export type IRaribleCollection = {
   contractAddress: string;
   tokens: [];
@@ -27,14 +25,6 @@ export const useRaribleWalletNFTs = ({
   const [items, setItems] = useState<IRaribleCollection[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const hasCache = () => {
-    return Object.prototype.hasOwnProperty.call(localCache, contractAddress);
-  };
-
-  const setCache = (val: any) => {
-    localCache[contractAddress] = val;
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       if (!contractAddress) {
@@ -42,6 +32,7 @@ export const useRaribleWalletNFTs = ({
       }
 
       setLoading(true);
+      setItems([]);
 
       const response = await fetch(
         `${RARIBLE_API_PATH}/items/byOwner?owner=ETHEREUM:${contractAddress}&blockchains=ETHEREUM`,
@@ -78,7 +69,6 @@ export const useRaribleWalletNFTs = ({
           const sorted = unsorted.sort(
             (a: any, b: any) => b.itemsCount - a.itemsCount,
           );
-          setCache(sorted);
           setItems(sorted);
         })
         .catch((e) => {
@@ -87,9 +77,7 @@ export const useRaribleWalletNFTs = ({
       setLoading(false);
     };
 
-    if (hasCache() && enabled) {
-      setItems({ ...localCache[contractAddress] });
-    } else {
+    if (enabled) {
       fetchData();
     }
   }, [contractAddress]);

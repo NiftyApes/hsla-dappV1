@@ -36,7 +36,7 @@ const Wallet: React.FC = () => {
   const [actualWalletValue, setActualWalletValue] = useState<number>(0);
   const [estimatedWalletValue, setEstimatedWalletValue] = useState<number>(0);
 
-  const { hydrated } = useRaribleFloorBatch({
+  const { hydrated, setHydrated } = useRaribleFloorBatch({
     list: colsNoOffers,
     enabled: isAllDataLoaded,
   });
@@ -49,9 +49,10 @@ const Wallet: React.FC = () => {
     limit: 1000,
   });
 
-  const { items: walletCollections } = useRaribleWalletNFTs({
-    contractAddress: validWalletAddress,
-  });
+  const { items: walletCollections, loading: walletCollectionsLoading } =
+    useRaribleWalletNFTs({
+      contractAddress: validWalletAddress,
+    });
 
   useEffect(() => {
     setEstimatedWalletValue(
@@ -62,7 +63,14 @@ const Wallet: React.FC = () => {
   }, [hydrated]);
 
   useEffect(() => {
-    if (walletCollections !== undefined && naCollections !== undefined) {
+    if (
+      !walletCollectionsLoading &&
+      walletCollections.length > 0 &&
+      naCollections !== undefined
+    ) {
+      console.log(walletCollections.length, naCollections.length);
+      console.log('Is data reset', isAllDataLoaded);
+
       walletCollections.forEach(({ contractAddress, tokens }) => {
         const hasOffers: any = naCollections.find(
           (item: any) => item.address === contractAddress,
@@ -106,7 +114,7 @@ const Wallet: React.FC = () => {
 
       setIsAllDataLoaded(true);
     }
-  }, [validWalletAddress, walletCollections, naCollections]);
+  }, [naCollections, walletCollections]);
 
   return (
     <VStack spacing="50px">
@@ -155,14 +163,16 @@ const Wallet: React.FC = () => {
             onSubmit={(event) => {
               event.preventDefault();
 
-              setValidWalletAddress(walletAddress);
-
-              // setIsAllDataLoaded(false);
               setActualWalletValue(0);
               setEstimatedWalletValue(0);
-              // setColsWithOffers([]);
-              // setColsNoOffers([]);
-              // setHydrated([]);
+              setColsWithOffers([]);
+              setColsNoOffers([]);
+              setHydrated([]);
+
+              setIsAllDataLoaded(false);
+              setValidWalletAddress(walletAddress);
+
+              console.log('Wallet reset---');
             }}
           >
             <InputGroup size="lg" width="900px">

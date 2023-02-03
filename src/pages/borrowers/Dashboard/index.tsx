@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-shadow */
-import React, { useState } from 'react';
 import {
   Alert,
   AlertDescription,
@@ -16,19 +15,20 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
+import React, { useState } from 'react';
 
 import TopCard from 'components/molecules/DashboardTopCard';
+import { BigNumber } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 import _ from 'lodash';
-import { BigNumber } from 'ethers';
 import { useNavigate } from 'react-router-dom';
 import { borrowers } from 'routes/router';
-import LoanTable from './LoanTable';
 import LoadingIndicator from '../../../components/atoms/LoadingIndicator';
 import NFTCardHeader from '../../../components/cards/NFTCardHeader';
-import { LoanAuction } from '../../../loan';
-import { useActiveLoansForBorrower } from '../../../hooks/useActiveLoansForBorrower';
 import BorrowLoanRepayCard from '../../../components/molecules/BorrowLoanRepayCard';
+import { useActiveLoansForBorrower } from '../../../hooks/useActiveLoansForBorrower';
+import { LoanAuction } from '../../../loan';
+import LoanTable from './LoanTable';
 
 const i18n = {
   repayLoanHeader: 'repay loan on ',
@@ -56,7 +56,7 @@ const Dashboard: React.FC = () => {
 
   const loanCount = activeLoans.length;
   const loanTotal = activeLoans.reduce(
-    (acc: BigNumber, loan: LoanAuction) => loan.amount.add(acc),
+    (acc: BigNumber, loan: LoanAuction) => loan.amountDrawn.add(acc),
     0,
   );
   const interestTotal = activeLoans.reduce(
