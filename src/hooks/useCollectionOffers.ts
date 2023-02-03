@@ -12,7 +12,7 @@ import _ from 'lodash';
 import { useFilterSignatureOffersByPunches } from 'providers/hooks/useFilterSignatureOffersByPunches';
 import { useEffect, useState } from 'react';
 import { useChainId } from './useChainId';
-import { useOffersContract } from './useContracts';
+import { isMainnet, useOffersContract } from './useContracts';
 
 export const useCollectionOffers = ({
   nftContractAddress,
@@ -32,7 +32,7 @@ export const useCollectionOffers = ({
     async function fetchLoanOffersForNFT() {
       if (
         !nftContractAddress ||
-        (chainId === '0x1' && !filterSignatureOffers)
+        (isMainnet(chainId) && !filterSignatureOffers)
       ) {
         return;
       }
@@ -98,25 +98,15 @@ export const useCollectionOffers = ({
       // when we expand dApp provider to Goerli,
       // we can drop chain restriction
       let filteredSigOffers = sigOffers;
-      if (chainId === '0x1' && filterSignatureOffers) {
+      if (isMainnet(chainId) && filterSignatureOffers) {
         filteredSigOffers = filterSignatureOffers(sigOffers);
       }
 
       for (let i = 0; i < filteredSigOffers.length; i++) {
         const sigOffer = filteredSigOffers[i];
 
-        // Comment out double-checking chain for sig offer cancelled/finalized status
-        // This is for loading speed
-
-        // const isCancelledOrFinalized =
-        //   await offersContract.getOfferSignatureStatus(sigOffer.Signature);
-
-        // if (isCancelledOrFinalized) {
-        //   continue;
-        // }
-
         // if not on mainnet, filter using on-chain data about punches
-        if (chainId !== '0x1') {
+        if (!isMainnet(chainId)) {
           const floorOfferCount =
             await getFloorSignatureOfferCountLeftFromSignature({
               offersContract,
