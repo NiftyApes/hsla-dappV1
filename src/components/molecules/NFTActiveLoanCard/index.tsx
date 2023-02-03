@@ -30,6 +30,7 @@ import {
 import NFTCardHeader from '../../cards/NFTCardHeader';
 import BorrowLoanRepayCard from '../BorrowLoanRepayCard';
 import BorrowLoanRolloverCard from '../BorrowLoanRolloverCard';
+import WithdrawButton from '../WithdrawButton';
 
 interface Props {
   loan: LoanAuction;
@@ -285,57 +286,60 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft, offers }) => {
 
   return (
     <NFTCardContainer>
-      <NFTCardContainerHeader
-        attributes={nft.attributes}
-        collectionName={nft.collectionName}
-        contractAddress={nft.contractAddress}
-        img={nft.image}
-        tokenId={nft.id}
-        tokenName={nft.name}
-      >
-        <>
-          {isLoanDefaulted(loan) ? renderDefaultedLoan() : renderActiveLoan()}
+      <>
+        <WithdrawButton amount={loan.amount} amountDrawn={loan.amountDrawn} />
+        <NFTCardContainerHeader
+          attributes={nft.attributes}
+          collectionName={nft.collectionName}
+          contractAddress={nft.contractAddress}
+          img={nft.image}
+          tokenId={nft.id}
+          tokenName={nft.name}
+        >
+          <>
+            {isLoanDefaulted(loan) ? renderDefaultedLoan() : renderActiveLoan()}
 
-          {isRepayLoanOpen && (
-            <Modal isOpen onClose={onRepayLoanClose} size="xl">
-              <ModalOverlay />
-              <ModalContent p="5px">
-                <NFTCardHeader
-                  nft={nft}
-                  contractAddress={nft.contractAddress}
-                  tokenId={nft.id}
-                  title={i18n.repayLoanHeader}
-                />
-                <BorrowLoanRepayCard loan={loan} onRepay={onRepayLoanClose} />
-                <ModalCloseButton />
-              </ModalContent>
-            </Modal>
-          )}
+            {isRepayLoanOpen && (
+              <Modal isOpen onClose={onRepayLoanClose} size="xl">
+                <ModalOverlay />
+                <ModalContent p="5px">
+                  <NFTCardHeader
+                    nft={nft}
+                    contractAddress={nft.contractAddress}
+                    tokenId={nft.id}
+                    title={i18n.repayLoanHeader}
+                  />
+                  <BorrowLoanRepayCard loan={loan} onRepay={onRepayLoanClose} />
+                  <ModalCloseButton />
+                </ModalContent>
+              </Modal>
+            )}
 
-          {isRolloverLoanOpen && (
-            <Modal isOpen onClose={onRolloverLoanClose} size="xl">
-              <ModalOverlay />
-              <ModalContent p="5px">
-                <NFTCardHeader
-                  nft={nft}
-                  contractAddress={nft.contractAddress}
-                  tokenId={nft.id}
-                  title={`${i18n.rolloverLoanHeader} ${nft.collectionName} ${
-                    nft.id ? `#${nft.id}` : ''
-                  }`}
-                />
-                <BorrowLoanRolloverCard
-                  nft={nft}
-                  loan={loan}
-                  onRollover={onRolloverLoanClose}
-                  offers={offers}
-                />
-                <ModalCloseButton />
-              </ModalContent>
-            </Modal>
-          )}
-        </>
-      </NFTCardContainerHeader>
+            {isRolloverLoanOpen && (
+              <Modal isOpen onClose={onRolloverLoanClose} size="xl">
+                <ModalOverlay />
+                <ModalContent p="5px">
+                  <NFTCardHeader
+                    nft={nft}
+                    contractAddress={nft.contractAddress}
+                    tokenId={nft.id}
+                    title={`${i18n.rolloverLoanHeader} ${nft.collectionName} ${
+                      nft.id ? `#${nft.id}` : ''
+                    }`}
+                  />
+                  <BorrowLoanRolloverCard
+                    nft={nft}
+                    loan={loan}
+                    onRollover={onRolloverLoanClose}
+                    offers={offers}
+                  />
+                  <ModalCloseButton />
+                </ModalContent>
+              </Modal>
+            )}
+          </>
+        </NFTCardContainerHeader>
+      </>
     </NFTCardContainer>
   );
 };
