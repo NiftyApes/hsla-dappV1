@@ -353,7 +353,9 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                   </Tbody>
                 </Table>
               </TableContainer>
-              <RolloverLoanVisual loan={loan} offer={rolloverOffer} />
+              <Flex justifyContent="space-between" alignItems="center">
+                <RolloverLoanVisual loan={loan} offer={rolloverOffer} />
+              </Flex>
               <Divider marginY={4} borderColor="gray.400" />
               <Flex
                 marginX="4"
