@@ -110,16 +110,11 @@ const RolloverLoanVisual: React.FC<RolloverLoanVisualProps> = ({
                 fontWeight="bold"
                 color={principalChangeColor}
               >
-                {roundForDisplay(
-                  currentPrincipal +
-                    totalAccruedInterestInEth -
-                    deltaCalculation,
-                )}
-                Ξ
+                {roundForDisplay(Number(rolloverOfferAmount))}Ξ
               </Text>
             </Flex>
             <Text color="gray.600" fontSize="14">
-              Principal Change
+              Change to Max
             </Text>
           </Flex>
         </Box>
