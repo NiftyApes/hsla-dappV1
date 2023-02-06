@@ -32,7 +32,7 @@ export const useDrawLoanAmount = () => {
   const chainId = useChainId();
 
   return {
-    withdrawETH: async ({
+    drawEthFromLoan: async ({
       cleanup,
       ethToWithdraw,
       nftContractAddress,

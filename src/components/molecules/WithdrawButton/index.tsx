@@ -18,7 +18,7 @@ const WithdrawButton: React.FC<WithdrawButtonProps> = ({
   amountDrawn,
   nft,
 }) => {
-  const { withdrawETH } = useDrawLoanAmount();
+  const { drawEthFromLoan } = useDrawLoanAmount();
 
   const difference = useMemo(() => {
     return amount.sub(amountDrawn);
@@ -29,7 +29,7 @@ const WithdrawButton: React.FC<WithdrawButtonProps> = ({
   return (
     <Button
       onClick={() =>
-        withdrawETH({
+        drawEthFromLoan({
           cleanup: () => {},
           ethToWithdraw: difference,
           nftContractAddress: nft.contractAddress,
