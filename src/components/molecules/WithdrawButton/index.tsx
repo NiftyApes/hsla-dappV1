@@ -1,11 +1,12 @@
+import React, { useMemo } from 'react';
 import { formatEther } from 'ethers/lib/utils';
 import { Button, HStack, Text } from '@chakra-ui/react';
 import Icon from 'components/atoms/Icon';
 import { BigNumber } from 'ethers';
-import React, { useMemo } from 'react';
-import { useDrawLoanAmount } from '../../../hooks/useDrawLoanAmount';
 import { NFT } from '../../../nft';
 import { roundForDisplay } from '../../../helpers/roundForDisplay';
+import { useDrawLoanAmount } from '../../../hooks/useDrawLoanAmount';
+import LoadingIndicator from '../../atoms/LoadingIndicator';
 
 interface WithdrawButtonProps {
   amount: BigNumber;
@@ -18,7 +19,7 @@ const WithdrawButton: React.FC<WithdrawButtonProps> = ({
   amountDrawn,
   nft,
 }) => {
-  const { drawEthFromLoan } = useDrawLoanAmount();
+  const { drawEthFromLoan, withdrawStatus } = useDrawLoanAmount();
 
   const difference = useMemo(() => {
     return amount.sub(amountDrawn);
@@ -44,11 +45,15 @@ const WithdrawButton: React.FC<WithdrawButtonProps> = ({
       colorScheme="green"
       borderRadius={24}
     >
-      <HStack spacing={1}>
-        <Text>Get</Text>
-        <Icon size={14} name="ether" />
-        <Text ml={2}>{roundForDisplay(Number(formatEther(difference)))}</Text>
-      </HStack>
+      {withdrawStatus === 'PENDING' ? (
+        <LoadingIndicator color="#12D196" size="xs" />
+      ) : (
+        <HStack spacing={1}>
+          <Text>Get</Text>
+          <Icon size={14} name="ether" />
+          <Text ml={2}>{roundForDisplay(Number(formatEther(difference)))}</Text>
+        </HStack>
+      )}
     </Button>
   );
 };
