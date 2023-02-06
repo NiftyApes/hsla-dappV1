@@ -287,7 +287,11 @@ const NFTActiveLoanCard: React.FC<Props> = ({ loan, nft, offers }) => {
   return (
     <NFTCardContainer>
       <>
-        <WithdrawButton amount={loan.amount} amountDrawn={loan.amountDrawn} />
+        <WithdrawButton
+          amount={loan.amount}
+          amountDrawn={loan.amountDrawn}
+          nft={nft}
+        />
         <NFTCardContainerHeader
           attributes={nft.attributes}
           collectionName={nft.collectionName}
