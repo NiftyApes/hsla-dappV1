@@ -15,7 +15,7 @@ export const useDrawLoanAmount = () => {
 
   const lendingContract = useLendingContract();
 
-  const [withdrawStatus, setWithdrawStatus] = useState<
+  const [status, setStatus] = useState<
     'PENDING' | 'SUCCESS' | 'ERROR' | 'READY'
   >('READY');
 
@@ -47,7 +47,7 @@ export const useDrawLoanAmount = () => {
         throw new Error('Contract is not defined');
       }
 
-      setWithdrawStatus('PENDING');
+      setStatus('PENDING');
 
       try {
         const tx = await lendingContract.drawLoanAmount(
@@ -82,18 +82,18 @@ export const useDrawLoanAmount = () => {
         });
 
         setTxReceipt(receipt);
-        setWithdrawStatus('SUCCESS');
+        setStatus('SUCCESS');
         setTimeout(() => {
-          setWithdrawStatus('READY');
+          setStatus('READY');
           setTxObject(null);
           setTxReceipt(null);
           cleanup();
         }, 3000);
       } catch (e: any) {
         logError(e);
-        setWithdrawStatus('ERROR');
+        setStatus('ERROR');
         setTimeout(() => {
-          setWithdrawStatus('READY');
+          setStatus('READY');
           setTxObject(null);
           setTxReceipt(null);
           cleanup();
@@ -103,7 +103,7 @@ export const useDrawLoanAmount = () => {
 
       dispatch(increment());
     },
-    withdrawStatus,
+    status,
     txObject,
     txReceipt,
   };
