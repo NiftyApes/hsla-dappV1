@@ -188,7 +188,8 @@ export const CreateCollectionOfferForm: React.FC<
       MonolithicSmartContracts,
     ).includes(nftContractAddress);
 
-    const isNotANumber = _.isNaN(Number(offerLTV));
+    const isNotANumber =
+      _.isNaN(Number(offerLTV)) || !Number.isFinite(Number(offerLTV));
 
     if (isMonolithicContract || isNotANumber) {
       return false;
