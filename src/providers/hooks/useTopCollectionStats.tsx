@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { ethers } from 'ethers';
 import _ from 'lodash';
+import { useEffect, useState } from 'react';
 import {
   useCollections,
   useOnChainOffers,
@@ -8,6 +9,8 @@ import {
 } from '../NiftyApesProvider';
 import { getActiveOffersInfoForCollection } from '../__helpers/getActiveOffersInfoForCollection';
 import { getStatsForCollection } from '../__helpers/getStatsForCollection';
+import { useFilterSignatureOffersByLiquidityBacking } from './useFilterSignatureOffersByLiquidityBacking';
+import { useFilterSignatureOffersByPunches } from './useFilterSignatureOffersByPunches';
 
 export function useTopCollectionStats({
   sortBy = 'TOTAL_LIQUIDITY',
@@ -23,10 +26,40 @@ export function useTopCollectionStats({
   const { signatureOffers, loading: isLoadingSignatureOffers } =
     useSignatureOffers();
 
+  const { filterSignatureOffersByLiquidityBacking } =
+    useFilterSignatureOffersByLiquidityBacking();
+  const { filterSignatureOffersByPunches } =
+    useFilterSignatureOffersByPunches();
+
+  const [filteredSigOffers, setFilteredSigOffers] = useState<any>();
+
+  useEffect(() => {
+    async function fn() {
+      if (
+        !filterSignatureOffersByLiquidityBacking ||
+        !filterSignatureOffersByPunches
+      ) {
+        return;
+      }
+
+      setFilteredSigOffers(
+        await filterSignatureOffersByLiquidityBacking(
+          filterSignatureOffersByPunches(signatureOffers),
+        ),
+      );
+    }
+    fn();
+  }, [
+    signatureOffers,
+    filterSignatureOffersByLiquidityBacking,
+    filterSignatureOffersByPunches,
+  ]);
+
   if (
     isLoadingCollections ||
     isLoadingOnChainOffers ||
-    isLoadingSignatureOffers
+    isLoadingSignatureOffers ||
+    !filteredSigOffers
   ) {
     return { loading: true, topCollectionStats: undefined };
   }
@@ -36,7 +69,7 @@ export function useTopCollectionStats({
       const { allActiveCollectionOffers } = getActiveOffersInfoForCollection({
         collectionAddress,
         onChainOffers,
-        signatureOffers,
+        signatureOffers: filteredSigOffers,
       });
 
       return allActiveCollectionOffers.length > 0;
@@ -53,7 +86,7 @@ export function useTopCollectionStats({
       } = getActiveOffersInfoForCollection({
         collectionAddress,
         onChainOffers,
-        signatureOffers,
+        signatureOffers: filteredSigOffers,
       });
 
       if (sortBy === 'TOTAL_LIQUIDITY') {
@@ -105,7 +138,7 @@ export function useTopCollectionStats({
         getStatsForCollection({
           collectionAddress,
           onChainOffers,
-          signatureOffers,
+          signatureOffers: filteredSigOffers,
         }),
       ),
   };

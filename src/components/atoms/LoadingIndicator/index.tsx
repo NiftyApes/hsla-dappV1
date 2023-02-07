@@ -4,11 +4,13 @@ import { Flex, FlexProps, Spinner } from '@chakra-ui/react';
 interface Props extends FlexProps {
   fullScreen?: boolean;
   size?: string;
+  color?: string;
 }
 
 const LoadingIndicator: React.FC<Props> = ({
   fullScreen = false,
   size = 'xl',
+  color = 'primary.purple',
   ...restProps
 }) =>
   fullScreen ? (
@@ -23,7 +25,7 @@ const LoadingIndicator: React.FC<Props> = ({
         thickness="4px"
         speed="0.65s"
         emptyColor="gray.200"
-        color="primary.purple"
+        color={color}
         size={size}
       />
     </Flex>
@@ -32,7 +34,7 @@ const LoadingIndicator: React.FC<Props> = ({
       thickness="4px"
       speed="0.65s"
       emptyColor="gray.200"
-      color="primary.purple"
+      color={color}
       size={size}
     />
   );

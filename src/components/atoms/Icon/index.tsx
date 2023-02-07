@@ -23,6 +23,7 @@ import { ReactComponent as Alert } from './assets/alert.svg';
 import { ReactComponent as Update } from './assets/update.svg';
 import { ReactComponent as Mail } from './assets/mail.svg';
 import { ReactComponent as Edit } from './assets/edit.svg';
+import { ReactComponent as Ether } from './assets/ether.svg';
 
 export const IconMap = {
   menu: Menu,
@@ -47,6 +48,7 @@ export const IconMap = {
   update: Update,
   mail: Mail,
   edit: Edit,
+  ether: Ether,
 };
 
 interface Props extends BoxProps {

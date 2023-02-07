@@ -1,19 +1,19 @@
-import React from 'react';
 import { Button, Link, Td, Text, Tr } from '@chakra-ui/react';
-import { formatEther } from 'ethers/lib/utils';
-import moment from 'moment';
 import { BigNumber } from 'ethers';
+import { formatEther } from 'ethers/lib/utils';
 import _ from 'lodash';
-import { LoanAuction } from '../../../loan';
-import { getAPR } from '../../../helpers/getAPR';
-import { roundForDisplay } from '../../../helpers/roundForDisplay';
+import moment from 'moment';
+import React from 'react';
+import Icon from '../../../components/atoms/Icon';
 import NFTCardSmall from '../../../components/cards/NFTCardSmall';
+import { getAPR } from '../../../helpers/getAPR';
 import {
   getLoanDurationDays,
   getLoanTimeRemaining,
   isLoanDefaulted,
 } from '../../../helpers/getDuration';
-import Icon from '../../../components/atoms/Icon';
+import { roundForDisplay } from '../../../helpers/roundForDisplay';
+import { LoanAuction } from '../../../loan';
 
 interface CallbackType {
   (loan: LoanAuction): void;
@@ -33,10 +33,10 @@ const i18n = {
 };
 
 const LoanTableRow: React.FC<Props> = ({ loan, onClick }) => {
-  const amount = Number(loan.amount.toString());
+  const amountDrawn = Number(loan.amountDrawn.toString());
   const irps = loan.interestRatePerSecond.toNumber();
   const apr = getAPR({
-    amount,
+    amount: amountDrawn,
     interestRatePerSecond: irps,
   });
 
@@ -45,7 +45,7 @@ const LoanTableRow: React.FC<Props> = ({ loan, onClick }) => {
   const totalInterest: BigNumber = loan.interestRatePerSecond.mul(
     loan.loanEndTimestamp - loan.loanBeginTimestamp,
   );
-  const totalAmount: BigNumber = loan.amount.add(
+  const totalAmountOwed: BigNumber = loan.amountDrawn.add(
     loan.interestRatePerSecond.mul(
       loan.loanEndTimestamp - loan.loanBeginTimestamp,
     ),
@@ -74,7 +74,7 @@ const LoanTableRow: React.FC<Props> = ({ loan, onClick }) => {
       </Td>
       <Td>
         <Text fontSize="xl" fontWeight="bold">
-          {formatEther(loan.amount)}Ξ
+          {formatEther(loan.amountDrawn)}Ξ
         </Text>
 
         <Text fontSize="sm">
@@ -86,10 +86,13 @@ const LoanTableRow: React.FC<Props> = ({ loan, onClick }) => {
       </Td>
       <Td>
         <Text fontSize="xl" fontWeight="bold">
-          {Number(formatEther(totalAmount)).toFixed(4)}Ξ
+          {Number(formatEther(totalAmountOwed)).toFixed(4)}Ξ
         </Text>
         <Text fontSize="sm" color="gray">
-          {i18n.loanTotalWithInterest(formatEther(loan.amount), totalInterest)}
+          {i18n.loanTotalWithInterest(
+            formatEther(loan.amountDrawn),
+            totalInterest,
+          )}
         </Text>
       </Td>
       <Td>

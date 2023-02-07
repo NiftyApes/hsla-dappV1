@@ -16,6 +16,7 @@ const Offers = lazy(() => import('../pages/lenders/Offers'));
 const CollectionDetailsModal = lazy(
   () => import('../pages/lenders/LendCollections/CollectionDetails'),
 );
+const RefinanceLoan = lazy(() => import('../pages/lenders/RefinanceLoan'));
 
 const Lenders = (
   <Route path={lenders()} element={<LendersLayout />}>
@@ -26,6 +27,10 @@ const Lenders = (
     <Route
       path="create-collection-offer/:collectionAddress"
       element={<CollectionDetailsModal />}
+    />
+    <Route
+      path="refinance-loan/:collectionAddress"
+      element={<RefinanceLoan />}
     />
   </Route>
 );

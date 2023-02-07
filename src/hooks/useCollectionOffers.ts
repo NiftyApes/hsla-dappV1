@@ -9,9 +9,11 @@ import { getFloorOfferCountFromHash } from 'helpers/getOfferCountLeftFromHash';
 import { getFloorSignatureOfferCountLeftFromSignature } from 'helpers/getSignatureOfferCountLeftFromSignature';
 import { loanOffer } from 'loan';
 import _ from 'lodash';
+import { useFilterSignatureOffersByLiquidityBacking } from 'providers/hooks/useFilterSignatureOffersByLiquidityBacking';
+import { useFilterSignatureOffersByPunches } from 'providers/hooks/useFilterSignatureOffersByPunches';
 import { useEffect, useState } from 'react';
 import { useChainId } from './useChainId';
-import { useOffersContract } from './useContracts';
+import { isMainnet, useOffersContract } from './useContracts';
 
 export const useCollectionOffers = ({
   nftContractAddress,
@@ -25,9 +27,22 @@ export const useCollectionOffers = ({
 
   const chainId = useChainId();
 
+  const { filterSignatureOffersByPunches } =
+    useFilterSignatureOffersByPunches();
+  const { filterSignatureOffersByLiquidityBacking } =
+    useFilterSignatureOffersByLiquidityBacking();
+
   useEffect(() => {
     async function fetchLoanOffersForNFT() {
-      if (!offersContract || !nftContractAddress) {
+      if (!nftContractAddress) {
+        return;
+      }
+
+      if (isMainnet(chainId) && !filterSignatureOffersByPunches) {
+        return;
+      }
+
+      if (isMainnet(chainId) && !filterSignatureOffersByLiquidityBacking) {
         return;
       }
 
@@ -88,38 +103,48 @@ export const useCollectionOffers = ({
           nftContractAddress,
         });
 
-      for (let i = 0; i < sigOffers.length; i++) {
-        const sigOffer = sigOffers[i];
+      // if on mainnet, filter using provider
+      // when we expand dApp provider to Goerli,
+      // we can drop chain restriction
+      let filteredSigOffers = sigOffers;
+      if (
+        isMainnet(chainId) &&
+        filterSignatureOffersByPunches &&
+        filterSignatureOffersByLiquidityBacking
+      ) {
+        filteredSigOffers = await filterSignatureOffersByLiquidityBacking(
+          filterSignatureOffersByPunches(sigOffers),
+        );
+      }
 
-        // Comment out double-checking chain for sig offer cancelled/finalized status
-        // This is for loading speed
+      for (let i = 0; i < filteredSigOffers.length; i++) {
+        const sigOffer = filteredSigOffers[i];
 
-        // const isCancelledOrFinalized =
-        //   await offersContract.getOfferSignatureStatus(sigOffer.Signature);
+        // if not on mainnet, filter using on-chain data about punches
+        if (!isMainnet(chainId)) {
+          const floorOfferCount =
+            await getFloorSignatureOfferCountLeftFromSignature({
+              offersContract,
+              signature: sigOffer.Signature,
+            });
 
-        // if (isCancelledOrFinalized) {
-        //   continue;
-        // }
-
-        const floorOfferCount =
-          await getFloorSignatureOfferCountLeftFromSignature({
-            offersContract,
-            signature: sigOffer.Signature,
-          });
-
-        // Ignore offers that are out of punches
-        if (
-          sigOffer.Offer.floorTerm &&
-          floorOfferCount &&
-          floorOfferCount.toNumber() >= sigOffer.Offer.floorTermLimit
-        ) {
-          continue;
+          // Ignore offers that are out of punches
+          if (
+            sigOffer.Offer.floorTerm &&
+            floorOfferCount &&
+            floorOfferCount.toNumber() >= sigOffer.Offer.floorTermLimit
+          ) {
+            continue;
+          }
         }
 
         const offerWithAddedFields = loanOffer({
-          offer: { ...sigOffer.Offer, offerHash: sigOffer.OfferHash },
+          offer: {
+            ...sigOffer.Offer,
+            offerHash: sigOffer.OfferHash,
+          },
           ...sigOffer.Offer,
-          floorOfferCount,
+
           OfferAttempt: sigOffer.Offer,
           OfferTerms: {
             Amount: sigOffer.Offer.amount,
@@ -140,7 +165,14 @@ export const useCollectionOffers = ({
     }
 
     fetchLoanOffersForNFT();
-  }, [nftContractAddress, offersContract, chainId, cacheCounter]);
+  }, [
+    nftContractAddress,
+    offersContract,
+    chainId,
+    filterSignatureOffersByPunches,
+    filterSignatureOffersByLiquidityBacking,
+    cacheCounter,
+  ]);
 
   if (!offers) {
     return undefined;

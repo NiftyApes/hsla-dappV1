@@ -1,5 +1,7 @@
+import { BigNumber } from 'ethers';
 import { getAPR } from 'helpers/getAPR';
 import { roundForDisplay } from 'helpers/roundForDisplay';
+import _ from 'lodash';
 import { CoinSymbol } from '../../lib/constants/coinSymbols';
 
 export type OfferTerms = {
@@ -87,5 +89,27 @@ export const getBestLoanOffer = (offers: Array<LoanOffer>): LoanOffer => {
       b.amount - a.amount ||
       a.aprPercentage - b.aprPercentage ||
       b.durationDays - a.durationDays,
+  )[0];
+};
+
+export const getMostSimilarOfferForRollover = ({
+  loanOfferAmount,
+  offers,
+}: {
+  loanOfferAmount: BigNumber;
+  offers: Array<LoanOffer>;
+}): LoanOffer => {
+  if (offers.length === 1) {
+    return offers[0];
+  }
+
+  const loanOfferAmountNum = Number(loanOfferAmount.toString());
+
+  return _.sortBy(
+    offers,
+    (o) => Math.abs(loanOfferAmountNum - o.amount), // closest amount
+    (o) => (o.amount >= loanOfferAmountNum ? -1 : 1), // prefer higher amount
+    (o) => o.aprPercentage, // lowest APR
+    (o) => -o.durationDays, // longest duration
   )[0];
 };
