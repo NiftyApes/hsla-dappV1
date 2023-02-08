@@ -74,6 +74,10 @@ const i18n = {
   allOffers: 'all offers for',
 };
 
+const gasGriefingPremiumBps = 25;
+const originationPremiumBps = 25;
+const MAX_BPS = 10000;
+
 const BorrowLoanRolloverCard: React.FC<Props> = ({
   loan,
   onRollover,
@@ -123,7 +127,12 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
     nftId: loan.nftId,
   });
 
-  const { amount, amountDrawn, interestRatePerSecond: irps } = loan;
+  const {
+    amount,
+    amountDrawn,
+    interestRatePerSecond: irps,
+    accumulatedLenderInterest,
+  } = loan;
 
   // Note: When running this on a local chain, the interest will be 0 until a new block is created.
   // Simply create a new transaction and the correct amount of interest will show up
@@ -132,18 +141,24 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
     : BigNumber.from(0);
 
   // 25 basis points of the amount drawn
-  const basisPoints: BigNumber = amountDrawn.mul(25).div(10000);
+  const gasGriefingMinimum: BigNumber = amountDrawn
+    .mul(gasGriefingPremiumBps)
+    .div(MAX_BPS);
 
   // Add basis points if total interest is less than
-  const earlyReplay = totalAccruedInterest.lt(basisPoints);
+  const earlyReplay = totalAccruedInterest.lt(gasGriefingMinimum);
 
   if (earlyReplay) {
-    totalAccruedInterest = basisPoints;
+    totalAccruedInterest = gasGriefingMinimum;
   }
 
-  // Minimum interest owed 0.0025
+  // Currently, if you make a prepayment, you get an additional 25 basis points
+  // added to accumulatedLenderInterest which the refinance must pay
+  const prepayGasGriefingPenalty = earlyReplay
+    ? gasGriefingMinimum
+    : BigNumber.from(0);
 
-  // Additional 20 minutes worth of interest
+  // Additional 60 minutes worth of interest
   const padding: BigNumber = irps.mul(3600);
   const totalAccruedInterestInWei: BigNumber = totalAccruedInterest;
   const apr = roundForDisplay(
@@ -164,18 +179,33 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
 
     const paddingInEth = parseFloat(formatEther(padding)) + 0.01;
 
-    if (rolloverPrincipal >= currentPrincipal + totalAccruedInterestInEth) {
+    const originationFee = (currentPrincipal * originationPremiumBps) / MAX_BPS;
+
+    const accumulatedLenderInterestInEth = parseFloat(
+      formatEther(accumulatedLenderInterest),
+    );
+
+    if (
+      rolloverPrincipal >=
+      currentPrincipal +
+        accumulatedLenderInterestInEth +
+        totalAccruedInterestInEth +
+        originationFee
+    ) {
       return 0;
     }
 
     return (
       currentPrincipal +
+      accumulatedLenderInterestInEth +
       totalAccruedInterestInEth +
+      originationFee +
       paddingInEth -
       rolloverPrincipal
     );
   }, [
     currentPrincipal,
+    accumulatedLenderInterest,
     totalAccruedInterestInEth,
     rolloverOfferAmount,
     padding,
@@ -184,7 +214,9 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
   const { partiallyRepayLoanByBorrower } = usePartiallyRepayLoanByBorrower({
     nftContractAddress: loan.nftContractAddress,
     nftId: loan.nftId,
-    amount: deltaCalculation,
+    amount:
+      Number(ethers.utils.formatEther(prepayGasGriefingPenalty)) +
+      deltaCalculation,
   });
 
   const { refinanceLoanByBorrower } = useRefinanceByBorrower({
@@ -377,7 +409,14 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                     ETH
                   </Text>
                   <Text fontSize="3.5xl" noOfLines={1} maxWidth="200px">
-                    {roundForDisplay(deltaCalculation)}Ξ
+                    {deltaCalculation === 0
+                      ? 0
+                      : roundForDisplay(
+                          Number(
+                            ethers.utils.formatEther(prepayGasGriefingPenalty),
+                          ) + deltaCalculation,
+                        )}
+                    Ξ
                   </Text>
                 </Flex>
                 {deltaCalculation === 0 ? (
