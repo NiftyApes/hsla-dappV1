@@ -1,12 +1,17 @@
-import moment from 'moment';
-import React, { useEffect, useMemo, useState } from 'react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import { Box, Flex, Text } from '@chakra-ui/react';
 import { formatEther } from '@ethersproject/units';
-import { roundForDisplay } from 'helpers/roundForDisplay';
-import { LoanAuction, LoanOffer } from 'loan';
+import {
+  gasGriefingPremiumBps,
+  MAX_BPS,
+  originationPremiumBps,
+} from 'constants/protocolValues';
 import { BigNumber, ethers } from 'ethers';
+import { roundForDisplay } from 'helpers/roundForDisplay';
 import { useCalculateInterestAccrued } from 'hooks/useCalculateInterestAccrued';
+import { LoanAuction, LoanOffer } from 'loan';
+import moment from 'moment';
+import React, { useEffect, useMemo, useState } from 'react';
 
 const DATE_FORMAT = 'hh:mm A MM/DD/YY';
 const MOMENT_INTERVAL_MS = 60000;
@@ -33,58 +38,103 @@ const RolloverLoanVisual: React.FC<RolloverLoanVisualProps> = ({
     return () => clearInterval(interval);
   }, [offer.durationDays]);
 
-  const rolloverOfferAmount = useMemo(() => {
+  const rolloverOfferAmountInEth = useMemo(() => {
     return ethers.utils.formatEther(
       BigNumber.from(String(offer.OfferTerms.Amount)),
     );
   }, [offer.OfferTerms.Amount]);
 
   const principalChangeColor = useMemo(() => {
-    if (rolloverOfferAmount > formatEther(loan.amountDrawn)) return '#15e9a7';
+    if (rolloverOfferAmountInEth > formatEther(loan.amountDrawn))
+      return '#15e9a7';
     return '#000000';
-  }, [rolloverOfferAmount, loan.amountDrawn]);
+  }, [rolloverOfferAmountInEth, loan.amountDrawn]);
 
-  const currentPrincipal = parseFloat(formatEther(loan.amountDrawn));
+  const currentPrincipalInEth = parseFloat(formatEther(loan.amountDrawn));
 
-  const { amountDrawn, interestRatePerSecond: irps } = loan;
+  const {
+    amountDrawn,
+    interestRatePerSecond: irps,
+    accumulatedLenderInterest,
+  } = loan;
+
   const accruedInterest: Array<BigNumber> = useCalculateInterestAccrued({
     nftContractAddress: loan.nftContractAddress,
     nftId: loan.nftId,
   });
+
   let totalAccruedInterest: BigNumber = accruedInterest
     ? accruedInterest[0].add(accruedInterest[1])
     : BigNumber.from(0);
-  const basisPoints: BigNumber = amountDrawn.mul(25).div(10000);
-  const earlyReplay = totalAccruedInterest.lt(basisPoints);
+
+  const gasGriefingMinimum: BigNumber = amountDrawn
+    .mul(gasGriefingPremiumBps)
+    .div(MAX_BPS);
+
+  const earlyReplay = totalAccruedInterest.lt(gasGriefingMinimum);
+
   if (earlyReplay) {
-    totalAccruedInterest = basisPoints;
+    totalAccruedInterest = gasGriefingMinimum;
   }
+
+  // Currently, if you make a prepayment, you get an additional 25 basis points
+  // added to accumulatedLenderInterest which the refinance must pay
+  const prepayGasGriefingPenaltyInWei = earlyReplay
+    ? gasGriefingMinimum
+    : BigNumber.from(0);
+
   const totalAccruedInterestInWei: BigNumber = totalAccruedInterest;
+
   const totalAccruedInterestInEth = parseFloat(
     formatEther(totalAccruedInterestInWei),
   );
 
-  const padding: BigNumber = irps.mul(3600);
-  const deltaCalculation = useMemo(() => {
-    const rolloverPrincipal = parseFloat(rolloverOfferAmount);
+  const oneHourInterestPaddingInWei: BigNumber = irps.mul(3600);
 
-    const paddingInEth = parseFloat(formatEther(padding)) + 0.01;
+  const deltaCalculationInEth = useMemo(() => {
+    const rolloverPrincipalInEth = parseFloat(rolloverOfferAmountInEth);
 
-    if (rolloverPrincipal >= currentPrincipal + totalAccruedInterestInEth) {
+    const oneHourInterestPaddingInEth = parseFloat(
+      formatEther(oneHourInterestPaddingInWei),
+    );
+
+    const originationFeeInEth =
+      (currentPrincipalInEth * originationPremiumBps) / MAX_BPS;
+
+    const accumulatedLenderInterestInEth = parseFloat(
+      formatEther(accumulatedLenderInterest),
+    );
+
+    const fiveMinutesInterestPaddingInEth = oneHourInterestPaddingInEth / 12;
+
+    // If rollover principal can pay for all old loan stuff + 5 minutes of interest,
+    // then no delta
+    if (
+      rolloverPrincipalInEth >=
+      currentPrincipalInEth +
+        accumulatedLenderInterestInEth +
+        totalAccruedInterestInEth +
+        originationFeeInEth +
+        fiveMinutesInterestPaddingInEth
+    ) {
       return 0;
     }
 
+    // Otherwise, return delta equal to all old loan stuff + 60 minutes of interest
     return (
-      currentPrincipal +
+      currentPrincipalInEth +
+      accumulatedLenderInterestInEth +
       totalAccruedInterestInEth +
-      paddingInEth -
-      rolloverPrincipal
+      originationFeeInEth +
+      oneHourInterestPaddingInEth -
+      rolloverPrincipalInEth
     );
   }, [
-    currentPrincipal,
+    currentPrincipalInEth,
+    accumulatedLenderInterest,
     totalAccruedInterestInEth,
-    rolloverOfferAmount,
-    padding,
+    rolloverOfferAmountInEth,
+    oneHourInterestPaddingInWei,
   ]);
 
   return (
@@ -110,7 +160,7 @@ const RolloverLoanVisual: React.FC<RolloverLoanVisualProps> = ({
                 fontWeight="bold"
                 color={principalChangeColor}
               >
-                {roundForDisplay(Number(rolloverOfferAmount))}Ξ
+                {roundForDisplay(Number(rolloverOfferAmountInEth))}Ξ
               </Text>
             </Flex>
             <Text color="gray.600" fontSize="14">
@@ -121,7 +171,14 @@ const RolloverLoanVisual: React.FC<RolloverLoanVisualProps> = ({
         <Box>
           <Flex alignItems="center" flexDirection="column">
             <Text fontSize="18" fontWeight="bold">
-              {roundForDisplay(deltaCalculation)}Ξ
+              {deltaCalculationInEth === 0
+                ? 0
+                : roundForDisplay(
+                    Number(
+                      ethers.utils.formatEther(prepayGasGriefingPenaltyInWei),
+                    ) + deltaCalculationInEth,
+                  )}
+              Ξ
             </Text>
             <Text color="gray.600" fontSize="14">
               Payment Due Now

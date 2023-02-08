@@ -20,6 +20,11 @@ import CryptoIcon from 'components/atoms/CryptoIcon';
 import NFTCardHeader from 'components/cards/NFTCardHeader';
 import { ToastSuccessCard } from 'components/cards/ToastSuccessCard';
 import { ACTIONS, CATEGORIES, LABELS } from 'constants/googleAnalytics';
+import {
+  gasGriefingPremiumBps,
+  MAX_BPS,
+  originationPremiumBps,
+} from 'constants/protocolValues';
 import { BigNumber, ethers } from 'ethers';
 import { formatEther } from 'ethers/lib/utils';
 import { getAPR } from 'helpers/getAPR';
@@ -73,10 +78,6 @@ const i18n = {
   loanApr: (apr: number) => `${apr}%`,
   allOffers: 'all offers for',
 };
-
-const gasGriefingPremiumBps = 25;
-const originationPremiumBps = 25;
-const MAX_BPS = 10000;
 
 const BorrowLoanRolloverCard: React.FC<Props> = ({
   loan,
