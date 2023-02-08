@@ -32,12 +32,13 @@ export const usePartiallyRepayLoanByBorrower = ({
   const chainId = useChainId();
 
   // Constantly getting errors parsing into BigNumber
+  // Trouble is trying to parseEther when JS wants to use scientific notation
+  // Only relevant for very small amounts
   let amountInWei: BigNumber;
   try {
     amountInWei = ethers.utils.parseEther(amount.toPrecision(2));
   } catch (e) {
-    amountInWei = BigNumber.from(0);
-    console.log('Error parsing amount: ', e);
+    amountInWei = BigNumber.from(Math.ceil(amount * 1e18));
   }
 
   if (!nftContractAddress || !nftId || !lendingContract) {

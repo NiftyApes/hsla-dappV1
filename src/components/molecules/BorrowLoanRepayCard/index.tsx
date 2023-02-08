@@ -72,7 +72,12 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
     nftId: loan.nftId,
   });
 
-  const { amount, amountDrawn, interestRatePerSecond: irps } = loan;
+  const {
+    amount,
+    amountDrawn,
+    interestRatePerSecond: irps,
+    accumulatedLenderInterest,
+  } = loan;
 
   // Note: When running this on a local chain, the interest will be 0 until a new block is created.
   // Simply create a new transaction and the correct amount of interest will show up
@@ -92,11 +97,14 @@ const BorrowLoanRepayCard: React.FC<Props> = ({ loan, onRepay }) => {
 
   // Minimum interest owed 0.0025
 
-  // Additional 20 minutes worth of interest
+  // Additional 60 minutes worth of interest
   const padding: BigNumber = irps.mul(3600);
+
   const totalOwed: BigNumber = amountDrawn
+    .add(accumulatedLenderInterest)
     .add(totalAccruedInterest)
     .add(padding);
+
   const apr = getAPR({
     amount: Number(amount.toString()),
     interestRatePerSecond: irps.toNumber(),
