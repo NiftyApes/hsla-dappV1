@@ -111,7 +111,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
     [onAllOffersClose],
   );
 
-  const rolloverOfferAmount = useMemo(() => {
+  const rolloverOfferAmountInEth = useMemo(() => {
     return ethers.utils.formatEther(
       BigNumber.from(String(rolloverOffer.OfferTerms.Amount)),
     );
@@ -154,12 +154,12 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
 
   // Currently, if you make a prepayment, you get an additional 25 basis points
   // added to accumulatedLenderInterest which the refinance must pay
-  const prepayGasGriefingPenalty = earlyReplay
+  const prepayGasGriefingPenaltyInWei = earlyReplay
     ? gasGriefingMinimum
     : BigNumber.from(0);
 
   // Additional 60 minutes worth of interest
-  const padding: BigNumber = irps.mul(3600);
+  const oneHourInterestPaddingInWei: BigNumber = irps.mul(3600);
   const totalAccruedInterestInWei: BigNumber = totalAccruedInterest;
   const apr = roundForDisplay(
     getAPR({
@@ -168,55 +168,64 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
     }),
   );
 
-  const currentPrincipal = parseFloat(formatEther(loan.amountDrawn));
+  const currentPrincipalInEth = parseFloat(formatEther(loan.amountDrawn));
 
   const totalAccruedInterestInEth = parseFloat(
     formatEther(totalAccruedInterestInWei),
   );
 
-  const deltaCalculation = useMemo(() => {
-    const rolloverPrincipal = parseFloat(rolloverOfferAmount);
+  const deltaCalculationInEth = useMemo(() => {
+    const rolloverPrincipalInEth = parseFloat(rolloverOfferAmountInEth);
 
-    const paddingInEth = parseFloat(formatEther(padding)) + 0.01;
+    const oneHourInterestPaddingInEth = parseFloat(
+      formatEther(oneHourInterestPaddingInWei),
+    );
 
-    const originationFee = (currentPrincipal * originationPremiumBps) / MAX_BPS;
+    const originationFeeInEth =
+      (currentPrincipalInEth * originationPremiumBps) / MAX_BPS;
 
     const accumulatedLenderInterestInEth = parseFloat(
       formatEther(accumulatedLenderInterest),
     );
 
+    const fiveMinutesInterestPaddingInEth = oneHourInterestPaddingInEth / 12;
+
+    // If rollover principal can pay for all old loan stuff + 5 minutes of interest,
+    // then no delta
     if (
-      rolloverPrincipal >=
-      currentPrincipal +
+      rolloverPrincipalInEth >=
+      currentPrincipalInEth +
         accumulatedLenderInterestInEth +
         totalAccruedInterestInEth +
-        originationFee
+        originationFeeInEth +
+        fiveMinutesInterestPaddingInEth
     ) {
       return 0;
     }
 
+    // Otherwise, return delta equal to all old loan stuff + 60 minutes of interest
     return (
-      currentPrincipal +
+      currentPrincipalInEth +
       accumulatedLenderInterestInEth +
       totalAccruedInterestInEth +
-      originationFee +
-      paddingInEth -
-      rolloverPrincipal
+      originationFeeInEth +
+      oneHourInterestPaddingInEth -
+      rolloverPrincipalInEth
     );
   }, [
-    currentPrincipal,
+    currentPrincipalInEth,
     accumulatedLenderInterest,
     totalAccruedInterestInEth,
-    rolloverOfferAmount,
-    padding,
+    rolloverOfferAmountInEth,
+    oneHourInterestPaddingInWei,
   ]);
 
   const { partiallyRepayLoanByBorrower } = usePartiallyRepayLoanByBorrower({
     nftContractAddress: loan.nftContractAddress,
     nftId: loan.nftId,
     amount:
-      Number(ethers.utils.formatEther(prepayGasGriefingPenalty)) +
-      deltaCalculation,
+      Number(ethers.utils.formatEther(prepayGasGriefingPenaltyInWei)) +
+      deltaCalculationInEth,
   });
 
   const { refinanceLoanByBorrower } = useRefinanceByBorrower({
@@ -365,7 +374,9 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                       <Td>
                         <Flex alignItems="center" gap="2">
                           <CryptoIcon symbol="eth" size={24} />
-                          <Text>{Number(rolloverOfferAmount).toFixed(4)}Ξ</Text>
+                          <Text>
+                            {Number(rolloverOfferAmountInEth).toFixed(4)}Ξ
+                          </Text>
                         </Flex>
                       </Td>
                       <Td>{getOfferTimeRemaining(rolloverOffer)}</Td>
@@ -395,7 +406,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                 alignItems="center"
               >
                 <Flex alignItems="center">
-                  {deltaCalculation === 0 ? (
+                  {deltaCalculationInEth === 0 ? (
                     <Text fontSize={24}>👍</Text>
                   ) : (
                     <CryptoIcon symbol="eth" size={24} />
@@ -409,17 +420,19 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
                     ETH
                   </Text>
                   <Text fontSize="3.5xl" noOfLines={1} maxWidth="200px">
-                    {deltaCalculation === 0
+                    {deltaCalculationInEth === 0
                       ? 0
                       : roundForDisplay(
                           Number(
-                            ethers.utils.formatEther(prepayGasGriefingPenalty),
-                          ) + deltaCalculation,
+                            ethers.utils.formatEther(
+                              prepayGasGriefingPenaltyInWei,
+                            ),
+                          ) + deltaCalculationInEth,
                         )}
                     Ξ
                   </Text>
                 </Flex>
-                {deltaCalculation === 0 ? (
+                {deltaCalculationInEth === 0 ? (
                   <Button
                     borderWidth="2px"
                     borderRadius="15"
@@ -452,7 +465,7 @@ const BorrowLoanRolloverCard: React.FC<Props> = ({
             </Box>
           </Flex>
           <Button
-            disabled={deltaCalculation > 0}
+            disabled={deltaCalculationInEth > 0}
             marginTop={4}
             marginBottom={1}
             borderRadius="8px"
