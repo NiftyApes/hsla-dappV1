@@ -29,19 +29,37 @@ export const MainnetWalletNFTs: React.FC<Props> = () => {
         return;
       }
 
-      const ownWalletNftsResult = await fetch(
-        `https://eth-mainnet.g.alchemy.com/v2/Of3Km_--Ow1fNnMhaETmwnmWBFFHF3ZY/getNFTs?owner=${walletAddress}`,
-      );
+      let ownWalletNftsPageKey;
 
-      const ownWalletNftsJSON = await ownWalletNftsResult.json();
+      const ownWalletNfts: any[] = [];
 
-      const escrowedNftsResult = await fetch(
-        `https://eth-mainnet.g.alchemy.com/v2/Of3Km_--Ow1fNnMhaETmwnmWBFFHF3ZY/getNFTs?owner=${MAINNET.LENDING.ADDRESS}`,
-      );
+      do {
+        const ownWalletNftsResult: any = await fetch(
+          `https://eth-mainnet.g.alchemy.com/v2/Of3Km_--Ow1fNnMhaETmwnmWBFFHF3ZY/getNFTs?owner=${walletAddress}&pageKey=${ownWalletNftsPageKey}`,
+        );
 
-      const escrowedNftsJSON = await escrowedNftsResult.json();
+        const ownWalletNftsJSON = await ownWalletNftsResult.json();
 
-      let escrowedNfts = escrowedNftsJSON.ownedNfts;
+        ownWalletNftsPageKey = ownWalletNftsJSON.pageKey;
+
+        ownWalletNfts.push(...ownWalletNftsJSON.ownedNfts);
+      } while (ownWalletNftsPageKey);
+
+      let escrowedNftsPageKey;
+
+      let escrowedNfts: any[] = [];
+
+      do {
+        const escrowedNftsResult: any = await fetch(
+          `https://eth-mainnet.g.alchemy.com/v2/Of3Km_--Ow1fNnMhaETmwnmWBFFHF3ZY/getNFTs?owner=${MAINNET.LENDING.ADDRESS}&pageKey=${escrowedNftsPageKey}`,
+        );
+
+        const escrowedNftsJSON = await escrowedNftsResult.json();
+
+        escrowedNftsPageKey = escrowedNftsJSON.pageKey;
+
+        escrowedNfts.push(...escrowedNftsJSON.ownedNfts);
+      } while (escrowedNftsPageKey);
 
       // Keep just the NiftyApes NFTs that are yours
       await Promise.all(
@@ -57,12 +75,13 @@ export const MainnetWalletNFTs: React.FC<Props> = () => {
           escrowedNfts[i] = { ...nft, isOwnedByWallet };
         }),
       );
+
       escrowedNfts = escrowedNfts.filter((nft: any) => nft.isOwnedByWallet);
 
       dispatch(
         loadMainnetNFTs({
           walletAddress,
-          nfts: [...escrowedNfts, ...ownWalletNftsJSON.ownedNfts],
+          nfts: [...escrowedNfts, ...ownWalletNfts],
         }),
       );
 
