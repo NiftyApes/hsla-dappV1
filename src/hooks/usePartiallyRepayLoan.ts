@@ -1,4 +1,3 @@
-import { updateLoanStatus } from 'api/updateLoanStatus';
 import { useAppDispatch } from 'app/hooks';
 import { transactionTypes } from 'constants/transactionTypes';
 
@@ -112,16 +111,6 @@ export const usePartiallyRepayLoanByBorrower = ({
           nftContractAddress: ethers.utils.getAddress(nftContractAddress),
           nftId,
         },
-      });
-
-      await updateLoanStatus({
-        chainId,
-        nftContractAddress,
-        nftId,
-        loanBeginTimestamp: loan.loanBeginTimestamp,
-        status: 'PARTIALLY_REPAID',
-        transactionTimestamp,
-        transactionHash: receipt.transactionHash,
       });
 
       dispatch(increment());
